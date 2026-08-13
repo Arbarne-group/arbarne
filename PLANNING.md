@@ -1,6 +1,6 @@
 # PLANNING.md — Future Farms Framework (FFF) Digital Platform
 
-> **Companion to `prd-refined.md`.** The PRD defines *what*; this file defines *how we plan to get there*. Tasks live in `TASKS.md`; living status in Slack `#future-farms-framework`.
+> **Companion to `docs/prd/prd-refined.md`.** The PRD defines *what*; this file defines *how we plan to get there*. Tasks live in `TASKS.md`; living status in Slack `#future-farms-framework`.
 
 ---
 

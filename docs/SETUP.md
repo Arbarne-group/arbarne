@@ -206,8 +206,10 @@ arbarne/
 ├── CLAUDE.md
 ├── PLANNING.md
 ├── TASKS.md
-├── prd-refined.md
 ├── docs/
+│   ├── prd/
+│   │   ├── prd-refined.md
+│   │   └── prd-4.md
 │   ├── DECISIONS.md
 │   ├── DATA_MODEL.md
 │   ├── GLOSSARY.md

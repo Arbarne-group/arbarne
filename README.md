@@ -47,7 +47,7 @@ $$\text{Assess} \longrightarrow \text{Diagnose} \longrightarrow \text{Prioritise
 
 #### 1. Clone & Navigate
 ```bash
-git clone <repository-url> arbarne
+git clone https://github.com/Arbarne-group/arbarne.git arbarne
 cd arbarne/src/backend
 ```
 
@@ -138,10 +138,10 @@ arbarne/
 ├── PLANNING.md          ← master plan, milestones, & service topology
 ├── TASKS.md             ← granular task tracker & sprint alignment
 ├── PROGRESS_TRACKER.md  ← live milestone status & component matrix
-├── prd-refined.md       ← authoritative Product Requirements Document (PRD)
 ├── requirements.txt     ← backend Python dependencies
 ├── pyproject.toml       ← hatchling project config & ruff/pytest settings
 ├── docs/
+│   ├── prd/             ← Product Requirements Documents (prd-refined.md & prd-4.md)
 │   ├── HANDOVER.md      ← platform operations & handover guide
 │   ├── SETUP.md         ← detailed local environment setup
 │   ├── DATA_MODEL.md    ← database schema & ER diagram

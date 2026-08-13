@@ -1,6 +1,6 @@
 # CLAUDE.md — Future Farms Framework (FFF) Digital Platform
 
-> **Read this first.** This is the project-level context for any Claude session working on this codebase. The detailed PRD is `prd-refined.md`; this file is the fast-orientation index that points to it.
+> **Read this first.** This is the project-level context for any Claude session working on this codebase. The detailed PRD is `docs/prd/prd-refined.md`; this file is the fast-orientation index that points to it.
 
 ---
 
@@ -26,18 +26,17 @@ arbarne/
 ├── PLANNING.md          ← master plan, milestones, architecture
 ├── TASKS.md             ← granular task list, sprint-aligned, owner-assigned
 ├── PROGRESS_TRACKER.md  ← live progress tracker & component status matrix
-├── prd-refined.md       ← full PRD (the single source of truth for what we build)
-├── prd-4.md             ← earlier PRD draft (reference only; do not edit)
 ├── docs/
+│   ├── prd/             ← PRD specs (prd-refined.md & prd-4.md)
 │   ├── DECISIONS.md     ← log of resolved and open decisions
 │   ├── DATA_MODEL.md    ← pillars / capabilities / questions schema
 │   ├── GLOSSARY.md      ← FFF & platform terms
 │   ├── SETUP.md         ← local dev environment
 │   └── SOURCE_INDEX.md  ← canonical source-material index
-└── (code will live under src/, infra under deploy/, etc. as added)
+└── (code lives under src/, infra under deploy/)
 ```
 
-**Authoritative spec:** `prd-refined.md`. If this file and the PRD disagree, the PRD wins; flag the discrepancy rather than acting on CLAUDE.md alone.
+**Authoritative spec:** `docs/prd/prd-refined.md`. If this file and the PRD disagree, the PRD wins; flag the discrepancy rather than acting on CLAUDE.md alone.
 
 ---
 
@@ -45,7 +44,7 @@ arbarne/
 
 | Contributor | Role | GitHub |
 |---|---|---|
-| Victor | Team Lead — Full-Stack & AI Engineer; architecture, complex builds, task assignment | — |
+| Victor | Team Lead — Full-Stack & AI Engineer; architecture, complex builds, task assignment | vikkirkobane |
 | Santana | ML & Database | Santana-clauss |
 | Liz Wahome | ML (+ frontend, provisional) | LizWahome |
 | Nikki Mackenzie | Database / ML | Nikki-Mackenzie |
