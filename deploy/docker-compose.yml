@@ -1,0 +1,102 @@
+# Future Farms Framework — pilot stack
+# Run with: docker compose -f deploy/docker-compose.yml up --build
+# Or use the Makefile targets: make up, make migrate, make seed, make smoke
+
+name: fff
+
+services:
+
+  # ─── Postgres + pgvector ────────────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: fff-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fff}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fff_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-fff}
+    ports:
+      - "5432:5432"
+    volumes:
+      - fff_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fff} -d ${POSTGRES_DB:-fff}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # ─── Redis (broker + cache) ─────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: fff-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # ─── FastAPI backend ────────────────────────────────────────────────
+  backend:
+    build:
+      context: ../src/backend
+      dockerfile: Dockerfile
+    container_name: fff-backend
+    env_file:
+      - ../.env
+    environment:
+      # Override DB host to reach the postgres container
+      POSTGRES_HOST: postgres
+      REDIS_HOST: redis
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../src/backend:/app
+      - fff_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ─── Celery worker (batch ML) ───────────────────────────────────────
+  worker:
+    build:
+      context: ../src/backend
+      dockerfile: Dockerfile
+    container_name: fff-worker
+    command: ["celery", "-A", "app.worker.celery_app", "worker", "--loglevel=INFO", "--concurrency=2"]
+    env_file:
+      - ../.env
+    environment:
+      POSTGRES_HOST: postgres
+      REDIS_HOST: redis
+    volumes:
+      - ../src/backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ─── Frontend (nginx serving the static SPA) ────────────────────────
+  frontend:
+    build:
+      context: ../src/frontend
+      dockerfile: Dockerfile
+    container_name: fff-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  fff_pgdata:
+    driver: local
+  fff_uploads:
+    driver: local

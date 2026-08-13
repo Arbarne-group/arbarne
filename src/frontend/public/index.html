@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1f6f43">
+    <meta name="description" content="Future Farms Framework — self-assessment for East African farms">
+    <title>Future Farms Framework</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <h1>Future Farms Framework</h1>
+        <span id="offline-indicator" class="badge badge-offline" hidden>Offline</span>
+    </header>
+
+    <main id="app">
+        <!-- ─── Start screen ──────────────────────────────────────── -->
+        <section id="screen-start" class="screen screen-active">
+            <h2>Assess your farm's readiness for the future</h2>
+            <p class="lead">
+                Answer 200 Yes/No questions in about 10–15 minutes. Get a score, a maturity
+                tier, and a personalised transformation plan.
+            </p>
+
+            <div class="card">
+                <label for="farm-name">Farm name <small>(optional)</small></label>
+                <input type="text" id="farm-name" placeholder="e.g. Mzuzu Maize Farm">
+
+                <label for="farm-region">Region <small>(optional)</small></label>
+                <input type="text" id="farm-region" placeholder="e.g. Northern Region, Malawi">
+
+                <label for="farm-crop">Primary crop / enterprise <small>(optional)</small></label>
+                <input type="text" id="farm-crop" placeholder="e.g. Maize, Dairy, Coffee">
+
+                <button id="btn-start" class="btn btn-primary">Start assessment</button>
+            </div>
+
+            <p class="muted">
+                Works offline — your answers are saved locally and sync when you're back online.
+            </p>
+        </section>
+
+        <!-- ─── Question screen ──────────────────────────────────── -->
+        <section id="screen-question" class="screen" hidden>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+                <span id="progress-text" class="progress-text">Question 1 of 200</span>
+            </div>
+
+            <div class="card question-card">
+                <p class="muted small" id="question-meta">Pillar 1 · Capability 1.1</p>
+                <h3 id="question-text">Question text appears here.</h3>
+                <p class="muted small" id="question-why"></p>
+
+                <div class="answer-buttons">
+                    <button id="btn-yes" class="btn btn-yes">Yes</button>
+                    <button id="btn-no" class="btn btn-no">No</button>
+                </div>
+            </div>
+
+            <div class="question-nav">
+                <button id="btn-prev" class="btn btn-ghost" disabled>Previous</button>
+                <button id="btn-skip" class="btn btn-ghost">Skip</button>
+            </div>
+        </section>
+
+        <!-- ─── Results screen ───────────────────────────────────── -->
+        <section id="screen-result" class="screen" hidden>
+            <h2>Your Farm Transformation Report</h2>
+            <div class="card hero-card">
+                <p class="muted">Overall maturity</p>
+                <h3 id="result-tier">—</h3>
+                <p class="muted">FFMI score</p>
+                <p id="result-ffmi" class="big-number">—</p>
+            </div>
+
+            <div class="card">
+                <h3>Where you stand</h3>
+                <ul class="plain-list">
+                    <li><strong>Strongest pillar:</strong> <span id="result-strongest">—</span></li>
+                    <li><strong>Priority gap:</strong> <span id="result-priority-gap">—</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Pillar scores</h3>
+                <ul id="result-pillars" class="plain-list"></ul>
+            </div>
+
+            <div class="card">
+                <h3>Top recommendations</h3>
+                <p class="muted small">Quick Wins first, then Medium Term, then Strategic.</p>
+                <ol id="result-recommendations" class="rec-list"></ol>
+            </div>
+
+            <div class="card">
+                <button id="btn-restart" class="btn btn-ghost">Start a new assessment</button>
+            </div>
+        </section>
+
+        <!-- ─── Loading screen ───────────────────────────────────── -->
+        <section id="screen-loading" class="screen" hidden>
+            <div class="spinner"></div>
+            <p>Loading…</p>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>Future Farms Framework — pilot build</p>
+    </footer>
+
+    <script src="/app.js"></script>
+</body>
+</html>

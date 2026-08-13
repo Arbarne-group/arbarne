@@ -1,0 +1,302 @@
+/* ─── Theme tokens ────────────────────────────────────────────────── */
+:root {
+    --color-primary: #1f6f43;
+    --color-primary-dark: #155031;
+    --color-accent: #f7b500;
+    --color-bg: #f7f8f4;
+    --color-surface: #ffffff;
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-border: #e5e7eb;
+    --color-yes: #1f6f43;
+    --color-no: #b91c1c;
+    --color-quick-win: #15803d;
+    --color-medium-term: #ca8a04;
+    --color-strategic: #1d4ed8;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-header {
+    background: var(--color-primary);
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.app-footer {
+    margin-top: auto;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+main {
+    flex: 1;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.screen {
+    animation: fade-in 0.2s ease-out;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.lead {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.muted { color: var(--color-text-muted); }
+.small { font-size: 0.85rem; }
+
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+}
+
+.hero-card {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    border: none;
+}
+
+.hero-card .muted { color: rgba(255, 255, 255, 0.85); }
+
+.big-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0.25rem 0 0;
+    font-variant-numeric: tabular-nums;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    margin: 0.25rem 0 0.75rem;
+    font-family: inherit;
+}
+
+input[type="text"]:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-top: 0.75rem;
+}
+
+label small {
+    font-weight: 400;
+    color: var(--color-text-muted);
+}
+
+.btn {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.05s, background 0.15s;
+}
+
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary {
+    background: var(--color-primary);
+    color: white;
+    margin-top: 1rem;
+}
+
+.btn-yes {
+    background: var(--color-yes);
+    color: white;
+}
+
+.btn-no {
+    background: var(--color-no);
+    color: white;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+
+.answer-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.question-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.question-nav .btn { width: auto; flex: 1; }
+
+.progress-bar {
+    position: relative;
+    height: 28px;
+    background: var(--color-border);
+    border-radius: 14px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    width: 0%;
+    transition: width 0.2s ease-out;
+}
+
+.progress-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text);
+    mix-blend-mode: difference;
+    color: white;
+}
+
+.question-card h3 {
+    margin: 0.5rem 0;
+    font-size: 1.15rem;
+    line-height: 1.4;
+}
+
+.plain-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.plain-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.plain-list li:last-child { border-bottom: none; }
+
+.rec-list {
+    padding-left: 1.5rem;
+}
+
+.rec-list li {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: #fafafa;
+    border-radius: 8px;
+    border-left: 4px solid var(--color-medium-term);
+}
+
+.rec-list li.priority-quick_win { border-left-color: var(--color-quick-win); }
+.rec-list li.priority-medium_term { border-left-color: var(--color-medium-term); }
+.rec-list li.priority-strategic { border-left-color: var(--color-strategic); }
+
+.priority-pill {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.priority-pill.priority-quick_win { background: #dcfce7; color: var(--color-quick-win); }
+.priority-pill.priority-medium_term { background: #fef3c7; color: var(--color-medium-term); }
+.priority-pill.priority-strategic { background: #dbeafe; color: var(--color-strategic); }
+
+.badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.badge-offline {
+    background: var(--color-accent);
+    color: var(--color-text);
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 2rem auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+    main { padding: 1rem; }
+    .card { padding: 1rem; }
+    .big-number { font-size: 2rem; }
+}
