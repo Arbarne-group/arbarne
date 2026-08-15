@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Draft — pending stakeholder sign-off on FFMI bands (see §12) |
+| **Status** | Draft — FFMI bands locked to Version A (0–4/5–9/10–15/16–20/21–24); remaining open decisions in §12 |
 | **Owner** | Victor — Team Lead |
 | **Team** | Victor (Lead), Santana (ML & Database), Liz Wahome (ML), Nikki Mackenzie (Database/ML) |
 | **Timeline** | 4-week build, sprint-based (see §11) |
@@ -118,15 +118,15 @@ This is the data the platform must faithfully represent — it is not something 
   Per the FFF source: *"The purpose is not to make farmers compete over scores. The purpose is to answer: What does this farm need to do next?"* The platform's UI and reporting must reflect this framing — score is a means to a next action, not a ranking.
 - **Five-Tier Farm Maturity Model** — the FFMI places a farm into one of 5 tiers:
 
-| Tier | Classification | Meaning |
-|---|---|---|
-| 1 | Informal Farm | Largely informal, limited business systems and structured management |
-| 2 | Emerging Agribusiness | Beginning to operate as a structured agricultural business |
-| 3 | Structured Farm | Core business, operational and management systems are established |
-| 4 | Investment Ready Farm | Sufficient structure, performance and evidence to pursue investment |
-| 5 | Future Ready Farm | Advanced capabilities, resilience, adaptability, competitiveness, and future readiness |
+| Tier | FFMI/24 band (Version A) | Classification | Meaning |
+|---|---:|---|---|
+| 1 | 0–4 | Informal Farm | Largely informal, limited business systems and structured management |
+| 2 | 5–9 | Emerging Agribusiness | Beginning to operate as a structured agricultural business |
+| 3 | 10–15 | Structured Farm | Core business, operational and management systems are established |
+| 4 | 16–20 | Investment Ready Farm | Sufficient structure, performance and evidence to pursue investment |
+| 5 | 21–24 | Future Ready Farm | Advanced capabilities, resilience, adaptability, competitiveness, and future readiness |
 
-> **Capability status describes the maturity of one capability. Farm maturity (FFMI/tier) describes the overall state of the farm.** These are related but distinct — the platform must not conflate them.
+> **Capability status describes the maturity of one capability. Farm maturity (FFMI/tier) describes the overall state of the farm.** These are related but distinct — the platform must not conflate them. The canonical tier mapping is **FFMI Bands Version A**: `0–4`, `5–9`, `10–15`, `16–20`, `21–24`.
 
 ### 7.2 The eight pillars
 
@@ -452,7 +452,7 @@ Each week is a sprint. Tasks, owners, and live status are tracked in Slack (`#fu
 ### Week 1 — Foundation
 | Task | Owner | Notes |
 |---|---|---|
-| Confirm rules, tiers & FFMI bands | Victor | Blocking — see §12 |
+| Confirm rules, tiers & FFMI bands | Victor | Resolved — use FFMI Bands Version A (`0–4/5–9/10–15/16–20/21–24`) |
 | Seed framework content into Postgres | Nikki | **All 200 question rows from the source spreadsheet**, fields per §7.7; 8 pillars; 40 capabilities. Stable IDs (`P{p}.{c}.{q}`) preserved |
 | Environment & Docker setup | Victor | `docker-compose.yml` for all services |
 
@@ -489,9 +489,9 @@ Each week is a sprint. Tasks, owners, and live status are tracked in Slack (`#fu
 
 ## 12. Open decisions requiring stakeholder sign-off
 
-These block or affect the plan above and must be resolved, ideally before or during Week 1:
+These block or affect the plan above and must be resolved, ideally before or during Week 1. **Resolved decisions are retained here for traceability when they affect scoring.**
 
-1. **FFMI numeric bands** — the FFF source documents contain two different tier-boundary tables (one framed as `0–4/5–9/10–15/16–20/21–24`, another as `0–6/7–12/13–18/19–21/22–24`). **This must be reconciled and signed off before the scoring engine is built**, since the entire tier classification depends on it.
+1. **FFMI numeric bands — RESOLVED.** Use **Version A** as the canonical tier-boundary table: `0–4/5–9/10–15/16–20/21–24`. The alternate `0–6/7–12/13–18/19–21/22–24` table is not used for this product build. The scoring engine must version this mapping as `ffmi_bands_vA` so historical assessments remain reproducible.
 2. **Evidence review capacity** — who verifies FFV submissions, and how quickly? No reviewer is currently nominated.
 3. **Pilot farmer access** — introductions to a small group of real farmers are needed for Week 4 testing.
 4. **Existing learning/recommendation content** — confirm what already exists vs. what the platform needs to generate or link to. The spreadsheet already enumerates the canonical `support_available` references per question — confirm these match the live FAAB module catalogue.
@@ -505,7 +505,7 @@ These block or affect the plan above and must be resolved, ideally before or dur
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| FFMI bands unresolved past Week 1 | Scoring engine can't be finalised | Escalate as the first blocking item; do not proceed to build scoring logic against an unconfirmed table |
+| FFMI band mapping implemented incorrectly | Farms may be assigned the wrong maturity tier | Use `ffmi_bands_vA` only: `0–4/5–9/10–15/16–20/21–24`; cover boundary values in scoring tests |
 | No dedicated frontend developer | Week 2 self-assessment flow slips | Confirmed owner (Liz) with fallback support from Victor; monitor closely in Week 2 |
 | Evidence review capacity undefined | FFV submissions pile up unreviewed | Nominate a reviewer before Week 3 begins |
 | Low-connectivity behaviour untested until Week 4 | Late discovery of offline-sync bugs | Build offline-first from Week 2, not as a Week 4 retrofit; smoke-test weekly |
@@ -574,7 +574,7 @@ The FFF source document now anchors §1.1, §7.1, §7.2, §8.4.1, §8.4.2, §8.4
 
 - The evidence A–B–C–D reliability ordering in §7.6 matches the Assessment Model document.
 - The full canonical FAAB module catalogue is available (§16 Glossary, FAAB entry; §12 open decision 4).
-- The FFMI band tables reconcile to one canonical set (§12 open decision 1).
+- The FFMI band tables reconcile to **Version A** (`0–4/5–9/10–15/16–20/21–24`) and the scoring engine uses `ffmi_bands_vA` (§12 decision 1).
 
 ---
 
