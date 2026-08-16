@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machine Learning Architecture &amp; Purpose | Future Farms Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-paper-2: #ececec;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-soft:    #7a8399;
+      --color-rule:    rgba(45,49,66,0.12);
+      --color-accent:  #eb6c36;
+      --color-accent-tint: rgba(235,108,54,0.08);
+      --color-link:    #2e5aa8;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .frame {
+      max-width: 1240px;
+      width: 100%;
+      background: #ffffff;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(45,49,66,0.06);
+      border: 1px solid var(--color-rule);
+    }
+
+    .header-group {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--color-rule);
+      padding-bottom: 1.25rem;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 2.4vw + 0.8rem, 2.3rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--color-muted);
+      margin-top: 0.35rem;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 1.75rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-rule);
+      font-size: 0.8rem;
+      color: var(--color-muted);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-badge {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="header-group">
+      <p class="eyebrow">Machine Learning Deep-Dive | Purpose, Mechanics &amp; MLOps</p>
+      <h1>Machine Learning Subsystem: Purpose, Models &amp; MLOps Lifecycle</h1>
+      <p class="subtitle">Population-scale farm clustering, 12-month trajectory risk forecasting, evidence fraud detection, and interactive simulation</p>
+    </div>
+
+    <svg viewBox="0 0 1140 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ml-deep-title ml-deep-desc">
+      <title id="ml-deep-title">Machine Learning Subsystem Architecture, Purpose and Mechanics</title>
+      <desc id="ml-deep-desc">Comprehensive technical diagram detailing the ML subsystem purpose, K-Means segmentation, Random Forest trajectory risk prediction, evidence anomaly scanner, What-If simulator, and Celery MLflow pipeline.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+
+      <!-- Background -->
+      <rect width="100%" height="100%" fill="#ffffff"/>
+
+      <!-- ================= ZONES ================= -->
+      <!-- Zone 1: Feature Extraction & Ingestion Guardrails -->
+      <rect x="20" y="24" width="232" height="648" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="36" y="28" width="200" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="136" y="38" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.14em">1. FEATURE DATA &amp; GUARDRAILS</text>
+
+      <!-- Zone 2: Machine Learning Models (FOCAL) -->
+      <rect x="276" y="24" width="416" height="648" rx="8" fill="rgba(235,108,54,0.03)" stroke="rgba(235,108,54,0.30)" stroke-width="1"/>
+      <rect x="372" y="28" width="224" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="484" y="38" fill="#eb6c36" font-size="7.5" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.14em">2. ML MODELS &amp; ALGORITHMS</text>
+
+      <!-- Zone 3: Inference Applications -->
+      <rect x="716" y="24" width="204" height="648" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="736" y="28" width="164" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="818" y="38" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.14em">3. APPLICATION OUTPUTS</text>
+
+      <!-- Zone 4: MLOps & Experiment Registry -->
+      <rect x="944" y="24" width="176" height="648" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="964" y="28" width="136" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="1032" y="38" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.14em">4. MLOPS &amp; TRACKING</text>
+
+
+      <!-- ================= CONNECTORS (Drawn Before Nodes) ================= -->
+
+      <!-- C1: Feature Extraction -> K-Means Cluster Model -->
+      <path d="M 236,124 H 296" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="266" y="116" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">X: [N, 8]</text>
+
+      <!-- C2: Feature Extraction -> Random Forest Risk Model -->
+      <path d="M 236,336 H 296" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="266" y="328" fill="#eb6c36" font-size="7.5" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">X: [N, 12]</text>
+
+      <!-- C3: Evidence Store -> Anomaly Detection Model -->
+      <path d="M 236,548 H 296" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="266" y="540" fill="#2e5aa8" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">EXIF/GPS</text>
+
+      <!-- C4: K-Means -> Peer Cohort Benchmarking -->
+      <path d="M 672,124 H 732" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="702" y="116" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Clusters</text>
+
+      <!-- C5: Random Forest -> Trajectory Early Warning -->
+      <path d="M 672,336 H 732" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="702" y="328" fill="#eb6c36" font-size="7.5" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">P(Risk)</text>
+
+      <!-- C6: Anomaly Detector -> Verifier Audit Flagging -->
+      <path d="M 672,548 H 732" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="702" y="540" fill="#2e5aa8" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Flags</text>
+
+      <!-- C7: ML Models -> MLflow Tracking Registry -->
+      <path d="M 900,124 H 960" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 900,336 H 960" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <path d="M 900,548 H 960" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+
+      <!-- ================= NODES ================= -->
+
+      <!-- Node 1.1: 8-Pillar Vectors -->
+      <rect x="36" y="64" width="200" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="48" y="86" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" font-weight="600">8-Pillar Feature Matrix</text>
+      <text x="48" y="104" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">X in [0.0, 1.0]^8 per farm</text>
+      <line x1="48" y1="112" x2="224" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="48" y="130" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">-  Governance &amp; Strategy (P1)</text>
+      <text x="48" y="146" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">-  Soil, Water, Crops, Livestock</text>
+      <text x="48" y="162" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">-  Finance, Tech &amp; Markets</text>
+
+      <!-- Node 1.2: Trajectory Covariates -->
+      <rect x="36" y="276" width="200" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="48" y="298" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" font-weight="600">Trajectory Covariates</text>
+      <text x="48" y="316" fill="#eb6c36" font-size="9" font-family="'Geist Mono', monospace">Multi-Modal Risk Inputs</text>
+      <line x1="48" y1="324" x2="224" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="48" y="342" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">-  Priority Gap Depth (P_gap &lt; 0.25)</text>
+      <text x="48" y="358" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">-  Farm Acreage &amp; Primary Crop</text>
+      <text x="48" y="374" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">-  Historical Score Deltas</text>
+
+      <!-- Node 1.3: Verifier Evidence Metadata -->
+      <rect x="36" y="488" width="200" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="48" y="510" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" font-weight="600">Evidence Raw Metadata</text>
+      <text x="48" y="528" fill="#2e5aa8" font-size="9" font-family="'Geist Mono', monospace">Field Audit Telemetry</text>
+      <line x1="48" y1="536" x2="224" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="48" y="554" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">-  EXIF GPS (lat, lon) coordinates</text>
+      <text x="48" y="570" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">-  Capture timestamp sequence</text>
+      <text x="48" y="586" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">-  Photo binary pixel arrays</text>
+
+
+      <!-- Node 2.1: Model 1 - K-Means Segmentation -->
+      <rect x="296" y="64" width="376" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="310" y="86" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" font-weight="600">Model 1: Farm Segmentation (K-Means)</text>
+      <text x="310" y="104" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace">Unsupervised Clustering | k=3 Clusters</text>
+      <line x1="310" y1="112" x2="656" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="310" y="130" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Algorithm: Euclidean distance minimization across 8 dimensions</text>
+      <text x="310" y="146" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Clusters: 0: Informal Smallholder | 1: Emerging | 2: Diversified Leader</text>
+      <text x="310" y="162" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">Purpose: Tailored extension programs &amp; regional peer comparison</text>
+
+      <!-- Node 2.2: FOCAL - Model 2 - Random Forest Risk Classifier -->
+      <rect x="296" y="276" width="376" height="120" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <rect x="306" y="284" width="48" height="12" rx="2" fill="#eb6c36"/>
+      <text x="330" y="293" fill="#ffffff" font-size="6.5" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">FOCAL</text>
+      <text x="360" y="298" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" font-weight="600">Model 2: Trajectory Risk Forecaster (RandomForest)</text>
+      <text x="310" y="316" fill="#eb6c36" font-size="9" font-family="'Geist Mono', monospace" font-weight="600">Supervised 12-Month Resilience Forecast</text>
+      <line x1="310" y1="324" x2="656" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="310" y="342" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Algorithm: Ensemble decision trees (n_estimators=10..100, max_depth=5)</text>
+      <text x="310" y="358" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Outputs: Class probabilities [P(Low), P(Medium), P(High)]</text>
+      <text x="310" y="374" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" font-weight="600">Purpose: Financial underwriting, default early warning, climate resilience</text>
+
+      <!-- Node 2.3: Model 3 - Evidence Fraud & Anomaly Detector -->
+      <rect x="296" y="488" width="376" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="310" y="510" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" font-weight="600">Model 3: Evidence Anomaly Scanner</text>
+      <text x="310" y="528" fill="#2e5aa8" font-size="9" font-family="'Geist Mono', monospace">Computer Vision &amp; Geo-Spatial Rules</text>
+      <line x1="310" y1="536" x2="656" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="310" y="554" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Algorithm: Difference Hash (dHash) duplicate matching &amp; GPS geofence</text>
+      <text x="310" y="570" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Detection: Reused photos, teleportation anomalies, backward timestamps</text>
+      <text x="310" y="586" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">Purpose: Guarantee integrity of FFF Verified credentials</text>
+
+
+      <!-- Node 3.1: Peer Cohort Analytics -->
+      <rect x="732" y="64" width="172" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="744" y="86" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Peer Cohort Analytics</text>
+      <text x="744" y="104" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Results Screen Visuals</text>
+      <line x1="744" y1="112" x2="892" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="744" y="130" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Western Kenya cohort</text>
+      <text x="744" y="146" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Rift Valley cohort</text>
+      <text x="744" y="162" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">-  Central Highlands cohort</text>
+
+      <!-- Node 3.2: Early Warning & Simulation UI -->
+      <rect x="732" y="276" width="172" height="120" rx="6" fill="#ffffff" stroke="#eb6c36" stroke-width="1.2"/>
+      <text x="744" y="298" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">What-If Simulator</text>
+      <text x="744" y="316" fill="#eb6c36" font-size="8.5" font-family="'Geist Mono', monospace">/ml-demo &amp; /api/ml/simulate</text>
+      <line x1="744" y1="324" x2="892" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="744" y="342" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Live slider tweaking</text>
+      <text x="744" y="358" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Risk gauge recalculation</text>
+      <text x="744" y="374" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace">-  Instant Quick Wins sort</text>
+
+      <!-- Node 3.3: Verifier Accreditation Badging -->
+      <rect x="732" y="488" width="172" height="120" rx="6" fill="#ffffff" stroke="#2e5aa8" stroke-width="1"/>
+      <text x="744" y="510" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Auditor Status Alert</text>
+      <text x="744" y="528" fill="#2e5aa8" font-size="8.5" font-family="'Geist Mono', monospace">Trust &amp; Verification</text>
+      <line x1="744" y1="536" x2="892" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="744" y="554" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Clean: Verified Badge</text>
+      <text x="744" y="570" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace">-  Flagged: Review Queue</text>
+      <text x="744" y="586" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">-  PDF Report Watermark</text>
+
+
+      <!-- Node 4.1: MLflow Experiment Tracking -->
+      <rect x="960" y="64" width="144" height="240" rx="6" fill="#ffffff" stroke="#eb6c36" stroke-width="1.2"/>
+      <text x="972" y="86" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">MLflow Tracking</text>
+      <text x="972" y="104" fill="#eb6c36" font-size="8.5" font-family="'Geist Mono', monospace">fff_farm_ml</text>
+      <line x1="972" y1="112" x2="1092" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="972" y="130" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Hyperparameters</text>
+      <text x="972" y="146" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Silhouette Scores</text>
+      <text x="972" y="162" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  AUC &amp; Log-Loss</text>
+      <text x="972" y="178" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Confusion Matrix</text>
+      <text x="972" y="194" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Model Artifacts</text>
+      <text x="972" y="210" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Version Lineage</text>
+      <text x="972" y="278" fill="#7a8399" font-size="7.5" font-family="'Geist Mono', monospace">Port :5000 Registry</text>
+
+      <!-- Node 4.2: Celery Beat Periodic Cron -->
+      <rect x="960" y="340" width="144" height="268" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="972" y="362" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Celery Beat Cron</text>
+      <text x="972" y="380" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Periodic Scheduler</text>
+      <line x1="972" y1="388" x2="1092" y2="388" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="972" y="406" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Nightly clustering</text>
+      <text x="972" y="422" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Weekly risk re-eval</text>
+      <text x="972" y="438" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Hourly evidence scan</text>
+      <text x="972" y="454" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Batch vs Real-time</text>
+      <text x="972" y="470" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">-  Great Expectations</text>
+      <text x="972" y="584" fill="#7a8399" font-size="7.5" font-family="'Geist Mono', monospace">Distributed Tasks</text>
+
+      <!-- Footer Principles -->
+      <text x="136" y="656" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">DATA INTEGRITY GUARDRAILS</text>
+      <text x="484" y="656" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">ARCHITECTURAL CODE ISOLATION (ZERO LLM IN SCORING)</text>
+      <text x="818" y="656" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">ACTIONABLE INSIGHTS</text>
+      <text x="1032" y="656" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">GOVERNED MLOPS</text>
+
+    </svg>
+
+    <div class="legend-row">
+      <div class="legend-item">
+        <div class="legend-badge" style="background: #eb6c36;"></div>
+        <span><strong>Focal Models:</strong> Trajectory Risk Forecasting &amp; MLflow Registry</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-badge" style="background: #2e5aa8;"></div>
+        <span><strong>Evidence &amp; Verification:</strong> Anomaly Scanner &amp; Trust Guardrails</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-badge" style="background: #ffffff; border: 1px solid #2d3142;"></div>
+        <span><strong>Batch Execution:</strong> Celery Beat Distributed Workers</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-badge" style="background: rgba(235,108,54,0.08); border: 1px dashed #eb6c36;"></div>
+        <span><strong>Code Isolation:</strong> ML runs in background; deterministic scoring remains untouched</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

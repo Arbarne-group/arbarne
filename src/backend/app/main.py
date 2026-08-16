@@ -19,6 +19,7 @@ from pathlib import Path
 from app.api.assessments import router as assessments_router
 from app.api.health import router as health_router
 from app.api.pillars import router as pillars_router
+from app.api.ml import router as ml_router
 from app.core.config import settings
 
 # ─── Logging ──────────────────────────────────────────────────────────
@@ -68,6 +69,18 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(pillars_router)
 app.include_router(assessments_router)
+app.include_router(ml_router)
+
+# ─── Gradio Interactive ML Demo Route ───────────────────────────────
+try:
+    import gradio as gr
+    from app.api.gradio_app import create_gradio_app
+    gradio_demo = create_gradio_app()
+    if gradio_demo:
+        app = gr.mount_gradio_app(app, gradio_demo, path="/ml-demo")
+        logger.info("Gradio interactive ML scenario simulator mounted at /ml-demo")
+except Exception as exc:
+    logger.warning("Could not mount Gradio demo route: %s", exc)
 
 
 # ─── Optional static frontend (pilot-scale) ─────────────────────────

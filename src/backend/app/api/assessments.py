@@ -75,6 +75,11 @@ def save_answers(
         )
 
     for a in answers:
+        # Run Data Quality Guardrail Validation
+        from app.ml.validation import validate_survey_payload
+        valid, errs = validate_survey_payload({a.question_id: a.value})
+        if not valid:
+            raise HTTPException(status_code=422, detail=f"Data validation failed: {'; '.join(errs)}")
         question = db.get(Question, a.question_id)
         if not question:
             raise HTTPException(
@@ -369,6 +374,70 @@ def get_assessment_narrative(
     )
 
 
+@router.get("/{assessment_id}/pdf")
+def get_assessment_pdf(
+    assessment_id: uuid.UUID,
+    db: Session = Depends(get_db),
+):
+    """Generate and download the official PDF Farm Transformation Report."""
+    from fastapi.responses import Response
+    from app.models.assessment import Farm
+    from app.reporting.pdf import generate_transformation_pdf
+
+    assessment = (
+        db.query(Assessment)
+        .options(selectinload(Assessment.recommendations))
+        .filter(Assessment.id == assessment_id)
+        .one_or_none()
+    )
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+
+    farm = db.query(Farm).filter(Farm.id == assessment.farm_id).one_or_none() if assessment.farm_id else None
+
+    # Determine risk label
+    ffmi = assessment.ffmi_score or 0.0
+    if ffmi < 5.0:
+        trajectory_risk = "🔴 High Risk"
+    elif ffmi < 16.0:
+        trajectory_risk = "🟡 Medium Risk"
+    else:
+        trajectory_risk = "🟢 Low Risk"
+
+    recs_data = [
+        {
+            "priority": r.priority,
+            "gap": r.gap,
+            "recommended_action": r.recommended_action,
+            "recommended_learning": r.recommended_learning,
+            "potential_service": r.potential_service,
+        }
+        for r in assessment.recommendations
+    ]
+
+    pdf_bytes = generate_transformation_pdf(
+        assessment_id=str(assessment.id),
+        farm_name=farm.name if farm else "Independent Smallholder",
+        region=farm.region if farm else "Eastern Africa",
+        crop_type=farm.crop_type if farm else "Mixed Farming",
+        farm_size=5.0,
+        ffmi_score=ffmi,
+        tier=assessment.tier or 1,
+        tier_classification=_tier_name(assessment.tier),
+        pillar_scores=assessment.pillar_scores or {},
+        recommendations=recs_data,
+        trajectory_risk=trajectory_risk,
+        assessed_at=assessment.submitted_at or assessment.started_at,
+    )
+
+    filename = f"fff_transformation_report_{str(assessment_id)[:8]}.pdf"
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
+    )
+
+
 def _tier_name(tier: int | None) -> str:
     names = {
         1: "Informal Farm",
@@ -378,4 +447,5 @@ def _tier_name(tier: int | None) -> str:
         5: "Future Ready Farm",
     }
     return names.get(tier or 1, "Informal Farm")
+
 

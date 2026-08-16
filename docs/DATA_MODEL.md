@@ -1,4 +1,4 @@
-# DATA_MODEL.md — Platform Schema
+# DATA_MODEL.md  --  Platform Schema
 
 > **The data shape the platform must support.** Authoritative source for fields is `prd-refined.md` §7.7. This file is the implementation view.
 
@@ -21,9 +21,9 @@
                                                    └──────────────┘
 ```
 
-Three reference tables (pillars, capabilities, questions) — the **framework content** — seeded verbatim from the source. They are read-mostly during the pilot.
+Three reference tables (pillars, capabilities, questions)  --  the **framework content**  --  seeded verbatim from the source. They are read-mostly during the pilot.
 
-Then the **assessment data** — farms, assessments, answers, evidence, recommendations, scores — appended to over time.
+Then the **assessment data**  --  farms, assessments, answers, evidence, recommendations, scores  --  appended to over time.
 
 ---
 
@@ -33,7 +33,7 @@ Then the **assessment data** — farms, assessments, answers, evidence, recommen
 
 | Column | Type | Notes |
 |---|---|---|
-| `id` | int | PK, 1–8 |
+| `id` | int | PK, 1-8 |
 | `name` | text | e.g. "Smart Farming and Digital Transformation" |
 | `principle` | text | The pillar principle (verbatim from FFF source) |
 | `seeks_to_achieve` | text[] | Outcomes the pillar seeks to achieve |
@@ -45,9 +45,9 @@ Then the **assessment data** — farms, assessments, answers, evidence, recommen
 | Column | Type | Notes |
 |---|---|---|
 | `id` | text | PK, e.g. `P1.1` |
-| `pillar_id` | int | FK → pillars.id |
+| `pillar_id` | int | FK  ->  pillars.id |
 | `name` | text | e.g. "Technology Readiness" |
-| `number` | int | 1–5 within the pillar |
+| `number` | int | 1-5 within the pillar |
 | `description` | text | Optional, from source |
 
 ### 2.3 `questions`
@@ -57,9 +57,9 @@ This is the **heart of the model**. Each of the 200 question rows from the sourc
 | Column | Type | Notes |
 |---|---|---|
 | `id` | text | PK, e.g. `P1.3.1` |
-| `pillar_id` | int | FK → pillars.id |
-| `capability_id` | text | FK → capabilities.id |
-| `question_number` | int | 1–5 within the capability |
+| `pillar_id` | int | FK  ->  pillars.id |
+| `capability_id` | text | FK  ->  capabilities.id |
+| `question_number` | int | 1-5 within the capability |
 | `question_text` | text | **Farmer-facing. Verbatim from source.** Immutable at the engineering level. |
 | `ffv_evidence_required` | text | What the verifier collects |
 | `if_no_recommendation` | text | The recommended action when answer is "No" |
@@ -80,7 +80,7 @@ This is the **heart of the model**. Each of the 200 question rows from the sourc
 | `created_at` | timestamptz | |
 | `ffmi_band_low` | numeric | Signed-off band table values |
 | `ffmi_band_high` | numeric | |
-| `tier` | int | 1–5 |
+| `tier` | int | 1-5 |
 | `notes` | text | Why this version exists |
 
 Every assessment row stores the `rule_version_id` that produced its score. This is how we keep historical assessments reproducible.
@@ -94,7 +94,7 @@ Every assessment row stores the `rule_version_id` that produced its score. This 
 | Column | Type | Notes |
 |---|---|---|
 | `id` | uuid | PK |
-| `name` | text | Optional — farmers may remain anonymous |
+| `name` | text | Optional  --  farmers may remain anonymous |
 | `region` | text | For aggregation |
 | `crop_type` | text | Optional |
 | `created_at` | timestamptz | |
@@ -104,15 +104,15 @@ Every assessment row stores the `rule_version_id` that produced its score. This 
 | Column | Type | Notes |
 |---|---|---|
 | `id` | uuid | PK |
-| `farm_id` | uuid | FK → farms.id |
-| `assessor_id` | uuid | FK → users.id (nullable for self-assessment) |
+| `farm_id` | uuid | FK  ->  farms.id |
+| `assessor_id` | uuid | FK  ->  users.id (nullable for self-assessment) |
 | `type` | enum | `self` \| `ffv_verified` |
 | `status` | enum | `draft` \| `submitted` \| `under_review` \| `verified` \| `needs_more_info` |
 | `started_at` | timestamptz | |
 | `submitted_at` | timestamptz | Nullable |
-| `rule_version_id` | text | FK → rule_versions.id — the version that produced this score |
-| `ffmi_score` | numeric | 0–24 |
-| `tier` | int | 1–5 |
+| `rule_version_id` | text | FK  ->  rule_versions.id  --  the version that produced this score |
+| `ffmi_score` | numeric | 0-24 |
+| `tier` | int | 1-5 |
 | `pillar_scores` | jsonb | `{"P1": 0.85, "P2": 0.62, ...}` |
 
 ### 3.3 `answers`
@@ -120,8 +120,8 @@ Every assessment row stores the `rule_version_id` that produced its score. This 
 | Column | Type | Notes |
 |---|---|---|
 | `id` | uuid | PK |
-| `assessment_id` | uuid | FK → assessments.id |
-| `question_id` | text | FK → questions.id |
+| `assessment_id` | uuid | FK  ->  assessments.id |
+| `question_id` | text | FK  ->  questions.id |
 | `value` | enum | `yes` \| `no` |
 | `answered_at` | timestamptz | |
 
@@ -130,8 +130,8 @@ Every assessment row stores the `rule_version_id` that produced its score. This 
 | Column | Type | Notes |
 |---|---|---|
 | `id` | uuid | PK |
-| `assessment_id` | uuid | FK → assessments.id |
-| `question_id` | text | FK → questions.id |
+| `assessment_id` | uuid | FK  ->  assessments.id |
+| `question_id` | text | FK  ->  questions.id |
 | `evidence_class` | enum | `A` \| `B` \| `C` \| `D` |
 | `type` | enum | `photo` \| `document` \| `gps` \| `observation` \| `interview` |
 | `file_url` | text | For photo / document |
@@ -139,7 +139,7 @@ Every assessment row stores the `rule_version_id` that produced its score. This 
 | `gps_lng` | numeric | For GPS |
 | `captured_at` | timestamptz | For GPS / photo |
 | `verifier_notes` | text | |
-| `verified_by` | uuid | FK → users.id |
+| `verified_by` | uuid | FK  ->  users.id |
 | `verified_at` | timestamptz | |
 
 ### 3.5 `recommendations`
@@ -147,10 +147,10 @@ Every assessment row stores the `rule_version_id` that produced its score. This 
 | Column | Type | Notes |
 |---|---|---|
 | `id` | uuid | PK |
-| `assessment_id` | uuid | FK → assessments.id |
-| `question_id` | text | FK → questions.id (nullable — could be rolled up to capability) |
-| `capability_id` | text | FK → capabilities.id |
-| `pillar_id` | int | FK → pillars.id |
+| `assessment_id` | uuid | FK  ->  assessments.id |
+| `question_id` | text | FK  ->  questions.id (nullable  --  could be rolled up to capability) |
+| `capability_id` | text | FK  ->  capabilities.id |
+| `pillar_id` | int | FK  ->  pillars.id |
 | `gap` | text | The weakness surfaced |
 | `capability_status` | enum | `non_existent` \| `emerging` \| `basic` \| `developing` \| `established` \| `advanced` |
 | `recommended_action` | text | |
@@ -204,7 +204,7 @@ Drives cost guardrails and the post-pilot LLM-economics review.
 | `id` | uuid | PK |
 | `source` | text | e.g. `faab_module_1`, `recommendation_P1.3.1` |
 | `text` | text | The chunk's text |
-| `embedding` | vector(1536) | pgvector — dimension depends on the embedding model |
+| `embedding` | vector(1536) | pgvector  --  dimension depends on the embedding model |
 
 RAG over FAAB content and the recommendation library.
 
@@ -224,12 +224,12 @@ RAG over FAAB content and the recommendation library.
 
 ## 6. Indexes and performance
 
-- `questions (pillar_id, capability_id, question_number)` — primary lookup
-- `answers (assessment_id, question_id)` — primary lookup
-- `evidence (assessment_id, question_id)` — primary lookup
-- `recommendations (assessment_id, priority)` — for the report
-- `farms (region)` — for FFF Insights aggregation
-- `assessments (farm_id, submitted_at)` — for progress tracking
+- `questions (pillar_id, capability_id, question_number)`  --  primary lookup
+- `answers (assessment_id, question_id)`  --  primary lookup
+- `evidence (assessment_id, question_id)`  --  primary lookup
+- `recommendations (assessment_id, priority)`  --  for the report
+- `farms (region)`  --  for FFF Insights aggregation
+- `assessments (farm_id, submitted_at)`  --  for progress tracking
 
 Plus the standard pgvector index on `embedding_documents` (HNSW or IVFFlat).
 

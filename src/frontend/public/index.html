@@ -11,8 +11,14 @@
 </head>
 <body>
     <header class="app-header">
-        <h1>Future Farms Framework</h1>
-        <span id="offline-indicator" class="badge badge-offline" hidden>Offline</span>
+        <div class="header-brand">
+            <h1>Future Farms Framework</h1>
+            <span id="offline-indicator" class="badge badge-offline" hidden>Offline</span>
+        </div>
+        <nav class="app-nav">
+            <button id="nav-btn-assessment" class="nav-tab nav-tab-active" type="button">📝 Assessment</button>
+            <button id="nav-btn-simulator" class="nav-tab" type="button">🔮 Scenario Simulator</button>
+        </nav>
     </header>
 
     <main id="app">
@@ -21,18 +27,32 @@
             <h2>Assess your farm's readiness for the future</h2>
             <p class="lead">
                 Answer 200 Yes/No questions in about 10–15 minutes. Get a score, a maturity
-                tier, and a personalised transformation plan.
+                tier, an interactive visual analytics dashboard, and a personalised transformation plan.
             </p>
 
             <div class="card">
                 <label for="farm-name">Farm name <small>(optional)</small></label>
-                <input type="text" id="farm-name" placeholder="e.g. Mzuzu Maize Farm">
+                <input type="text" id="farm-name" placeholder="e.g. Kakamega Demonstration Farm">
 
-                <label for="farm-region">Region <small>(optional)</small></label>
-                <input type="text" id="farm-region" placeholder="e.g. Northern Region, Malawi">
+                <div class="form-grid">
+                    <div>
+                        <label for="farm-region">Region</label>
+                        <select id="farm-region">
+                            <option value="Western Kenya">Western Kenya</option>
+                            <option value="Rift Valley">Rift Valley</option>
+                            <option value="Central Kenya">Central Kenya</option>
+                            <option value="Eastern Kenya">Eastern Kenya</option>
+                            <option value="Coast">Coast</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="farm-size">Farm size (Acres)</label>
+                        <input type="number" id="farm-size" placeholder="5.0" value="5.0" step="0.5">
+                    </div>
+                </div>
 
                 <label for="farm-crop">Primary crop / enterprise <small>(optional)</small></label>
-                <input type="text" id="farm-crop" placeholder="e.g. Maize, Dairy, Coffee">
+                <input type="text" id="farm-crop" placeholder="e.g. Maize, Dairy, Horticulture">
 
                 <button id="btn-start" class="btn btn-primary">Start assessment</button>
             </div>
@@ -40,6 +60,76 @@
             <p class="muted">
                 Works offline — your answers are saved locally and sync when you're back online.
             </p>
+        </section>
+
+        <!-- ─── Standalone Simulator screen ────────────────────────── -->
+        <section id="screen-simulator" class="screen" hidden>
+            <h2>🔮 Farm Scenario & Risk Simulator</h2>
+            <p class="lead">
+                Simulate capability score improvements across the 8 pillars to evaluate real-time <strong>FFMI / 24</strong> maturity tiers, trajectory risk, visual radar charts, and prioritized Quick Wins.
+            </p>
+
+            <div class="card">
+                <h3>Farm Profile</h3>
+                <div class="form-grid">
+                    <div>
+                        <label for="sim-farm-name">Farm Name</label>
+                        <input type="text" id="sim-farm-name" value="Kakamega Pilot Farm A">
+                    </div>
+                    <div>
+                        <label for="sim-region">Region</label>
+                        <select id="sim-region">
+                            <option value="Western Kenya">Western Kenya</option>
+                            <option value="Rift Valley">Rift Valley</option>
+                            <option value="Central Kenya">Central Kenya</option>
+                            <option value="Eastern Kenya">Eastern Kenya</option>
+                            <option value="Coast">Coast</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>8 Pillar Capability Sliders</h3>
+                <p class="muted small">Drag sliders (0% = Non-Existent to 100% = Advanced) to simulate farm maturity.</p>
+
+                <div class="slider-group" id="sim-sliders-container">
+                    <!-- Dynamic pillar sliders will be generated here -->
+                </div>
+            </div>
+
+            <!-- Simulator Visual Radar Chart -->
+            <div class="card chart-card">
+                <h3>🕸️ 8-Pillar Capability Radar (Live Simulation)</h3>
+                <div id="sim-radar-chart" class="radar-container"></div>
+            </div>
+
+            <div class="card hero-card">
+                <p class="muted">Simulated Maturity Tier</p>
+                <h3 id="sim-result-tier">—</h3>
+                <p class="muted">Simulated FFMI Score</p>
+                <p id="sim-result-ffmi" class="big-number">—</p>
+                <div id="sim-risk-badge" class="risk-badge">🟡 Medium Risk</div>
+            </div>
+
+            <div class="card">
+                <h3>Where You Stand</h3>
+                <ul class="plain-list">
+                    <li><strong>Strongest Pillar:</strong> <span id="sim-result-strongest">—</span></li>
+                    <li><strong>Priority Gap:</strong> <span id="sim-result-priority-gap">—</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Pillar Breakdown</h3>
+                <ul id="sim-result-pillars" class="plain-list"></ul>
+            </div>
+
+            <div class="card">
+                <h3>Prioritized Transformation Plan</h3>
+                <p class="muted small">Quick Wins first, then Medium Term, then Strategic.</p>
+                <ol id="sim-result-recommendations" class="rec-list"></ol>
+            </div>
         </section>
 
         <!-- ─── Question screen ──────────────────────────────────── -->
@@ -72,8 +162,16 @@
             <div class="card hero-card">
                 <p class="muted">Overall maturity</p>
                 <h3 id="result-tier">—</h3>
-                <p class="muted">FFMI score</p>
+                <p class="muted">FFMI score (out of 24)</p>
                 <p id="result-ffmi" class="big-number">—</p>
+                <div id="result-risk-badge" class="risk-badge">🟡 Medium Risk</div>
+            </div>
+
+            <!-- Visual Analytics Dashboard (Radar Chart + Progress Bars) -->
+            <div class="card chart-card">
+                <h3>🕸️ 8-Pillar Capability Radar</h3>
+                <p class="muted small">Visual distribution of strengths and transformation gaps across all 8 dimensions.</p>
+                <div id="result-radar-chart" class="radar-container"></div>
             </div>
 
             <div class="card">
@@ -84,9 +182,27 @@
                 </ul>
             </div>
 
+            <!-- Horizontal Progress Bars with Tier Targets -->
             <div class="card">
-                <h3>Pillar scores</h3>
-                <ul id="result-pillars" class="plain-list"></ul>
+                <h3>📊 Pillar Capability Performance</h3>
+                <p class="muted small">Current score vs. Next Tier Target (60% minimum threshold).</p>
+                <div id="result-pillar-bars" class="pillar-bars-list"></div>
+            </div>
+
+            <!-- Regional Peer Benchmark -->
+            <div class="card benchmark-card">
+                <h3>👥 Regional Peer Benchmark</h3>
+                <p class="muted small">How your farm compares against peer smallholders in <span id="benchmark-region-name">your region</span>.</p>
+                <div class="benchmark-bar-wrapper">
+                    <div class="benchmark-stat">
+                        <span>Your Farm: <strong id="bench-your-score">—</strong> / 24</span>
+                        <span>Regional Average: <strong id="bench-avg-score">9.80</strong> / 24</span>
+                    </div>
+                    <div class="benchmark-track">
+                        <div id="bench-fill-your" class="bench-fill bench-your" style="width: 40%;"></div>
+                        <div class="bench-marker-avg" style="left: 41%;"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="card">
@@ -95,7 +211,23 @@
                 <ol id="result-recommendations" class="rec-list"></ol>
             </div>
 
-            <div class="card">
+            <!-- Post-Assessment What-If Simulation Card -->
+            <div class="card what-if-card">
+                <h3>🔮 "What-If" Transformation Planner</h3>
+                <p class="lead small">
+                    Adjust the sliders below to simulate how improving your capability gaps unlocks the next maturity tier and lowers your risk.
+                </p>
+                <div id="post-sim-sliders-container" class="slider-group"></div>
+                <div class="what-if-outcome card" style="margin-top: 1rem; background: #fdfbf7;">
+                    <p><strong>Simulated Tier:</strong> <span id="post-sim-tier">—</span></p>
+                    <p><strong>Simulated FFMI:</strong> <span id="post-sim-ffmi">—</span> / 24.00</p>
+                    <p><strong>Trajectory Risk:</strong> <span id="post-sim-risk">—</span></p>
+                </div>
+            </div>
+
+            <!-- Download PDF & Actions -->
+            <div class="card action-card">
+                <button id="btn-download-pdf" class="btn btn-primary" style="margin-bottom: 0.75rem;">📥 Download Official PDF Transformation Report</button>
                 <button id="btn-restart" class="btn btn-ghost">Start a new assessment</button>
             </div>
         </section>

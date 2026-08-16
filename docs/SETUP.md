@@ -1,4 +1,4 @@
-# SETUP.md — Local Development
+# SETUP.md  --  Local Development
 
 > **Get the platform running on a fresh machine in under 15 minutes.** Works on Windows (PowerShell 5.1), macOS, and Linux.
 
@@ -15,7 +15,7 @@
 
 If you don't have Docker installed: <https://docs.docker.com/get-docker/>.
 
-You do **not** need Python, Postgres, or Redis installed locally — they all run in containers.
+You do **not** need Python, Postgres, or Redis installed locally  --  they all run in containers.
 
 You **do** need an LLM API key for the LLM layer. Ask Victor for one or set up your own at <https://console.anthropic.com>.
 
@@ -120,13 +120,13 @@ You should see the FFF self-assessment start screen.
 
 ## 7. Offline behavior
 
-The frontend is a service-worker–backed PWA. To smoke-test offline:
+The frontend is a service-worker-backed PWA. To smoke-test offline:
 
 1. Open `http://localhost:8080`
 2. Start a self-assessment
-3. In Chrome DevTools → Application → Service Workers, tick "Offline"
-4. Continue answering — answers persist locally
-5. Untick "Offline" — answers sync to the backend
+3. In Chrome DevTools  ->  Application  ->  Service Workers, tick "Offline"
+4. Continue answering  --  answers persist locally
+5. Untick "Offline"  --  answers sync to the backend
 
 ---
 
@@ -251,7 +251,7 @@ The frontend directory is created in Week 2. The worker entry is created in Week
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `docker compose up` says port 5432 already in use | Local Postgres running | Stop local Postgres, or change `POSTGRES_PORT` in `.env` |
-| Backend logs `connection refused` to postgres | Postgres not yet ready | Wait 5–10 seconds; compose has a healthcheck but cold starts can lag |
+| Backend logs `connection refused` to postgres | Postgres not yet ready | Wait 5-10 seconds; compose has a healthcheck but cold starts can lag |
 | `alembic upgrade head` fails | Migrations missing | Run `docker compose exec backend alembic revision --autogenerate` after a model change; commit the generated file |
 | Frontend loads but `/api/pillars` 404s | Backend not running, or wrong port | Check `docker compose ps` and `docker compose logs backend` |
 | LLM call fails | Missing or invalid `ANTHROPIC_API_KEY` | Set in `.env`, `docker compose restart backend` |
@@ -274,8 +274,8 @@ Before opening a PR:
 
 ## 13. Where to get help
 
-- Slack `#future-farms-framework` — most questions
-- `docs/DECISIONS.md` — what's been decided and why
-- `docs/GLOSSARY.md` — terminology
-- `docs/DATA_MODEL.md` — schema
-- `prd-refined.md` — what we are building and why
+- Slack `#future-farms-framework`  --  most questions
+- `docs/DECISIONS.md`  --  what's been decided and why
+- `docs/GLOSSARY.md`  --  terminology
+- `docs/DATA_MODEL.md`  --  schema
+- `prd-refined.md`  --  what we are building and why
