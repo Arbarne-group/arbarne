@@ -38,7 +38,7 @@ $$\text{Assess} \longrightarrow \text{Diagnose} \longrightarrow \text{Prioritise
 | **Containerization** | Docker & Docker Compose (`deploy/docker-compose.yml`) |
 | **Task Queue & ML** | Celery + Redis (scikit-learn, XGBoost/LightGBM, pandas) |
 | **LLM Integration** | Hosted Anthropic Claude API (`claude-sonnet-4-5`) |
-
+|  Machine Learning -Ml flow
 ---
 
 ## 💻 Quickstart & Local Setup
