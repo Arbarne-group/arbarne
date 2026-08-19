@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ML Data Processing &amp; Feature Pipeline | Future Farms Framework</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-paper-2: #ececec;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-soft:    #7a8399;
+      --color-rule:    rgba(45,49,66,0.12);
+      --color-accent:  #eb6c36;
+      --color-accent-tint: rgba(235,108,54,0.08);
+      --color-link:    #2e5aa8;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .frame {
+      max-width: 1280px;
+      width: 100%;
+      background: #ffffff;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(45,49,66,0.06);
+      border: 1px solid var(--color-rule);
+    }
+
+    .header-group {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--color-rule);
+      padding-bottom: 1.25rem;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 2.4vw + 0.8rem, 2.3rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--color-muted);
+      margin-top: 0.35rem;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 1.75rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-rule);
+      font-size: 0.8rem;
+      color: var(--color-muted);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-badge {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="header-group">
+      <p class="eyebrow">MLOps &amp; Data Pipeline | Preprocessing &amp; Feature Engineering</p>
+      <h1>ML Data Preprocessing, Cleaning &amp; Feature Pipeline</h1>
+      <p class="subtitle">End-to-end data transformation: ingestion guardrails, sanitization, categorical encoding, feature scaling, and quality validation</p>
+    </div>
+
+    <svg viewBox="0 0 1204 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="data-pipe-title data-pipe-desc">
+      <title id="data-pipe-title">ML Data Preprocessing, Cleaning and Feature Pipeline</title>
+      <desc id="data-pipe-desc">Comprehensive data flow diagram detailing raw data ingestion, Great Expectations validation, cleaning and outlier sanitization, feature engineering, categorical encoding, normalization, and model ingestion.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+
+      <!-- Background -->
+      <rect width="100%" height="100%" fill="#ffffff"/>
+
+      <!-- ================= 6 STAGE ZONES ================= -->
+      <!-- Stage 1: Ingestion -->
+      <rect x="16" y="24" width="180" height="648" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="28" y="28" width="156" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="106" y="38" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.12em">1. RAW DATA SOURCES</text>
+
+      <!-- Stage 2: Validation Guardrails -->
+      <rect x="212" y="24" width="180" height="648" rx="8" fill="rgba(235,108,54,0.03)" stroke="rgba(235,108,54,0.30)" stroke-width="1"/>
+      <rect x="224" y="28" width="156" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="302" y="38" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.12em">2. QUALITY GUARDRAILS</text>
+
+      <!-- Stage 3: Cleaning & Sanitization -->
+      <rect x="408" y="24" width="180" height="648" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="420" y="28" width="156" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="498" y="38" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.12em">3. SANITIZATION</text>
+
+      <!-- Stage 4: Feature Engineering (FOCAL) -->
+      <rect x="604" y="24" width="188" height="648" rx="8" fill="rgba(235,108,54,0.04)" stroke="rgba(235,108,54,0.35)" stroke-width="1.2"/>
+      <rect x="616" y="28" width="164" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="698" y="38" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.12em">4. FEATURE ENGINEERING</text>
+
+      <!-- Stage 5: Encoding & Scaling -->
+      <rect x="808" y="24" width="180" height="648" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="820" y="28" width="156" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="898" y="38" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.12em">5. ENCODING &amp; SCALING</text>
+
+      <!-- Stage 6: Model Input & Registry -->
+      <rect x="1004" y="24" width="184" height="648" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <rect x="1016" y="28" width="160" height="14" rx="2" fill="#f5f5f5"/>
+      <text x="1096" y="38" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle" letter-spacing="0.12em">6. MODEL INGESTION</text>
+
+
+      <!-- ================= CONNECTORS (Drawn Before Nodes) ================= -->
+
+      <!-- C1: Survey Data -> Ingestion Validation -->
+      <path d="M 180,124 H 224" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="202" y="116" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Payload</text>
+
+      <!-- C2: Farm Metadata -> Ingestion Validation -->
+      <path d="M 180,336 H 224" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="202" y="328" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Metadata</text>
+
+      <!-- C3: Evidence EXIF -> Ingestion Validation -->
+      <path d="M 180,548 H 224" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="202" y="540" fill="#2e5aa8" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Telemetry</text>
+
+      <!-- C4: Ingestion Validation -> Cleaning & Deduplication -->
+      <path d="M 380,124 H 420" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="400" y="116" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Clean Pass</text>
+
+      <path d="M 380,336 H 420" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="400" y="328" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Sanitized</text>
+
+      <path d="M 380,548 H 420" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="400" y="540" fill="#2e5aa8" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Geofenced</text>
+
+      <!-- C5: Sanitization -> Feature Engineering (FOCAL) -->
+      <path d="M 576,124 H 616" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="596" y="116" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">Vectors</text>
+
+      <path d="M 576,336 H 616" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="596" y="328" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">Features</text>
+
+      <path d="M 576,548 H 616" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="596" y="540" fill="#2e5aa8" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">dHash</text>
+
+      <!-- C6: Feature Engineering -> Encoding & Scaling -->
+      <path d="M 780,124 H 820" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="800" y="116" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Scale</text>
+
+      <path d="M 780,336 H 820" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="800" y="328" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">Encode</text>
+
+      <path d="M 780,548 H 820" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="800" y="540" fill="#2e5aa8" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Balance</text>
+
+      <!-- C7: Encoding & Scaling -> Model Ingestion -->
+      <path d="M 976,124 H 1016" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="996" y="116" fill="#4f5d75" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">X: [N, 8]</text>
+
+      <path d="M 976,336 H 1016" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <text x="996" y="328" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">X: [N, 14]</text>
+
+      <path d="M 976,548 H 1016" fill="none" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="996" y="540" fill="#2e5aa8" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">Images</text>
+
+
+      <!-- ================= NODES ================= -->
+
+      <!-- Stage 1 Nodes: Raw Data Sources -->
+      <rect x="28" y="64" width="152" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="40" y="86" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">200 Survey Qs</text>
+      <text x="40" y="104" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Lite / Verified Inputs</text>
+      <line x1="40" y1="112" x2="168" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="40" y="130" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Binary Yes/No responses</text>
+      <text x="40" y="146" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- 40 Capabilities map</text>
+      <text x="40" y="162" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">- Unprocessed raw JSON</text>
+
+      <rect x="28" y="276" width="152" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="40" y="298" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Farm Metadata</text>
+      <text x="40" y="316" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Demographic Profile</text>
+      <line x1="40" y1="324" x2="168" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="40" y="342" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Acreage (Continuous)</text>
+      <text x="40" y="358" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Crop Type (Categorical)</text>
+      <text x="40" y="374" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">- Region (Categorical)</text>
+
+      <rect x="28" y="488" width="152" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="40" y="510" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Audit Telemetry</text>
+      <text x="40" y="528" fill="#2e5aa8" font-size="8.5" font-family="'Geist Mono', monospace">Field Proof Data</text>
+      <line x1="40" y1="536" x2="168" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="40" y="554" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- EXIF GPS (lat, lon)</text>
+      <text x="40" y="570" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Timestamp sequence</text>
+      <text x="40" y="586" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">- JPG/PNG image buffers</text>
+
+
+      <!-- Stage 2 Nodes: Quality Guardrails -->
+      <rect x="224" y="64" width="156" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="236" y="86" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Schema Validation</text>
+      <text x="236" y="104" fill="#eb6c36" font-size="8.5" font-family="'Geist Mono', monospace">Great Expectations</text>
+      <line x1="236" y1="112" x2="368" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="236" y="130" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Question ID integrity</text>
+      <text x="236" y="146" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Values in {0, 1}</text>
+      <text x="236" y="162" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace">- Reject truncated sets</text>
+
+      <rect x="224" y="276" width="156" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="236" y="298" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Type &amp; Range Checks</text>
+      <text x="236" y="316" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Domain Constraints</text>
+      <line x1="236" y1="324" x2="368" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="236" y="342" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Acreage > 0.0 acres</text>
+      <text x="236" y="358" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Valid regional taxonomy</text>
+      <text x="236" y="374" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">- Non-null primary crop</text>
+
+      <rect x="224" y="488" width="156" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="236" y="510" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Geo Bounding Guard</text>
+      <text x="236" y="528" fill="#2e5aa8" font-size="8.5" font-family="'Geist Mono', monospace">Spatial Sanity Filter</text>
+      <line x1="236" y1="536" x2="368" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="236" y="554" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Lat in [-4.7, 5.5] (EA)</text>
+      <text x="236" y="570" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Lon in [29.0, 42.0]</text>
+      <text x="236" y="586" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace">- Chronological monotonicity</text>
+
+
+      <!-- Stage 3 Nodes: Sanitization & Cleaning -->
+      <rect x="420" y="64" width="156" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="432" y="86" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Answer Imputation</text>
+      <text x="432" y="104" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Deterministic Handling</text>
+      <line x1="432" y1="112" x2="564" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="432" y="130" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Missing answers -> 0 (No)</text>
+      <text x="432" y="146" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Boolean normalization</text>
+      <text x="432" y="162" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">- Zero silent hallucinations</text>
+
+      <rect x="420" y="276" width="156" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="432" y="298" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Outlier Clipping</text>
+      <text x="432" y="316" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Robust Statistics</text>
+      <line x1="432" y1="324" x2="564" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="432" y="342" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- 99th percentile winsorize</text>
+      <text x="432" y="358" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Log1p acreage transform</text>
+      <text x="432" y="374" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">- Unknown crop category map</text>
+
+      <rect x="420" y="488" width="156" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="432" y="510" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Image Deduplication</text>
+      <text x="432" y="528" fill="#2e5aa8" font-size="8.5" font-family="'Geist Mono', monospace">Perceptual Hashing</text>
+      <line x1="432" y1="536" x2="564" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="432" y="554" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- dHash 64-bit fingerprint</text>
+      <text x="432" y="570" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Hamming distance &lt; 5</text>
+      <text x="432" y="586" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace">- Flag copied evidence</text>
+
+
+      <!-- Stage 4 Nodes: Feature Engineering (FOCAL) -->
+      <rect x="616" y="64" width="164" height="120" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="628" y="86" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">8 Pillar Fractions</text>
+      <text x="628" y="104" fill="#eb6c36" font-size="8.5" font-family="'Geist Mono', monospace">P1..P8 in [0.0, 1.0]</text>
+      <line x1="628" y1="112" x2="768" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="628" y="130" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Governance &amp; Soil scores</text>
+      <text x="628" y="146" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Water, Crops, Livestock</text>
+      <text x="628" y="162" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace">- Finance, Tech, Markets</text>
+
+      <rect x="616" y="276" width="164" height="120" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="628" y="298" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Risk Feature Vectors</text>
+      <text x="628" y="316" fill="#eb6c36" font-size="8.5" font-family="'Geist Mono', monospace">Engineered Predictors</text>
+      <line x1="628" y1="324" x2="768" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="628" y="342" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- P_gap depth = min(P_i)</text>
+      <text x="628" y="358" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Imbalance = std(P_i)</text>
+      <text x="628" y="374" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Delta FFMI (Momentum)</text>
+
+      <rect x="616" y="488" width="164" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="628" y="510" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Spatial Telemetry</text>
+      <text x="628" y="528" fill="#2e5aa8" font-size="8.5" font-family="'Geist Mono', monospace">Geo-Spatial Features</text>
+      <line x1="628" y1="536" x2="768" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="628" y="554" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Distance to farm centroid</text>
+      <text x="628" y="570" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Photo capture time delta</text>
+      <text x="628" y="586" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace">- Solar altitude angle check</text>
+
+
+      <!-- Stage 5 Nodes: Encoding & Scaling -->
+      <rect x="820" y="64" width="156" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="832" y="86" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">MinMax Scaling</text>
+      <text x="832" y="104" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Distance Preservation</text>
+      <line x1="832" y1="112" x2="964" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="832" y="130" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Scale X to [0.0, 1.0]</text>
+      <text x="832" y="146" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Preserves Euclidean norm</text>
+      <text x="832" y="162" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">- Essential for K-Means</text>
+
+      <rect x="820" y="276" width="156" height="120" rx="6" fill="#ffffff" stroke="#eb6c36" stroke-width="1.2"/>
+      <text x="832" y="298" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">One-Hot Encoding</text>
+      <text x="832" y="316" fill="#eb6c36" font-size="8.5" font-family="'Geist Mono', monospace">Categorical Dummies</text>
+      <line x1="832" y1="324" x2="964" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="832" y="342" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Region -> 4 binary cols</text>
+      <text x="832" y="358" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Crop -> 6 binary cols</text>
+      <text x="832" y="374" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace">- SMOTE class balancing</text>
+
+      <rect x="820" y="488" width="156" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="832" y="510" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Anomaly Vectorizer</text>
+      <text x="832" y="528" fill="#2e5aa8" font-size="8.5" font-family="'Geist Mono', monospace">StandardScaler Norm</text>
+      <line x1="832" y1="536" x2="964" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="832" y="554" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Z-score geo-dispersion</text>
+      <text x="832" y="570" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Time acceleration index</text>
+      <text x="832" y="586" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace">- Feature matrix X_anomaly</text>
+
+
+      <!-- Stage 6 Nodes: Model Ingestion -->
+      <rect x="1016" y="64" width="160" height="120" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+      <text x="1028" y="86" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">K-Means Ingestion</text>
+      <text x="1028" y="104" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace">Cluster Segmentation</text>
+      <line x1="1028" y1="112" x2="1164" y2="112" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="1028" y="130" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Input: X in [N, 8]</text>
+      <text x="1028" y="146" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- k=3 cluster assignments</text>
+      <text x="1028" y="162" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace">- Regional peer baselines</text>
+
+      <rect x="1016" y="276" width="160" height="120" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+      <text x="1028" y="298" fill="#eb6c36" font-size="11" font-family="'Geist', sans-serif" font-weight="600">RandomForest Ingestion</text>
+      <text x="1028" y="316" fill="#2d3142" font-size="8.5" font-family="'Geist Mono', monospace">Risk Classification</text>
+      <line x1="1028" y1="324" x2="1164" y2="324" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="1028" y="342" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Input: X in [N, 14]</text>
+      <text x="1028" y="358" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace">- Multi-class probabilities</text>
+      <text x="1028" y="374" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- 12-Month default forecast</text>
+
+      <rect x="1016" y="488" width="160" height="120" rx="6" fill="#ffffff" stroke="#2e5aa8" stroke-width="1.2"/>
+      <text x="1028" y="510" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" font-weight="600">Evidence Audit Ingest</text>
+      <text x="1028" y="528" fill="#2e5aa8" font-size="8.5" font-family="'Geist Mono', monospace">Anomaly Detection</text>
+      <line x1="1028" y1="536" x2="1164" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+      <text x="1028" y="554" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Input: image &amp; GPS vectors</text>
+      <text x="1028" y="570" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace">- Duplicate &amp; fraud flags</text>
+      <text x="1028" y="586" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace">- Verified badge issuance</text>
+
+      <!-- Stage Footer Summaries -->
+      <text x="106" y="656" fill="#7a8399" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">HETEROGENEOUS INPUTS</text>
+      <text x="302" y="656" fill="#eb6c36" font-size="7.5" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">GREAT EXPECTATIONS SUITES</text>
+      <text x="498" y="656" fill="#7a8399" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">ROBUST IMPUTATION &amp; CLIP</text>
+      <text x="698" y="656" fill="#eb6c36" font-size="7.5" font-family="'Geist Mono', monospace" font-weight="600" text-anchor="middle">PILLARS &amp; GAP METRICS</text>
+      <text x="898" y="656" fill="#7a8399" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">ONE-HOT &amp; MINMAX SCALING</text>
+      <text x="1096" y="656" fill="#2e5aa8" font-size="7.5" font-family="'Geist Mono', monospace" text-anchor="middle">TRAINING &amp; INFERENCE READY</text>
+
+    </svg>
+
+    <div class="legend-row">
+      <div class="legend-item">
+        <div class="legend-badge" style="background: #eb6c36;"></div>
+        <span><strong>Focal Core:</strong> Feature Engineering &amp; Supervised Risk Predictor Vectors</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-badge" style="background: #2e5aa8;"></div>
+        <span><strong>Evidence &amp; Telemetry:</strong> Perceptual Hashing &amp; GPS Validation</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-badge" style="background: #ffffff; border: 1px solid #2d3142;"></div>
+        <span><strong>Data Transformations:</strong> Imputation, Encoding &amp; MinMax Scaling</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-badge" style="background: rgba(235,108,54,0.08); border: 1px dashed #eb6c36;"></div>
+        <span><strong>Quality Gate:</strong> Great Expectations Pre-Processing Rules</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

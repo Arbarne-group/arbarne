@@ -24,6 +24,7 @@
         start: $("screen-start"),
         question: $("screen-question"),
         result: $("screen-result"),
+        simulator: $("screen-simulator"),
         loading: $("screen-loading"),
     };
     const showScreen = (name) => {
@@ -418,6 +419,16 @@
             ul.appendChild(li);
         });
 
+        // Risk badge calculation
+        const lowestScore = priorityGapId ? (scores[priorityGapId] || 0) : 0;
+        const ffmiNum = typeof data.ffmi_score === "number" ? data.ffmi_score : 0;
+        renderRiskBadge("result-risk-badge", ffmiNum, lowestScore);
+
+        // Visual Dashboard Charts: Radar & Pillar Progress Bars
+        renderRadarChart("result-radar-chart", scores);
+        renderPillarBars("result-pillar-bars", scores);
+        renderPeerBenchmark($("farm-region")?.value || "Western Kenya", ffmiNum);
+
         const recs = $("result-recommendations");
         recs.innerHTML = "";
         const recList = data.recommendations || [];
@@ -432,6 +443,314 @@
                 <p>${r.recommended_action || ""}</p>
                 <p class="muted small">Learning: ${r.recommended_learning || "FAAB Module"}</p>
                 <p class="muted small">Service: ${r.potential_service || "Farm Advisory"}</p>
+            `;
+            recs.appendChild(li);
+        });
+
+        // Initialize Post-Assessment What-If Planner
+        initPostAssessmentWhatIfPlanner(data);
+    }
+
+    function renderRiskBadge(badgeId, ffmi, lowestScore) {
+        const badge = $(badgeId);
+        if (!badge) return;
+        badge.className = "risk-badge";
+        if (ffmi < 5.0 || lowestScore < 0.25) {
+            badge.textContent = "🔴 High Risk (Urgent gap intervention required)";
+            badge.classList.add("risk-high");
+        } else if (ffmi < 16.0 || lowestScore < 0.50) {
+            badge.textContent = "🟡 Medium Risk (Developing capabilities; vulnerability to shocks)";
+            badge.classList.add("risk-medium");
+        } else {
+            badge.textContent = "🟢 Low Risk (High resilience across core pillars)";
+            badge.classList.add("risk-low");
+        }
+    }
+
+    // ─── Visual Charts (Radar & Progress Bars) ────────────────────────
+    function renderRadarChart(containerId, scoresMap) {
+        const container = $(containerId);
+        if (!container) return;
+
+        const pillars = state.pillars.length ? state.pillars : DEFAULT_PILLARS;
+        const total = pillars.length || 8;
+        const cx = 175;
+        const cy = 175;
+        const R = 110;
+
+        let gridPolygons = "";
+        [0.2, 0.4, 0.6, 0.8, 1.0].forEach((level) => {
+            const pts = [];
+            for (let i = 0; i < total; i++) {
+                const angle = (Math.PI * 2 * i) / total - Math.PI / 2;
+                const x = cx + R * level * Math.cos(angle);
+                const y = cy + R * level * Math.sin(angle);
+                pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+            }
+            gridPolygons += `<polygon points="${pts.join(" ")}" fill="none" stroke="#e5e7eb" stroke-width="1"/>`;
+        });
+
+        let axisLines = "";
+        let axisLabels = "";
+        const dataPoints = [];
+
+        pillars.forEach((p, i) => {
+            const angle = (Math.PI * 2 * i) / total - Math.PI / 2;
+            const ax = cx + R * Math.cos(angle);
+            const ay = cy + R * Math.sin(angle);
+            axisLines += `<line x1="${cx}" y1="${cy}" x2="${ax.toFixed(1)}" y2="${ay.toFixed(1)}" stroke="#e5e7eb" stroke-width="1"/>`;
+
+            const lx = cx + (R + 26) * Math.cos(angle);
+            const ly = cy + (R + 26) * Math.sin(angle);
+            const shortName = p.name ? p.name.split(" ")[0] : `P${p.id}`;
+            axisLabels += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="10" fill="#4b5563" font-weight="600">${shortName}</text>`;
+
+            const rawVal = scoresMap[p.id] !== undefined ? scoresMap[p.id] : (scoresMap[String(p.id)] || 0.4);
+            const val = Math.max(0.05, Math.min(1.0, parseFloat(rawVal)));
+            const dx = cx + R * val * Math.cos(angle);
+            const dy = cy + R * val * Math.sin(angle);
+            dataPoints.push({ x: dx, y: dy, pct: Math.round(val * 100) });
+        });
+
+        const polygonPts = dataPoints.map((d) => `${d.x.toFixed(1)},${d.y.toFixed(1)}`).join(" ");
+        const dots = dataPoints
+            .map((d) => `<circle cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="4" fill="#1f6f43" stroke="#fff" stroke-width="1.5"/>`)
+            .join("");
+
+        container.innerHTML = `
+            <svg viewBox="0 0 350 350" class="radar-svg">
+                ${gridPolygons}
+                ${axisLines}
+                <polygon points="${polygonPts}" fill="rgba(31, 111, 67, 0.28)" stroke="#1f6f43" stroke-width="2.5"/>
+                ${dots}
+                ${axisLabels}
+            </svg>
+        `;
+    }
+
+    function renderPillarBars(containerId, scoresMap) {
+        const container = $(containerId);
+        if (!container) return;
+        container.innerHTML = "";
+
+        const pillars = state.pillars.length ? state.pillars : DEFAULT_PILLARS;
+        pillars.forEach((p) => {
+            const rawVal = scoresMap[p.id] !== undefined ? scoresMap[p.id] : (scoresMap[String(p.id)] || 0.4);
+            const pct = Math.round(parseFloat(rawVal) * 100);
+            const colorClass = pct >= 70 ? "bar-high" : (pct >= 40 ? "bar-med" : "bar-low");
+            const statusLabel = pct >= 80 ? "Advanced" : (pct >= 60 ? "Established" : (pct >= 40 ? "Developing" : (pct >= 20 ? "Emerging" : "Non-Existent")));
+
+            const item = document.createElement("div");
+            item.className = "pillar-bar-item";
+            item.innerHTML = `
+                <div class="pillar-bar-header">
+                    <span>${p.name}</span>
+                    <span><strong>${pct}%</strong> <small class="muted">(${statusLabel})</small></span>
+                </div>
+                <div class="pillar-bar-track">
+                    <div class="pillar-bar-fill ${colorClass}" style="width: ${pct}%;"></div>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function renderPeerBenchmark(region, ffmi) {
+        const regName = $("benchmark-region-name");
+        if (regName) regName.textContent = region || "Western Kenya";
+
+        const yourScoreEl = $("bench-your-score");
+        if (yourScoreEl) yourScoreEl.textContent = typeof ffmi === "number" ? ffmi.toFixed(2) : "0.00";
+
+        const regionalAverages = {
+            "Western Kenya": 9.80,
+            "Rift Valley": 11.20,
+            "Central Kenya": 12.40,
+            "Eastern Kenya": 8.50,
+            "Coast": 8.10,
+        };
+        const avg = regionalAverages[region] || 10.0;
+        const avgScoreEl = $("bench-avg-score");
+        if (avgScoreEl) avgScoreEl.textContent = avg.toFixed(2);
+
+        const yourPct = Math.min(100, Math.max(0, (ffmi / 24.0) * 100));
+        const fillYour = $("bench-fill-your");
+        if (fillYour) fillYour.style.width = `${yourPct}%`;
+    }
+
+    function downloadPdf() {
+        if (!state.assessmentId) {
+            alert("Please start or complete an assessment to download your official report.");
+            return;
+        }
+        window.open(`/api/assessments/${state.assessmentId}/pdf`, "_blank");
+    }
+
+    // ─── Simulator & What-If Planner Logic ────────────────────────────
+    const DEFAULT_PILLARS = [
+        { id: 1, name: "Governance & Strategy", defaultVal: 0.4 },
+        { id: 2, name: "Soil & Land Health", defaultVal: 0.6 },
+        { id: 3, name: "Water Stewardship", defaultVal: 0.3 },
+        { id: 4, name: "Crop Management", defaultVal: 0.7 },
+        { id: 5, name: "Livestock Management", defaultVal: 0.2 },
+        { id: 6, name: "Financial Inclusion", defaultVal: 0.5 },
+        { id: 7, name: "Technology & Data", defaultVal: 0.3 },
+        { id: 8, name: "Market Access", defaultVal: 0.6 },
+    ];
+
+    function initSimulatorSliders() {
+        const container = $("sim-sliders-container");
+        if (!container || container.children.length > 0) return;
+
+        const pillars = state.pillars.length ? state.pillars : DEFAULT_PILLARS;
+        container.innerHTML = "";
+
+        pillars.forEach((p, idx) => {
+            const defVal = DEFAULT_PILLARS[idx]?.defaultVal ?? 0.5;
+            const item = document.createElement("div");
+            item.className = "slider-item";
+            item.innerHTML = `
+                <div class="slider-header">
+                    <span>${p.name}</span>
+                    <span id="sim-val-${p.id}" class="slider-val">${Math.round(defVal * 100)}%</span>
+                </div>
+                <input type="range" min="0" max="100" value="${Math.round(defVal * 100)}" class="slider-input" id="sim-input-${p.id}">
+            `;
+            container.appendChild(item);
+
+            const input = item.querySelector(`#sim-input-${p.id}`);
+            input.addEventListener("input", (e) => {
+                $(`sim-val-${p.id}`).textContent = `${e.target.value}%`;
+                runSimulation();
+            });
+        });
+    }
+
+    function initPostAssessmentWhatIfPlanner(data) {
+        const container = $("post-sim-sliders-container");
+        if (!container) return;
+        container.innerHTML = "";
+
+        const pillars = state.pillars.length ? state.pillars : DEFAULT_PILLARS;
+        const scores = data.pillar_scores || {};
+
+        pillars.forEach((p) => {
+            const currentVal = Math.round((scores[p.id] || 0.3) * 100);
+            const item = document.createElement("div");
+            item.className = "slider-item";
+            item.innerHTML = `
+                <div class="slider-header">
+                    <span>${p.name}</span>
+                    <span id="post-sim-val-${p.id}" class="slider-val">${currentVal}%</span>
+                </div>
+                <input type="range" min="0" max="100" value="${currentVal}" class="slider-input" id="post-sim-input-${p.id}">
+            `;
+            container.appendChild(item);
+
+            const input = item.querySelector(`#post-sim-input-${p.id}`);
+            input.addEventListener("input", (e) => {
+                $(`post-sim-val-${p.id}`).textContent = `${e.target.value}%`;
+                recalcPostSimulation();
+            });
+        });
+
+        recalcPostSimulation();
+    }
+
+    function recalcPostSimulation() {
+        const pillars = state.pillars.length ? state.pillars : DEFAULT_PILLARS;
+        let totalFraction = 0;
+        let lowestVal = 1.0;
+
+        pillars.forEach((p) => {
+            const input = $(`post-sim-input-${p.id}`);
+            const val = input ? parseFloat(input.value) / 100.0 : 0.5;
+            totalFraction += val;
+            if (val < lowestVal) lowestVal = val;
+        });
+
+        const avg = totalFraction / pillars.length;
+        const ffmi = Math.round((avg * 24.0) * 100) / 100;
+
+        let tier = "Tier 1: Informal Farm";
+        if (ffmi >= 21) tier = "Tier 5: Future Ready Farm";
+        else if (ffmi >= 16) tier = "Tier 4: Investment Ready Farm";
+        else if (ffmi >= 10) tier = "Tier 3: Structured Farm";
+        else if (ffmi >= 5) tier = "Tier 2: Emerging Agribusiness";
+
+        $("post-sim-tier").textContent = tier;
+        $("post-sim-ffmi").textContent = ffmi.toFixed(2);
+
+        let risk = "🟢 Low Risk";
+        if (ffmi < 5.0 || lowestVal < 0.25) risk = "🔴 High Risk";
+        else if (ffmi < 16.0 || lowestVal < 0.50) risk = "🟡 Medium Risk";
+        $("post-sim-risk").textContent = risk;
+    }
+
+    async function runSimulation() {
+        const pillars = state.pillars.length ? state.pillars : DEFAULT_PILLARS;
+        const scores = {};
+        let totalFraction = 0;
+        let lowestScore = 1.0;
+
+        pillars.forEach((p) => {
+            const input = $(`sim-input-${p.id}`);
+            const frac = input ? parseFloat(input.value) / 100.0 : 0.5;
+            scores[p.id] = frac;
+            totalFraction += frac;
+            if (frac < lowestScore) lowestScore = frac;
+        });
+
+        const avg = totalFraction / pillars.length;
+        const ffmi_score = Math.round((avg * 24.0) * 100) / 100;
+
+        let tier_num = 1;
+        let tier_classification = "Informal Farm";
+        if (ffmi_score >= 21) { tier_num = 5; tier_classification = "Future Ready Farm"; }
+        else if (ffmi_score >= 16) { tier_num = 4; tier_classification = "Investment Ready Farm"; }
+        else if (ffmi_score >= 10) { tier_num = 3; tier_classification = "Structured Farm"; }
+        else if (ffmi_score >= 5) { tier_num = 2; tier_classification = "Emerging Agribusiness"; }
+
+        const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+        const strongestPillar = pillars.find((p) => p.id === parseInt(sorted[0][0], 10));
+        const priorityGapPillar = pillars.find((p) => p.id === parseInt(sorted[sorted.length - 1][0], 10));
+
+        // Update UI
+        $("sim-result-tier").textContent = `Tier ${tier_num}: ${tier_classification}`;
+        $("sim-result-ffmi").textContent = `${ffmi_score.toFixed(2)} / 24.00`;
+        renderRiskBadge("sim-risk-badge", ffmi_score, lowestScore);
+
+        $("sim-result-strongest").textContent = strongestPillar ? `${strongestPillar.name} (${(scores[strongestPillar.id] * 100).toFixed(0)}%)` : "—";
+        $("sim-result-priority-gap").textContent = priorityGapPillar ? `${priorityGapPillar.name} (${(scores[priorityGapPillar.id] * 100).toFixed(0)}%)` : "—";
+
+        // Visual Radar Chart for Simulator
+        renderRadarChart("sim-radar-chart", scores);
+
+        // Pillar Breakdown
+        const ul = $("sim-result-pillars");
+        ul.innerHTML = "";
+        pillars.forEach((p) => {
+            const li = document.createElement("li");
+            const pct = Math.round((scores[p.id] || 0) * 100);
+            li.textContent = `${p.name}: ${pct}%`;
+            ul.appendChild(li);
+        });
+
+        // Recommendations
+        const recs = $("sim-result-recommendations");
+        recs.innerHTML = "";
+        const weakPillars = pillars.filter((p) => (scores[p.id] || 0) < 0.70);
+        const targetPillars = weakPillars.length ? weakPillars : [priorityGapPillar];
+
+        targetPillars.slice(0, 5).forEach((wp) => {
+            const li = document.createElement("li");
+            li.className = "priority-quick_win";
+            li.innerHTML = `
+                <span class="priority-pill priority-quick_win">Quick Win</span>
+                <p><strong>Develop baseline capability for ${wp.name}</strong></p>
+                <p>Establish operational processes and standard records for ${wp.name}.</p>
+                <p class="muted small">Learning: FAAB Transformation Module for ${wp.name}</p>
+                <p class="muted small">Service: Future Farms Technical Advisory</p>
             `;
             recs.appendChild(li);
         });
@@ -470,12 +789,34 @@
     $("btn-no").addEventListener("click", () => answer("no"));
     $("btn-prev").addEventListener("click", previousQuestion);
     $("btn-skip").addEventListener("click", skipQuestion);
+    const btnDownloadPdf = $("btn-download-pdf");
+    if (btnDownloadPdf) btnDownloadPdf.addEventListener("click", downloadPdf);
     $("btn-restart").addEventListener("click", () => {
         state.assessmentId = null;
         state.answers = {};
         state.currentIndex = 0;
         state.result = null;
         showScreen("start");
+    });
+
+    // Navigation Tabs
+    const navBtnAssessment = $("nav-btn-assessment");
+    const navBtnSimulator = $("nav-btn-simulator");
+
+    navBtnAssessment.addEventListener("click", () => {
+        navBtnAssessment.classList.add("nav-tab-active");
+        navBtnSimulator.classList.remove("nav-tab-active");
+        if (state.result) showScreen("result");
+        else if (state.assessmentId) showScreen("question");
+        else showScreen("start");
+    });
+
+    navBtnSimulator.addEventListener("click", () => {
+        navBtnSimulator.classList.add("nav-tab-active");
+        navBtnAssessment.classList.remove("nav-tab-active");
+        initSimulatorSliders();
+        runSimulation();
+        showScreen("simulator");
     });
 
     // ─── Bootstrap ──────────────────────────────────────────────────

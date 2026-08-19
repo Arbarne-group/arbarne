@@ -61,8 +61,20 @@ class Settings(BaseSettings):
     jwt_expire_minutes: int = Field(default=1440, alias="JWT_EXPIRE_MINUTES")
 
     # ─── Paths ──────────────────────────────────────────────────────
-    backend_dir: Path = Path(__file__).resolve().parents[2]
-    project_dir: Path = Path(__file__).resolve().parents[4]
+    backend_dir: Path = (
+        Path(__file__).resolve().parents[2]
+        if len(Path(__file__).resolve().parents) > 2
+        else Path(__file__).resolve().parent
+    )
+    project_dir: Path = (
+        Path(__file__).resolve().parents[4]
+        if len(Path(__file__).resolve().parents) > 4
+        else (
+            Path(__file__).resolve().parents[2]
+            if len(Path(__file__).resolve().parents) > 2
+            else Path(__file__).resolve().parent
+        )
+    )
     uploads_dir: Path = backend_dir / "uploads"
     alembic_dir: Path = backend_dir / "alembic"
 

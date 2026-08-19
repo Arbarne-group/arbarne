@@ -261,3 +261,24 @@ def test_batch_ml_jobs():
     anomaly = evidence_anomaly_scan()
     assert anomaly["status"] == "clean"
 
+
+def test_pdf_report_generation_and_download(client):
+    """Test PDF generation engine and HTTP download endpoint."""
+    r = client.post("/api/assessments/start", json={"name": "PDF Test Farm", "region": "Western Kenya"})
+    aid = r.json()["assessment_id"]
+
+    # Submit answers
+    client.post(f"/api/assessments/{aid}/answers", json=[
+        {"question_id": "P1.1.1", "value": "yes"},
+        {"question_id": "P1.1.2", "value": "no"},
+    ])
+    client.post(f"/api/assessments/{aid}/submit")
+
+    # Download PDF
+    pdf_res = client.get(f"/api/assessments/{aid}/pdf")
+    assert pdf_res.status_code == 200
+    assert pdf_res.headers["content-type"] == "application/pdf"
+    assert len(pdf_res.content) > 1000  # Valid PDF binary
+    assert pdf_res.content.startswith(b"%PDF")
+
+

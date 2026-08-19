@@ -1,4 +1,4 @@
-# HANDOVER.md — Future Farms Framework (FFF) Digital Platform Handover & Operations Guide
+# HANDOVER.md  --  Future Farms Framework (FFF) Digital Platform Handover & Operations Guide
 
 > **Final Project Deliverable & Handover Documentation**
 > Date: August 13, 2026
