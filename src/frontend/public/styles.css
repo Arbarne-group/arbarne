@@ -295,7 +295,225 @@ label small {
     to { transform: rotate(360deg); }
 }
 
-@media (max-width: 480px) {
+/* ─── Navigation Tabs ────────────────────────────────────────────── */
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.app-nav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.nav-tab {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.nav-tab:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.nav-tab.nav-tab-active {
+    background: white;
+    color: var(--color-primary-dark);
+    font-weight: 600;
+}
+
+/* ─── Form Grid & Sliders ───────────────────────────────────────── */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+select {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    margin-bottom: 0.75rem;
+}
+
+.slider-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 0.75rem;
+}
+
+.slider-item {
+    background: #f9fafb;
+    border: 1px solid var(--color-border);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.slider-val {
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.slider-input {
+    width: 100%;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+/* ─── Risk Badges ────────────────────────────────────────────────── */
+.risk-badge {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.risk-high { background: #fee2e2; color: #991b1b; }
+.risk-medium { background: #fef3c7; color: #92400e; }
+.risk-low { background: #dcfce7; color: #166534; }
+
+.what-if-card {
+    border: 2px dashed var(--color-primary);
+    background: #fafdfb;
+}
+
+/* ─── Visual Charts & Radar ─────────────────────────────────────── */
+.chart-card {
+    text-align: center;
+}
+
+.radar-container {
+    width: 100%;
+    max-width: 440px;
+    margin: 1rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.radar-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+/* ─── Pillar Progress Bars ──────────────────────────────────────── */
+.pillar-bars-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 0.75rem;
+}
+
+.pillar-bar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.pillar-bar-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.pillar-bar-track {
+    width: 100%;
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+}
+
+.pillar-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+    background: var(--color-primary);
+}
+
+.pillar-bar-fill.bar-high { background: #16a34a; }
+.pillar-bar-fill.bar-med { background: #ca8a04; }
+.pillar-bar-fill.bar-low { background: #dc2626; }
+
+/* ─── Regional Peer Benchmark ───────────────────────────────────── */
+.benchmark-card {
+    background: #fdfbf7;
+}
+
+.benchmark-bar-wrapper {
+    margin-top: 0.75rem;
+}
+
+.benchmark-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+}
+
+.benchmark-track {
+    width: 100%;
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    position: relative;
+}
+
+.bench-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--color-primary);
+    transition: width 0.5s ease;
+}
+
+.bench-marker-avg {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 3px;
+    background: #dc2626;
+    border-radius: 2px;
+}
+
+.action-card {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 600px) {
+    .app-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+    .form-grid { grid-template-columns: 1fr; }
     main { padding: 1rem; }
     .card { padding: 1rem; }
     .big-number { font-size: 2rem; }

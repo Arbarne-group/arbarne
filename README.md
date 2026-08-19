@@ -160,6 +160,8 @@ arbarne/
 
 ## 📖 Key Documentation Links
 
+- 📊 [**docs/TECHNICAL_DIAGRAMS_AND_FLOWS.md**](docs/TECHNICAL_DIAGRAMS_AND_FLOWS.md) — Comprehensive technical diagrams & architecture flows
+- 🎨 [**docs/diagrams/index.html**](docs/diagrams/index.html) — Interactive HTML diagram portfolio & showcase
 - 📋 [**PROGRESS_TRACKER.md**](PROGRESS_TRACKER.md) — Current implementation completion status
 - 📦 [**docs/HANDOVER.md**](docs/HANDOVER.md) — Operational runbook & handover documentation
 - 🛠️ [**docs/SETUP.md**](docs/SETUP.md) — In-depth setup & environment guide

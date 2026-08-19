@@ -1,4 +1,4 @@
-# GLOSSARY.md — FFF & Platform Terms
+# GLOSSARY.md  --  FFF & Platform Terms
 
 > **For the team.** All FFF terms used in the codebase, in detail, with their operational consequences.
 
@@ -6,16 +6,16 @@
 
 ## Framework terms
 
-### FFF — Future Farms Framework
+### FFF  --  Future Farms Framework
 A *Farm Systems Capability and Maturity Framework*. Per the FFF source: a *farm transformation architecture*, not just an assessment questionnaire. The platform's job is to make the framework answerable, year after year, for individual farms.
 
-### FFMI — Future Farms Maturity Index (out of 24)
+### FFMI  --  Future Farms Maturity Index (out of 24)
 The aggregate score from the assessment. Per the FFF source: *"a diagnostic and transformation tool."* It is **not** a competitive score. The platform UI must reflect this framing.
 
-### FFV — Future Farms Verification
-The evidence-based assessment pathway. Uses the same 200 questions as the self-assessment, but adds an evidence collection step per question. Evidence is classified by reliability (A–B–C–D).
+### FFV  --  Future Farms Verification
+The evidence-based assessment pathway. Uses the same 200 questions as the self-assessment, but adds an evidence collection step per question. Evidence is classified by reliability (A-B-C-D).
 
-### FAAB — Farm Agribusiness Advisory Bundle
+### FAAB  --  Farm Agribusiness Advisory Bundle
 A structured programme of numbered modules. The platform's `support_available` field references FAAB modules. The full canonical module catalogue is one of the open decisions (PRD §12.4).
 
 ### Tier
@@ -44,7 +44,7 @@ The 6-level maturity rating of one specific capability:
 Per the FFF source: *"a development pathway, rather than a simple pass/fail assessment."*
 
 ### Capability Approach
-The FFF framing: *"How capable is the farm of consistently doing this?"* — capability is not asset ownership. The underlying capability chain is `collect → store → analyse → interpret → decide → improve`. The platform's questions probe this chain, not the presence of assets.
+The FFF framing: *"How capable is the farm of consistently doing this?"*  --  capability is not asset ownership. The underlying capability chain is `collect  ->  store  ->  analyse  ->  interpret  ->  decide  ->  improve`. The platform's questions probe this chain, not the presence of assets.
 
 ### Question ID
 Stable identifier `P{pillar}.{capability}.{q}`, e.g. `P1.3.1`. Primary key in the `questions` table. Used as a foreign key in every other table that references a question.
@@ -54,9 +54,9 @@ The three recommendation priority levels:
 
 | Priority | Timeline | Examples |
 |---|---|---|
-| 🟢 Quick Win | 0–3 months | Low cost, low complexity, high impact |
-| 🟡 Medium Term | 3–12 months | Moderate investment/complexity |
-| 🔵 Strategic | 1–3 years | Transformational, long-term |
+| 🟢 Quick Win | 0-3 months | Low cost, low complexity, high impact |
+| 🟡 Medium Term | 3-12 months | Moderate investment/complexity |
+| 🔵 Strategic | 1-3 years | Transformational, long-term |
 
 UI shows Quick Wins first.
 
@@ -85,11 +85,11 @@ The broader platform extension that hosts learning resources and services. **Out
 
 The per-gap output structure mandated by the FFF source (§8.4.1 of the PRD). Every surfaced gap has exactly five fields:
 
-1. **Gap** — the weakness
-2. **Capability status** — the 6-level rating of the affected capability
-3. **Recommended action** — concrete, doable instruction
-4. **Recommended learning** — FAAB module reference
-5. **Potential service** — mapped FFF service
+1. **Gap**  --  the weakness
+2. **Capability status**  --  the 6-level rating of the affected capability
+3. **Recommended action**  --  concrete, doable instruction
+4. **Recommended learning**  --  FAAB module reference
+5. **Potential service**  --  mapped FFF service
 
 The LLM may rephrase these fields but must never reorder, omit, or substitute them.
 
@@ -97,13 +97,13 @@ The LLM may rephrase these fields but must never reorder, omit, or substitute th
 
 ## The transformation cycle
 
-`Assess → Diagnose → Prioritise → Learn → Implement → Verify → Measure → Advance → Reassess`
+`Assess  ->  Diagnose  ->  Prioritise  ->  Learn  ->  Implement  ->  Verify  ->  Measure  ->  Advance  ->  Reassess`
 
 A continuous loop, not a one-time test. The platform must support re-entering at any point.
 
 ---
 
-## Evidence classification (A–B–C–D)
+## Evidence classification (A-B-C-D)
 
 | Class | Type | Reliability |
 |---|---|---|
@@ -154,7 +154,7 @@ The 8 internal workstreams of the framework. Our platform is workstream #3:
 ## Platform terms
 
 ### Rule version
-A specific version of the scoring rules (capability → pillar → FFMI → tier mapping). Every assessment is tagged with the rule version that produced its score. Historical assessments remain reproducible against the rules in effect when they were taken.
+A specific version of the scoring rules (capability  ->  pillar  ->  FFMI  ->  tier mapping). Every assessment is tagged with the rule version that produced its score. Historical assessments remain reproducible against the rules in effect when they were taken.
 
 ### Auditability
 The property that any score can be traced back to the exact answers and rule version that produced it. The scoring engine has no LLM dependency because auditability is non-negotiable.
