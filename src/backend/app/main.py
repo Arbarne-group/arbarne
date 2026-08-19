@@ -86,8 +86,24 @@ except Exception as exc:
 # ─── Optional static frontend (pilot-scale) ─────────────────────────
 # In the pilot, FastAPI can serve the frontend directly. In production,
 # nginx serves it and proxies /api to the backend.
-_frontend_dir = Path(__file__).resolve().parents[3] / "src" / "frontend" / "public"
-if _frontend_dir.exists():
+def _find_frontend_dir() -> Path | None:
+    candidates = [
+        Path("/frontend/public"),
+        Path("/app/frontend_public"),
+    ]
+    parents = Path(__file__).resolve().parents
+    if len(parents) > 3:
+        candidates.append(parents[3] / "src" / "frontend" / "public")
+    if len(parents) > 2:
+        candidates.append(parents[2] / "frontend" / "public")
+        candidates.append(parents[2] / "src" / "frontend" / "public")
+    for candidate in candidates:
+        if candidate and candidate.exists() and candidate.is_dir():
+            return candidate
+    return None
+
+_frontend_dir = _find_frontend_dir()
+if _frontend_dir:
     app.mount("/", StaticFiles(directory=str(_frontend_dir), html=True), name="frontend")
     logger.info("Serving frontend static files from %s", _frontend_dir)
 else:
@@ -95,6 +111,6 @@ else:
     def root() -> str:
         return (
             "<html><body><h1>FFF API</h1>"
-            "<p>Frontend not yet mounted. Visit <a href='/docs'>/docs</a> for the API.</p>"
+            "<p>Frontend not mounted directly on backend. Open the frontend at <a href='http://localhost:8080'>http://localhost:8080</a> or visit <a href='/docs'>/docs</a> for API documentation.</p>"
             "</body></html>"
         )

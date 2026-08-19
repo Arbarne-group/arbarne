@@ -65,6 +65,7 @@ services:
       - "8000:8000"
     volumes:
       - ../src/backend:/app
+      - ../src/frontend/public:/frontend/public:ro
       - fff_uploads:/app/uploads
     depends_on:
       postgres:
