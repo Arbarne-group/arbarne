@@ -12,6 +12,13 @@ from app.models.framework import (
     Question,
     RuleVersion,
 )
+from app.models.gamification import UserBadge, UserGamification
+from app.models.portal import (
+    LearningModule,
+    LearningProgress,
+    ServiceItem,
+    ServiceRequest,
+)
 from app.models.recommendation import Recommendation
 from app.models.user import User
 
@@ -21,9 +28,16 @@ __all__ = [
     "Capability",
     "Evidence",
     "Farm",
+    "LearningModule",
+    "LearningProgress",
     "Pillar",
     "Question",
     "Recommendation",
     "RuleVersion",
+    "ServiceItem",
+    "ServiceRequest",
     "User",
+    "UserBadge",
+    "UserGamification",
 ]
+

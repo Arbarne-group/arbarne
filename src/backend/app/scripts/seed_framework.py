@@ -13,6 +13,7 @@ import sys
 
 from sqlalchemy import select
 
+import app.models  # noqa: F401 - ensure all ORM models are registered
 from app.db.session import Base, SessionLocal, engine
 from app.models.framework import Capability, Pillar, Question
 from app.scripts.seed_data import PILLARS, CAPABILITIES, QUESTIONS

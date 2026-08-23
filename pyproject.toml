@@ -86,9 +86,9 @@ packages = ["app"]
 # ─── Pytest ──────────────────────────────────────────────────────────
 [tool.pytest.ini_options]
 minversion = "8.0"
-testpaths = ["tests"]
+testpaths = ["src/backend/tests"]
 addopts = "-ra -q --strict-markers"
-pythonpath = ["."]
+pythonpath = ["src/backend"]
 asyncio_mode = "auto"
 
 # ─── Ruff ────────────────────────────────────────────────────────────

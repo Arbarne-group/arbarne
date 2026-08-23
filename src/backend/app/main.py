@@ -17,10 +17,14 @@ from fastapi.responses import HTMLResponse
 from pathlib import Path
 
 from app.api.assessments import router as assessments_router
+from app.api.auth import router as auth_router
+from app.api.gamification import router as gamification_router
 from app.api.health import router as health_router
 from app.api.pillars import router as pillars_router
+from app.api.portal import router as portal_router
 from app.api.ml import router as ml_router
 from app.core.config import settings
+
 
 # ─── Logging ──────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -30,17 +34,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-from app.db.session import Base, engine
-
-
 # ─── Lifespan ─────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup/shutdown hooks."""
-    logger.info("FFF backend starting (env=%s, debug=%s)", settings.app_env, settings.app_debug)
+    """Lifespan event handler for FastAPI startup and shutdown."""
+    logger.info("FFF backend starting up")
+    from app.db.session import engine, Base
     try:
         Base.metadata.create_all(bind=engine)
-        logger.info("Database tables verified/created")
+        logger.info("Database tables verified/created successfully.")
     except Exception as exc:
         logger.warning("Could not auto-create tables on startup: %s", exc)
     yield
@@ -67,9 +69,13 @@ app.add_middleware(
 
 # ─── Routers ─────────────────────────────────────────────────────────
 app.include_router(health_router)
+app.include_router(auth_router, prefix="/api")
 app.include_router(pillars_router)
 app.include_router(assessments_router)
+app.include_router(portal_router, prefix="/api")
+app.include_router(gamification_router, prefix="/api")
 app.include_router(ml_router)
+
 
 # ─── Gradio Interactive ML Demo Route ───────────────────────────────
 try:
