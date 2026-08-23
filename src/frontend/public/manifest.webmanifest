@@ -1,13 +1,25 @@
 {
-    "name": "Future Farms Framework",
-    "short_name": "FFF",
-    "description": "Self-assessment for future-ready farms",
+    "name": "Future Farms Digital Platform | Arbarne Agriculture Group",
+    "short_name": "Arbarne FFF",
+    "description": "Smallholder Capability Transformation Platform by Arbarne Agriculture Group",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#f7f8f4",
-    "theme_color": "#1f6f43",
+    "background_color": "#022c24",
+    "theme_color": "#022c24",
     "orientation": "portrait",
     "icons": [
+        {
+            "src": "/assets/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/assets/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
         {
             "src": "/icon.svg",
             "sizes": "any",
