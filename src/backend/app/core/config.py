@@ -81,15 +81,26 @@ class Settings(BaseSettings):
     def resolved_database_url(self) -> str:
         """Build the SQLAlchemy database URL from components if not given.
 
-        If psycopg2 is not installed and no explicit DATABASE_URL is set,
-        fall back to SQLite so local execution without Docker works out of the box.
+        If a Postgres URL/host is specified (like Docker 'postgres') but cannot
+        be reached/resolved in local standalone development, falls back to SQLite
+        so local execution without Docker works out of the box.
         """
         import os
-        env_url = os.environ.get("DATABASE_URL")
-        if env_url:
-            return env_url
-        if self.database_url:
-            return self.database_url
+        import socket
+
+        url = os.environ.get("DATABASE_URL") or self.database_url
+        if url and url.startswith("sqlite"):
+            return url
+
+        # If pointing to docker service 'postgres', test if resolvable on host
+        if url and "@postgres:" in url:
+            try:
+                socket.gethostbyname("postgres")
+            except OSError:
+                return "sqlite:///fff_dev.db"
+
+        if url:
+            return url
 
         try:
             import psycopg2  # noqa: F401
@@ -97,7 +108,22 @@ class Settings(BaseSettings):
         except ImportError:
             has_psycopg2 = False
 
-        if not has_psycopg2:
+        if not has_psycopg2 or self.postgres_host == "postgres":
+            if self.postgres_host == "postgres":
+                try:
+                    socket.gethostbyname("postgres")
+                except OSError:
+                    return "sqlite:///fff_dev.db"
+            if not has_psycopg2:
+                return "sqlite:///fff_dev.db"
+
+        # Final reachability check: probe TCP port before building the URL.
+        # If localhost Postgres isn't running we fall back to SQLite so that
+        # local development without a Postgres service always works.
+        try:
+            with socket.create_connection((self.postgres_host, self.postgres_port), timeout=1):
+                pass
+        except OSError:
             return "sqlite:///fff_dev.db"
 
         return (

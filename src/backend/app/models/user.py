@@ -1,14 +1,16 @@
-"""User table — for verifiers and admins (farmers may be anonymous in pilot)."""
-
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING
+import uuid
 
 from sqlalchemy import DateTime, String, Uuid as UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
-import uuid
+
+if TYPE_CHECKING:
+    from app.models.assessment import Farm
 
 
 class User(Base):
@@ -25,6 +27,9 @@ class User(Base):
     role: Mapped[str] = mapped_column(String(32), nullable=False, default="farmer")
     organisation: Mapped[str | None] = mapped_column(String(255), nullable=True)
     password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    is_verified: Mapped[bool] = mapped_column(default=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=datetime.utcnow
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
     )
+
+    farms: Mapped[list["Farm"]] = relationship(back_populates="user")
