@@ -10,6 +10,7 @@ Allows agronomists, verifiers, investors, and farmers to:
 from __future__ import annotations
 
 import functools
+import hashlib
 import io
 import logging
 import os
@@ -945,18 +946,24 @@ def generate_risk_distribution_chart() -> plt.Figure:
     return fig
 
 
+from matplotlib.colors import LinearSegmentedColormap
+
+_FARM_HEATMAP_CMAP = LinearSegmentedColormap.from_list("farm_cmap", ["#f0faf5", "#10b981", "#065f46"], N=64)
+_BENCH_HEATMAP_CMAP = LinearSegmentedColormap.from_list("bench_cmap", ["#fff7ed", "#f59e0b", "#92400e"], N=64)
+
+
 def generate_pillar_heatmap(pillar_scores: List[float] | Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
     """Capability heat-map scorecard: 8 pillars × 5 maturity bands rendered as colour tiles."""
-    scores_tuple = tuple(round(float(s), 3) for s in pillar_scores)
+    scores_tuple = tuple(round(float(s), 2) for s in pillar_scores)
     return _cached_generate_pillar_heatmap(scores_tuple, region)
 
 
-@functools.lru_cache(maxsize=64)
+@functools.lru_cache(maxsize=128)
 def _cached_generate_pillar_heatmap(pillar_scores: Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
     benchmarks = REGIONAL_BENCHMARKS.get(region, REGIONAL_BENCHMARKS["Western Kenya"])
     bench_scores = [benchmarks[p] for p in range(1, 9)]
-    pillar_labels = [f"P{i}: {PILLAR_METADATA[i]['name'].split('&')[0].strip()[:22]}" for i in range(1, 9)]
-    cap_labels = ["Non-Existent\n(0–20%)", "Emerging\n(20–40%)", "Developing\n(40–60%)", "Established\n(60–80%)", "Advanced\n(80–100%)"]
+    pillar_labels = [f"P{i}: {PILLAR_METADATA[i]['name'].split('&')[0].strip()[:20]}" for i in range(1, 9)]
+    cap_labels = ["0–20%\n(Non-Ex.)", "20–40%\n(Emerg.)", "40–60%\n(Dev.)", "60–80%\n(Estab.)", "80–100%\n(Adv.)"]
 
     # Build matrix: rows=pillars, cols=5 maturity bands (binary fill per score)
     matrix = np.zeros((8, 5))
@@ -964,40 +971,50 @@ def _cached_generate_pillar_heatmap(pillar_scores: Tuple[float, ...], region: st
     for p_idx, score in enumerate(pillar_scores):
         for band_idx in range(5):
             threshold = (band_idx + 1) * 0.20
-            matrix[p_idx, band_idx] = 1.0 if score >= threshold else max(0, score / threshold)
-        for band_idx in range(5):
-            threshold = (band_idx + 1) * 0.20
-            bench_matrix[p_idx, band_idx] = 1.0 if bench_scores[p_idx] >= threshold else max(0, bench_scores[p_idx] / threshold)
+            matrix[p_idx, band_idx] = 1.0 if score >= threshold else max(0.0, score / threshold)
+            bench_matrix[p_idx, band_idx] = 1.0 if bench_scores[p_idx] >= threshold else max(0.0, bench_scores[p_idx] / threshold)
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 5.5), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(9.2, 4.6), sharey=True, dpi=85)
     fig.patch.set_facecolor("#fafdfb")
 
-    from matplotlib.colors import LinearSegmentedColormap
-    farm_cmap = LinearSegmentedColormap.from_list("farm", ["#f0faf5", "#10b981", "#065f46"], N=256)
-    bench_cmap = LinearSegmentedColormap.from_list("bench", ["#fff7ed", "#f59e0b", "#92400e"], N=256)
-
     for ax, mat, title, cmap, tcolor in [
-        (axes[0], matrix, f"Your Farm Score Profile", farm_cmap, "#065f46"),
-        (axes[1], bench_matrix, f"{region} Peer Cohort Profile", bench_cmap, "#92400e")
+        (axes[0], matrix, "Your Farm Score Profile", _FARM_HEATMAP_CMAP, "#065f46"),
+        (axes[1], bench_matrix, f"{region} Peer Cohort Profile", _BENCH_HEATMAP_CMAP, "#92400e")
     ]:
         ax.set_facecolor("#fafdfb")
         im = ax.imshow(mat, cmap=cmap, vmin=0, vmax=1, aspect="auto")
         ax.set_xticks(range(5))
-        ax.set_xticklabels(cap_labels, fontsize=8, color="#475569")
+        ax.set_xticklabels(cap_labels, fontsize=7.5, color="#475569")
         ax.set_yticks(range(8))
-        ax.set_yticklabels(pillar_labels, fontsize=8.5, weight="normal", color="#1e293b")
-        ax.set_title(title, fontsize=10.5, weight="bold", color=tcolor, pad=10)
+        ax.set_yticklabels(pillar_labels, fontsize=8, weight="normal", color="#1e293b")
+        ax.set_title(title, fontsize=10, weight="bold", color=tcolor, pad=8)
         for i in range(8):
             for j in range(5):
                 val = mat[i, j]
                 txt = "✓" if val >= 1.0 else ("◐" if val >= 0.5 else "○")
                 ax.text(j, i, txt, ha="center", va="center",
-                        fontsize=12, color="#ffffff" if val > 0.6 else "#374151")
+                        fontsize=11, color="#ffffff" if val > 0.6 else "#374151")
 
     fig.suptitle("8-Pillar Capability Maturity Heatmap — Farm vs. Peer Cohort",
-                 fontsize=11.5, weight="bold", color="#1f6f43", y=0.98)
+                 fontsize=11, weight="bold", color="#1f6f43", y=0.98)
     fig.subplots_adjust(top=0.88, bottom=0.12, left=0.22, right=0.96, wspace=0.15)
     return fig
+
+
+def get_cached_heatmap_image(pillar_scores: List[float] | Tuple[float, ...], region: str = "Western Kenya") -> str:
+    """Generate and return cached PNG file path for 8-pillar capability heatmap."""
+    CHART_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    scores_tuple = tuple(round(float(s), 2) for s in pillar_scores)
+    reg_clean = region.replace(" ", "_").lower()
+    score_hash = hashlib.md5(f"{scores_tuple}_{reg_clean}".encode("utf-8")).hexdigest()[:10]
+    img_path = CHART_CACHE_DIR / f"heatmap_{score_hash}_{reg_clean}.png"
+
+    if not img_path.exists() or img_path.stat().st_size == 0:
+        fig = generate_pillar_heatmap(scores_tuple, region)
+        fig.savefig(img_path, format="png", dpi=85, bbox_inches="tight", facecolor=fig.get_facecolor())
+        plt.close(fig)
+
+    return str(img_path.resolve())
 
 
 # ─── CORE SCENARIO SIMULATION ENGINE ─────────────────────────────────────────
@@ -1467,7 +1484,13 @@ def create_gradio_app():
                 )
                 with gr.Row():
                     with gr.Column(scale=5):
-                        gr.Markdown("#### Pillar Scores for Heatmap Input")
+                        gr.Markdown("#### Preset Farm Archetype Loaders")
+                        with gr.Row():
+                            btn_hm_informal = gr.Button("Informal Smallholder (Tier 1)", size="sm")
+                            btn_hm_transitioning = gr.Button("Transitioning Agribusiness (Tier 2/3)", size="sm")
+                            btn_hm_leader = gr.Button("Commercial Market Leader (Tier 4/5)", size="sm")
+
+                        gr.Markdown("#### 8-Pillar Capability Scores (0.0 = Non-Existent, 1.0 = Advanced)")
                         hm_p1 = gr.Slider(0.0, 1.0, value=0.40, step=0.05, label="P1: Smart Farming & Digital")
                         hm_p2 = gr.Slider(0.0, 1.0, value=0.35, step=0.05, label="P2: Renewable Energy")
                         hm_p3 = gr.Slider(0.0, 1.0, value=0.45, step=0.05, label="P3: Food Safety & Compliance")
@@ -1483,10 +1506,35 @@ def create_gradio_app():
                         )
                         btn_hm = gr.Button("🗺️ Generate Capability Heatmap", variant="primary")
                     with gr.Column(scale=7):
-                        hm_chart = gr.Plot(label="8-Pillar × 5-Band Capability Maturity Heatmap")
+                        hm_chart = gr.Image(
+                            value=lambda: get_cached_heatmap_image([0.40, 0.35, 0.45, 0.75, 0.30, 0.50, 0.40, 0.20], "Western Kenya"),
+                            label="8-Pillar × 5-Band Capability Maturity Heatmap",
+                            type="filepath",
+                            interactive=False,
+                        )
+
+                def apply_hm_preset(scores, reg):
+                    img_path = get_cached_heatmap_image(scores, reg)
+                    return scores[0], scores[1], scores[2], scores[3], scores[4], scores[5], scores[6], scores[7], img_path
+
+                btn_hm_informal.click(
+                    fn=lambda reg: apply_hm_preset([0.25, 0.20, 0.30, 0.75, 0.20, 0.35, 0.25, 0.10], reg),
+                    inputs=[hm_region],
+                    outputs=[hm_p1, hm_p2, hm_p3, hm_p4, hm_p5, hm_p6, hm_p7, hm_p8, hm_chart]
+                )
+                btn_hm_transitioning.click(
+                    fn=lambda reg: apply_hm_preset([0.60, 0.55, 0.65, 0.75, 0.55, 0.65, 0.60, 0.40], reg),
+                    inputs=[hm_region],
+                    outputs=[hm_p1, hm_p2, hm_p3, hm_p4, hm_p5, hm_p6, hm_p7, hm_p8, hm_chart]
+                )
+                btn_hm_leader.click(
+                    fn=lambda reg: apply_hm_preset([0.90, 0.85, 0.95, 0.85, 0.90, 0.90, 0.95, 0.80], reg),
+                    inputs=[hm_region],
+                    outputs=[hm_p1, hm_p2, hm_p3, hm_p4, hm_p5, hm_p6, hm_p7, hm_p8, hm_chart]
+                )
 
                 btn_hm.click(
-                    fn=lambda p1, p2, p3, p4, p5, p6, p7, p8, reg: generate_pillar_heatmap(
+                    fn=lambda p1, p2, p3, p4, p5, p6, p7, p8, reg: get_cached_heatmap_image(
                         [p1, p2, p3, p4, p5, p6, p7, p8], reg
                     ),
                     inputs=[hm_p1, hm_p2, hm_p3, hm_p4, hm_p5, hm_p6, hm_p7, hm_p8, hm_region],
@@ -1509,7 +1557,12 @@ def create_gradio_app():
         generate_radar_chart(default_scores, "Kakamega Pioneer Farm")
         generate_pillar_comparison_chart(default_scores, "Western Kenya")
         generate_section_capability_chart(1, [0.6, 0.4, 0.8, 0.4, 0.2], "Western Kenya")
-        generate_pillar_heatmap(default_scores, "Western Kenya")
+
+        for reg in ["Western Kenya", "Rift Valley", "Central Highlands", "Eastern Semi-Arid", "Coastal Lowlands"]:
+            get_cached_heatmap_image(default_scores, reg)
+            get_cached_heatmap_image([0.25, 0.20, 0.30, 0.75, 0.20, 0.35, 0.25, 0.10], reg)
+            get_cached_heatmap_image([0.60, 0.55, 0.65, 0.75, 0.55, 0.65, 0.60, 0.40], reg)
+            get_cached_heatmap_image([0.90, 0.85, 0.95, 0.85, 0.90, 0.90, 0.95, 0.80], reg)
     except Exception as e:
         log.warning("Could not warm chart/model cache: %s", e)
 
