@@ -202,7 +202,7 @@ def generate_radar_chart(pillar_scores: List[float] | Tuple[float, ...], farm_na
 
 @functools.lru_cache(maxsize=64)
 def _cached_generate_radar_chart(pillar_scores: Tuple[float, ...], farm_name: str = "Farm") -> plt.Figure:
-    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(5.5, 5.5), subplot_kw=dict(polar=True), dpi=90)
     fig.patch.set_facecolor("#ffffff")
     ax.set_facecolor("#fafdfb")
 
@@ -216,14 +216,14 @@ def _cached_generate_radar_chart(pillar_scores: Tuple[float, ...], farm_name: st
     target_threshold = [0.60] * (num_vars + 1)
 
     # Plot Target Line
-    ax.plot(angles, target_threshold, color="#94a3b8", linewidth=1.2, linestyle="--", label="Target Threshold (60%)")
+    ax.plot(angles, target_threshold, color="#94a3b8", linewidth=1.2, linestyle="--", label="Target (60%)")
 
     # Plot Farm Scores
-    ax.plot(angles, scores, color="#1f6f43", linewidth=2.5, linestyle="solid", label=f"{farm_name} Score")
+    ax.plot(angles, scores, color="#1f6f43", linewidth=2.5, linestyle="solid", label=f"{farm_name[:14]} Score")
     ax.fill(angles, scores, color="#1f6f43", alpha=0.25)
 
     # Plot Data Dots
-    ax.scatter(angles[:-1], pillar_scores, color="#155031", s=50, zorder=5)
+    ax.scatter(angles[:-1], pillar_scores, color="#155031", s=45, zorder=5)
 
     # Labels for the 8 canonical pillars
     labels = [f"P{i}\n{PILLAR_METADATA[i]['name'].split('&')[0].strip()}" for i in range(1, 9)]
@@ -236,9 +236,9 @@ def _cached_generate_radar_chart(pillar_scores: Tuple[float, ...], farm_name: st
     ax.set_ylim(0, 1.05)
     ax.grid(color="#e2e8f0", linestyle=":", linewidth=0.8)
 
-    ax.set_title(f"8-Pillar Capability Radar Profile", size=11, weight="bold", color="#1f6f43", pad=15)
-    ax.legend(loc="upper right", bbox_to_anchor=(1.25, 1.1), fontsize=8)
-    fig.tight_layout()
+    ax.set_title(f"8-Pillar Capability Radar Profile", size=10.5, weight="bold", color="#1f6f43", pad=12)
+    ax.legend(loc="upper right", bbox_to_anchor=(1.22, 1.12), fontsize=7.5)
+    fig.subplots_adjust(top=0.88, bottom=0.08, left=0.08, right=0.92)
     return fig
 
 
@@ -250,7 +250,7 @@ def generate_pillar_comparison_chart(pillar_scores: List[float] | Tuple[float, .
 
 @functools.lru_cache(maxsize=64)
 def _cached_generate_pillar_comparison_chart(pillar_scores: Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
-    fig, ax = plt.subplots(figsize=(7, 4.2))
+    fig, ax = plt.subplots(figsize=(6.5, 4.0), dpi=90)
     fig.patch.set_facecolor("#ffffff")
     ax.set_facecolor("#fafbfc")
 
@@ -283,9 +283,9 @@ def _cached_generate_pillar_comparison_chart(pillar_scores: Tuple[float, ...], r
                     xytext=(3, 0), textcoords="offset points", ha="left", va="center", fontsize=8, weight="bold")
 
     ax.grid(axis="x", linestyle="--", alpha=0.5, color="#cbd5e1")
-    ax.set_title(f"8-Pillar Capability Performance vs. {region} Benchmark", fontsize=10.5, weight="bold", color="#1f6f43", pad=10)
+    ax.set_title(f"8-Pillar Capability Performance vs. {region} Benchmark", fontsize=10.5, weight="bold", color="#1f6f43", pad=8)
     ax.legend(loc="lower right", fontsize=8)
-    fig.tight_layout()
+    fig.subplots_adjust(top=0.90, bottom=0.12, left=0.28, right=0.95)
     return fig
 
 
@@ -297,7 +297,7 @@ def generate_section_capability_chart(pillar_id: int, cap_scores: List[float] | 
 
 @functools.lru_cache(maxsize=64)
 def _cached_generate_section_capability_chart(pillar_id: int, cap_scores: Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
-    fig, ax = plt.subplots(figsize=(6.8, 3.5))
+    fig, ax = plt.subplots(figsize=(6.5, 3.4), dpi=90)
     fig.patch.set_facecolor("#ffffff")
     ax.set_facecolor("#fafbfc")
 
@@ -311,7 +311,7 @@ def _cached_generate_section_capability_chart(pillar_id: int, cap_scores: Tuple[
 
     colors = ["#16a34a" if s >= 70 else ("#ca8a04" if s >= 40 else "#dc2626") for s in cap_pcts]
 
-    rects = ax.barh(y_pos, cap_pcts, height, color=colors, edgecolor="#e2e8f0")
+    rects = ax.barh(y_pos, cap_pcts, height, color=colors, edgecolor="#e2ece6")
 
     # Regional benchmark vertical reference line
     ax.axvline(bench_val, color="#dc2626", linestyle="--", linewidth=1.5, label=f"Regional Benchmark ({bench_val:.0f}%)")
@@ -330,9 +330,9 @@ def _cached_generate_section_capability_chart(pillar_id: int, cap_scores: Tuple[
                     xytext=(4, 0), textcoords="offset points", ha="left", va="center", fontsize=8, weight="bold")
 
     ax.grid(axis="x", linestyle=":", alpha=0.6, color="#cbd5e1")
-    ax.set_title(f"Pillar {pillar_id} 5-Capability Scorecard & Benchmark", fontsize=10.5, weight="bold", color="#1f6f43", pad=10)
+    ax.set_title(f"Pillar {pillar_id} 5-Capability Scorecard & Benchmark", fontsize=10.5, weight="bold", color="#1f6f43", pad=8)
     ax.legend(loc="lower right", fontsize=8)
-    fig.tight_layout()
+    fig.subplots_adjust(top=0.88, bottom=0.14, left=0.30, right=0.95)
     return fig
 
 
@@ -995,8 +995,8 @@ def _cached_generate_pillar_heatmap(pillar_scores: Tuple[float, ...], region: st
                         fontsize=12, color="#ffffff" if val > 0.6 else "#374151")
 
     fig.suptitle("8-Pillar Capability Maturity Heatmap — Farm vs. Peer Cohort",
-                 fontsize=12, weight="bold", color="#1f6f43", y=1.02)
-    fig.tight_layout()
+                 fontsize=11.5, weight="bold", color="#1f6f43", y=0.98)
+    fig.subplots_adjust(top=0.88, bottom=0.12, left=0.22, right=0.96, wspace=0.15)
     return fig
 
 
@@ -1234,30 +1234,41 @@ def create_gradio_app():
                     with gr.Column(scale=6):
                         gr.Markdown("### 📈 Visual Analytics Dashboard")
                         with gr.Row():
-                            radar_plot = gr.Plot(label="8-Pillar Capability Radar Chart")
-                            bar_plot = gr.Plot(label="Regional Benchmark Comparison")
+                            radar_plot = gr.Plot(
+                                value=lambda: generate_radar_chart([0.40, 0.35, 0.45, 0.75, 0.30, 0.50, 0.40, 0.20], "Kakamega Pioneer Farm"),
+                                label="8-Pillar Capability Radar Chart"
+                            )
+                            bar_plot = gr.Plot(
+                                value=lambda: generate_pillar_comparison_chart([0.40, 0.35, 0.45, 0.75, 0.30, 0.50, 0.40, 0.20], "Western Kenya"),
+                                label="Regional Benchmark Comparison"
+                            )
 
                         gr.Markdown("### 📑 Transformation Diagnostic Summary")
                         with gr.Row():
-                            tier_box = gr.Textbox(label="Calculated Maturity Tier", interactive=False)
-                            risk_box = gr.Textbox(label="12-Month Trajectory Risk", interactive=False)
+                            tier_box = gr.Textbox(label="Calculated Maturity Tier", value="Tier 2: Emerging Growth", interactive=False)
+                            risk_box = gr.Textbox(label="12-Month Trajectory Risk", value="🟡 Medium Risk (Model Prob: 64.2%)", interactive=False)
 
-                        summary_md = gr.Markdown(label="Transformation Report")
-                        quick_wins_md = gr.Markdown(label="Prioritized Quick Wins")
-
-                # Preset Archetype click actions
-                btn_informal.click(
-                    fn=lambda: (0.25, 0.20, 0.30, 0.75, 0.20, 0.35, 0.25, 0.10),
-                    outputs=[p1, p2, p3, p4, p5, p6, p7, p8]
-                )
-                btn_transitioning.click(
-                    fn=lambda: (0.60, 0.55, 0.65, 0.75, 0.55, 0.65, 0.60, 0.40),
-                    outputs=[p1, p2, p3, p4, p5, p6, p7, p8]
-                )
-                btn_leader.click(
-                    fn=lambda: (0.90, 0.85, 0.95, 0.85, 0.90, 0.90, 0.95, 0.80),
-                    outputs=[p1, p2, p3, p4, p5, p6, p7, p8]
-                )
+                        summary_md = gr.Markdown(
+                            value=(
+                                "### 🌾 Farm Transformation Report: Kakamega Pioneer Farm\n"
+                                "- **Agro-Ecological Region:** Western Kenya (6.5 acres)\n"
+                                "- **Canonical FFMI Index:** **10.05 / 24.00 pts**\n"
+                                "- **Overall Maturity Tier:** **Tier 2: Emerging Growth**\n"
+                                "- **Strongest Dimension:** Pillar 4: Indigenous Knowledge & Climate Resilience (75%)\n"
+                                "- **Principal Gap Dimension:** Pillar 8: Investment Readiness & Enterprise Development (20%)\n"
+                                "- **12-Month Trajectory Default Risk:** 🟡 Medium Risk (Model Prob: 64.2%)"
+                            ),
+                            label="Transformation Report"
+                        )
+                        quick_wins_md = gr.Markdown(
+                            value=(
+                                "1. **Quick Wins Action Plan:** Implement gap resolution for **Pillar 8: Investment Readiness & Enterprise Development** (Score: 20%)\n"
+                                "2. **Competitive Leverage:** Scale strengths in **Pillar 4: Indigenous Knowledge & Climate Resilience** (Score: 75%)\n"
+                                "3. **Peer Benchmark:** Current farm score is **10.05 / 24**, compared to the Western Kenya regional average of **9.84 / 24**.\n"
+                                "4. **Verifier Evidence Audit:** Schedule photo/GPS verification for Level 3/4 capabilities."
+                            ),
+                            label="Prioritized Quick Wins"
+                        )
 
                 def run_full_overview(name, reg, size, v1, v2, v3, v4, v5, v6, v7, v8):
                     sum_txt, t_txt, r_txt, qw_txt = calculate_farm_scenario(name, reg, size, v1, v2, v3, v4, v5, v6, v7, v8)
@@ -1265,6 +1276,30 @@ def create_gradio_app():
                     r_fig = generate_radar_chart(scores, name)
                     b_fig = generate_pillar_comparison_chart(scores, reg)
                     return sum_txt, t_txt, r_txt, qw_txt, r_fig, b_fig
+
+                def apply_preset(preset_scores, name, reg, size):
+                    p1_val, p2_val, p3_val, p4_val, p5_val, p6_val, p7_val, p8_val = preset_scores
+                    sum_txt, t_txt, r_txt, qw_txt = calculate_farm_scenario(name, reg, size, p1_val, p2_val, p3_val, p4_val, p5_val, p6_val, p7_val, p8_val)
+                    r_fig = generate_radar_chart(preset_scores, name)
+                    b_fig = generate_pillar_comparison_chart(preset_scores, reg)
+                    return p1_val, p2_val, p3_val, p4_val, p5_val, p6_val, p7_val, p8_val, sum_txt, t_txt, r_txt, qw_txt, r_fig, b_fig
+
+                # Preset Archetype click actions: update sliders AND recalculate simulation simultaneously
+                btn_informal.click(
+                    fn=lambda name, reg, size: apply_preset([0.25, 0.20, 0.30, 0.75, 0.20, 0.35, 0.25, 0.10], name, reg, size),
+                    inputs=[farm_name, region, farm_size],
+                    outputs=[p1, p2, p3, p4, p5, p6, p7, p8, summary_md, tier_box, risk_box, quick_wins_md, radar_plot, bar_plot]
+                )
+                btn_transitioning.click(
+                    fn=lambda name, reg, size: apply_preset([0.60, 0.55, 0.65, 0.75, 0.55, 0.65, 0.60, 0.40], name, reg, size),
+                    inputs=[farm_name, region, farm_size],
+                    outputs=[p1, p2, p3, p4, p5, p6, p7, p8, summary_md, tier_box, risk_box, quick_wins_md, radar_plot, bar_plot]
+                )
+                btn_leader.click(
+                    fn=lambda name, reg, size: apply_preset([0.90, 0.85, 0.95, 0.85, 0.90, 0.90, 0.95, 0.80], name, reg, size),
+                    inputs=[farm_name, region, farm_size],
+                    outputs=[p1, p2, p3, p4, p5, p6, p7, p8, summary_md, tier_box, risk_box, quick_wins_md, radar_plot, bar_plot]
+                )
 
                 btn_run_overview.click(
                     fn=run_full_overview,
@@ -1465,10 +1500,16 @@ def create_gradio_app():
             """
         )
 
-    # Warm cache and serialized models during creation
+    # Eagerly warm models, fonts, and dynamic simulation pipelines during creation
     try:
         load_ml_models()
         load_ml_charts()
+        default_scores = [0.40, 0.35, 0.45, 0.75, 0.30, 0.50, 0.40, 0.20]
+        calculate_farm_scenario("Kakamega Pioneer Farm", "Western Kenya", 6.5, *default_scores)
+        generate_radar_chart(default_scores, "Kakamega Pioneer Farm")
+        generate_pillar_comparison_chart(default_scores, "Western Kenya")
+        generate_section_capability_chart(1, [0.6, 0.4, 0.8, 0.4, 0.2], "Western Kenya")
+        generate_pillar_heatmap(default_scores, "Western Kenya")
     except Exception as e:
         log.warning("Could not warm chart/model cache: %s", e)
 
