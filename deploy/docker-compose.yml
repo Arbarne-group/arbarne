@@ -98,6 +98,11 @@ services:
         condition: service_healthy
       mlflow:
         condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.worker.celery_app inspect ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: unless-stopped
 
   # ─── Frontend (nginx serving the static SPA) ────────────────────────
