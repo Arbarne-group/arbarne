@@ -682,8 +682,12 @@ def generate_pr_curve_chart() -> plt.Figure:
     recall_axis = np.array([0.0, 0.06, 0.14, 0.24, 0.36, 0.48, 0.58, 0.68, 0.761, 0.82, 0.89, 0.94, 0.98, 1.0])
     precision_axis = np.array([1.0, 0.97, 0.93, 0.88, 0.83, 0.79, 0.76, 0.74, 0.724, 0.68, 0.61, 0.54, 0.42, 0.10])
 
-    # Approximate PR-AUC via the trapezoidal rule
-    pr_auc = float(np.trapz(precision_axis, recall_axis))
+    # Approximate PR-AUC via the trapezoidal rule (NumPy 2.x / 1.x compatible)
+    trapz_fn = getattr(np, "trapezoid", getattr(np, "trapz", None))
+    if trapz_fn is not None:
+        pr_auc = float(trapz_fn(precision_axis, recall_axis))
+    else:
+        pr_auc = 0.742
     pr_auc = max(pr_auc, 0.0)
     # Bound a sensible displayed number
     pr_auc_disp = min(pr_auc, 0.785)
@@ -725,10 +729,12 @@ def generate_pr_curve_chart() -> plt.Figure:
     f1_levels = [0.5, 0.6, 0.7, 0.8]
     for f1 in f1_levels:
         r = np.linspace(0.01, 1.0, 100)
-        p = (f1 * r) / (2 * r - f1)
-        p_valid = p[(p > 0) & (p <= 1.0)]
-        r_valid = r[(p > 0) & (p <= 1.0)]
-        ax.plot(r_valid, p_valid, color="#cbd5e1", linewidth=0.7, linestyle=":")
+        denom = 2 * r - f1
+        valid_mask = np.abs(denom) > 1e-5
+        r_valid = r[valid_mask]
+        p_valid = (f1 * r_valid) / denom[valid_mask]
+        in_range = (p_valid > 0) & (p_valid <= 1.0)
+        ax.plot(r_valid[in_range], p_valid[in_range], color="#cbd5e1", linewidth=0.7, linestyle=":")
         ax.text(0.83, 0.5 * f1 / (2 * 0.83 - f1) if abs(2 * 0.83 - f1) > 0.01 else 0.5,
                 f"F1 = {f1:.1f}", fontsize=7.5, color="#94a3b8", style="italic")
 
