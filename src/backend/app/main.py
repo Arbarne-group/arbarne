@@ -13,7 +13,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from pathlib import Path
 
 from app.api.assessments import router as assessments_router
@@ -78,6 +78,11 @@ app.include_router(ml_router)
 
 
 # ─── Gradio Interactive ML Demo Route ───────────────────────────────
+@app.get("/ml-demo", include_in_schema=False)
+def redirect_to_gradio_demo():
+    return RedirectResponse(url="/ml-demo/", status_code=307)
+
+
 try:
     import gradio as gr
     from app.api.gradio_app import create_gradio_app
