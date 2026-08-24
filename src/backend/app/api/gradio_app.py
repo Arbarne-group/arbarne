@@ -355,18 +355,19 @@ _ML_METRICS = {
 }
 
 # Pre-rendered chart cache directory for instantaneous UI responses
-CHART_CACHE_DIR = MODELS_DIR / "chart_cache"
+CHART_CACHE_DIR = Path(__file__).resolve().parent.parent / "ml" / "chart_cache"
 CHART_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def get_cached_chart_image(name: str, generator_fn) -> str:
     """Return file path to pre-rendered PNG chart, generating once on demand if not yet cached."""
+    CHART_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     img_path = CHART_CACHE_DIR / f"{name}.png"
-    if not img_path.exists():
+    if not img_path.exists() or img_path.stat().st_size == 0:
         fig = generator_fn()
         fig.savefig(img_path, format="png", dpi=100, bbox_inches="tight", facecolor=fig.get_facecolor())
         plt.close(fig)
-    return str(img_path)
+    return str(img_path.resolve())
 
 
 # Feature importances from trained Random Forest (sorted descending)

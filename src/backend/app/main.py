@@ -85,10 +85,15 @@ def redirect_to_gradio_demo():
 
 try:
     import gradio as gr
-    from app.api.gradio_app import create_gradio_app
+    from app.api.gradio_app import create_gradio_app, CHART_CACHE_DIR
     gradio_demo = create_gradio_app()
     if gradio_demo:
-        app = gr.mount_gradio_app(app, gradio_demo, path="/ml-demo")
+        app = gr.mount_gradio_app(
+            app,
+            gradio_demo,
+            path="/ml-demo",
+            allowed_paths=[str(CHART_CACHE_DIR.resolve())],
+        )
         logger.info("Gradio interactive ML scenario simulator mounted at /ml-demo")
 except Exception as exc:
     logger.warning("Could not mount Gradio demo route: %s", exc)
