@@ -9,6 +9,7 @@ Allows agronomists, verifiers, investors, and farmers to:
 
 from __future__ import annotations
 
+import functools
 import io
 import logging
 import os
@@ -26,6 +27,18 @@ import matplotlib
 matplotlib.use("Agg")  # Non-interactive backend
 import matplotlib.pyplot as plt
 import numpy as np
+
+# Fast rendering and explicit font mapping to prevent Windows font-scan stalls
+matplotlib.rcParams['font.sans-serif'] = ['DejaVu Sans', 'Arial', 'Helvetica', 'sans-serif']
+matplotlib.rcParams['font.family'] = 'sans-serif'
+matplotlib.rcParams['font.weight'] = 'normal'
+matplotlib.rcParams['axes.labelweight'] = 'normal'
+matplotlib.rcParams['axes.titleweight'] = 'bold'
+matplotlib.rcParams['figure.dpi'] = 96
+matplotlib.rcParams['figure.autolayout'] = False
+matplotlib.rcParams['path.simplify'] = True
+matplotlib.rcParams['path.simplify_threshold'] = 1.0
+matplotlib.rcParams['agg.path.chunksize'] = 10000
 
 log = logging.getLogger(__name__)
 
@@ -143,6 +156,7 @@ REGIONAL_BENCHMARKS = {
 MODELS_DIR = Path(__file__).resolve().parent.parent / "ml" / "models"
 
 
+@functools.lru_cache(maxsize=1)
 def load_ml_models() -> Tuple[Optional[Any], Optional[Any], Optional[Any]]:
     """Attempt to load trained serialized ML models."""
     import joblib
@@ -180,8 +194,14 @@ def load_ml_models() -> Tuple[Optional[Any], Optional[Any], Optional[Any]]:
 
 # ─── VISUAL CHART GENERATORS (MATPLOTLIB) ─────────────────────────────────────
 
-def generate_radar_chart(pillar_scores: List[float], farm_name: str = "Farm") -> plt.Figure:
+def generate_radar_chart(pillar_scores: List[float] | Tuple[float, ...], farm_name: str = "Farm") -> plt.Figure:
     """Generate official 8-Pillar Capability Radar (Spider) Chart."""
+    scores_tuple = tuple(round(float(s), 3) for s in pillar_scores)
+    return _cached_generate_radar_chart(scores_tuple, farm_name)
+
+
+@functools.lru_cache(maxsize=64)
+def _cached_generate_radar_chart(pillar_scores: Tuple[float, ...], farm_name: str = "Farm") -> plt.Figure:
     fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
     fig.patch.set_facecolor("#ffffff")
     ax.set_facecolor("#fafdfb")
@@ -222,8 +242,14 @@ def generate_radar_chart(pillar_scores: List[float], farm_name: str = "Farm") ->
     return fig
 
 
-def generate_pillar_comparison_chart(pillar_scores: List[float], region: str = "Western Kenya") -> plt.Figure:
+def generate_pillar_comparison_chart(pillar_scores: List[float] | Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
     """Generate Horizontal Bar Chart comparing 8 Pillars against Regional Cohort Benchmark."""
+    scores_tuple = tuple(round(float(s), 3) for s in pillar_scores)
+    return _cached_generate_pillar_comparison_chart(scores_tuple, region)
+
+
+@functools.lru_cache(maxsize=64)
+def _cached_generate_pillar_comparison_chart(pillar_scores: Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
     fig, ax = plt.subplots(figsize=(7, 4.2))
     fig.patch.set_facecolor("#ffffff")
     ax.set_facecolor("#fafbfc")
@@ -245,7 +271,7 @@ def generate_pillar_comparison_chart(pillar_scores: List[float], region: str = "
     rects2 = ax.barh(y_pos - height / 2, bench_pcts, height, label=f"{region} Benchmark", color="#94a3b8", alpha=0.6, edgecolor="#cbd5e1")
 
     ax.set_yticks(y_pos)
-    ax.set_yticklabels(labels, fontsize=8.5, weight="medium", color="#1e293b")
+    ax.set_yticklabels(labels, fontsize=8.5, weight="normal", color="#1e293b")
     ax.invert_yaxis()  # Labels read top-to-bottom
     ax.set_xlabel("Capability Maturity Score (%)", fontsize=9, color="#475569")
     ax.set_xlim(0, 105)
@@ -263,8 +289,14 @@ def generate_pillar_comparison_chart(pillar_scores: List[float], region: str = "
     return fig
 
 
-def generate_section_capability_chart(pillar_id: int, cap_scores: List[float], region: str = "Western Kenya") -> plt.Figure:
+def generate_section_capability_chart(pillar_id: int, cap_scores: List[float] | Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
     """Generate 5-Capability Scorecard Breakdown Bar Chart for a specific section."""
+    caps_tuple = tuple(round(float(c), 3) for c in cap_scores)
+    return _cached_generate_section_capability_chart(int(pillar_id), caps_tuple, region)
+
+
+@functools.lru_cache(maxsize=64)
+def _cached_generate_section_capability_chart(pillar_id: int, cap_scores: Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
     fig, ax = plt.subplots(figsize=(6.8, 3.5))
     fig.patch.set_facecolor("#ffffff")
     ax.set_facecolor("#fafbfc")
@@ -286,7 +318,7 @@ def generate_section_capability_chart(pillar_id: int, cap_scores: List[float], r
 
     labels = [f"P{pillar_id}.{i+1}: {cap_names[i]}" for i in range(5)]
     ax.set_yticks(y_pos)
-    ax.set_yticklabels(labels, fontsize=8.5, weight="medium", color="#1e293b")
+    ax.set_yticklabels(labels, fontsize=8.5, weight="normal", color="#1e293b")
     ax.invert_yaxis()
     ax.set_xlabel("Capability Level Score (%)", fontsize=9, color="#475569")
     ax.set_xlim(0, 105)
@@ -322,6 +354,21 @@ _ML_METRICS = {
     "anomaly_f1": 0.7420,
 }
 
+# Pre-rendered chart cache directory for instantaneous UI responses
+CHART_CACHE_DIR = MODELS_DIR / "chart_cache"
+CHART_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def get_cached_chart_image(name: str, generator_fn) -> str:
+    """Return file path to pre-rendered PNG chart, generating once on demand if not yet cached."""
+    img_path = CHART_CACHE_DIR / f"{name}.png"
+    if not img_path.exists():
+        fig = generator_fn()
+        fig.savefig(img_path, format="png", dpi=100, bbox_inches="tight", facecolor=fig.get_facecolor())
+        plt.close(fig)
+    return str(img_path)
+
+
 # Feature importances from trained Random Forest (sorted descending)
 _FEATURE_IMPORTANCES = [
     ("Priority Gap Depth (min P)", 0.2345),
@@ -344,6 +391,7 @@ _CONFUSION_MATRIX = [
 ]
 
 
+@functools.lru_cache(maxsize=1)
 def generate_confusion_matrix_chart() -> plt.Figure:
     """Publication-grade RF confusion matrix heatmap."""
     cm = np.array(_CONFUSION_MATRIX)
@@ -388,6 +436,7 @@ def generate_confusion_matrix_chart() -> plt.Figure:
     return fig
 
 
+@functools.lru_cache(maxsize=1)
 def generate_feature_importance_chart() -> plt.Figure:
     """Horizontal waterfall bar chart of RF feature importances."""
     names = [n for n, _ in _FEATURE_IMPORTANCES]
@@ -423,6 +472,7 @@ def generate_feature_importance_chart() -> plt.Figure:
     return fig
 
 
+@functools.lru_cache(maxsize=1)
 def generate_model_comparison_chart() -> plt.Figure:
     """Grouped bar chart comparing all 3 model performance metrics."""
     models = ["RF Risk\nForecaster", "K-Means\nClustering", "Isolation\nForest"]
@@ -470,6 +520,7 @@ def generate_model_comparison_chart() -> plt.Figure:
     return fig
 
 
+@functools.lru_cache(maxsize=1)
 def generate_cv_stability_chart() -> plt.Figure:
     """Cross-validation F1 per fold with mean ± std bands for the RF model."""
     # Simulated 5-fold CV scores matching the reported mean=0.9871, std=0.0071
@@ -509,6 +560,7 @@ def generate_cv_stability_chart() -> plt.Figure:
     return fig
 
 
+@functools.lru_cache(maxsize=1)
 def generate_roc_auc_chart() -> plt.Figure:
     """Multi-Class One-vs-Rest ROC Curves for RF Risk Forecaster (Low / Medium / High)."""
     np.random.seed(7)
@@ -580,6 +632,7 @@ def generate_roc_auc_chart() -> plt.Figure:
     return fig
 
 
+@functools.lru_cache(maxsize=1)
 def generate_pca_cluster_chart() -> plt.Figure:
     """PCA 2-D scatter with 3 K-Means cluster ellipses (Informal / Transitioning / Commercial Leader)."""
     np.random.seed(13)
@@ -673,6 +726,7 @@ def generate_pca_cluster_chart() -> plt.Figure:
     return fig
 
 
+@functools.lru_cache(maxsize=1)
 def generate_pr_curve_chart() -> plt.Figure:
     """Precision-Recall curve for the IsolationForest evidence-anomaly detector."""
     np.random.seed(19)
@@ -752,6 +806,7 @@ def generate_pr_curve_chart() -> plt.Figure:
     return fig
 
 
+@functools.lru_cache(maxsize=1)
 def generate_regional_violin_chart() -> plt.Figure:
     """FFMI score distribution violin + box per region — for cohort spread, not just averages."""
     np.random.seed(31)
@@ -846,6 +901,7 @@ def generate_regional_violin_chart() -> plt.Figure:
     return fig
 
 
+@functools.lru_cache(maxsize=1)
 def generate_risk_distribution_chart() -> plt.Figure:
     """Stacked horizontal bar showing predicted risk class distribution across 5 regions."""
     regions = ["Western Kenya", "Rift Valley", "Central Highlands", "Eastern Semi-Arid", "Coastal Lowlands"]
@@ -876,7 +932,7 @@ def generate_risk_distribution_chart() -> plt.Figure:
     add_labels(p3, [l + m for l, m in zip(low, med)])
 
     ax.set_yticks(y)
-    ax.set_yticklabels(regions, fontsize=9.5, weight="medium", color="#1e293b")
+    ax.set_yticklabels(regions, fontsize=9.5, weight="normal", color="#1e293b")
     ax.set_xlabel("Farm Population Distribution (%)", fontsize=9.5, color="#475569")
     ax.set_xlim(0, 105)
     ax.grid(axis="x", linestyle=":", alpha=0.4, color="#cbd5e1")
@@ -888,8 +944,14 @@ def generate_risk_distribution_chart() -> plt.Figure:
     return fig
 
 
-def generate_pillar_heatmap(pillar_scores: List[float], region: str = "Western Kenya") -> plt.Figure:
+def generate_pillar_heatmap(pillar_scores: List[float] | Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
     """Capability heat-map scorecard: 8 pillars × 5 maturity bands rendered as colour tiles."""
+    scores_tuple = tuple(round(float(s), 3) for s in pillar_scores)
+    return _cached_generate_pillar_heatmap(scores_tuple, region)
+
+
+@functools.lru_cache(maxsize=64)
+def _cached_generate_pillar_heatmap(pillar_scores: Tuple[float, ...], region: str = "Western Kenya") -> plt.Figure:
     benchmarks = REGIONAL_BENCHMARKS.get(region, REGIONAL_BENCHMARKS["Western Kenya"])
     bench_scores = [benchmarks[p] for p in range(1, 9)]
     pillar_labels = [f"P{i}: {PILLAR_METADATA[i]['name'].split('&')[0].strip()[:22]}" for i in range(1, 9)]
@@ -922,7 +984,7 @@ def generate_pillar_heatmap(pillar_scores: List[float], region: str = "Western K
         ax.set_xticks(range(5))
         ax.set_xticklabels(cap_labels, fontsize=8, color="#475569")
         ax.set_yticks(range(8))
-        ax.set_yticklabels(pillar_labels, fontsize=8.5, weight="medium", color="#1e293b")
+        ax.set_yticklabels(pillar_labels, fontsize=8.5, weight="normal", color="#1e293b")
         ax.set_title(title, fontsize=10.5, weight="bold", color=tcolor, pad=10)
         for i in range(8):
             for j in range(5):
@@ -987,12 +1049,14 @@ def calculate_farm_scenario(
             log_ac = float(np.log1p(farm_size))
             c_shock = float(REGIONAL_BENCHMARKS.get(region, {}).get("climate_risk_baseline", 0.35))
             m_vol = 0.35
-            delta = 1.0
+            delta = 0.5
+            prev_ffmi = max(0.0, float(ffmi_score - delta))
 
+            # Exact 15-feature vector matching farm_risk_classifier training columns
             x_vec = np.array([
                 pillar_scores[0], pillar_scores[1], pillar_scores[2], pillar_scores[3],
                 pillar_scores[4], pillar_scores[5], pillar_scores[6], pillar_scores[7],
-                p_gap, p_var, log_ac, c_shock, m_vol, delta
+                p_gap, p_var, c_shock, m_vol, delta, prev_ffmi, log_ac
             ]).reshape(1, -1)
 
             pred_label = risk_model.predict(x_vec)[0]
@@ -1004,7 +1068,8 @@ def calculate_farm_scenario(
                 risk = f"🟡 Medium Risk (Model Prob: {probs[1]*100:.1f}%)"
             else:
                 risk = f"🔴 High Risk (Model Prob: {probs[2]*100:.1f}%)"
-        except Exception:
+        except Exception as e:
+            log.warning("Inference fallback triggered: %s", e)
             risk = _rule_risk(ffmi_score, priority_gap_pillar[1])
     else:
         risk = _rule_risk(ffmi_score, priority_gap_pillar[1])
@@ -1301,40 +1366,40 @@ def create_gradio_app():
 
                 # Row 2: Confusion Matrix + Feature Importances (auto-rendered on load)
                 with gr.Row():
-                    cm_chart = gr.Plot(label="RF Confusion Matrix — Test Set Performance")
-                    fi_chart = gr.Plot(label="Top Feature Importances — Risk Trajectory Drivers")
+                    cm_chart = gr.Image(value=lambda: get_cached_chart_image("confusion_matrix", generate_confusion_matrix_chart), label="RF Confusion Matrix — Test Set Performance", type="filepath", show_label=True, interactive=False)
+                    fi_chart = gr.Image(value=lambda: get_cached_chart_image("feature_importance", generate_feature_importance_chart), label="Top Feature Importances — Risk Trajectory Drivers", type="filepath", show_label=True, interactive=False)
 
                 # Row 3: Model Comparison + CV Stability
                 with gr.Row():
-                    mc_chart = gr.Plot(label="All Models Performance Comparison")
-                    cv_chart = gr.Plot(label="5-Fold CV F1 Stability Analysis")
+                    mc_chart = gr.Image(value=lambda: get_cached_chart_image("model_comparison", generate_model_comparison_chart), label="All Models Performance Comparison", type="filepath", show_label=True, interactive=False)
+                    cv_chart = gr.Image(value=lambda: get_cached_chart_image("cv_stability", generate_cv_stability_chart), label="5-Fold CV F1 Stability Analysis", type="filepath", show_label=True, interactive=False)
 
                 # Row 4: Regional Risk Distribution (full width)
                 with gr.Row():
-                    rd_chart = gr.Plot(label="12-Month Default Risk — Regional Population Distribution")
+                    rd_chart = gr.Image(value=lambda: get_cached_chart_image("risk_distribution", generate_risk_distribution_chart), label="12-Month Default Risk — Regional Population Distribution", type="filepath", show_label=True, interactive=False)
 
                 # Row 5: Multi-Class ROC + PCA Cluster (side-by-side)
                 with gr.Row():
-                    roc_chart = gr.Plot(label="Multi-Class ROC — RF Risk Forecaster (One-vs-Rest)")
-                    pca_chart = gr.Plot(label="Farmer Archetype Clusters — PCA 2-D Projection")
+                    roc_chart = gr.Image(value=lambda: get_cached_chart_image("roc_auc", generate_roc_auc_chart), label="Multi-Class ROC — RF Risk Forecaster (One-vs-Rest)", type="filepath", show_label=True, interactive=False)
+                    pca_chart = gr.Image(value=lambda: get_cached_chart_image("pca_cluster", generate_pca_cluster_chart), label="Farmer Archetype Clusters — PCA 2-D Projection", type="filepath", show_label=True, interactive=False)
 
                 # Row 6: Precision-Recall + Regional FFMI Violin (side-by-side)
                 with gr.Row():
-                    pr_chart = gr.Plot(label="Precision-Recall — Evidence Anomaly Detector")
-                    violin_chart = gr.Plot(label="Regional FFMI Score Distribution — Cohort Spread")
+                    pr_chart = gr.Image(value=lambda: get_cached_chart_image("pr_curve", generate_pr_curve_chart), label="Precision-Recall — Evidence Anomaly Detector", type="filepath", show_label=True, interactive=False)
+                    violin_chart = gr.Image(value=lambda: get_cached_chart_image("regional_violin", generate_regional_violin_chart), label="Regional FFMI Score Distribution — Cohort Spread", type="filepath", show_label=True, interactive=False)
 
-                # Auto-render all 9 ML charts on tab load
+                # Auto-render all 9 ML charts from static disk cache
                 def load_ml_charts():
                     return (
-                        generate_confusion_matrix_chart(),
-                        generate_feature_importance_chart(),
-                        generate_model_comparison_chart(),
-                        generate_cv_stability_chart(),
-                        generate_risk_distribution_chart(),
-                        generate_roc_auc_chart(),
-                        generate_pca_cluster_chart(),
-                        generate_pr_curve_chart(),
-                        generate_regional_violin_chart(),
+                        get_cached_chart_image("confusion_matrix", generate_confusion_matrix_chart),
+                        get_cached_chart_image("feature_importance", generate_feature_importance_chart),
+                        get_cached_chart_image("model_comparison", generate_model_comparison_chart),
+                        get_cached_chart_image("cv_stability", generate_cv_stability_chart),
+                        get_cached_chart_image("risk_distribution", generate_risk_distribution_chart),
+                        get_cached_chart_image("roc_auc", generate_roc_auc_chart),
+                        get_cached_chart_image("pca_cluster", generate_pca_cluster_chart),
+                        get_cached_chart_image("pr_curve", generate_pr_curve_chart),
+                        get_cached_chart_image("regional_violin", generate_regional_violin_chart),
                     )
 
                 # Use a hidden trigger button auto-clicked via JS, or load_event on the block
@@ -1398,6 +1463,13 @@ def create_gradio_app():
             *Future Farms Framework (FFF) — Arbarne Agriculture Group · Digital Simulation & ML Analytics Platform.*
             """
         )
+
+    # Warm cache and serialized models during creation
+    try:
+        load_ml_models()
+        load_ml_charts()
+    except Exception as e:
+        log.warning("Could not warm chart/model cache: %s", e)
 
     demo.queue(default_concurrency_limit=20)
     return demo
