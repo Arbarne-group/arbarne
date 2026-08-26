@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useAppStore } from '../store/useStore';
 import { RadarChart } from '../components/charts/RadarChart';
 import {
@@ -9,6 +10,7 @@ import {
   AlertTriangle,
   Zap,
   CheckCircle,
+  Shield,
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
@@ -23,29 +25,66 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* ─── Hero Card ─────────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#022c24] via-[#03362c] to-[#011913] border border-emerald-500/30 p-6 sm:p-10 shadow-2xl text-white">
+      {/* ─── Hero Card with Animated Logo & Watermark ───────────────────── */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#022c24] via-[#03362c] to-[#011913] border border-emerald-500/30 p-6 sm:p-10 shadow-2xl text-white group">
+        {/* Animated Background Watermark Logo */}
+        <motion.img
+          src="/assets/arbarne-emblem-white.png"
+          alt=""
+          className="absolute right-[-2%] top-1/2 -translate-y-1/2 h-[95%] max-h-[290px] w-auto pointer-events-none select-none z-0 transition-opacity duration-500 group-hover:opacity-20"
+          animate={{
+            opacity: [0.07, 0.16, 0.07],
+            scale: [1, 1.04, 1],
+            y: ['-50%', '-52%', '-50%'],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          aria-hidden="true"
+        />
+
         <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="h-0.5 w-6 bg-emerald-400 rounded-full" />
-              <span className="text-[11px] font-extrabold uppercase tracking-widest text-emerald-400">
-                Arbarne Agriculture Group • Live Farm Intelligence
-              </span>
+          <div className="flex items-start gap-4 sm:gap-5">
+            {/* Animated Floating Arbarne Emblem Badge */}
+            <motion.div
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+              whileHover={{ scale: 1.08, rotate: 2 }}
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-emerald-500/30 to-[#022c24] border border-emerald-400/40 p-3 shadow-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-md glow-emerald relative cursor-pointer group/badge"
+              title="Arbarne Agriculture Group Emblem"
+            >
+              <img
+                src="/assets/arbarne-emblem-white.png"
+                alt="Arbarne"
+                className="h-full w-auto object-contain drop-shadow"
+              />
+              <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-400 animate-ping opacity-75" />
+            </motion.div>
+
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="h-0.5 w-5 bg-emerald-400 rounded-full" />
+                <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-emerald-400">
+                  Arbarne Agriculture Group • Live Farm Intelligence
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight">
+                Karibu, {user.name.split(' ')[0] || 'Farmer'}.
+                <br />
+                <span className="text-sprout-400 italic">The Great Transition.</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-white/70 flex flex-wrap items-center gap-2 pt-0.5">
+                <span>📍 {user.farm_name || 'Kakamega Demofarm'}</span>
+                <span>•</span>
+                <span>{user.farm_region || 'Western Kenya'}</span>
+                <span>•</span>
+                <span>{user.farm_size_acres || 5} Acres</span>
+              </p>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white tracking-tight">
-              Karibu, {user.name.split(' ')[0] || 'Farmer'}.
-              <br />
-              <span className="text-sprout-400 italic">The Great Transition.</span>
-            </h1>
-            <p className="text-xs sm:text-sm text-white/70 flex items-center gap-2 pt-1">
-              <span>📍 {user.farm_name || 'Kakamega Demofarm'}</span>
-              <span>•</span>
-              <span>{user.farm_region || 'Western Kenya'}</span>
-              <span>•</span>
-              <span>{user.farm_size_acres || 5} Acres</span>
-            </p>
           </div>
 
           {/* KPI Snapshot Pills */}

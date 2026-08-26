@@ -78,3 +78,47 @@
 .toast-progress {
   animation: toastProgress linear forwards;
 }
+
+/* ─── Hero Banner Logo & Watermark Animations ──────────────────────── */
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(74, 222, 128, 0.35);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(74, 222, 128, 0.65);
+    transform: scale(1.04);
+  }
+}
+
+@keyframes watermarkBreathe {
+  0%, 100% {
+    opacity: 0.08;
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.16;
+    transform: translateY(-52%) scale(1.05);
+  }
+}
+
+.animate-logo-float {
+  animation: logoFloat 3.5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.animate-watermark {
+  animation: watermarkBreathe 6s ease-in-out infinite;
+}
