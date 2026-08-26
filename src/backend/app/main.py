@@ -104,15 +104,20 @@ except Exception as exc:
 # nginx serves it and proxies /api to the backend.
 def _find_frontend_dir() -> Path | None:
     candidates = [
+        Path("/frontend/dist"),
         Path("/frontend/public"),
+        Path("/app/frontend_dist"),
         Path("/app/frontend_public"),
     ]
     parents = Path(__file__).resolve().parents
     if len(parents) > 3:
+        candidates.append(parents[3] / "src" / "frontend" / "dist")
         candidates.append(parents[3] / "src" / "frontend" / "public")
     if len(parents) > 2:
-        candidates.append(parents[2] / "frontend" / "public")
+        candidates.append(parents[2] / "src" / "frontend" / "dist")
         candidates.append(parents[2] / "src" / "frontend" / "public")
+        candidates.append(parents[2] / "frontend" / "dist")
+        candidates.append(parents[2] / "frontend" / "public")
     for candidate in candidates:
         if candidate and candidate.exists() and candidate.is_dir():
             return candidate

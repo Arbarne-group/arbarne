@@ -480,24 +480,20 @@ FastAPI backend at `backend:8000`.
 3. Ensure Quest ➔ button navigation targets correct screen
 
 ### 5. Running & Testing
-- **Local dev:** `docker compose up -d` (per SETUP.md)
-- **Frontend only:** Open `index.html` in browser; service worker requires local server (nginx)
-- **API testing:** Use FastAPI test client or `docker compose exec backend pytest`
-- **Build:** No build step — static files served directly by nginx
+- **Local dev (React + Vite):** `cd src/frontend && npm run dev` (Runs on `http://localhost:5173` with automatic API & Gradio proxy to FastAPI on port `8000`)
+- **Production Build:** `cd src/frontend && npm run build` (Outputs optimized, tree-shaken static bundle to `src/frontend/dist/`)
+- **Backend static serving:** FastAPI checks `src/frontend/dist` first, serving the React SPA directly at `/`
+- **Backend tests:** `cd src/backend && .venv\Scripts\python -m pytest -v` (74 passing unit, integration, and MLOps tests)
 
 ---
 
-## 9. Reference Index
+## 9. Modern React + Vite Architecture (`src/frontend/src`)
 
-- `index.html` — all screen markup and feature definitions
-- `app.js` — all application logic, gamification, charts, navigation
-- `service-worker.js` — offline-first caching strategy
-- `nginx.conf` — reverse proxy + static asset serving
-- `MASTER_BADGES_DATA` — 12 master badge definitions
-- `ROADMAP_TIERS` — 6-tier transformation roadmap definitions
-- `REGIONAL_PEER_BENCHMARKS` — K-Means cluster peer cohort data
-- `state` — central application state object
-- CSS custom properties — brand colors and design tokens
+- **State Store:** `src/frontend/src/store/useStore.ts` (Zustand reactive store managing authentication, XP progression, active assessments, and screen navigation)
+- **API Services:** `src/frontend/src/services/api.ts` (Type-safe client communicating with `/api/auth`, `/api/assessments`, `/api/portal`, and `/api/ml`)
+- **Layout Shell:** `src/frontend/src/components/layout/AppLayout.tsx` (Fixed desktop sidebar, mobile off-canvas drawer, sticky gamification topbar)
+- **Charts:** `src/frontend/src/components/charts/RadarChart.tsx` (Interactive 8-Pillar SVG radar visualization via Recharts)
+- **Design Tokens:** `src/frontend/tailwind.config.js` (Midnight Pine `#022c24`, Emerald `#10b981`, Sprout `#4ade80`, Amber Gold `#f59e0b`)
 
 ---
 
