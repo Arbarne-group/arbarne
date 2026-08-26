@@ -9,7 +9,7 @@
  *     the app handles the offline buffer.
  */
 
-const VERSION = "fff-v1";
+const VERSION = "fff-v6";
 const SHELL_CACHE = `${VERSION}-shell`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 

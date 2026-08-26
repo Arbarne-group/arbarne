@@ -1,4 +1,4 @@
-﻿"""Gamification Engine â€” Deterministic XP math, Level progression, Badges evaluator, Quests, and Leaderboards."""
+"""Gamification Engine â€” Deterministic XP math, Level progression, Badges evaluator, Quests, and Leaderboards."""
 
 from __future__ import annotations
 
@@ -440,8 +440,8 @@ def generate_quests(
         QuestOut(
             id="quest_soil_baseline",
             quest_key="soil_baseline",
-            title="Evaluate Soil & Land Health",
-            description="Take a Single-Pillar assessment or full audit to diagnose soil nutrient & carbon baseline.",
+            title="Evaluate Smart Farming & Digital Readiness",
+            description="Take a Single-Pillar assessment or full audit to diagnose technology & data management baseline.",
             category="Assessment",
             xp_reward=60,
             target_count=1,
@@ -450,7 +450,7 @@ def generate_quests(
             is_claimed="quest_soil_baseline" in claimed,
             action_type="assessment",
             action_target="pillar-1",
-            icon="ðŸ§ª",
+            icon="📱",
         ),
         QuestOut(
             id="quest_water_service",

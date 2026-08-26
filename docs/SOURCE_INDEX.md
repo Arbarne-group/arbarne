@@ -95,14 +95,14 @@
 | Support Available | `support_available` | |
 | Priority | `priority` | 🟢 / 🟡 / 🔵 |
 
-**Status:** ✅ Extracted for Pillar 1 (25 questions fully). Pillar 2-8 are structured identically across separate tabs.
+**Status:** ✅ Extracted for Pillar 1 (5 capabilities with Focus assessment questions and 25 questions with full metadata: questions, evidence required, if-no recommendations, why it matters, quick wins, support available, priorities). Pillars 2-8 are structured identically across separate tabs.
 
 **Used for (cross-references in the PRD):**
 
 | PRD section | What from the source |
 |---|---|
 | §7.3 | Priority distribution per pillar (10/10/5 = 40/40/20%) |
-| §7.4 | Pillar 1 capability map (5 capabilities, IDs P1.1-P1.5) |
+| §7.4 | Pillar 1 capability map (5 capabilities, IDs P1.1-P1.5 with authoritative Focus questions) |
 | §7.5 | Sample questions (P1.1.1, P1.3.1, P1.5.5) |
 | §7.6 | Per-question evidence requirements |
 | §7.7 | Question row schema (the 11 fields) |

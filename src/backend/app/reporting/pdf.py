@@ -195,14 +195,14 @@ def generate_transformation_pdf(
     # ─── 8-Pillar Score Breakdown Table ───────────────────────────────────
     elements.append(Paragraph("8-Pillar Capability Score Breakdown", h2_style))
     pillar_names = {
-        "1": "Pillar 1: Governance & Strategy",
-        "2": "Pillar 2: Soil & Land Health",
-        "3": "Pillar 3: Water Stewardship",
-        "4": "Pillar 4: Crop Management",
-        "5": "Pillar 5: Livestock Management",
-        "6": "Pillar 6: Financial Inclusion",
-        "7": "Pillar 7: Technology & Data",
-        "8": "Pillar 8: Market Access",
+        "1": "Pillar 1: Smart Farming & Digital Transformation",
+        "2": "Pillar 2: Productive Use of Renewable Energy",
+        "3": "Pillar 3: Food Safety & Compliance",
+        "4": "Pillar 4: Indigenous Knowledge & Climate Resilience",
+        "5": "Pillar 5: Farm Business Performance & Growth",
+        "6": "Pillar 6: Human Capital, Leadership & Farm Operations",
+        "7": "Pillar 7: Market Access, Customer Value & Competitiveness",
+        "8": "Pillar 8: Investment Readiness & Enterprise Development",
     }
 
     p_table_data = [["Pillar Dimension", "Capability Score", "Score (%)", "Status Band"]]

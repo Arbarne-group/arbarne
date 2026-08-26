@@ -12,69 +12,148 @@
     <link rel="apple-touch-icon" href="/assets/arbarne-app-badge.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css?v=5.1">
 </head>
 <body>
     <!-- ─── Floating Canvas & Particle Overlays ──────────────────────────── -->
     <canvas id="confetti-canvas"></canvas>
     <div id="xp-floater-container" class="xp-floater-layer"></div>
 
-    <!-- ─── Platform Header & Navigation Bar ────────────────────────────── -->
-    <header class="app-header">
-        <div class="header-container">
-            <div class="header-brand" id="brand-home-trigger" style="cursor: pointer;" title="Arbarne Agriculture Group — Home Dashboard">
-                <div class="brand-logo-badge">
-                    <img src="/assets/arbarne-emblem-white.png" alt="Arbarne Emblem" class="brand-emblem-img">
-                </div>
-                <div class="brand-text-block">
-                    <span class="brand-company-label">Arbarne Agriculture Group</span>
-                    <h1 class="brand-title">Future Farms <span class="brand-platform-pill">Platform</span></h1>
-                </div>
-            </div>
-            
-            <!-- Live Gamification HUD in Header -->
-            <div class="header-hud-group" id="header-hud-group" title="Click to view Transformation Journey &amp; Badges">
-                <div class="hud-level-badge" id="hud-level-badge">
-                    <span class="hud-level-icon">🏅</span>
-                    <span id="hud-level-text">Lvl 3 Resilient Steward</span>
-                </div>
-                <div class="hud-xp-box" id="hud-xp-box">
-                    <div class="hud-xp-track">
-                        <div id="hud-xp-bar" class="hud-xp-bar" style="width: 62%;"></div>
+    <!-- ─── Side Navigation Mobile Backdrop ──────────────────────────────── -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- ─── Master App Layout Structure ──────────────────────────────────── -->
+    <div class="app-layout" id="app-layout">
+        <!-- ─── Premium Side Navigation Bar ──────────────────────────────── -->
+        <aside id="app-sidebar" class="app-sidebar" aria-label="Main Navigation">
+            <div class="sidebar-header">
+                <div class="header-brand" id="brand-home-trigger" style="cursor: pointer;" title="Arbarne Agriculture Group — Home Dashboard">
+                    <div class="brand-logo-badge">
+                        <img src="/assets/arbarne-emblem-white.png" alt="Arbarne Emblem" class="brand-emblem-img">
                     </div>
-                    <span id="hud-xp-text" class="hud-xp-text">620 / 1,000 XP</span>
+                    <div class="brand-text-block">
+                        <span class="brand-company-label">Arbarne Agriculture</span>
+                        <h1 class="brand-title">Future Farms</h1>
+                    </div>
                 </div>
-                <div class="hud-streak-badge" id="hud-streak-badge">
-                    <span class="streak-icon">🔥</span>
-                    <span id="hud-streak-text">3-Day Streak</span>
+                <button id="sidebar-close-btn" class="sidebar-close-btn" type="button" aria-label="Close Navigation Sidebar">✕</button>
+            </div>
+
+            <!-- Sidebar Farm Identity Badge -->
+            <div class="sidebar-farm-badge" id="sidebar-farm-badge">
+                <div class="sidebar-farm-avatar">🌾</div>
+                <div class="sidebar-farm-info">
+                    <div class="sidebar-farm-name" id="sidebar-farm-name">Kakamega Demofarm</div>
+                    <div class="sidebar-farm-meta">
+                        <span class="sidebar-farm-region" id="sidebar-farm-region">Western Kenya</span>
+                        <span class="sidebar-farm-tier" id="sidebar-farm-tier">Tier 3</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="header-user-status" id="header-user-badge">
-                <span id="offline-indicator" class="badge badge-offline" hidden>Offline</span>
-                <div id="user-profile-pill" class="user-pill" style="cursor: pointer;">
+            <!-- Grouped Navigation Menu Items -->
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <div class="nav-section-label">OVERVIEW</div>
+                <button id="nav-btn-dashboard" class="nav-tab nav-tab-active" type="button">
+                    <span class="nav-tab-icon">🏠</span>
+                    <span class="nav-tab-label">Dashboard</span>
+                </button>
+                <button id="nav-btn-journey" class="nav-tab" type="button">
+                    <span class="nav-tab-icon">🏆</span>
+                    <span class="nav-tab-label">Journey &amp; Badges</span>
+                    <span class="nav-tab-pill" id="nav-streak-pill">🔥 3d</span>
+                </button>
+
+                <div class="nav-section-label">ASSESSMENT &amp; ANALYTICS</div>
+                <button id="nav-btn-assessment" class="nav-tab" type="button">
+                    <span class="nav-tab-icon">📝</span>
+                    <span class="nav-tab-label">Assessment Hub</span>
+                </button>
+                <button id="nav-btn-history" class="nav-tab" type="button">
+                    <span class="nav-tab-icon">📜</span>
+                    <span class="nav-tab-label">History &amp; Compare</span>
+                </button>
+                <button id="nav-btn-simulator" class="nav-tab" type="button">
+                    <span class="nav-tab-icon">🔮</span>
+                    <span class="nav-tab-label">Scenario Simulator</span>
+                </button>
+
+                <div class="nav-section-label">ECOSYSTEM &amp; SERVICES</div>
+                <button id="nav-btn-services" class="nav-tab" type="button">
+                    <span class="nav-tab-icon">🛠️</span>
+                    <span class="nav-tab-label">Services Portal</span>
+                </button>
+                <button id="nav-btn-learning" class="nav-tab" type="button">
+                    <span class="nav-tab-icon">📚</span>
+                    <span class="nav-tab-label">Learning Academy</span>
+                </button>
+
+                <div class="nav-section-label">ACCOUNT</div>
+                <button id="nav-btn-profile" class="nav-tab" type="button">
+                    <span class="nav-tab-icon">👤</span>
+                    <span class="nav-tab-label">Farm Profile</span>
+                </button>
+            </nav>
+
+            <!-- Sidebar User / Auth Footer Card -->
+            <div class="sidebar-footer">
+                <div id="user-profile-pill" class="sidebar-user-card" style="cursor: pointer;" title="View Farm Profile">
                     <span class="user-avatar" id="header-user-avatar">🧑‍🌾</span>
-                    <span class="user-name" id="header-user-name">Joseph Ochieng</span>
-                    <span class="user-tier-pill" id="header-user-tier">Tier 3</span>
+                    <div class="sidebar-user-details">
+                        <span class="sidebar-user-name" id="header-user-name">Joseph Ochieng</span>
+                        <span class="sidebar-user-role" id="header-user-tier">Tier 3 Commercializing</span>
+                    </div>
                 </div>
+                <button id="nav-btn-auth" class="nav-tab-auth-btn" type="button">
+                    <span class="auth-icon">🔑</span>
+                    <span class="auth-label" id="auth-btn-label">Sign In</span>
+                </button>
             </div>
-        </div>
+        </aside>
 
-        <nav class="app-nav">
-            <button id="nav-btn-dashboard" class="nav-tab nav-tab-active" type="button">🏠 Dashboard</button>
-            <button id="nav-btn-journey" class="nav-tab" type="button">🏆 Journey &amp; Badges</button>
-            <button id="nav-btn-assessment" class="nav-tab" type="button">📝 Assessment Hub</button>
-            <button id="nav-btn-history" class="nav-tab" type="button">📜 History &amp; Compare</button>
-            <button id="nav-btn-services" class="nav-tab" type="button">🛠️ Services Portal</button>
-            <button id="nav-btn-learning" class="nav-tab" type="button">📚 Learning Portal</button>
-            <button id="nav-btn-simulator" class="nav-tab" type="button">🔮 Simulator</button>
-            <button id="nav-btn-profile" class="nav-tab" type="button">👤 Profile</button>
-            <button id="nav-btn-auth" class="nav-tab nav-tab-auth" type="button">🔑 Sign In</button>
-        </nav>
-    </header>
+        <!-- ─── Main Viewport Area ────────────────────────────────────────── -->
+        <div class="app-main-wrapper">
+            <!-- ─── Top Header Bar ───────────────────────────────────────── -->
+            <header class="app-topbar">
+                <div class="topbar-left">
+                    <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" type="button" aria-label="Toggle Navigation Menu">
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                    </button>
+                    <div class="topbar-breadcrumb">
+                        <span class="topbar-breadcrumb-parent">Future Farms</span>
+                        <span class="topbar-breadcrumb-sep">/</span>
+                        <span class="topbar-breadcrumb-current" id="topbar-current-page">Dashboard</span>
+                    </div>
+                </div>
 
-    <main id="app">
+                <div class="topbar-right">
+                    <!-- Live Gamification HUD in Header -->
+                    <div class="header-hud-group" id="header-hud-group" title="Click to view Transformation Journey &amp; Badges">
+                        <div class="hud-level-badge" id="hud-level-badge">
+                            <span class="hud-level-icon">🏅</span>
+                            <span id="hud-level-text">Lvl 3 Resilient Steward</span>
+                        </div>
+                        <div class="hud-xp-box" id="hud-xp-box">
+                            <div class="hud-xp-track">
+                                <div id="hud-xp-bar" class="hud-xp-bar" style="width: 62%;"></div>
+                            </div>
+                            <span id="hud-xp-text" class="hud-xp-text">620 / 1,000 XP</span>
+                        </div>
+                        <div class="hud-streak-badge" id="hud-streak-badge">
+                            <span class="streak-icon">🔥</span>
+                            <span id="hud-streak-text">3-Day Streak</span>
+                        </div>
+                    </div>
+
+                    <div class="header-user-status" id="header-user-badge">
+                        <span id="offline-indicator" class="badge badge-offline" hidden>Offline</span>
+                    </div>
+                </div>
+            </header>
+
+            <main id="app">
         <!-- ─── 1. Authentication Screen (Register / Log In) ──────────────── -->
         <section id="screen-auth" class="screen" hidden>
             <div style="max-width: 520px; margin: 0 auto;">
@@ -294,8 +373,8 @@
                     <div style="flex: 1;">
                         <h4 style="margin: 0; font-size: 1.15rem;" id="dash-gap-heading">Transformation Gaps Identified</h4>
                         <p class="small muted" style="margin: 0.25rem 0 0 0;" id="dash-gap-subtext">
-                            <strong>Strongest:</strong> <span id="dash-strongest-pillar">Pillar 1: Soil &amp; Land Health</span> · 
-                            <strong>Priority Gap:</strong> <span id="dash-priority-gap">Pillar 2: Water Stewardship</span>.
+                            <strong>Strongest:</strong> <span id="dash-strongest-pillar">Pillar 1: Smart Farming &amp; Digital Transformation</span> · 
+                            <strong>Priority Gap:</strong> <span id="dash-priority-gap">Pillar 2: Productive Use of Renewable Energy</span>.
                         </p>
                     </div>
                     <button id="dash-btn-view-recs" class="btn btn-primary btn-sm">Explore Action Plan</button>
@@ -654,7 +733,7 @@
         <section id="screen-question" class="screen" hidden>
             <div class="question-container">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-                    <span id="progress-pillar-badge" class="badge badge-success">Pillar 1: Soil &amp; Land Health</span>
+                    <span id="progress-pillar-badge" class="badge badge-success">Pillar 1: Smart Farming &amp; Digital Transformation</span>
                     <span id="q-streak-text" class="badge badge-warning">Streak: 0 (1.0x XP)</span>
                 </div>
 
@@ -880,7 +959,7 @@
                     <!-- Populated dynamically -->
                 </div>
                 <div id="section-detail-content" style="margin-top: 1rem;">
-                    <h4 id="section-title" style="font-size: 1.25rem; margin-bottom: 0.25rem;">Pillar 1: Soil &amp; Land Health</h4>
+                    <h4 id="section-title" style="font-size: 1.25rem; margin-bottom: 0.25rem;">Pillar 1: Smart Farming &amp; Digital Transformation</h4>
                     <p id="section-principle" class="muted small" style="margin-bottom: 0.75rem;">Principle explanation</p>
                     <p id="section-guiding-question" class="small" style="font-weight: 600; color: var(--color-emerald-500); margin-bottom: 1rem;">Guiding Question</p>
                     <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
@@ -1183,14 +1262,14 @@
             <div class="footer-col-standards">
                 <h4 class="footer-heading">Transformation Pillars</h4>
                 <ul class="footer-pillars-list">
-                    <li><span>🧪 P1:</span> Soil &amp; Land Health</li>
-                    <li><span>💧 P2:</span> Water Stewardship</li>
-                    <li><span>🌱 P3:</span> Crop Biodiversity &amp; IPM</li>
-                    <li><span>🚜 P4:</span> Infra &amp; Mechanization</li>
-                    <li><span>💳 P5:</span> Farm Economy &amp; Markets</li>
-                    <li><span>🛡️ P6:</span> Labour &amp; Safety</li>
-                    <li><span>♻️ P7:</span> Circularity &amp; Waste</li>
-                    <li><span>📈 P8:</span> Governance &amp; Strategy</li>
+                    <li><span>📱 P1:</span> Smart Farming &amp; Digital</li>
+                    <li><span>☀️ P2:</span> Renewable Energy</li>
+                    <li><span>🛡️ P3:</span> Food Safety &amp; Compliance</li>
+                    <li><span>🌿 P4:</span> Indigenous Knowledge &amp; Climate</li>
+                    <li><span>📈 P5:</span> Farm Business Performance</li>
+                    <li><span>👥 P6:</span> Human Capital &amp; Operations</li>
+                    <li><span>🤝 P7:</span> Market Access &amp; Value</li>
+                    <li><span>💼 P8:</span> Investment Readiness</li>
                 </ul>
             </div>
         </div>
@@ -1206,6 +1285,8 @@
             </div>
         </div>
     </footer>
+    </div>
+</div>
 
     <!-- ─── Celebration Modals (Level-Up & Badge Unlock) ─────────────────── -->
     <div id="modal-level-up" class="modal-overlay" hidden>
@@ -1226,21 +1307,21 @@
 
     <div id="modal-badge-unlocked" class="modal-overlay" hidden>
         <div class="modal-card">
-            <div class="modal-icon-big" id="modal-badge-icon">🧪</div>
+            <div class="modal-icon-big" id="modal-badge-icon">📱</div>
             <div class="arbarne-eyebrow-wrap" style="justify-content: center;">
                 <div class="arbarne-hairline" style="background-color: var(--color-green-400);"></div>
                 <span class="arbarne-eyebrow light">New Badge Unlocked!</span>
                 <div class="arbarne-hairline" style="background-color: var(--color-green-400);"></div>
             </div>
-            <h2 id="modal-badge-title" style="font-size: 2rem; color: #ffffff; margin-bottom: 0.75rem;">Soil Alchemist</h2>
+            <h2 id="modal-badge-title" style="font-size: 2rem; color: #ffffff; margin-bottom: 0.75rem;">Digital Pioneer</h2>
             <p id="modal-badge-desc" style="color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; margin-bottom: 2rem;">
-                Baseline farm soil chemistry, carbon organic matter, and test nutrient balances.
+                Baseline farm technology readiness, digital records, and data management systems.
             </p>
             <button id="btn-close-badge-modal" class="btn btn-primary" style="width: 100%;">View Trophy Cabinet ➔</button>
         </div>
     </div>
 
     <!-- ─── Application JavaScript ──────────────────────────────────────── -->
-    <script src="/app.js"></script>
+    <script src="/app.js?v=5.1"></script>
 </body>
 </html>

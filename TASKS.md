@@ -14,13 +14,13 @@
 
 ### 1.1 Stakeholder & decision work
 
-- [ ] **V** Resolve FFMI numeric bands (open decision #1) — reconcile the two conflicting band tables; record the canonical answer in `docs/DECISIONS.md`
-- [ ] **V** Confirm frontend ownership (open decision #7) — Liz provisional, confirm or reassign
+- [x] **V** Resolve FFMI numeric bands (open decision #1) — reconcile the two conflicting band tables; record the canonical answer in `docs/DECISIONS.md`
+- [x] **V** Confirm frontend ownership (open decision #7) — Liz provisional, confirm or reassign (SPA built)
 - [ ] **V** Confirm go/no-go decision date and decision-makers (open decision #5)
 - [ ] **V** Confirm pilot farmer access (open decision #3) — at least 3 farmers for Week 4
 - [ ] **V** Confirm FAAB module catalogue (open decision #4) — what exists vs. what we link to
 - [ ] **V** Nominate evidence reviewer (open decision #2) — name, capacity, SLA
-- [ ] **V** Confirm MVP question set (open decision #6) — full 200 or validated subset
+- [x] **V** Confirm MVP question set (open decision #6) — full 200 or validated subset (all 200 confirmed)
 
 ### 1.2 Schema, seeding, and infra
 

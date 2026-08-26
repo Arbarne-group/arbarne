@@ -459,7 +459,7 @@ FastAPI backend at `backend:8000`.
 ### 8.1 Adding a New Screen
 1. Add `<section id="screen-xxx" class="screen">...</section>` to `index.html`
 2. Add to `PUBLIC_SCREENS` Set in `app.js:153` if public (no auth required)
-3. Add navigation tab in header `app-nav` if desired
+3. Add navigation button in sidebar `.sidebar-nav` if desired
 4. Add `showScreen('screen-xxx')` call in route handlers
 5. Implement screen-specific logic in `app.js`
 

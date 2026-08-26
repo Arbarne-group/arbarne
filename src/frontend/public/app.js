@@ -79,14 +79,14 @@ const state = {
         latestResult: null,
     },
     pillars: [
-        { id: 1, name: 'Soil & Land Health', icon: '🧪', principle: 'Optimize chemical, physical, and biological soil health for long-term yields.' },
-        { id: 2, name: 'Water Stewardship & Resilience', icon: '💧', principle: 'Capture, store, and efficiently apply water with zero wastage.' },
-        { id: 3, name: 'Crop Management & Biodiversity', icon: '🌱', principle: 'Diversify crop genetics, IPM pest controls, and ecological buffers.' },
-        { id: 4, name: 'Energy, Infra & Mechanization', icon: '🚜', principle: 'Deploy clean renewable energy and targeted field mechanization.' },
-        { id: 5, name: 'Farm Economy & Market Linkages', icon: '💳', principle: 'Strengthen financial records, credit access, and structured offtake contracts.' },
-        { id: 6, name: 'Labour, Safety & Community', icon: '🛡️', principle: 'Maintain fair labour, PPE safety standards, and shared community knowledge.' },
-        { id: 7, name: 'Waste, Circularity & Footprint', icon: '♻️', principle: 'Recycle crop residues, manure composting, and lower carbon footprint.' },
-        { id: 8, name: 'Governance, Strategy & Improvement', icon: '📈', principle: 'Establish continuous digitized farm records, goal tracking, and audits.' }
+        { id: 1, name: 'Smart Farming and Digital Transformation', icon: '📱', principle: 'Use technology and data to farm smarter.' },
+        { id: 2, name: 'Productive Use of Renewable Energy', icon: '☀️', principle: 'Turn energy from an operating cost into a productive asset.' },
+        { id: 3, name: 'Food Safety and Compliance', icon: '🛡️', principle: 'Produce food that is safe, traceable, quality-assured and compliant.' },
+        { id: 4, name: 'Indigenous Knowledge and Climate Resilience', icon: '🌿', principle: 'Build resilience by combining local knowledge, science and innovation.' },
+        { id: 5, name: 'Farm Business Performance and Growth', icon: '📈', principle: 'Build farms that are financially viable, sustainable and capable of growth.' },
+        { id: 6, name: 'Human Capital, Leadership and Farm Operations', icon: '👥', principle: 'Build the people, leadership and systems required to operate a professional farm business.' },
+        { id: 7, name: 'Market Access, Customer Value and Competitiveness', icon: '🤝', principle: 'Build the farm around customers and markets, not production alone.' },
+        { id: 8, name: 'Investment Readiness and Enterprise Development', icon: '💼', principle: 'Build farms that can attract, manage and grow capital responsibly.' }
     ],
     services: [],
     learning: [],
@@ -149,24 +149,59 @@ async function apiCall(endpoint, method = 'GET', body = null) {
     }
 }
 
+// ─── Sidebar Mobile Drawer Helpers ───────────────────────────────────────────
+function openMobileSidebar() {
+    const layout = document.getElementById('app-layout');
+    if (layout) layout.classList.add('sidebar-open');
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+}
+
+function closeMobileSidebar() {
+    const layout = document.getElementById('app-layout');
+    if (layout) layout.classList.remove('sidebar-open');
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+}
+
+function toggleMobileSidebar() {
+    const layout = document.getElementById('app-layout');
+    if (layout) {
+        if (layout.classList.contains('sidebar-open')) {
+            closeMobileSidebar();
+        } else {
+            openMobileSidebar();
+        }
+    }
+}
+
 // ─── Screen Navigation ──────────────────────────────────────────────────────
-const PUBLIC_SCREENS = new Set(['screen-auth']);
+const PUBLIC_SCREENS = new Set([
+    'screen-dashboard',
+    'screen-journey',
+    'screen-assessment-choice',
+    'screen-question',
+    'screen-result',
+    'screen-history',
+    'screen-services',
+    'screen-learning',
+    'screen-profile',
+    'screen-simulator',
+    'screen-auth'
+]);
 
 function updateAuthChrome() {
     const authed = isAuthenticated();
-    document.querySelectorAll('.app-nav .nav-tab').forEach(btn => {
-        if (btn.id !== 'nav-btn-auth') btn.hidden = !authed;
-    });
-    const hud = document.getElementById('header-hud-group');
-    if (hud) hud.hidden = !authed;
-    const pill = document.getElementById('user-profile-pill');
-    if (pill) pill.hidden = !authed;
+    const authBtn = document.getElementById('nav-btn-auth');
+    const authLabelEl = document.getElementById('auth-btn-label');
+    if (authLabelEl) {
+        authLabelEl.textContent = authed ? 'Sign Out' : 'Sign In';
+    } else if (authBtn) {
+        authBtn.textContent = authed ? '🚪 Sign Out' : '🔑 Sign In';
+    }
 }
 
 function showScreen(screenId) {
-    if (!PUBLIC_SCREENS.has(screenId) && !isAuthenticated()) {
-        screenId = 'screen-auth';
-    }
     updateAuthChrome();
     document.querySelectorAll('.screen').forEach(el => el.hidden = true);
     const target = document.getElementById(screenId);
@@ -195,6 +230,28 @@ function showScreen(screenId) {
         const btn = document.getElementById(activeTabId);
         if (btn) btn.classList.add('nav-tab-active');
     }
+
+    // Update topbar breadcrumb current page title
+    const screenTitles = {
+        'screen-dashboard': 'Dashboard',
+        'screen-journey': 'Journey & Badges',
+        'screen-assessment-choice': 'Assessment Hub',
+        'screen-question': 'Live Capability Assessment',
+        'screen-result': 'Assessment Scorecard & Roadmap',
+        'screen-history': 'Assessment History & Compare',
+        'screen-services': 'Services Portal',
+        'screen-learning': 'Learning Academy',
+        'screen-profile': 'Farm Profile',
+        'screen-simulator': 'Scenario Simulator',
+        'screen-auth': 'Platform Authentication'
+    };
+    const curTitleEl = document.getElementById('topbar-current-page');
+    if (curTitleEl) {
+        curTitleEl.textContent = screenTitles[screenId] || 'Dashboard';
+    }
+
+    // Close mobile sidebar drawer after navigation selection
+    closeMobileSidebar();
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -413,7 +470,6 @@ function awardXP(amount, actionLabel = '', event = null) {
     }).catch(() => {});
 }
 
-// ─── Header HUD Updates ─────────────────────────────────────────────────────
 function updateHeaderHUD() {
     updateAuthChrome();
     const g = state.gamification;
@@ -421,6 +477,7 @@ function updateHeaderHUD() {
     const xpBarEl = document.getElementById('hud-xp-bar');
     const xpTextEl = document.getElementById('hud-xp-text');
     const streakTextEl = document.getElementById('hud-streak-text');
+    const streakPillEl = document.getElementById('nav-streak-pill');
 
     const span = Math.max(1, g.next_level_xp - g.current_level_min_xp);
     const pct = Math.max(5, Math.min(100, ((g.total_xp - g.current_level_min_xp) / span) * 100));
@@ -429,15 +486,26 @@ function updateHeaderHUD() {
     if (xpBarEl) xpBarEl.style.width = `${pct}%`;
     if (xpTextEl) xpTextEl.textContent = `${g.total_xp.toLocaleString()} / ${g.next_level_xp.toLocaleString()} XP`;
     if (streakTextEl) streakTextEl.textContent = `${g.streak_days}-Day Streak`;
+    if (streakPillEl) streakPillEl.textContent = `🔥 ${g.streak_days || 3}d`;
 
     const userNameEl = document.getElementById('header-user-name');
     const userTierEl = document.getElementById('header-user-tier');
     const authBtn = document.getElementById('nav-btn-auth');
+    const authLabelEl = document.getElementById('auth-btn-label');
+
+    const sFarmName = document.getElementById('sidebar-farm-name');
+    const sFarmRegion = document.getElementById('sidebar-farm-region');
+    const sFarmTier = document.getElementById('sidebar-farm-tier');
 
     if (state.user) {
         if (userNameEl) userNameEl.textContent = state.user.name || 'Farmer';
-        if (userTierEl) userTierEl.textContent = `Tier ${state.user.tier || 3}`;
-        if (authBtn) authBtn.textContent = state.token ? '🚪 Sign Out' : '🔑 Sign In';
+        if (userTierEl) userTierEl.textContent = `Tier ${state.user.tier || 3} ${state.user.tier_name || 'Commercializing'}`;
+        if (authLabelEl) authLabelEl.textContent = state.token ? 'Sign Out' : 'Sign In';
+        if (authBtn && !authLabelEl) authBtn.textContent = state.token ? '🚪 Sign Out' : '🔑 Sign In';
+
+        if (sFarmName) sFarmName.textContent = state.user.farm_name || 'Kakamega Demofarm';
+        if (sFarmRegion) sFarmRegion.textContent = state.user.farm_region || 'Western Kenya';
+        if (sFarmTier) sFarmTier.textContent = `Tier ${state.user.tier || 3}`;
     }
 }
 
@@ -1058,8 +1126,8 @@ function renderResultsScreen(res) {
         }
     }
 
-    if (strongestEl) strongestEl.textContent = res.strongest_pillar || 'Soil & Land Health';
-    if (priorityGapEl) priorityGapEl.textContent = res.priority_gap_pillar || 'Water Stewardship';
+    if (strongestEl) strongestEl.textContent = res.strongest_pillar || 'Smart Farming & Digital Transformation';
+    if (priorityGapEl) priorityGapEl.textContent = res.priority_gap_pillar || 'Productive Use of Renewable Energy';
 
     renderRadarChart('result-radar-chart', res.pillar_scores || {});
     renderPillarBars('result-pillar-bars', res.pillar_scores || {});
@@ -1136,9 +1204,9 @@ function renderInteractiveRadarChart(containerId, farmScores = {}, peerScores = 
     let nodesSvg = '';
 
     const pNames = {
-        1: 'Soil & Land Health',
-        2: 'Water Stewardship',
-        3: 'Crop Management',
+        1: 'Smart Farming',
+        2: 'Renewable Energy',
+        3: 'Food Safety',
         4: 'Climate Resilience',
         5: 'Farm Business',
         6: 'Human Capital',
@@ -2304,8 +2372,8 @@ function renderResultsScreen(res) {
         }
     }
 
-    if (strongestEl) strongestEl.textContent = res.strongest_pillar || 'Soil & Land Health';
-    if (priorityGapEl) priorityGapEl.textContent = res.priority_gap_pillar || 'Water Stewardship';
+    if (strongestEl) strongestEl.textContent = res.strongest_pillar || 'Smart Farming & Digital Transformation';
+    if (priorityGapEl) priorityGapEl.textContent = res.priority_gap_pillar || 'Productive Use of Renewable Energy';
 
     // Render 4 interactive results charts
     const pScores = res.pillar_scores || {};
@@ -2896,6 +2964,21 @@ function initAuthAndProfile() {
 
 // ─── DOM Ready ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+    // Sidebar toggle and backdrop handlers for mobile responsiveness
+    const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+    if (sidebarToggleBtn) sidebarToggleBtn.onclick = () => toggleMobileSidebar();
+
+    const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+    if (sidebarCloseBtn) sidebarCloseBtn.onclick = () => closeMobileSidebar();
+
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+    if (sidebarBackdrop) sidebarBackdrop.onclick = () => closeMobileSidebar();
+
+    // Escape key closes mobile sidebar
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMobileSidebar();
+    });
+
     // Navigation bar tabs
     document.getElementById('nav-btn-dashboard').onclick = () => { refreshDashboard(); showScreen('screen-dashboard'); };
     document.getElementById('nav-btn-journey').onclick = () => { loadJourneyScreen(); showScreen('screen-journey'); };
@@ -3053,9 +3136,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initAuthAndProfile();
     if (isAuthenticated()) {
         syncGamificationState();
-        refreshDashboard();
-        showScreen('screen-dashboard');
-    } else {
-        showScreen('screen-auth');
+    }
+    refreshDashboard();
+    showScreen('screen-dashboard');
+
+    // Register Service Worker with cache invalidation
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js').then((reg) => {
+            reg.update().catch(() => {});
+        }).catch(() => {});
     }
 });

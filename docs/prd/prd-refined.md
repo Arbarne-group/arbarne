@@ -199,13 +199,13 @@ This distribution is what gives the Farm Transformation Report its character —
 
 Pillar 1 is given here as the canonical example; the same shape applies to Pillars 2–8.
 
-| Capability ID | Capability name | Questions |
-|---|---|---|
-| **P1.1** | Technology Readiness | P1.1.1 – P1.1.5 |
-| **P1.2** | Digital Capability | P1.2.1 – P1.2.5 |
-| **P1.3** | Farm Information & Data Management | P1.3.1 – P1.3.5 |
-| **P1.4** | Data-Driven Decision Making | P1.4.1 – P1.4.5 |
-| **P1.5** | Continuous Improvement & Innovation | P1.5.5 – P1.5.5 |
+| Capability ID | Capability name | Focus Assessment Scope | Questions |
+|---|---|---|---|
+| **P1.1** | Technology Readiness | *Does the farm understand its operational needs and have the basic infrastructure, resources, willingness and capacity required to identify and adopt appropriate technologies?* | P1.1.1 – P1.1.5 |
+| **P1.2** | Digital Capability | *Does the farmer have access to and the practical skills required to confidently use digital technologies in everyday farm and business activities?* | P1.2.1 – P1.2.5 |
+| **P1.3** | Farm Information & Data Management | *Does the farm systematically collect, organise, store and maintain reliable information about its production, finances, resources and operations?* | P1.3.1 – P1.3.5 |
+| **P1.4** | Data-Driven Decision Making | *Does the farmer actually use farm records, data, digital information and analysis to make better operational, production and business decisions?* | P1.4.1 – P1.4.5 |
+| **P1.5** | Continuous Improvement & Innovation | *Does the farm continuously evaluate its performance, experiment with better approaches, adopt appropriate innovations and improve how technology and information are used over time?* | P1.5.1 – P1.5.5 |
 
 The stable ID format `P{pillar}.{cap}.{q}` is used as the database primary key for each question row and must be referenced consistently in code, exports, and reports.
 

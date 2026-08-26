@@ -125,7 +125,7 @@ To sustain farmer engagement and incentivize continuous capability development, 
    - Granular XP rewards for answering questions (+5 XP), completing single pillar (+60 XP), full 8-pillar assessment (+250 XP), completing courses (+50 XP), receiving services (+75 XP), and maintaining daily streaks.
 
 2. **Master Badges Catalogue:**
-   - 8 Pillar-specific Master Badges (*Soil Alchemist*, *Water Guardian*, *Crop Champion*, *Livestock Master*, *Ecosystem Steward*, *Market Navigator*, *Financial Wizard*, *Governance Leader*).
+   - 8 Pillar-specific Master Badges (*Smart Farming Navigator*, *Renewable Energy Pioneer*, *Food Safety Champion*, *Climate Resilience Steward*, *Farm Business Leader*, *Human Capital Master*, *Market Value Champion*, *Investment Readiness Master*).
    - Dynamic progress fraction calculation evaluating 6-level capability states.
 
 3. **Quests & Regional Leaderboards:**
@@ -136,8 +136,8 @@ To sustain farmer engagement and incentivize continuous capability development, 
 
 ### 3.5 Core Assessment Engine, Longitudinal Tracking & PDF Reporting
 1. **Dual Assessment Pathways (`app/api/assessments.py`):**
-   - **Path A (Single Pillar 25Q):** Rapid diagnostic focused on a specific pillar (e.g., Water Stewardship), producing an immediate section scorecard.
-   - **Path B (Full 8-Pillar 200Q):** Comprehensive 200-question audit computing the 0–24 FFMI Score and assigning one of the 5 canonical maturity tiers (Tier 1 *Subsistence* to Tier 5 *Future Ready*).
+   - **Path A (Single Pillar 25Q):** Rapid diagnostic focused on a specific pillar (e.g., Smart Farming and Digital Transformation), producing an immediate section scorecard.
+   - **Path B (Full 8-Pillar 200Q):** Comprehensive 200-question audit computing the 0–24 FFMI Score and assigning one of the 5 canonical maturity tiers (Tier 1 *Informal Farm* to Tier 5 *Future Ready Farm*).
 
 2. **Longitudinal Assessment Comparison (`/api/assessments/compare`):**
    - Analyzes historical assessments for a farm, computing score progression deltas ($\Delta \text{FFMI}$), tier advancements, and identifying improved vs stagnant capabilities.

@@ -53,14 +53,14 @@ $$\text{Assess} \longrightarrow \text{Diagnose} \longrightarrow \text{Prioritise
 ## 2. Core Scoring, Tiers & Recommendation Logic
 
 ### A. The 8 Pillars
-1. **Pillar 1: Governance & Strategy**
-2. **Pillar 2: Soil & Land Health**
-3. **Pillar 3: Water Stewardship**
-4. **Pillar 4: Crop Management**
-5. **Pillar 5: Livestock Management**
-6. **Pillar 6: Financial Inclusion**
-7. **Pillar 7: Technology & Data**
-8. **Pillar 8: Market Access**
+1. **Pillar 1: Smart Farming and Digital Transformation**
+2. **Pillar 2: Productive Use of Renewable Energy**
+3. **Pillar 3: Food Safety and Compliance**
+4. **Pillar 4: Indigenous Knowledge and Climate Resilience**
+5. **Pillar 5: Farm Business Performance and Growth**
+6. **Pillar 6: Human Capital, Leadership and Farm Operations**
+7. **Pillar 7: Market Access, Customer Value and Competitiveness**
+8. **Pillar 8: Investment Readiness and Enterprise Development**
 
 ### B. Canonical FFMI Scale & Signed-off Tiers (`DEFAULT_FFMI_BANDS`)
 The Future Farm Maturity Index (FFMI) is normalized on a **0.00 to 24.00 scale**:
@@ -129,7 +129,7 @@ GET /api/assessments/{assessment_id}/pdf
 
 ### A. Frontend "What-If" Planner
 - Embedded in the web application (both standalone via the top header tab and post-assessment on the results page).
-- Allows agronomists and farmers to drag sliders to see how targeted investments (e.g. improving Soil Health from 30% to 70%) shift their FFMI score and unlock the next tier.
+- Allows agronomists and farmers to drag sliders to see how targeted investments (e.g. improving Smart Farming & Digital Transformation from 30% to 70%) shift their FFMI score and unlock the next tier.
 
 ### B. Gradio ML Sandbox (`/ml-demo/`)
 - Dedicated Python interface for data scientists, donors, and technical partners.
@@ -164,9 +164,10 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ## 7. Running Test Suites
 
 ```powershell
-# Run full Pytest test suite
-pytest tests/ -v
+# Run full Pytest test suite (74 unit, integration, and ML accuracy tests)
+cd c:\Users\user\Desktop\Projects\arbane\src\backend
+& .venv\Scripts\python.exe -m pytest tests/ -v
 
 # Run performance and latency benchmark
-python test_simulation_performance.py
+& .venv\Scripts\python.exe test_simulation_performance.py
 ```

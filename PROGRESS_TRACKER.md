@@ -13,7 +13,7 @@
 | **Week 2 — Milestone 2 (Core Assessment)** | Deterministic Scoring Engine, Quick Wins Recommendation Engine, Offline PWA UI | **Completed & Verified** | 100% |
 | **Week 3 — Milestone 3 (Verification, Section Reports & AI/ML)** | Section Diagnostic Reports & Charts, Section PDF Downloads, 40-Cap Synthetic Data, Retrained ML Models (98% Acc), Celery ML Workers, Anthropic Claude | **Completed & Verified** | 100% |
 | **Week 4 — Milestone 4 (Simulation, MLOps & Handover)** | Multi-Tab Gradio Simulation Platform, 63/63 Test Suite Pass Rate, Docker Compose Verified, Dual DB Engine Fallback | **Completed & Verified** | 100% |
-| **Week 5 — Milestone 5 (Farmer UX & Platform Architecture)** | Diagram 1, 2, 3 Full Implementation: Auth & Verification, Path A (25Q) vs Path B (200Q) Pathways, History & Longitudinal Comparison, Services & Learning Portals, 67/67 Tests Passing | **Completed & Verified** | 100% |
+| **Week 5 — Milestone 5 (Farmer UX & Platform Architecture)** | Diagram 1, 2, 3 Full Implementation: Auth & Verification, Path A (25Q) vs Path B (200Q) Pathways, History & Longitudinal Comparison, Services & Learning Portals, 74/74 Tests Passing | **Completed & Verified** | 100% |
 
 ---
 
@@ -75,7 +75,7 @@
     10. `screen-simulator`: Interactive 8-Pillar capability sliders with live SVG radar and FFMI recalculations.
 
 ### 2.4 Test Suite & Quality Verification
-- [x] **Test Suite Coverage:** **`67 / 67 Tests Passing (100% Pass Rate)`** via `pytest`.
+- [x] **Test Suite Coverage:** **`74 / 74 Tests Passing (100% Pass Rate)`** via `pytest`.
 - [x] **New Test Module:** `src/backend/tests/test_auth_and_portals.py` covering auth, Path A/B lifecycle, history comparison, and portals.
 - [x] **End-to-End Workflow Verification:** `src/backend/tests/verify_e2e_workflow.py` validating the entire 7-tier farmer journey from registration to reassessment.
 
