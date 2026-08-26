@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppStore } from '../../store/useStore';
 import { ScreenId } from '../../types';
 import {
@@ -13,6 +13,10 @@ import {
   LogOut,
   LogIn,
   X,
+  ChevronLeft,
+  ChevronRight,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from 'lucide-react';
 
 interface NavItem {
@@ -31,8 +35,22 @@ export const SidebarNav: React.FC = () => {
     logout,
     gamification,
     sidebarOpen,
+    sidebarCollapsed,
     toggleSidebar,
+    toggleSidebarCollapsed,
   } = useAppStore();
+
+  // Keyboard shortcut listener: Ctrl+B or Cmd+B to toggle collapse
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        toggleSidebarCollapsed();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleSidebarCollapsed]);
 
   const navGroups: Array<{ title: string; items: NavItem[] }> = [
     {
@@ -89,34 +107,59 @@ export const SidebarNav: React.FC = () => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 bottom-0 w-[270px] z-50 flex flex-col bg-gradient-to-b from-[#011913] via-[#022c24] to-[#03362c] border-r border-emerald-500/20 shadow-2xl transition-transform duration-300 ease-out overflow-y-auto ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed top-0 left-0 bottom-0 z-50 flex flex-col bg-gradient-to-b from-[#011913] via-[#022c24] to-[#03362c] border-r border-emerald-500/20 shadow-2xl transition-all duration-300 ease-in-out overflow-x-hidden overflow-y-auto ${
+          sidebarOpen ? 'translate-x-0 w-[270px]' : '-translate-x-full lg:translate-x-0'
+        } ${sidebarCollapsed ? 'lg:w-[78px]' : 'lg:w-[264px]'}`}
       >
-        {/* Header Branding */}
-        <div className="p-4 flex items-center justify-between border-b border-white/10">
+        {/* ─── Header Branding & Collapse Toggle ───────────────────────── */}
+        <div
+          className={`p-3.5 border-b border-white/10 flex items-center ${
+            sidebarCollapsed ? 'justify-center' : 'justify-between'
+          }`}
+        >
+          {/* Logo & Brand Info */}
           <div
-            className="flex items-center gap-3 cursor-pointer group"
+            className={`flex items-center gap-2.5 cursor-pointer group ${
+              sidebarCollapsed ? 'justify-center' : ''
+            }`}
             onClick={() => setScreen('screen-dashboard')}
+            title="Arbarne Agriculture - Future Farms Framework"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/30 to-pine-900 border border-emerald-400/40 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform backdrop-blur-md">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/30 to-[#022c24] border border-emerald-400/40 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform backdrop-blur-md flex-shrink-0">
               <img
                 src="/assets/arbarne-emblem-white.png"
-                alt="Arbarne Emblem"
-                className="h-7 w-auto object-contain drop-shadow"
+                alt="Arbarne Agriculture Group"
+                className="h-6 w-auto object-contain drop-shadow"
               />
             </div>
-            <div>
-              <span className="text-[10px] font-bold text-sprout-400 tracking-wider uppercase block">
-                Arbarne Agriculture
-              </span>
-              <h1 className="font-serif text-lg font-bold text-white tracking-tight">
-                Future Farms
-              </h1>
-            </div>
+
+            {!sidebarCollapsed && (
+              <div className="overflow-hidden whitespace-nowrap">
+                <span className="text-[9px] font-extrabold text-sprout-400 tracking-wider uppercase block">
+                  Arbarne Agriculture
+                </span>
+                <h1 className="font-serif text-base font-bold text-white tracking-tight">
+                  Future Farms
+                </h1>
+              </div>
+            )}
           </div>
+
+          {/* Desktop Collapse / Expand Button */}
+          {!sidebarCollapsed ? (
+            <button
+              onClick={toggleSidebarCollapsed}
+              className="hidden lg:flex p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+              title="Collapse sidebar (Ctrl+B)"
+              aria-label="Collapse sidebar"
+            >
+              <PanelLeftClose className="w-4 h-4" />
+            </button>
+          ) : null}
+
+          {/* Mobile Close Button */}
           <button
-            className="lg:hidden p-1 text-white/70 hover:text-white"
+            className="lg:hidden p-1.5 text-white/70 hover:text-white rounded-lg hover:bg-white/10"
             onClick={() => toggleSidebar(false)}
             aria-label="Close Sidebar"
           >
@@ -124,31 +167,65 @@ export const SidebarNav: React.FC = () => {
           </button>
         </div>
 
-        {/* Farm Identity Badge */}
-        <div className="mx-4 my-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-lg">
-            🌾
+        {/* Floating Expand Trigger when Collapsed on Desktop */}
+        {sidebarCollapsed && (
+          <div className="hidden lg:flex justify-center py-2 border-b border-white/5">
+            <button
+              onClick={toggleSidebarCollapsed}
+              className="p-1.5 rounded-lg text-sprout-400 hover:text-white hover:bg-white/10 transition-colors"
+              title="Expand sidebar (Ctrl+B)"
+              aria-label="Expand sidebar"
+            >
+              <PanelLeftOpen className="w-4 h-4" />
+            </button>
           </div>
-          <div className="flex-1 overflow-hidden">
-            <div className="text-xs font-bold text-white truncate">
-              {user.farm_name || 'Kakamega Demofarm'}
+        )}
+
+        {/* ─── Farm Identity Badge ───────────────────────────────────── */}
+        {!sidebarCollapsed ? (
+          <div className="mx-3.5 my-3 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-sm flex-shrink-0">
+              🌾
             </div>
-            <div className="flex items-center gap-1.5 text-[11px] text-sprout-400">
-              <span className="truncate">{user.farm_region || 'Western Kenya'}</span>
-              <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/30 text-[9px] font-extrabold text-white border border-emerald-400/40">
-                Tier {user.tier || 3}
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-bold text-white truncate">
+                {user.farm_name || 'Demonstration Farm'}
+              </div>
+              <div className="flex items-center gap-1.5 text-[10px] text-sprout-400">
+                <span className="truncate">{user.farm_region || 'Western Kenya'}</span>
+                <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/30 text-[8px] font-extrabold text-white border border-emerald-400/40">
+                  Tier {user.tier || 3}
+                </span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div
+            className="hidden lg:flex justify-center my-2.5 cursor-pointer"
+            onClick={() => setScreen('screen-profile')}
+            title={`${user.farm_name || 'Demonstration Farm'} (Tier ${user.tier || 3})`}
+          >
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-sm relative">
+              <span>🌾</span>
+              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 text-[8px] font-extrabold text-pine-950 flex items-center justify-center">
+                {user.tier || 3}
               </span>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Navigation Links */}
-        <nav className="flex-1 px-3 py-2 space-y-4">
+        {/* ─── Navigation Links ──────────────────────────────────────── */}
+        <nav className="flex-1 px-2.5 py-2 space-y-4">
           {navGroups.map((group) => (
             <div key={group.title}>
-              <div className="px-3 mb-1 text-[10px] font-extrabold tracking-wider text-sprout-400/60 uppercase">
-                {group.title}
-              </div>
+              {!sidebarCollapsed ? (
+                <div className="px-2.5 mb-1 text-[9px] font-extrabold tracking-wider text-sprout-400/60 uppercase">
+                  {group.title}
+                </div>
+              ) : (
+                <div className="w-6 h-px bg-white/10 mx-auto my-2" />
+              )}
+
               <div className="space-y-1">
                 {group.items.map((item) => {
                   const isActive = activeScreen === item.id;
@@ -156,20 +233,39 @@ export const SidebarNav: React.FC = () => {
                     <button
                       key={item.id}
                       onClick={() => setScreen(item.id)}
-                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                      title={sidebarCollapsed ? item.label : undefined}
+                      className={`w-full flex items-center rounded-xl text-xs font-medium transition-all group relative ${
+                        sidebarCollapsed
+                          ? 'justify-center p-2.5 h-10 w-10 mx-auto'
+                          : 'gap-3 px-3 py-2 text-sm'
+                      } ${
                         isActive
                           ? 'bg-gradient-to-r from-emerald-500/30 to-emerald-500/10 text-white font-bold border border-emerald-400/40 shadow-inner'
-                          : 'text-white/70 hover:text-white hover:bg-white/5 hover:translate-x-1'
+                          : 'text-white/70 hover:text-white hover:bg-white/5 hover:translate-x-0.5'
                       }`}
                     >
-                      <span className={isActive ? 'text-sprout-400' : 'text-white/60'}>
+                      <span
+                        className={`flex-shrink-0 ${
+                          isActive ? 'text-sprout-400' : 'text-white/60 group-hover:text-white'
+                        }`}
+                      >
                         {item.icon}
                       </span>
-                      <span className="flex-1 text-left truncate">{item.label}</span>
-                      {item.pill && (
-                        <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300">
-                          {item.pill}
-                        </span>
+
+                      {!sidebarCollapsed && (
+                        <>
+                          <span className="flex-1 text-left truncate">{item.label}</span>
+                          {item.pill && (
+                            <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300">
+                              {item.pill}
+                            </span>
+                          )}
+                        </>
+                      )}
+
+                      {/* Small notification dot when collapsed if pill exists */}
+                      {sidebarCollapsed && item.pill && (
+                        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
                       )}
                     </button>
                   );
@@ -179,32 +275,51 @@ export const SidebarNav: React.FC = () => {
           ))}
         </nav>
 
-        {/* Footer Identity & Auth */}
-        <div className="p-3 border-t border-white/10 bg-pine-950/60 space-y-2">
-          <div
-            className="flex items-center gap-2.5 p-2 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/30 cursor-pointer transition-colors"
-            onClick={() => setScreen('screen-profile')}
-          >
-            <div className="text-xl">🧑‍🌾</div>
-            <div className="flex-1 overflow-hidden">
-              <div className="text-xs font-bold text-white truncate">{user.name}</div>
-              <div className="text-[10px] text-sprout-400 truncate">
-                Tier {user.tier || 3} {user.tier_name || 'Commercializing Farm'}
+        {/* ─── Footer Identity & Auth ────────────────────────────────── */}
+        <div className="p-2.5 border-t border-white/10 bg-pine-950/60 space-y-2">
+          {!sidebarCollapsed ? (
+            <div
+              className="flex items-center gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/30 cursor-pointer transition-colors"
+              onClick={() => setScreen('screen-profile')}
+            >
+              <div className="text-lg flex-shrink-0">🧑‍🌾</div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold text-white truncate">{user.name}</div>
+                <div className="text-[9px] text-sprout-400 truncate">
+                  Tier {user.tier || 3} • {user.farm_region || 'Kenya'}
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div
+              className="hidden lg:flex justify-center py-1 cursor-pointer"
+              onClick={() => setScreen('screen-profile')}
+              title={`${user.name} - Profile Settings`}
+            >
+              <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-sm hover:bg-white/20 transition-colors">
+                🧑‍🌾
+              </div>
+            </div>
+          )}
 
           <button
             onClick={handleAuthClick}
-            className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-red-500/20 text-white hover:text-red-300 border border-white/10 hover:border-red-400/40 transition-colors"
+            title={sidebarCollapsed ? (token ? 'Sign Out' : 'Sign In') : undefined}
+            className={`w-full flex items-center justify-center rounded-xl text-xs font-bold transition-colors ${
+              sidebarCollapsed
+                ? 'p-2.5 h-10 w-10 mx-auto bg-white/10 hover:bg-red-500/20 text-white hover:text-red-300'
+                : 'gap-2 py-2 px-3 bg-white/10 hover:bg-red-500/20 text-white hover:text-red-300 border border-white/10 hover:border-red-400/40'
+            }`}
           >
             {token ? (
               <>
-                <LogOut className="w-3.5 h-3.5" /> Sign Out
+                <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
+                {!sidebarCollapsed && <span>Sign Out</span>}
               </>
             ) : (
               <>
-                <LogIn className="w-3.5 h-3.5" /> Sign In
+                <LogIn className="w-3.5 h-3.5 flex-shrink-0" />
+                {!sidebarCollapsed && <span>Sign In</span>}
               </>
             )}
           </button>

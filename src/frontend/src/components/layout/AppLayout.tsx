@@ -9,14 +9,18 @@ interface AppLayoutProps {
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
-  const { setScreen } = useAppStore();
+  const { setScreen, sidebarCollapsed } = useAppStore();
 
   return (
     <div className="flex min-h-screen bg-canvas font-sans relative">
       <SidebarNav />
       <ToastNotification />
 
-      <div className="flex-1 lg:ml-[270px] flex flex-col min-h-screen min-w-0">
+      <div
+        className={`flex-1 flex flex-col min-h-screen min-w-0 transition-all duration-300 ease-in-out ${
+          sidebarCollapsed ? 'lg:ml-[78px]' : 'lg:ml-[264px]'
+        }`}
+      >
         <AppTopbar />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">

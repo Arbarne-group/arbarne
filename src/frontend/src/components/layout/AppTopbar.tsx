@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppStore } from '../../store/useStore';
-import { Menu, Award, Flame, WifiOff } from 'lucide-react';
+import { Menu, Award, Flame, WifiOff, PanelLeft } from 'lucide-react';
 import { ScreenId } from '../../types';
 
 const SCREEN_TITLES: Record<ScreenId, string> = {
@@ -18,7 +18,15 @@ const SCREEN_TITLES: Record<ScreenId, string> = {
 };
 
 export const AppTopbar: React.FC = () => {
-  const { activeScreen, setScreen, gamification, toggleSidebar, token } = useAppStore();
+  const {
+    activeScreen,
+    setScreen,
+    gamification,
+    toggleSidebar,
+    toggleSidebarCollapsed,
+    sidebarCollapsed,
+    token,
+  } = useAppStore();
   const [isOnline, setIsOnline] = React.useState(navigator.onLine);
 
   React.useEffect(() => {
@@ -54,6 +62,15 @@ export const AppTopbar: React.FC = () => {
           aria-label="Open Navigation"
         >
           <Menu className="w-5 h-5" />
+        </button>
+
+        <button
+          onClick={toggleSidebarCollapsed}
+          className="hidden lg:flex p-2 rounded-lg bg-white/10 text-white/80 hover:text-white hover:bg-white/20 transition-colors"
+          title={sidebarCollapsed ? 'Expand Sidebar (Ctrl+B)' : 'Collapse Sidebar (Ctrl+B)'}
+          aria-label="Toggle Sidebar"
+        >
+          <PanelLeft className="w-4 h-4" />
         </button>
 
         <div className="flex items-center gap-2 text-sm font-medium">

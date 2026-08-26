@@ -77,6 +77,7 @@ interface AppState {
   activeScreen: ScreenId;
   pillars: Pillar[];
   sidebarOpen: boolean;
+  sidebarCollapsed: boolean;
   toasts: AppNotification[];
 
   // Active Assessment Flow
@@ -93,6 +94,7 @@ interface AppState {
   // Actions
   setScreen: (screen: ScreenId) => void;
   toggleSidebar: (open?: boolean) => void;
+  toggleSidebarCollapsed: () => void;
   setToken: (token: string | null) => void;
   setUser: (user: Partial<User>) => void;
   logout: () => void;
@@ -133,6 +135,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     : 'screen-auth',
   pillars: CANONICAL_PILLARS,
   sidebarOpen: false,
+  sidebarCollapsed: localStorage.getItem('fff_sidebar_collapsed') === 'true',
   toasts: [],
 
   assessment: {
@@ -155,6 +158,14 @@ export const useAppStore = create<AppState>((set, get) => ({
     set((state) => ({
       sidebarOpen: open !== undefined ? open : !state.sidebarOpen,
     }));
+  },
+
+  toggleSidebarCollapsed: () => {
+    set((state) => {
+      const next = !state.sidebarCollapsed;
+      localStorage.setItem('fff_sidebar_collapsed', String(next));
+      return { sidebarCollapsed: next };
+    });
   },
 
   setToken: (token) => {
