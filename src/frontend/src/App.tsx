@@ -45,11 +45,9 @@ export const App: React.FC = () => {
   // If unauthenticated, gate access and render the full-screen Login / Register portal
   if (!token) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#011913] via-[#022c24] to-[#03362c] flex flex-col justify-center items-center p-4 sm:p-8 relative">
+      <div className="min-h-screen w-full relative">
         <ToastNotification />
-        <div className="w-full max-w-lg">
-          <AuthPage />
-        </div>
+        <AuthPage />
       </div>
     );
   }
