@@ -52,7 +52,9 @@ export const AuthPage: React.FC = () => {
       console.warn('API login failed, checking demo fallback:', err);
       if (email === 'farmer@example.com' && password === 'password123') {
         const demoToken =
-          'demo_jwt_' + btoa(JSON.stringify({ sub: email, exp: Date.now() / 1000 + 86400 }));
+          'demo.' +
+          btoa(JSON.stringify({ sub: email, exp: Math.floor(Date.now() / 1000) + 86400 })) +
+          '.fff';
         const demoUser = {
           id: 1,
           name: 'Joseph Ochieng',
@@ -116,7 +118,9 @@ export const AuthPage: React.FC = () => {
     } catch (err: any) {
       console.warn('API register failed, using local simulation:', err);
       const simulatedToken =
-        'reg_jwt_' + btoa(JSON.stringify({ sub: email, exp: Date.now() / 1000 + 86400 }));
+        'reg.' +
+        btoa(JSON.stringify({ sub: email, exp: Math.floor(Date.now() / 1000) + 86400 })) +
+        '.fff';
       const newUser = {
         name,
         email,

@@ -25,8 +25,14 @@ export const App: React.FC = () => {
     };
     window.addEventListener('fff_auth_expired', handleAuthExpired);
 
-    // Validate active session token and sync profile on app load
-    if (token) {
+    // Validate active session token and sync profile on app load.
+    // Only call the backend for real JWTs — offline/demo tokens (prefixed
+    // `demo.`/`reg.`) are not server-verifiable and would 401 and bounce the user out.
+    const isRealJwt =
+      !!token &&
+      token.split('.').length === 3 &&
+      !/^(demo|reg)\./.test(token);
+    if (token && isRealJwt) {
       authApi
         .getProfile()
         .then((profile) => {
