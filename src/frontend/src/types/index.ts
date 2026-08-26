@@ -166,3 +166,116 @@ export interface Course {
   description: string;
   completed?: boolean;
 }
+
+// ─── FFF Official Branding Guidelines Constants ─────────────────────────
+export interface PillarBrand {
+  id: number;
+  name: string;
+  theme: string;
+  colorName: string;
+  hex: string;
+  bgLight: string;
+  borderLight: string;
+  textClass: string;
+}
+
+export const PILLAR_BRAND_COLORS: Record<number, PillarBrand> = {
+  1: {
+    id: 1,
+    name: 'Smart Farming & Digital Transformation',
+    theme: 'Blue',
+    colorName: 'Blue',
+    hex: '#1E88E5',
+    bgLight: 'bg-[#1E88E5]/10',
+    borderLight: 'border-[#1E88E5]/30',
+    textClass: 'text-[#1E88E5]',
+  },
+  2: {
+    id: 2,
+    name: 'Productive Use of Renewable Energy (P.U.R.E)',
+    theme: 'Yellow/Amber',
+    colorName: 'Yellow/Amber',
+    hex: '#FDD835',
+    bgLight: 'bg-[#FDD835]/15',
+    borderLight: 'border-[#FDD835]/40',
+    textClass: 'text-[#b28900]',
+  },
+  3: {
+    id: 3,
+    name: 'Food Safety, Quality & Compliance',
+    theme: 'Green',
+    colorName: 'Green',
+    hex: '#43A047',
+    bgLight: 'bg-[#43A047]/10',
+    borderLight: 'border-[#43A047]/30',
+    textClass: 'text-[#43A047]',
+  },
+  4: {
+    id: 4,
+    name: 'Indigenous Knowledge & Climate Resilience',
+    theme: 'Dark Green',
+    colorName: 'Dark Green',
+    hex: '#2E7D32',
+    bgLight: 'bg-[#2E7D32]/10',
+    borderLight: 'border-[#2E7D32]/30',
+    textClass: 'text-[#2E7D32]',
+  },
+  5: {
+    id: 5,
+    name: 'Farm Business Performance & Growth',
+    theme: 'Purple',
+    colorName: 'Purple',
+    hex: '#8E24AA',
+    bgLight: 'bg-[#8E24AA]/10',
+    borderLight: 'border-[#8E24AA]/30',
+    textClass: 'text-[#8E24AA]',
+  },
+  6: {
+    id: 6,
+    name: 'Human Capital, Leadership & Farm Operations',
+    theme: 'Indigo',
+    colorName: 'Indigo',
+    hex: '#3949AB',
+    bgLight: 'bg-[#3949AB]/10',
+    borderLight: 'border-[#3949AB]/30',
+    textClass: 'text-[#3949AB]',
+  },
+  7: {
+    id: 7,
+    name: 'Market Access, Customer Value & Competitiveness',
+    theme: 'Orange',
+    colorName: 'Orange',
+    hex: '#FB8C00',
+    bgLight: 'bg-[#FB8C00]/10',
+    borderLight: 'border-[#FB8C00]/30',
+    textClass: 'text-[#FB8C00]',
+  },
+  8: {
+    id: 8,
+    name: 'Investment Readiness & Enterprise Development',
+    theme: 'Brown',
+    colorName: 'Brown',
+    hex: '#683C21',
+    bgLight: 'bg-[#683C21]/10',
+    borderLight: 'border-[#683C21]/30',
+    textClass: 'text-[#683C21]',
+  },
+};
+
+export const MATURITY_STATUS_COLORS = {
+  nonExistent: { label: 'Non-Existent', hex: '#D32F2F', colorName: 'Red' },
+  emerging: { label: 'Emerging', hex: '#F57C00', colorName: 'Orange' },
+  basic: { label: 'Basic', hex: '#FBC02D', colorName: 'Yellow' },
+  developing: { label: 'Developing', hex: '#7CB342', colorName: 'Light Green' },
+  established: { label: 'Established', hex: '#388E3C', colorName: 'Green' },
+  advanced: { label: 'Advanced', hex: '#1B5E20', colorName: 'Dark Green' },
+};
+
+export const TIER_CLASSIFICATION_COLORS: Record<number, { tier: number; name: string; hex: string }> = {
+  1: { tier: 1, name: 'Informal Farm', hex: '#8E99A2' },
+  2: { tier: 2, name: 'Emerging Agribusiness', hex: '#FB8C00' },
+  3: { tier: 3, name: 'Structured Farm', hex: '#1E88E5' },
+  4: { tier: 4, name: 'Investment Ready', hex: '#045D61' },
+  5: { tier: 5, name: 'Future-Ready Farm', hex: '#B88917' },
+};
+

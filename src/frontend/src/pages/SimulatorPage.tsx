@@ -40,11 +40,11 @@ export const SimulatorPage: React.FC = () => {
     <div className="max-w-6xl mx-auto space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">
-            <Sparkles className="w-4 h-4 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30 text-xs font-bold uppercase tracking-wider mb-2">
+            <Sparkles className="w-4 h-4 text-[#009924]" />
             <span>Empirical MLOps Simulation Sandbox</span>
           </div>
-          <h1 className="font-serif text-3xl font-bold text-pine-950">
+          <h1 className="font-serif text-3xl font-bold text-slate-900">
             Scenario Simulator &amp; ROI Forecast
           </h1>
           <p className="text-xs sm:text-sm text-slate-600">
@@ -63,16 +63,16 @@ export const SimulatorPage: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Simulation Controls */}
-        <div className="p-6 rounded-3xl glass-panel border border-emerald-900/10 shadow-sm space-y-6">
-          <div className="flex items-center gap-2 text-sm font-bold text-pine-950">
-            <Calculator className="w-4 h-4 text-emerald-600" />
+        <div className="p-6 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm space-y-6">
+          <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
+            <Calculator className="w-4 h-4 text-[#045D61]" />
             <span>Investment Levers</span>
           </div>
 
           <div className="space-y-4 text-xs">
             <div>
               <label className="font-bold text-slate-800 block mb-1">
-                Farm Acreage: <span className="text-emerald-700">{farmAcres} Acres</span>
+                Farm Acreage: <span className="text-[#045D61]">{farmAcres} Acres</span>
               </label>
               <input
                 type="range"
@@ -81,7 +81,7 @@ export const SimulatorPage: React.FC = () => {
                 step="0.5"
                 value={farmAcres}
                 onChange={(e) => setFarmAcres(Number(e.target.value))}
-                className="w-full accent-emerald-600 cursor-pointer"
+                className="w-full accent-[#045D61] cursor-pointer"
               />
             </div>
 
@@ -94,13 +94,13 @@ export const SimulatorPage: React.FC = () => {
                 type="checkbox"
                 checked={solarAdopted}
                 onChange={(e) => setSolarAdopted(e.target.checked)}
-                className="w-4 h-4 accent-emerald-600 cursor-pointer"
+                className="w-4 h-4 accent-[#009924] cursor-pointer"
               />
             </div>
 
             <div>
               <label className="font-bold text-slate-800 block mb-1">
-                Soil Health Index: <span className="text-emerald-700">{soilHealthLevel}%</span>
+                Soil Health Index: <span className="text-[#045D61]">{soilHealthLevel}%</span>
               </label>
               <input
                 type="range"
@@ -108,7 +108,7 @@ export const SimulatorPage: React.FC = () => {
                 max="100"
                 value={soilHealthLevel}
                 onChange={(e) => setSoilHealthLevel(Number(e.target.value))}
-                className="w-full accent-emerald-600 cursor-pointer"
+                className="w-full accent-[#045D61] cursor-pointer"
               />
             </div>
 
@@ -121,59 +121,59 @@ export const SimulatorPage: React.FC = () => {
                 type="checkbox"
                 checked={digitalRecords}
                 onChange={(e) => setDigitalRecords(e.target.checked)}
-                className="w-4 h-4 accent-emerald-600 cursor-pointer"
+                className="w-4 h-4 accent-[#009924] cursor-pointer"
               />
             </div>
           </div>
         </div>
 
         {/* Projected Financial Return Results */}
-        <div className="lg:col-span-2 p-6 sm:p-8 rounded-3xl glass-dark border border-emerald-400/30 text-white shadow-2xl space-y-6 flex flex-col justify-between">
+        <div className="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#023c3f] via-[#045D61] to-[#012527] border border-[#009924]/40 text-white shadow-2xl space-y-6 flex flex-col justify-between">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase font-bold text-sprout-400 tracking-wider">
+              <span className="text-[10px] uppercase font-bold text-[#009924] tracking-wider">
                 Simulation Outcome
               </span>
-              <span className="px-3 py-1 rounded-full bg-emerald-500 text-pine-950 font-bold text-[10px] uppercase">
-                Tier 4 Projected
+              <span className="px-3 py-1 rounded-full bg-[#FFD700] text-[#023c3f] font-extrabold text-[10px] uppercase shadow-sm">
+                Tier 4 Investment Ready Projected
               </span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
-              <div className="p-4 rounded-2xl bg-white/10 border border-white/10">
-                <div className="text-[10px] text-white/60 font-bold uppercase">
+              <div className="p-4 rounded-2xl bg-white/10 border border-white/15">
+                <div className="text-[10px] text-white/70 font-bold uppercase">
                   Projected Yield
                 </div>
                 <div className="text-2xl font-bold text-white mt-1">
                   {projectedYield.toFixed(1)}{' '}
-                  <span className="text-xs font-normal text-sprout-300">bags/ac</span>
+                  <span className="text-xs font-normal text-white/80">bags/ac</span>
                 </div>
-                <div className="text-[10px] text-sprout-400 font-semibold mt-0.5">
+                <div className="text-[10px] text-[#009924] font-semibold mt-0.5">
                   +{(yieldGainPct * 100).toFixed(0)}% gain
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white/10 border border-white/10">
-                <div className="text-[10px] text-white/60 font-bold uppercase">
+              <div className="p-4 rounded-2xl bg-white/10 border border-white/15">
+                <div className="text-[10px] text-white/70 font-bold uppercase">
                   Total Production
                 </div>
                 <div className="text-2xl font-bold text-white mt-1">
                   {Math.round(totalBags)}{' '}
-                  <span className="text-xs font-normal text-sprout-300">bags</span>
+                  <span className="text-xs font-normal text-white/80">bags</span>
                 </div>
-                <div className="text-[10px] text-white/60 mt-0.5">
+                <div className="text-[10px] text-white/70 mt-0.5">
                   across {farmAcres} acres
                 </div>
               </div>
 
-              <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-emerald-500/20 border border-emerald-400/40">
-                <div className="text-[10px] text-emerald-300 font-bold uppercase">
+              <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-[#009924]/20 border border-[#009924]/40">
+                <div className="text-[10px] text-white/80 font-bold uppercase">
                   Net Profit Dividend
                 </div>
-                <div className="text-2xl font-bold text-amber-300 mt-1">
+                <div className="text-2xl font-extrabold text-[#FFD700] mt-1">
                   KES {Math.round(netDividendKes).toLocaleString()}
                 </div>
-                <div className="text-[10px] text-sprout-400 mt-0.5 font-bold">
+                <div className="text-[10px] text-[#009924] mt-0.5 font-bold">
                   Annual uplift
                 </div>
               </div>
@@ -182,17 +182,17 @@ export const SimulatorPage: React.FC = () => {
 
           <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/80 space-y-2">
             <div className="font-bold text-white flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <TrendingUp className="w-4 h-4 text-[#FFD700]" />
               <span>Gradio ML Interactive Sandbox Link</span>
             </div>
-            <p className="text-white/60">
+            <p className="text-white/70">
               For complete multi-variable Random Forest feature weighting and Isolation Forest anomaly boundaries, access the live Gradio application:
             </p>
             <a
               href="/ml-demo"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-sprout-400 hover:text-white underline pt-1"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#FFD700] hover:text-white underline pt-1"
             >
               <span>Launch Full Gradio Simulation Studio</span>
               <ExternalLink className="w-3.5 h-3.5" />

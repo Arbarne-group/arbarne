@@ -41,11 +41,11 @@ export const ProfilePage: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">
-          <UserIcon className="w-4 h-4 text-emerald-600" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30 text-xs font-bold uppercase tracking-wider mb-2">
+          <UserIcon className="w-4 h-4 text-[#009924]" />
           <span>Farm Enterprise Identity</span>
         </div>
-        <h1 className="font-serif text-3xl font-bold text-pine-950">
+        <h1 className="font-serif text-3xl font-bold text-slate-900">
           Farmer &amp; Farm Profile Settings
         </h1>
         <p className="text-xs sm:text-sm text-slate-600">
@@ -55,7 +55,7 @@ export const ProfilePage: React.FC = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="p-6 sm:p-8 rounded-3xl glass-panel border border-emerald-900/10 shadow-xl space-y-6"
+        className="p-6 sm:p-8 rounded-3xl glass-panel border border-[#045D61]/15 shadow-xl space-y-6"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -67,7 +67,7 @@ export const ProfilePage: React.FC = () => {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
-              className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
+              className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#045D61]/20 focus:border-[#045D61] outline-none bg-white font-medium"
             />
           </div>
 
@@ -79,7 +79,7 @@ export const ProfilePage: React.FC = () => {
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
+              className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#045D61]/20 focus:border-[#045D61] outline-none bg-white font-medium"
             />
           </div>
         </div>
@@ -93,12 +93,12 @@ export const ProfilePage: React.FC = () => {
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             required
-            className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
+            className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#045D61]/20 focus:border-[#045D61] outline-none bg-white font-medium"
           />
         </div>
 
         <div className="pt-4 border-t border-slate-100">
-          <h3 className="font-serif text-lg font-bold text-pine-950 mb-4">
+          <h3 className="font-serif text-lg font-bold text-slate-900 mb-4">
             Farm Agronomic Details
           </h3>
 
@@ -111,7 +111,7 @@ export const ProfilePage: React.FC = () => {
                 type="text"
                 value={formData.farm_name}
                 onChange={(e) => setFormData({ ...formData, farm_name: e.target.value })}
-                className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
+                className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#045D61]/20 focus:border-[#045D61] outline-none bg-white font-medium"
               />
             </div>
 
@@ -123,7 +123,7 @@ export const ProfilePage: React.FC = () => {
                 <select
                   value={formData.farm_region}
                   onChange={(e) => setFormData({ ...formData, farm_region: e.target.value })}
-                  className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
+                  className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#045D61]/20 focus:border-[#045D61] outline-none bg-white font-medium"
                 >
                   <option value="Western Kenya">Western Kenya</option>
                   <option value="Rift Valley">Rift Valley</option>
@@ -144,7 +144,7 @@ export const ProfilePage: React.FC = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, farm_size_acres: Number(e.target.value) })
                   }
-                  className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
+                  className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#045D61]/20 focus:border-[#045D61] outline-none bg-white font-medium"
                 />
               </div>
             </div>
@@ -159,7 +159,7 @@ export const ProfilePage: React.FC = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, farm_crop_type: e.target.value })
                 }
-                className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none bg-white font-medium"
+                className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#045D61]/20 focus:border-[#045D61] outline-none bg-white font-medium"
               />
             </div>
           </div>
@@ -167,11 +167,11 @@ export const ProfilePage: React.FC = () => {
 
         <button
           type="submit"
-          className="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-pine-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-all"
+          className="w-full py-3.5 rounded-2xl bg-[#045D61] hover:bg-[#023c3f] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-[#045D61]/20 transition-all"
         >
           {saved ? (
             <>
-              <Check className="w-4 h-4" />
+              <Check className="w-4 h-4 text-[#009924]" />
               <span>Profile Saved Successfully!</span>
             </>
           ) : (

@@ -16,13 +16,13 @@ interface RadarChartProps {
 
 const PILLAR_LABELS: Record<number, string> = {
   1: 'P1 Smart Farming',
-  2: 'P2 Clean Energy',
+  2: 'P2 P.U.R.E Clean Energy',
   3: 'P3 Food Safety',
-  4: 'P4 Resilience',
+  4: 'P4 Climate Resilience',
   5: 'P5 Performance',
   6: 'P6 Human Capital',
   7: 'P7 Market Access',
-  8: 'P8 Invest Ready',
+  8: 'P8 Invest Readiness',
 };
 
 const DEFAULT_SCORES: Record<number, number> = {
@@ -67,7 +67,7 @@ export const RadarChart: React.FC<RadarChartProps> = ({
           <PolarGrid stroke="#e2e8f0" strokeDasharray="3 3" />
           <PolarAngleAxis
             dataKey="pillar"
-            tick={{ fill: '#022c24', fontSize: 11, fontWeight: 600 }}
+            tick={{ fill: '#045D61', fontSize: 11, fontWeight: 700 }}
           />
           <PolarRadiusAxis
             angle={30}
@@ -77,27 +77,28 @@ export const RadarChart: React.FC<RadarChartProps> = ({
           <Radar
             name="Your Farm Enterprise"
             dataKey="farm"
-            stroke="#10b981"
-            fill="#10b981"
-            fillOpacity={0.35}
-            strokeWidth={2}
+            stroke="#009924"
+            fill="#045D61"
+            fillOpacity={0.42}
+            strokeWidth={2.5}
           />
           <Radar
             name="Regional Peer Benchmark"
             dataKey="benchmark"
-            stroke="#f59e0b"
-            fill="#f59e0b"
+            stroke="#1E88E5"
+            fill="#1E88E5"
             fillOpacity={0.15}
             strokeWidth={1.5}
             strokeDasharray="4 4"
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#022c24',
-              borderColor: '#10b981',
-              borderRadius: '8px',
+              backgroundColor: '#045D61',
+              borderColor: '#009924',
+              borderRadius: '12px',
               color: '#ffffff',
               fontSize: '12px',
+              boxShadow: '0 8px 24px rgba(4, 93, 97, 0.35)',
             }}
           />
         </RechartsRadar>

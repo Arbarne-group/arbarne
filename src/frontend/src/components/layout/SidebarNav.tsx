@@ -13,8 +13,6 @@ import {
   LogOut,
   LogIn,
   X,
-  ChevronLeft,
-  ChevronRight,
   PanelLeftClose,
   PanelLeftOpen,
 } from 'lucide-react';
@@ -107,7 +105,7 @@ export const SidebarNav: React.FC = () => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 bottom-0 z-50 flex flex-col bg-gradient-to-b from-[#011913] via-[#022c24] to-[#03362c] border-r border-emerald-500/20 shadow-2xl transition-all duration-300 ease-in-out overflow-x-hidden overflow-y-auto ${
+        className={`fixed top-0 left-0 bottom-0 z-50 flex flex-col bg-gradient-to-b from-[#023c3f] via-[#045D61] to-[#012527] border-r border-[#009924]/25 shadow-2xl transition-all duration-300 ease-in-out overflow-x-hidden overflow-y-auto ${
           sidebarOpen ? 'translate-x-0 w-[270px]' : '-translate-x-full lg:translate-x-0'
         } ${sidebarCollapsed ? 'lg:w-[78px]' : 'lg:w-[264px]'}`}
       >
@@ -123,23 +121,23 @@ export const SidebarNav: React.FC = () => {
               sidebarCollapsed ? 'justify-center' : ''
             }`}
             onClick={() => setScreen('screen-dashboard')}
-            title="Arbarne Agriculture - Future Farms Framework"
+            title="Future Farms Framework"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/30 to-[#022c24] border border-emerald-400/40 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform backdrop-blur-md flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#009924]/30 to-[#045D61] border border-[#009924]/40 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform backdrop-blur-md flex-shrink-0 glow-cyan">
               <img
                 src="/assets/arbarne-emblem-white.png"
-                alt="Arbarne Agriculture Group"
+                alt="FFF"
                 className="h-6 w-auto object-contain drop-shadow"
               />
             </div>
 
             {!sidebarCollapsed && (
               <div className="overflow-hidden whitespace-nowrap">
-                <span className="text-[9px] font-extrabold text-sprout-400 tracking-wider uppercase block">
-                  Arbarne Agriculture
+                <span className="text-[9px] font-extrabold text-[#009924] tracking-wider uppercase block">
+                  Future Farms
                 </span>
                 <h1 className="font-serif text-base font-bold text-white tracking-tight">
-                  Future Farms
+                  Framework
                 </h1>
               </div>
             )}
@@ -149,7 +147,7 @@ export const SidebarNav: React.FC = () => {
           {!sidebarCollapsed ? (
             <button
               onClick={toggleSidebarCollapsed}
-              className="hidden lg:flex p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+              className="hidden lg:flex p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
               title="Collapse sidebar (Ctrl+B)"
               aria-label="Collapse sidebar"
             >
@@ -172,7 +170,7 @@ export const SidebarNav: React.FC = () => {
           <div className="hidden lg:flex justify-center py-2 border-b border-white/5">
             <button
               onClick={toggleSidebarCollapsed}
-              className="p-1.5 rounded-lg text-sprout-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-1.5 rounded-lg text-[#009924] hover:text-white hover:bg-white/10 transition-colors"
               title="Expand sidebar (Ctrl+B)"
               aria-label="Expand sidebar"
             >
@@ -183,17 +181,17 @@ export const SidebarNav: React.FC = () => {
 
         {/* ─── Farm Identity Badge ───────────────────────────────────── */}
         {!sidebarCollapsed ? (
-          <div className="mx-3.5 my-3 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-sm flex-shrink-0">
+          <div className="mx-3.5 my-3 p-2.5 rounded-xl bg-white/10 border border-white/15 flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#009924]/20 border border-[#009924]/30 flex items-center justify-center text-sm flex-shrink-0">
               🌾
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-xs font-bold text-white truncate">
                 {user.farm_name || 'Demonstration Farm'}
               </div>
-              <div className="flex items-center gap-1.5 text-[10px] text-sprout-400">
+              <div className="flex items-center gap-1.5 text-[10px] text-white/80">
                 <span className="truncate">{user.farm_region || 'Western Kenya'}</span>
-                <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/30 text-[8px] font-extrabold text-white border border-emerald-400/40">
+                <span className="px-1.5 py-0.2 rounded-full bg-[#1E88E5]/30 text-[8px] font-extrabold text-white border border-[#1E88E5]/40">
                   Tier {user.tier || 3}
                 </span>
               </div>
@@ -205,9 +203,9 @@ export const SidebarNav: React.FC = () => {
             onClick={() => setScreen('screen-profile')}
             title={`${user.farm_name || 'Demonstration Farm'} (Tier ${user.tier || 3})`}
           >
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-sm relative">
+            <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-sm relative">
               <span>🌾</span>
-              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 text-[8px] font-extrabold text-pine-950 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#1E88E5] text-[8px] font-extrabold text-white flex items-center justify-center">
                 {user.tier || 3}
               </span>
             </div>
@@ -219,7 +217,7 @@ export const SidebarNav: React.FC = () => {
           {navGroups.map((group) => (
             <div key={group.title}>
               {!sidebarCollapsed ? (
-                <div className="px-2.5 mb-1 text-[9px] font-extrabold tracking-wider text-sprout-400/60 uppercase">
+                <div className="px-2.5 mb-1 text-[9px] font-extrabold tracking-wider text-white/60 uppercase">
                   {group.title}
                 </div>
               ) : (
@@ -240,13 +238,13 @@ export const SidebarNav: React.FC = () => {
                           : 'gap-3 px-3 py-2 text-sm'
                       } ${
                         isActive
-                          ? 'bg-gradient-to-r from-emerald-500/30 to-emerald-500/10 text-white font-bold border border-emerald-400/40 shadow-inner'
-                          : 'text-white/70 hover:text-white hover:bg-white/5 hover:translate-x-0.5'
+                          ? 'bg-gradient-to-r from-[#009924]/35 to-[#009924]/15 text-white font-bold border border-[#009924]/40 shadow-inner'
+                          : 'text-white/75 hover:text-white hover:bg-white/10 hover:translate-x-0.5'
                       }`}
                     >
                       <span
                         className={`flex-shrink-0 ${
-                          isActive ? 'text-sprout-400' : 'text-white/60 group-hover:text-white'
+                          isActive ? 'text-[#FFD700]' : 'text-white/70 group-hover:text-white'
                         }`}
                       >
                         {item.icon}
@@ -256,7 +254,7 @@ export const SidebarNav: React.FC = () => {
                         <>
                           <span className="flex-1 text-left truncate">{item.label}</span>
                           {item.pill && (
-                            <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300">
+                            <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-[#EF6C00]/25 border border-[#FFD700]/40 text-[#FFD700]">
                               {item.pill}
                             </span>
                           )}
@@ -265,7 +263,7 @@ export const SidebarNav: React.FC = () => {
 
                       {/* Small notification dot when collapsed if pill exists */}
                       {sidebarCollapsed && item.pill && (
-                        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#FFD700] animate-pulse" />
                       )}
                     </button>
                   );
@@ -276,16 +274,16 @@ export const SidebarNav: React.FC = () => {
         </nav>
 
         {/* ─── Footer Identity & Auth ────────────────────────────────── */}
-        <div className="p-2.5 border-t border-white/10 bg-pine-950/60 space-y-2">
+        <div className="p-2.5 border-t border-white/10 bg-[#012527]/80 space-y-2">
           {!sidebarCollapsed ? (
             <div
-              className="flex items-center gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/30 cursor-pointer transition-colors"
+              className="flex items-center gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#009924]/40 cursor-pointer transition-colors"
               onClick={() => setScreen('screen-profile')}
             >
               <div className="text-lg flex-shrink-0">🧑‍🌾</div>
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-bold text-white truncate">{user.name}</div>
-                <div className="text-[9px] text-sprout-400 truncate">
+                <div className="text-[9px] text-white/70 truncate">
                   Tier {user.tier || 3} • {user.farm_region || 'Kenya'}
                 </div>
               </div>

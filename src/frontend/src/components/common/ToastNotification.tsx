@@ -38,36 +38,36 @@ interface ToastItemProps {
 const ToastItem: React.FC<ToastItemProps> = ({ toast, onDismiss }) => {
   const typeConfig = {
     success: {
-      card: 'bg-white/95 border-emerald-200/90 text-slate-900',
-      iconBox: 'bg-emerald-50 text-emerald-600 border border-emerald-200',
-      icon: <CheckCircle2 className="w-4 h-4 text-emerald-600" />,
-      badge: 'bg-emerald-100 text-emerald-800',
+      card: 'bg-white/95 border-[#009924]/35 text-slate-900 shadow-lg shadow-[#009924]/10',
+      iconBox: 'bg-[#009924]/10 text-[#009924] border border-[#009924]/30',
+      icon: <CheckCircle2 className="w-4 h-4 text-[#009924]" />,
+      badge: 'bg-[#009924]/15 text-[#009924] border border-[#009924]/30',
       badgeText: 'Success',
-      timerBar: 'bg-emerald-500',
+      timerBar: 'bg-[#009924]',
     },
     error: {
-      card: 'bg-white/95 border-red-200/90 text-slate-900',
-      iconBox: 'bg-red-50 text-red-600 border border-red-200',
-      icon: <AlertCircle className="w-4 h-4 text-red-600" />,
-      badge: 'bg-red-100 text-red-800',
+      card: 'bg-white/95 border-[#D32F2F]/35 text-slate-900 shadow-lg shadow-[#D32F2F]/10',
+      iconBox: 'bg-[#D32F2F]/10 text-[#D32F2F] border border-[#D32F2F]/30',
+      icon: <AlertCircle className="w-4 h-4 text-[#D32F2F]" />,
+      badge: 'bg-[#D32F2F]/15 text-[#D32F2F] border border-[#D32F2F]/30',
       badgeText: 'Attention',
-      timerBar: 'bg-red-500',
+      timerBar: 'bg-[#D32F2F]',
     },
     warning: {
-      card: 'bg-white/95 border-amber-200/90 text-slate-900',
-      iconBox: 'bg-amber-50 text-amber-600 border border-amber-200',
-      icon: <AlertTriangle className="w-4 h-4 text-amber-600" />,
-      badge: 'bg-amber-100 text-amber-800',
+      card: 'bg-white/95 border-[#FB8C00]/35 text-slate-900 shadow-lg shadow-[#FB8C00]/10',
+      iconBox: 'bg-[#FB8C00]/10 text-[#FB8C00] border border-[#FB8C00]/30',
+      icon: <AlertTriangle className="w-4 h-4 text-[#FB8C00]" />,
+      badge: 'bg-[#FB8C00]/15 text-[#FB8C00] border border-[#FB8C00]/30',
       badgeText: 'Warning',
-      timerBar: 'bg-amber-500',
+      timerBar: 'bg-[#FB8C00]',
     },
     info: {
-      card: 'bg-white/95 border-slate-200/90 text-slate-900',
-      iconBox: 'bg-teal-50 text-teal-700 border border-teal-200',
-      icon: <Info className="w-4 h-4 text-teal-700" />,
-      badge: 'bg-teal-100 text-teal-800',
+      card: 'bg-white/95 border-[#045D61]/35 text-slate-900 shadow-lg shadow-[#045D61]/10',
+      iconBox: 'bg-[#045D61]/10 text-[#045D61] border border-[#045D61]/30',
+      icon: <Info className="w-4 h-4 text-[#045D61]" />,
+      badge: 'bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30',
       badgeText: 'Notice',
-      timerBar: 'bg-teal-600',
+      timerBar: 'bg-[#045D61]',
     },
   }[toast.type || 'info'];
 
@@ -100,8 +100,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onDismiss }) => {
               {typeConfig.badgeText}
             </span>
           </div>
-
-          <p className="text-xs font-medium text-slate-600 leading-snug break-words">
+          <p className="text-xs text-slate-600 leading-snug font-medium break-words">
             {toast.message}
           </p>
         </div>
@@ -109,21 +108,21 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onDismiss }) => {
         {/* Close Button */}
         <button
           onClick={onDismiss}
-          className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors flex-shrink-0"
-          aria-label="Close notification"
+          className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors flex-shrink-0"
+          aria-label="Dismiss notification"
         >
           <X className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* Subtle Progress Bar */}
+      {/* Progress Auto-Dismiss Timer Line */}
       {duration > 0 && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-slate-100 overflow-hidden">
-          <div
-            className={`h-full toast-progress ${typeConfig.timerBar}`}
-            style={{ animationDuration: `${duration}ms` }}
-          />
-        </div>
+        <div
+          className={`absolute bottom-0 left-0 right-0 h-[2.5px] ${typeConfig.timerBar} opacity-85`}
+          style={{
+            animation: `toast-progress ${duration}ms linear forwards`,
+          }}
+        />
       )}
     </div>
   );

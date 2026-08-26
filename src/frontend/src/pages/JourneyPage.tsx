@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAppStore } from '../store/useStore';
 import { portalApi } from '../services/api';
-import { Badge, Quest, LeaderboardEntry } from '../types';
+import { Badge, Quest, LeaderboardEntry, TIER_CLASSIFICATION_COLORS } from '../types';
 import {
-  Trophy,
   CheckCircle,
-  Award,
-  Zap,
   Flame,
-  Shield,
   Loader2,
   Users,
 } from 'lucide-react';
@@ -33,7 +29,7 @@ const MASTER_BADGES: Badge[] = [
   {
     key: 'future_ready_100k',
     title: 'Future Ready 100k',
-    description: 'Registered verified enterprise in the Arbarne Future Farms directory.',
+    description: 'Registered verified enterprise in the Future Farms directory.',
     icon: '🌾',
     rarity: 'Silver',
     is_unlocked: true,
@@ -57,7 +53,7 @@ const MASTER_BADGES: Badge[] = [
   {
     key: 'master_steward',
     title: 'Master Steward',
-    description: 'Achieved Tier 4 Commercial Agribusiness status across all 8 pillars.',
+    description: 'Achieved Tier 4 Investment Ready status across all 8 pillars.',
     icon: '👑',
     rarity: 'Diamond',
     is_unlocked: false,
@@ -89,7 +85,7 @@ export const JourneyPage: React.FC = () => {
           farm_name: 'Highland Dairy & Avocado',
           region,
           tier: 4,
-          tier_name: 'Commercial Agribusiness',
+          tier_name: 'Investment Ready Farm',
           ffmi_score: 18.5,
           level: 5,
           total_xp: 3200,
@@ -101,7 +97,7 @@ export const JourneyPage: React.FC = () => {
           farm_name: user.farm_name || 'Kakamega Demonstration Farm',
           region,
           tier: user.tier || 3,
-          tier_name: user.tier_name || 'Commercializing Farm',
+          tier_name: user.tier_name || 'Structured Farm',
           ffmi_score: user.ffmi_score || 13.8,
           level: gamification.level,
           total_xp: gamification.total_xp,
@@ -114,7 +110,7 @@ export const JourneyPage: React.FC = () => {
           farm_name: 'Sergoit Grain Enterprise',
           region,
           tier: 3,
-          tier_name: 'Commercializing Farm',
+          tier_name: 'Structured Farm',
           ffmi_score: 12.9,
           level: 3,
           total_xp: 890,
@@ -168,32 +164,32 @@ export const JourneyPage: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* ─── Gamification Banner ─────────────────────────────────────── */}
-      <div className="p-8 rounded-3xl bg-gradient-to-br from-[#022c24] via-[#03362c] to-[#011913] border border-emerald-500/30 text-white shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="p-8 rounded-3xl bg-gradient-to-br from-[#023c3f] via-[#045D61] to-[#012527] border border-[#045D61]/30 text-white shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-sprout-400 border border-emerald-400/40 uppercase tracking-wider">
+            <span className="text-xs font-bold px-3 py-1 rounded-full bg-white/10 text-[#FFD700] border border-[#FFD700]/30 uppercase tracking-wider">
               Level {gamification.level} • {gamification.level_name}
             </span>
           </div>
-          <h1 className="text-3xl font-serif font-bold tracking-tight">
+          <h1 className="text-3xl font-serif font-bold tracking-tight text-white">
             Transformation Journey &amp; Trophies
           </h1>
-          <p className="text-xs text-white/70">
+          <p className="text-xs text-white/80">
             Earn verified experience points (XP), complete capability milestones, and climb your regional farmer leaderboard.
           </p>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="p-4 rounded-2xl bg-white/10 border border-white/10 text-center">
-            <div className="text-[10px] uppercase font-bold text-sprout-300">Total XP</div>
-            <div className="text-2xl font-bold text-white">
+          <div className="p-4 rounded-2xl bg-white/10 border border-white/15 text-center">
+            <div className="text-[10px] uppercase font-bold text-white/80">Total XP</div>
+            <div className="text-2xl font-extrabold text-white">
               {gamification.total_xp.toLocaleString()}
             </div>
           </div>
-          <div className="p-4 rounded-2xl bg-amber-500/20 border border-amber-400/30 text-center">
-            <div className="text-[10px] uppercase font-bold text-amber-300">Active Streak</div>
-            <div className="text-2xl font-bold text-amber-300 flex items-center justify-center gap-1">
-              <Flame className="w-5 h-5 text-amber-400" />
+          <div className="p-4 rounded-2xl bg-[#EF6C00]/25 border border-[#FFD700]/35 text-center">
+            <div className="text-[10px] uppercase font-bold text-[#FFD700]">Active Streak</div>
+            <div className="text-2xl font-extrabold text-[#FFD700] flex items-center justify-center gap-1">
+              <Flame className="w-5 h-5 text-[#FFD700]" />
               <span>{gamification.streak_days}d</span>
             </div>
           </div>
@@ -201,13 +197,13 @@ export const JourneyPage: React.FC = () => {
       </div>
 
       {/* ─── Active Quests ───────────────────────────────────────────── */}
-      <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-emerald-900/10 shadow-sm space-y-6">
+      <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
               Active Missions
             </span>
-            <h3 className="font-serif text-xl font-bold text-pine-950">
+            <h3 className="font-serif text-xl font-bold text-slate-900">
               Capability Quests
             </h3>
           </div>
@@ -221,16 +217,16 @@ export const JourneyPage: React.FC = () => {
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#009924]/15 text-[#009924] border border-[#009924]/30">
                     +{q.xp_reward} XP
                   </span>
                   {q.is_completed && (
-                    <span className="text-xs text-emerald-600 font-bold flex items-center gap-1">
+                    <span className="text-xs text-[#009924] font-bold flex items-center gap-1">
                       <CheckCircle className="w-3.5 h-3.5" /> Done
                     </span>
                   )}
                 </div>
-                <h4 className="font-bold text-sm text-pine-950">{q.title}</h4>
+                <h4 className="font-bold text-sm text-slate-900">{q.title}</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   {q.description}
                 </p>
@@ -239,7 +235,7 @@ export const JourneyPage: React.FC = () => {
               {q.is_completed && !q.is_claimed ? (
                 <button
                   onClick={() => claimQuest(q.id, q.xp_reward)}
-                  className="w-full py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-pine-950 font-bold text-xs shadow-md transition-colors"
+                  className="w-full py-2 rounded-xl bg-[#EF6C00] hover:bg-[#d85f00] text-white font-bold text-xs shadow-md transition-colors"
                 >
                   Claim +{q.xp_reward} XP Reward ➔
                 </button>
@@ -253,7 +249,7 @@ export const JourneyPage: React.FC = () => {
               ) : (
                 <button
                   onClick={() => q.target_screen && setScreen(q.target_screen)}
-                  className="w-full py-2 rounded-xl bg-pine-900 hover:bg-pine-800 text-white font-bold text-xs transition-colors"
+                  className="w-full py-2 rounded-xl bg-[#045D61] hover:bg-[#023c3f] text-white font-bold text-xs transition-colors shadow-sm"
                 >
                   Start Quest
                 </button>
@@ -264,13 +260,13 @@ export const JourneyPage: React.FC = () => {
       </div>
 
       {/* ─── Badge Showcase & Trophy Cabinet ─────────────────────────── */}
-      <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-emerald-900/10 shadow-sm space-y-6">
+      <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
               Verifiable Milestones
             </span>
-            <h3 className="font-serif text-xl font-bold text-pine-950">
+            <h3 className="font-serif text-xl font-bold text-slate-900">
               Master Trophy Cabinet
             </h3>
           </div>
@@ -282,7 +278,7 @@ export const JourneyPage: React.FC = () => {
                 onClick={() => setBadgeFilter(filter)}
                 className={`px-3 py-1 rounded-xl text-xs font-bold capitalize transition-colors ${
                   badgeFilter === filter
-                    ? 'bg-emerald-500 text-pine-950'
+                    ? 'bg-[#045D61] text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -298,7 +294,7 @@ export const JourneyPage: React.FC = () => {
               key={badge.key}
               className={`p-5 rounded-2xl border transition-all ${
                 badge.is_unlocked
-                  ? 'bg-white border-emerald-300 shadow-md'
+                  ? 'bg-white border-[#009924]/40 shadow-md'
                   : 'bg-slate-50/70 border-slate-200 opacity-60'
               }`}
             >
@@ -306,7 +302,7 @@ export const JourneyPage: React.FC = () => {
                 <div className="text-3xl">{badge.icon}</div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-bold text-pine-950">{badge.title}</h4>
+                    <h4 className="text-sm font-bold text-slate-900">{badge.title}</h4>
                     <span
                       className={`text-[9px] font-extrabold px-1.5 py-0.2 rounded ${
                         badge.rarity === 'Diamond'
@@ -328,17 +324,17 @@ export const JourneyPage: React.FC = () => {
       </div>
 
       {/* ─── Regional Leaderboard ────────────────────────────────────── */}
-      <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-emerald-900/10 shadow-sm space-y-6">
+      <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-[#045D61]/15 text-[#045D61] flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
                 Peer Benchmarking
               </span>
-              <h3 className="font-serif text-xl font-bold text-pine-950">
+              <h3 className="font-serif text-xl font-bold text-slate-900">
                 Regional Transformation Leaderboard
               </h3>
             </div>
@@ -351,7 +347,7 @@ export const JourneyPage: React.FC = () => {
                 onClick={() => setLeaderboardRegion(r)}
                 className={`px-3 py-1 rounded-xl text-xs font-bold transition-colors ${
                   leaderboardRegion === r
-                    ? 'bg-pine-900 text-white'
+                    ? 'bg-[#045D61] text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -379,33 +375,41 @@ export const JourneyPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {leaderboard.map((entry) => (
-                  <tr
-                    key={entry.rank}
-                    className={`hover:bg-slate-50 transition-colors ${
-                      entry.is_current_user ? 'bg-emerald-50/70 font-bold' : ''
-                    }`}
-                  >
-                    <td className="py-3 px-3 font-mono font-extrabold text-sm">
-                      #{entry.rank}
-                    </td>
-                    <td className="py-3 px-3">
-                      <div className="font-bold text-pine-950">{entry.farmer_name}</div>
-                      <div className="text-[11px] text-slate-500">{entry.farm_name}</div>
-                    </td>
-                    <td className="py-3 px-3">
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px]">
-                        Tier {entry.tier} {entry.tier_name.split(' ')[0]}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3 font-mono font-bold text-emerald-700">
-                      {entry.ffmi_score.toFixed(2)} pts
-                    </td>
-                    <td className="py-3 px-3 text-right font-mono font-bold text-pine-950">
-                      {entry.total_xp.toLocaleString()} XP
-                    </td>
-                  </tr>
-                ))}
+                {leaderboard.map((entry) => {
+                  const tierMeta = TIER_CLASSIFICATION_COLORS[entry.tier] || {
+                    hex: '#045D61',
+                  };
+                  return (
+                    <tr
+                      key={entry.rank}
+                      className={`hover:bg-slate-50 transition-colors ${
+                        entry.is_current_user ? 'bg-[#045D61]/10 font-bold' : ''
+                      }`}
+                    >
+                      <td className="py-3 px-3 font-mono font-extrabold text-sm">
+                        #{entry.rank}
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="font-bold text-slate-900">{entry.farmer_name}</div>
+                        <div className="text-[11px] text-slate-500">{entry.farm_name}</div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <span
+                          className="px-2 py-0.5 rounded-full text-white font-semibold text-[10px] shadow-sm"
+                          style={{ backgroundColor: tierMeta.hex }}
+                        >
+                          Tier {entry.tier} {entry.tier_name.split(' ')[0]}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 font-mono font-bold text-[#045D61]">
+                        {entry.ffmi_score.toFixed(2)} pts
+                      </td>
+                      <td className="py-3 px-3 text-right font-mono font-bold text-slate-900">
+                        {entry.total_xp.toLocaleString()} XP
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

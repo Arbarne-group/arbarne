@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppStore } from '../../store/useStore';
-import { Menu, Award, Flame, WifiOff, PanelLeft } from 'lucide-react';
+import { Menu, Award, Flame, WifiOff, PanelLeft, ShieldCheck } from 'lucide-react';
 import { ScreenId } from '../../types';
 
 const SCREEN_TITLES: Record<ScreenId, string> = {
@@ -53,7 +53,7 @@ export const AppTopbar: React.FC = () => {
   );
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-[#022c24]/95 backdrop-blur-md border-b border-emerald-500/20 px-4 lg:px-8 flex items-center justify-between shadow-lg">
+    <header className="sticky top-0 z-30 h-16 bg-[#045D61]/95 backdrop-blur-md border-b border-[#009924]/25 px-4 lg:px-8 flex items-center justify-between shadow-lg">
       {/* Left: Hamburger & Breadcrumb */}
       <div className="flex items-center gap-3">
         <button
@@ -74,8 +74,8 @@ export const AppTopbar: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-2 text-sm font-medium">
-          <span className="text-white/50 hidden sm:inline">Future Farms</span>
-          <span className="text-white/30 hidden sm:inline">/</span>
+          <span className="text-white/60 hidden sm:inline">Future Farms</span>
+          <span className="text-white/40 hidden sm:inline">/</span>
           <span className="text-white font-serif font-bold text-base tracking-tight truncate max-w-[200px] sm:max-w-none">
             {SCREEN_TITLES[activeScreen] || 'Dashboard'}
           </span>
@@ -85,7 +85,7 @@ export const AppTopbar: React.FC = () => {
       {/* Right: Gamification HUD */}
       <div className="flex items-center gap-3">
         {!isOnline && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold animate-pulse">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EF6C00]/20 border border-[#EF6C00]/40 text-[#FFD700] text-xs font-bold animate-pulse">
             <WifiOff className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Offline Mode</span>
           </div>
@@ -93,12 +93,12 @@ export const AppTopbar: React.FC = () => {
 
         <div
           onClick={() => setScreen('screen-journey')}
-          className="flex items-center gap-2 sm:gap-3 p-1.5 sm:px-3 sm:py-1.5 rounded-full bg-white/10 border border-emerald-400/30 hover:border-emerald-400/60 cursor-pointer transition-all shadow-md group"
+          className="flex items-center gap-2 sm:gap-3 p-1.5 sm:px-3 sm:py-1.5 rounded-full bg-white/10 border border-white/20 hover:border-[#FFD700]/50 cursor-pointer transition-all shadow-md group"
           title="Click to view Transformation Journey & Badges"
         >
           {/* Level Badge */}
-          <div className="flex items-center gap-1 text-xs font-bold text-amber-300">
-            <Award className="w-4 h-4 text-amber-400 group-hover:rotate-12 transition-transform" />
+          <div className="flex items-center gap-1 text-xs font-bold text-[#FFD700]">
+            <Award className="w-4 h-4 text-[#FFD700] group-hover:rotate-12 transition-transform" />
             <span className="hidden md:inline">Lvl {gamification.level}</span>
             <span className="hidden lg:inline">{gamification.level_name}</span>
           </div>
@@ -107,19 +107,19 @@ export const AppTopbar: React.FC = () => {
           <div className="hidden sm:flex flex-col gap-0.5 w-24 md:w-32">
             <div className="w-full h-1.5 rounded-full bg-black/40 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-emerald-400 to-sprout-400 transition-all duration-500 rounded-full"
+                className="h-full bg-gradient-to-r from-[#009924] to-[#FFD700] transition-all duration-500 rounded-full"
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <div className="text-[9px] text-sprout-300 font-semibold text-right">
+            <div className="text-[9px] text-white/80 font-semibold text-right">
               {gamification.total_xp.toLocaleString()} /{' '}
               {gamification.next_level_xp.toLocaleString()} XP
             </div>
           </div>
 
           {/* Streak Flame */}
-          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-extrabold border border-amber-400/40">
-            <Flame className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
+          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#EF6C00]/25 text-[#FFD700] text-xs font-extrabold border border-[#FFD700]/30">
+            <Flame className="w-3.5 h-3.5 text-[#FFD700] animate-bounce" />
             <span>{gamification.streak_days}d</span>
           </div>
         </div>
@@ -128,20 +128,18 @@ export const AppTopbar: React.FC = () => {
         {token ? (
           <button
             onClick={() => setScreen('screen-profile')}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-sprout-300 text-xs font-bold hover:bg-emerald-500/30 transition-colors"
-            title="Verified Farmer Session Active"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1565C0]/25 border border-[#1565C0]/40 text-[#90CAF9] text-xs font-bold hover:bg-[#1565C0]/40 transition-colors"
+            title="FFV Verified Farmer Session Active"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Verified</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-[#64B5F6]" />
+            <span>FFV Verified</span>
           </button>
         ) : (
           <button
             onClick={() => setScreen('screen-auth')}
             className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold transition-colors"
-            title="Running in Demo / Guest Mode — Click to Sign In"
           >
-            <span className="w-2 h-2 rounded-full bg-amber-400" />
-            <span>Sign In</span>
+            Sign In
           </button>
         )}
       </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { portalApi } from '../services/api';
 import { useAppStore } from '../store/useStore';
-import { Course } from '../types';
+import { Course, PILLAR_BRAND_COLORS } from '../types';
 import { GraduationCap, Clock, PlayCircle, CheckCircle, Loader2 } from 'lucide-react';
 
 export const LearningPage: React.FC = () => {
@@ -73,11 +73,11 @@ export const LearningPage: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">
-          <GraduationCap className="w-4 h-4 text-emerald-600" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30 text-xs font-bold uppercase tracking-wider mb-2">
+          <GraduationCap className="w-4 h-4 text-[#009924]" />
           <span>Regenerative Agronomy Curriculum</span>
         </div>
-        <h1 className="font-serif text-3xl font-bold text-pine-950">
+        <h1 className="font-serif text-3xl font-bold text-slate-900">
           Learning Academy &amp; Practical Training
         </h1>
         <p className="text-xs sm:text-sm text-slate-600">
@@ -87,53 +87,64 @@ export const LearningPage: React.FC = () => {
 
       {loading ? (
         <div className="flex items-center justify-center py-16 text-slate-500 text-xs font-semibold">
-          <Loader2 className="w-5 h-5 animate-spin mr-2" />
+          <Loader2 className="w-5 h-5 animate-spin mr-2 text-[#045D61]" />
           <span>Loading curriculum modules...</span>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course) => (
-            <div
-              key={course.id}
-              className="p-6 rounded-3xl glass-panel border border-emerald-900/10 shadow-sm flex flex-col justify-between space-y-4 hover:shadow-xl transition-all"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase">
-                    {course.pillar_name || `Pillar ${course.pillar_id}`}
-                  </span>
-                  <span className="text-[11px] font-semibold text-slate-500 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span>{course.duration_mins} mins</span>
-                  </span>
+          {courses.map((course) => {
+            const pBrand = PILLAR_BRAND_COLORS[course.pillar_id] || {
+              hex: '#045D61',
+              textClass: 'text-[#045D61]',
+              bgLight: 'bg-[#045D61]/10',
+              borderLight: 'border-[#045D61]/30',
+            };
+
+            return (
+              <div
+                key={course.id}
+                className="p-6 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm flex flex-col justify-between space-y-4 hover:shadow-xl transition-all"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase border ${pBrand.bgLight} ${pBrand.borderLight} ${pBrand.textClass}`}
+                    >
+                      {course.pillar_name || `Pillar ${course.pillar_id}`}
+                    </span>
+                    <span className="text-[11px] font-semibold text-slate-500 flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>{course.duration_mins} mins</span>
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif text-lg font-bold text-slate-900">
+                    {course.title}
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {course.description}
+                  </p>
                 </div>
 
-                <h3 className="font-serif text-lg font-bold text-pine-950">
-                  {course.title}
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {course.description}
-                </p>
+                <div className="pt-4 border-t border-slate-100">
+                  {course.completed ? (
+                    <div className="py-2.5 rounded-xl bg-[#009924]/10 text-[#009924] font-bold text-xs flex items-center justify-center gap-1.5 border border-[#009924]/30">
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Module Completed (+50 XP Earned)</span>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleCompleteCourse(course)}
+                      className="w-full py-2.5 rounded-xl bg-[#045D61] hover:bg-[#023c3f] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-[#045D61]/20 transition-colors"
+                    >
+                      <PlayCircle className="w-4 h-4 text-[#FFD700]" />
+                      <span>Start Audio Module (Earn +50 XP)</span>
+                    </button>
+                  )}
+                </div>
               </div>
-
-              <div className="pt-4 border-t border-slate-100">
-                {course.completed ? (
-                  <div className="py-2.5 rounded-xl bg-emerald-50 text-emerald-700 font-bold text-xs flex items-center justify-center gap-1.5 border border-emerald-200">
-                    <CheckCircle className="w-4 h-4" />
-                    <span>Module Completed (+50 XP Earned)</span>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => handleCompleteCourse(course)}
-                    className="w-full py-2.5 rounded-xl bg-pine-900 hover:bg-pine-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-colors"
-                  >
-                    <PlayCircle className="w-4 h-4 text-emerald-400" />
-                    <span>Start Audio Module (Earn +50 XP)</span>
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

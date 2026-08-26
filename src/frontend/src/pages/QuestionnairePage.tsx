@@ -5,12 +5,11 @@ import {
   Check,
   X,
   ArrowLeft,
-  ArrowRight,
   Info,
   Zap,
   Loader2,
-  HelpCircle,
 } from 'lucide-react';
+import { PILLAR_BRAND_COLORS } from '../types';
 
 export const QuestionnairePage: React.FC = () => {
   const {
@@ -47,10 +46,10 @@ export const QuestionnairePage: React.FC = () => {
   if (!currentQ) {
     return (
       <div className="text-center py-20 space-y-4">
-        <h2 className="text-xl font-bold text-pine-950">No active questionnaire found</h2>
+        <h2 className="text-xl font-bold text-slate-900">No active questionnaire found</h2>
         <button
           onClick={() => setScreen('screen-assessment-choice')}
-          className="px-5 py-2.5 rounded-xl bg-emerald-500 text-pine-950 font-bold text-xs"
+          className="px-5 py-2.5 rounded-xl bg-[#009924] text-white font-bold text-xs shadow-md"
         >
           Return to Assessment Hub
         </button>
@@ -103,6 +102,12 @@ export const QuestionnairePage: React.FC = () => {
   };
 
   const currentAnswer = answers[currentQ.id];
+  const pBrand = PILLAR_BRAND_COLORS[currentQ.pillar_id] || {
+    hex: '#045D61',
+    textClass: 'text-[#045D61]',
+    bgLight: 'bg-[#045D61]/10',
+    borderLight: 'border-[#045D61]/30',
+  };
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -110,7 +115,7 @@ export const QuestionnairePage: React.FC = () => {
       <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
         <button
           onClick={() => (currentIndex > 0 ? prevQuestion() : setScreen('screen-assessment-choice'))}
-          className="flex items-center gap-1 hover:text-pine-950 transition-colors"
+          className="flex items-center gap-1 hover:text-[#045D61] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>{currentIndex > 0 ? 'Previous Question' : 'Exit to Hub'}</span>
@@ -118,7 +123,7 @@ export const QuestionnairePage: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <span>Question {currentIndex + 1} of {total}</span>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#045D61]/15 text-[#045D61] font-bold border border-[#045D61]/25">
             {Math.round(progressPct)}%
           </span>
         </div>
@@ -127,16 +132,18 @@ export const QuestionnairePage: React.FC = () => {
       {/* Progress Bar */}
       <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-emerald-500 to-sprout-400 transition-all duration-300 rounded-full"
+          className="h-full bg-gradient-to-r from-[#045D61] via-[#009924] to-[#FFD700] transition-all duration-300 rounded-full"
           style={{ width: `${progressPct}%` }}
         />
       </div>
 
       {/* Question Card */}
-      <div className="p-6 sm:p-10 rounded-3xl glass-panel border border-emerald-900/10 shadow-xl space-y-6">
+      <div className="p-6 sm:p-10 rounded-3xl glass-panel border border-[#045D61]/15 shadow-xl space-y-6">
         {/* Capability / Pillar Badges */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-extrabold uppercase tracking-wider">
+          <span
+            className={`px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider border ${pBrand.bgLight} ${pBrand.borderLight} ${pBrand.textClass}`}
+          >
             {currentQ.pillar_code || `Pillar ${currentQ.pillar_id}`}
           </span>
           <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold">
@@ -145,25 +152,25 @@ export const QuestionnairePage: React.FC = () => {
         </div>
 
         {/* Question Text */}
-        <h2 className="text-xl sm:text-2xl font-serif font-bold text-pine-950 leading-snug">
+        <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 leading-snug">
           {currentQ.question_text}
         </h2>
 
         {/* Why It Matters / Quick Win Box */}
         {(currentQ.why_it_matters || currentQ.quick_win) && (
-          <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/60 space-y-2 text-xs">
+          <div className="p-4 rounded-2xl bg-[#045D61]/5 border border-[#045D61]/15 space-y-2 text-xs">
             {currentQ.why_it_matters && (
               <div className="flex items-start gap-2 text-slate-700">
-                <Info className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <Info className="w-4 h-4 text-[#045D61] flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-pine-950">Why it matters: </span>
+                  <span className="font-bold text-slate-900">Why it matters: </span>
                   {currentQ.why_it_matters}
                 </div>
               </div>
             )}
             {currentQ.quick_win && (
-              <div className="flex items-start gap-2 text-emerald-800 font-medium">
-                <Zap className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 text-[#009924] font-medium">
+                <Zap className="w-4 h-4 text-[#009924] flex-shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold">Quick win: </span>
                   {currentQ.quick_win}
@@ -180,13 +187,13 @@ export const QuestionnairePage: React.FC = () => {
             disabled={submitting}
             className={`py-4 rounded-2xl font-bold text-sm sm:text-base flex items-center justify-center gap-2 border-2 transition-all shadow-md ${
               currentAnswer === 'yes'
-                ? 'bg-emerald-500 text-pine-950 border-emerald-400 scale-[1.02]'
-                : 'bg-white hover:bg-emerald-50 text-emerald-900 border-emerald-300 hover:border-emerald-500'
+                ? 'bg-[#009924] text-white border-[#009924] scale-[1.02] shadow-[#009924]/30'
+                : 'bg-white hover:bg-[#009924]/10 text-[#009924] border-[#009924]/40 hover:border-[#009924]'
             }`}
           >
             <Check className="w-5 h-5" />
             <span>YES (Practiced)</span>
-            <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono">
+            <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-[#009924] font-mono border border-[#009924]/30">
               Y
             </kbd>
           </button>
@@ -196,20 +203,20 @@ export const QuestionnairePage: React.FC = () => {
             disabled={submitting}
             className={`py-4 rounded-2xl font-bold text-sm sm:text-base flex items-center justify-center gap-2 border-2 transition-all shadow-md ${
               currentAnswer === 'no'
-                ? 'bg-slate-800 text-white border-slate-700 scale-[1.02]'
-                : 'bg-white hover:bg-red-50 text-red-900 border-red-200 hover:border-red-400'
+                ? 'bg-[#D32F2F] text-white border-[#D32F2F] scale-[1.02] shadow-[#D32F2F]/30'
+                : 'bg-white hover:bg-red-50 text-[#D32F2F] border-[#D32F2F]/30 hover:border-[#D32F2F]'
             }`}
           >
             <X className="w-5 h-5" />
             <span>NO (Gap)</span>
-            <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-800 font-mono">
+            <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded bg-red-50 text-[#D32F2F] font-mono border border-[#D32F2F]/30">
               N
             </kbd>
           </button>
         </div>
 
         {submitting && (
-          <div className="flex items-center justify-center gap-2 text-xs font-bold text-emerald-700 py-2">
+          <div className="flex items-center justify-center gap-2 text-xs font-bold text-[#045D61] py-2">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span>Calculating Official FFMI Maturity Score &amp; Generating Roadmap...</span>
           </div>
