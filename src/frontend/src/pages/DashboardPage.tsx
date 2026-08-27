@@ -1,344 +1,128 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { ArrowRight, BarChart3, BookOpen, CheckCircle2, ChevronRight, CircleAlert, Compass, Target } from 'lucide-react';
 import { useAppStore } from '../store/useStore';
-import { RadarChart } from '../components/charts/RadarChart';
-import {
-  ArrowRight,
-  Award,
-  AlertTriangle,
-  Shield,
-} from 'lucide-react';
+import { portalApi } from '../services/api';
+
+const FALLBACK_SCORES: Record<number, number> = { 1: 0.72, 2: 0.45, 3: 0.85, 4: 0.6, 5: 0.78, 6: 0.5, 7: 0.68, 8: 0.4 };
 
 export const DashboardPage: React.FC = () => {
-  const { user, gamification, setScreen, assessment } = useAppStore();
-
+  const { user, gamification, setScreen, assessment, pillars } = useAppStore();
+  const [portalSummary, setPortalSummary] = useState({ completedCourses: 1, recommendations: 3 });
   const latest = assessment.latestResult;
-  const ffmiScore = latest ? latest.ffmi_score : user.ffmi_score || 13.8;
-  const tier = latest ? latest.tier : user.tier || 3;
-  const tierName = latest ? latest.tier_classification : user.tier_name || 'Structured Farm';
+  const scores = latest?.pillar_scores ?? FALLBACK_SCORES;
+  const rankedPillars = pillars.map((pillar) => ({ ...pillar, score: scores[pillar.id] ?? 0 })).sort((a, b) => a.score - b.score);
+  const priorityPillar = rankedPillars[0];
+  const strongestPillar = rankedPillars[rankedPillars.length - 1];
+  const priorityRecommendation = latest?.recommendations?.[0];
+  const overallScore = Math.round(((latest?.ffmi_score ?? 13.8) / 24) * 100);
+  const currentTier = latest?.tier ?? user.tier ?? 3;
+  const answeredCount = Object.keys(assessment.answers).length || 74;
+  const answeredPercent = Math.min(Math.round((answeredCount / 200) * 100), 100);
+  const assessedPillarIds = new Set(
+    assessment.questions.filter((question) => assessment.answers[question.id]).map((question) => question.pillar_id)
+  );
+  const pillarsAssessed = latest ? 8 : Math.max(assessedPillarIds.size, 0);
 
-  const dividendKes = latest?.economic_dividend?.dividend_gain_kes || 248685;
+  useEffect(() => {
+    portalApi.getDashboardSummary().then((summary) => {
+      setPortalSummary({
+        completedCourses: summary.completed_courses_count,
+        recommendations: summary.active_recommendations_count,
+      });
+    }).catch(() => undefined);
+  }, []);
 
   return (
-    <div className="space-y-6">
-      {/* ─── 1. Hero Card with Animated Logo & Watermark ────────────────── */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#023c3f] via-[#045D61] to-[#012527] border border-[#045D61]/30 p-6 sm:p-10 shadow-2xl text-white group">
-        {/* Animated Background Watermark Logo */}
-        <motion.img
-          src="/assets/arbarne-emblem-white.png"
-          alt=""
-          className="absolute right-[-2%] top-1/2 -translate-y-1/2 h-[95%] max-h-[290px] w-auto pointer-events-none select-none z-0 transition-opacity duration-500 group-hover:opacity-20"
-          animate={{
-            opacity: [0.07, 0.16, 0.07],
-            scale: [1, 1.04, 1],
-            y: ['-50%', '-52%', '-50%'],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          aria-hidden="true"
-        />
+    <div className="space-y-6 pb-8">
+      <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#00852b]"><span className="h-2 w-2 rounded-full bg-[#00852b]" /> Farm intelligence</div>
+          <p className="text-sm text-slate-500">{user.farm_name || 'Your farm'} <span className="mx-2 text-slate-300">/</span> {user.farm_region || 'Western Kenya'} <span className="mx-2 text-slate-300">/</span> {user.farm_size_acres || 5} acres</p>
+        </div>
+        {/* <div className="flex items-center gap-3 text-sm text-slate-500"><span className="rounded-full border border-[#d8e7df] bg-white px-3 py-1.5 font-semibold text-[#045d61]">Level {gamification.level}</span><span>{gamification.total_xp} XP</span><span className="text-[#ef6c00]">{gamification.streak_days} day streak</span></div> */}
+      </header>
 
-        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-[#009924]/15 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="flex items-start gap-4 sm:gap-5">
-            {/* Animated Floating Arbarne Emblem Badge */}
-            <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-              whileHover={{ scale: 1.08, rotate: 2 }}
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-[#009924]/30 to-[#045D61] border border-[#009924]/40 p-3 shadow-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-md glow-cyan relative cursor-pointer group/badge"
-              title="Future Farms Framework Emblem"
-            >
-              <img
-                src="/assets/arbarne-emblem-white.png"
-                alt="FFF"
-                className="h-full w-auto object-contain drop-shadow"
-              />
-              <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#009924] animate-ping opacity-75" />
-            </motion.div>
-
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2">
-                <span className="h-0.5 w-5 bg-[#009924] rounded-full" />
-                <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#009924]">
-                  Future Farms Framework • Live Farm Intelligence
-                </span>
+      <section>
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#023c3f] via-[#045D61] to-[#012527] p-6 text-white shadow-xl shadow-[#023c3f]/20 sm:p-8">
+          <div className="absolute -right-8 -top-12 h-56 w-56 rounded-full border-[28px] border-[#b6d36a]/10" />
+          <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-xl">
+            <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-[#b6d36a]"><Compass className="h-4 w-4" /> Future Farms Framework</div>
+            <h2 className="max-w-lg font-serif text-2xl font-bold leading-tight sm:text-3xl">Good morning, {user.name.split(' ')[0] || 'Farmer'}.</h2>
+            <p className="mt-2 text-sm text-white/65">Your farm journey starts here.</p>
+            <p className="mt-6 max-w-lg text-sm leading-relaxed text-white/70">Find the capability that needs attention first.</p>
+            <button onClick={() => setScreen('screen-assessment-choice')} className="mt-7 inline-flex items-center gap-2 rounded-xl bg-[#b6d36a] px-4 py-3 text-sm font-bold text-[#173d2d] transition hover:bg-[#d0e78f]"><span>Start a focused assessment</span><ArrowRight className="h-4 w-4" /></button>
+            </div>
+            <div className="flex shrink-0 items-center gap-5 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm sm:p-5 lg:w-[230px] lg:flex-col lg:gap-4" aria-label="Farm assessment scores">
+              <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full" style={{ background: `conic-gradient(#b6d36a ${overallScore}%, rgba(255,255,255,0.14) 0)` }}>
+                <div className="flex h-[78px] w-[78px] flex-col items-center justify-center rounded-full bg-[#023c3f]"><strong className="text-xl text-white">{overallScore}/100</strong><span className="text-[9px] uppercase tracking-wider text-white/60">farm score</span></div>
               </div>
-              <h1 className="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight">
-                Karibu, {user.name.split(' ')[0] || 'Farmer'}.
-                <br />
-                <span className="text-[#FFD700] italic">The Great Transition.</span>
-              </h1>
-              <p className="text-xs sm:text-sm text-white/80 flex flex-wrap items-center gap-2 pt-0.5">
-                <span>📍 {user.farm_name || 'Kakamega Demofarm'}</span>
-                <span>•</span>
-                <span>{user.farm_region || 'Western Kenya'}</span>
-                <span>•</span>
-                <span>{user.farm_size_acres || 5} Acres</span>
-              </p>
-            </div>
-          </div>
-
-          {/* KPI Snapshot Pills */}
-          <div className="flex flex-wrap items-center gap-3">
-            <motion.div
-              className="px-5 py-3 rounded-2xl bg-[#1E88E5]/20 border border-[#1E88E5]/40 backdrop-blur-md cursor-default"
-              whileHover={{ y: -4, scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 200 }}
-            >
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#90CAF9]">
-                Maturity Status
-              </div>
-              <div className="text-base font-bold text-white">
-                Tier {tier} {tierName.split(' ')[0]}
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="px-5 py-3 rounded-2xl bg-[#FFD700]/15 border border-[#FFD700]/40 backdrop-blur-md cursor-default"
-              whileHover={{ y: -4, scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 200 }}
-            >
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#FFD700]">
-                FFMI Maturity Index
-              </div>
-              <div className="text-xl font-extrabold text-white">
-                {ffmiScore.toFixed(2)}{' '}
-                <span className="text-xs font-normal text-white/70">/ 24.00</span>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Action CTAs */}
-        <div className="relative z-10 flex flex-wrap gap-3 mt-6 pt-6 border-t border-white/10">
-          <button
-            onClick={() => setScreen('screen-assessment-choice')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs shadow-lg shadow-[#009924]/30 transition-all hover:scale-105"
-          >
-            <span>Start Capability Assessment</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setScreen('screen-journey')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/15 transition-all"
-          >
-            <Award className="w-4 h-4 text-[#FFD700]" />
-            <span>Transformation Roadmap &amp; Quests</span>
-          </button>
-        </div>
-      </div>
-
-      {/* ─── 2. Active Quest & Gamification Banner ──────────────────────── */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#045D61] to-[#023c3f] border border-[#009924]/30 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-[#FFD700]/20 border border-[#FFD700]/30 flex items-center justify-center text-xl text-[#FFD700]">
-            🏆
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-extrabold text-[#FFD700] uppercase tracking-wider">
-                Level {gamification.level}: {gamification.level_name}
-              </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#EF6C00]/20 border border-[#FFD700]/30 text-[#FFD700] font-bold">
-                {gamification.streak_days}-Day Streak 🔥
-              </span>
-            </div>
-            <p className="text-xs text-white/90 mt-0.5">
-              Complete the <span className="font-semibold text-[#FFD700]">Smart Farming Baseline Quest</span> to unlock 150 XP and the Digital Pioneer Badge.
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={() => setScreen('screen-journey')}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EF6C00] hover:bg-[#d85f00] text-white text-xs font-bold shadow-md transition-all whitespace-nowrap"
-        >
-          <span>Open Quests &amp; Badges</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
-
-      {/* ─── 3. Three Pillar Portals ───────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div className="p-5 rounded-2xl glass-panel hover:shadow-xl transition-all border border-[#045D61]/15 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-2xl">📝</span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#1E88E5]/15 text-[#1E88E5] border border-[#1E88E5]/30">
-              Diagnostic Engine
-            </span>
-          </div>
-          <h3 className="font-serif text-lg font-bold text-slate-900">Assessment Hub</h3>
-          <p className="text-xs text-slate-600 leading-relaxed">
-            Evaluate your farm readiness across the 8 FFF pillars. Choose a quick Single-Pillar deep dive or a comprehensive baseline.
-          </p>
-          <div className="flex gap-2 pt-2">
-            <button
-              onClick={() => setScreen('screen-assessment-choice')}
-              className="flex-1 py-2 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white text-xs font-bold transition-colors shadow-sm"
-            >
-              Start Audit
-            </button>
-          </div>
-        </div>
-
-        <div className="p-5 rounded-2xl glass-panel hover:shadow-xl transition-all border border-[#045D61]/15 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-2xl">🛠️</span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30">
-              Inputs &amp; Tech
-            </span>
-          </div>
-          <h3 className="font-serif text-lg font-bold text-slate-900">Services Portal</h3>
-          <p className="text-xs text-slate-600 leading-relaxed">
-            Connect with vetted mechanization providers, solar drip irrigation, agroforestry nurseries, and soil test labs matching your capability gaps.
-          </p>
-          <div className="pt-2">
-            <button
-              onClick={() => setScreen('screen-services')}
-              className="w-full py-2 rounded-xl bg-[#045D61] hover:bg-[#023c3f] text-white text-xs font-bold transition-colors shadow-sm"
-            >
-              Explore Agro-Services
-            </button>
-          </div>
-        </div>
-
-        <div className="p-5 rounded-2xl glass-panel hover:shadow-xl transition-all border border-[#045D61]/15 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-2xl">📚</span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#FB8C00]/15 text-[#FB8C00] border border-[#FB8C00]/30">
-              Agronomic Skills
-            </span>
-          </div>
-          <h3 className="font-serif text-lg font-bold text-slate-900">Learning Academy</h3>
-          <p className="text-xs text-slate-600 leading-relaxed">
-            Practical, audio-assisted training modules on regenerative IPM, farm gross-margin ledgers, and organic biochar composting.
-          </p>
-          <div className="pt-2">
-            <button
-              onClick={() => setScreen('screen-learning')}
-              className="w-full py-2 rounded-xl bg-[#FB8C00] hover:bg-[#e07d00] text-white text-xs font-bold transition-colors shadow-sm"
-            >
-              Open Learning Modules
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ─── 4. Priority Transformation Gap ───────────────────────────── */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-[#FB8C00]/10 border border-[#FB8C00]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#FB8C00]/20 text-[#FB8C00] flex items-center justify-center">
-            <AlertTriangle className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="text-xs font-bold text-slate-900">Transformation Gaps Identified</div>
-            <div className="text-xs text-slate-700">
-              <span className="font-bold text-[#009924]">Strongest:</span> Pillar 1 Smart Farming &amp; Digital •{' '}
-              <span className="font-bold text-[#D32F2F]">Priority Gap:</span> Pillar 2 Productive Use of Renewable Energy
+              <div className="grid flex-1 grid-cols-3 gap-2 lg:w-full"><FarmPulseStat icon={<Target className="h-3.5 w-3.5" />} value={`${Math.round(priorityPillar?.score * 100)}/100`} label="priority" /><FarmPulseStat icon={<CheckCircle2 className="h-3.5 w-3.5" />} value={`${Math.round(strongestPillar?.score * 100)}/100`} label="strongest" /><FarmPulseStat icon={<BarChart3 className="h-3.5 w-3.5" />} value={`${pillarsAssessed}/8`} label="covered" /></div>
             </div>
           </div>
         </div>
-        <button
-          onClick={() => setScreen('screen-assessment-choice')}
-          className="px-4 py-2 rounded-xl bg-[#FB8C00] hover:bg-[#e07d00] text-white text-xs font-bold transition-colors whitespace-nowrap shadow-sm"
-        >
-          Explore Action Plan
-        </button>
-      </div>
+      </section>
 
-      {/* ─── 5. Capability Analytics & Benchmarks ──────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Radar Profile */}
-        <div className="p-6 rounded-3xl glass-panel shadow-sm border border-[#045D61]/15 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-                Closed Cross-Pillar Metrics
-              </span>
-              <h3 className="font-serif text-lg font-bold text-slate-900">
-                8-Pillar Maturity Profile
-              </h3>
-            </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30">
-              Interactive Spider Chart
-            </span>
-          </div>
+      <section className="rounded-[2rem] border border-[#cfe0d5] bg-white p-5 sm:p-7">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div><p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#00852b]">Transformation progress</p><h2 className="mt-1 font-serif text-2xl font-bold text-[#022c24]">Your work at a glance</h2></div>
+          <span className="text-xs text-slate-400">Updated from your latest activity</span>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <ProgressMetric icon={<Target className="h-4 w-4" />} label="Assessment" value={`${answeredPercent}%`} detail={`${answeredCount} of 200 questions`} progress={answeredPercent} color="#045d61" onClick={() => setScreen('screen-assessment-choice')} />
+          <ProgressMetric icon={<BarChart3 className="h-4 w-4" />} label="Pillars assessed" value={`${pillarsAssessed} / 8`} detail={pillarsAssessed === 8 ? 'Full framework covered' : `${8 - pillarsAssessed} pillars remaining`} progress={(pillarsAssessed / 8) * 100} color="#00852b" onClick={() => setScreen('screen-assessment-choice')} />
+          <ProgressMetric icon={<BookOpen className="h-4 w-4" />} label="Learning" value={`${portalSummary.completedCourses}`} detail="modules completed" progress={Math.min((portalSummary.completedCourses / 3) * 100, 100)} color="#045d61" onClick={() => setScreen('screen-learning')} />
+          <ProgressMetric icon={<CircleAlert className="h-4 w-4" />} label="Recommendations" value={`${portalSummary.recommendations}`} detail="actions to review" progress={portalSummary.recommendations ? 100 : 0} color="#ef6c00" onClick={() => setScreen('screen-result')} />
+        </div>
+      </section>
 
-          <RadarChart pillarScores={latest?.pillar_scores} />
-
-          <div className="flex items-center justify-center gap-6 text-xs text-slate-600 pt-2 border-t border-slate-100">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#009924]" />
-              <span>Your Farm Enterprise</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#1E88E5]" />
-              <span>Regional Peer Average</span>
-            </div>
-          </div>
+      <section className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="rounded-[2rem] border border-[#cfe0d5] bg-white p-5 sm:p-7">
+          <div className="flex items-start justify-between gap-4"><div><p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#00852b]">Recommended next step</p><h2 className="mt-1 font-serif text-2xl font-bold text-[#022c24]">A clear path for {priorityPillar?.code || 'your priority gap'}</h2></div><span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e7f2df] text-[#00852b]"><CheckCircle2 className="h-5 w-5" /></span></div>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600">One practical action to move your farm forward.</p>
+          <div className="mt-6 rounded-2xl border border-[#cfe0d5] bg-[#f2f6f1] p-4"><div className="flex items-start gap-3"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#023c3f] text-sm font-bold text-[#b6d36a]">1</span><div><span className="mb-2 inline-flex rounded-full bg-[#e6f0d4] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[#35621e]">Start here</span><strong className="block text-sm leading-relaxed text-[#022c24]">{priorityRecommendation?.recommended_action || `Complete a focused assessment for ${priorityPillar?.name || 'your priority pillar'}.`}</strong><p className="mt-2 text-xs leading-relaxed text-slate-500">This is the first step toward stronger farm capability.</p></div></div></div>
         </div>
 
-        {/* Economic Dividend Projections */}
-        <div className="p-6 rounded-3xl glass-panel shadow-sm border border-[#045D61]/15 space-y-5">
-          <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-              Empirical ROI Projection
-            </span>
-            <h3 className="font-serif text-lg font-bold text-slate-900">
-              Projected Economic Dividend
-            </h3>
-            <p className="text-xs text-slate-600">
-              Financial and agronomic returns from resolving priority capability gaps.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-2xl bg-[#009924]/10 border border-[#009924]/20 space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#009924]">
-                Projected Yield
-              </span>
-              <div className="text-2xl font-bold text-slate-900">
-                19.2 <span className="text-xs font-normal text-slate-600">bags/ac</span>
-              </div>
-              <span className="text-[10px] text-[#009924] font-semibold">
-                +45% vs baseline
-              </span>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-[#FB8C00]/10 border border-[#FB8C00]/20 space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#FB8C00]">
-                Net Annual Gain
-              </span>
-              <div className="text-2xl font-bold text-slate-900">
-                KES {dividendKes.toLocaleString()}
-              </div>
-              <span className="text-[10px] text-[#FB8C00] font-semibold">
-                +58% profitability dividend
-              </span>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-[#045D61] text-white space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-[#FFD700]">Next Target: Tier 4</span>
-              <span className="text-white/80">Investment Ready Farm</span>
-            </div>
-            <div className="text-xs text-white/90 leading-relaxed">
-              Target Score: <span className="font-bold text-white">15.00 pts</span> • Gap to close: <span className="font-bold text-[#FFD700]">+1.20 pts</span>.
-            </div>
-            <button
-              onClick={() => setScreen('screen-simulator')}
-              className="w-full mt-2 py-2 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs transition-colors shadow-md"
-            >
-              Simulate Tier 4 ROI in Scenario Simulator ➔
-            </button>
-          </div>
+        <div className="rounded-[2rem] border border-[#cfe0d5] bg-white p-5 sm:p-7">
+          <div className="flex items-start justify-between"><div><p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#00852b]">Pillar health</p><h2 className="mt-1 font-serif text-2xl font-bold text-[#022c24]">Your capability signals</h2></div><button onClick={() => setScreen('screen-result')} className="flex items-center gap-1 text-xs font-bold text-[#045d61]">All 8 <ArrowRight className="h-3.5 w-3.5" /></button></div>
+          <div className="mt-6 space-y-3">{rankedPillars.slice(0, 3).map((pillar, index) => <div key={pillar.id} className={`rounded-xl border p-3 ${index === 0 ? 'border-[#f2c681] bg-[#fffaf1]' : 'border-[#e3ece7] bg-[#f8faf8]'}`}><div className="flex items-center gap-3"><span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold ${index === 0 ? 'bg-[#ef6c00] text-white' : 'bg-[#e4eee7] text-[#567166]'}`}>{index + 1}</span><span className="min-w-0 flex-1"><span className="block truncate text-xs font-semibold text-slate-700">{pillar.name}</span><span className="mt-0.5 block font-mono text-[10px] text-slate-400">{pillar.code} · {index === 0 ? 'Start here' : 'Developing signal'}</span></span><span className={`shrink-0 text-sm font-bold ${index === 0 ? 'text-[#c56b00]' : 'text-[#045d61]'}`}>{Math.round(pillar.score * 100)}/100</span></div><div className="ml-10 mt-2 h-2 rounded-full bg-slate-200"><div className={`h-full rounded-full ${index === 0 ? 'bg-[#ef6c00]' : 'bg-[#6ca77c]'}`} style={{ width: `${pillar.score * 100}%` }} /></div></div>)}</div>
+          <button onClick={() => setScreen('screen-assessment-choice')} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-[#cfe0d5] px-4 py-3 text-xs font-bold text-[#045d61] transition hover:bg-[#f2f6f1]">Review all pillar details <ChevronRight className="h-4 w-4" /></button>
         </div>
-      </div>
+      </section>
+
+      <section className="rounded-[2rem] border border-[#cfe0d5] bg-[#f2f6f1] p-5 sm:p-7">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#00852b]">Maturity journey</p><h2 className="mt-1 font-serif text-2xl font-bold text-[#022c24]">Your farm’s progress</h2></div><span className="text-xs text-slate-500">Stage {currentTier} of 5</span></div>
+        <div className="relative mt-7 grid grid-cols-5 gap-1 sm:gap-3"><div className="absolute left-[10%] right-[10%] top-4 h-1 rounded-full bg-[#d5e2d7]" /><div className="absolute left-[10%] top-4 h-1 rounded-full bg-[#00852b]" style={{ width: `${Math.max((Math.min(currentTier, 5) - 1) / 4 * 80, 0)}%` }} />{['Starting', 'Emerging', 'Structured', 'Ready', 'Future-ready'].map((stage, index) => { const stageNumber = index + 1; const isCurrent = stageNumber === currentTier; return <div key={stage} className="relative z-10 flex min-w-0 flex-col items-center gap-2 text-center"><span className={`flex h-8 w-8 items-center justify-center rounded-full border-4 border-[#f2f6f1] text-xs font-bold ${stageNumber <= currentTier ? 'bg-[#00852b] text-white' : 'bg-[#d5e2d7] text-[#567166]'}`}>{stageNumber}</span><span className={`text-[10px] font-semibold sm:text-xs ${isCurrent ? 'text-[#022c24]' : 'text-slate-500'}`}>{stage}</span></div>; })}</div>
+      </section>
     </div>
   );
 };
+
+interface ProgressMetricProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  detail: string;
+  progress: number;
+  color: string;
+  onClick: () => void;
+}
+
+const ProgressMetric: React.FC<ProgressMetricProps> = ({ icon, label, value, detail, progress, color, onClick }) => (
+  <button onClick={onClick} className="rounded-2xl border border-[#e3ece7] bg-[#f8faf8] p-4 text-left transition hover:-translate-y-0.5 hover:border-[#9bb9aa]">
+    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400"><span style={{ color }}>{icon}</span>{label}</div>
+    <div className="mt-4 flex items-baseline justify-between gap-2"><strong className="text-2xl font-bold text-[#022c24]">{value}</strong><ChevronRight className="h-4 w-4 text-slate-300" /></div>
+    <p className="mt-1 truncate text-xs text-slate-500">{detail}</p>
+    <div className="mt-4 h-1.5 rounded-full bg-slate-200"><div className="h-full rounded-full" style={{ width: `${Math.min(progress, 100)}%`, backgroundColor: color }} /></div>
+  </button>
+);
+
+interface FarmPulseStatProps {
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+}
+
+const FarmPulseStat: React.FC<FarmPulseStatProps> = ({ icon, value, label }) => (
+  <div className="text-center"><span className="mx-auto flex h-7 w-7 items-center justify-center rounded-full bg-[#b6d36a]/20 text-[#b6d36a]">{icon}</span><strong className="mt-1 block text-sm text-white">{value}</strong><span className="block text-[9px] uppercase tracking-wider text-white/55">{label}</span></div>
+);

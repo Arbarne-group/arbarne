@@ -60,6 +60,8 @@ test_*.txt
 # ─── Generated reports / artefacts ────────────────────────────────────
 reports/
 ml-artifacts/
+mlruns/
+src/backend/mlruns/
 uploads/
 chart_cache/
 src/backend/app/ml/chart_cache/
