@@ -31,6 +31,16 @@ Then the **assessment data**  --  farms, assessments, answers, evidence, recomme
 
 ### 2.1 `pillars`
 
+The 8 canonical pillars seeded verbatim from the FFF framework:
+1. **Smart Farming and Digital Transformation**
+2. **Productive Use of Renewable Energy**
+3. **Food Safety and Compliance**
+4. **Indigenous Knowledge and Climate Resilience**
+5. **Farm Business Performance and Growth**
+6. **Human Capital, Leadership and Farm Operations**
+7. **Market Access, Customer Value and Competitiveness**
+8. **Investment Readiness and Enterprise Development**
+
 | Column | Type | Notes |
 |---|---|---|
 | `id` | int | PK, 1-8 |
@@ -42,13 +52,15 @@ Then the **assessment data**  --  farms, assessments, answers, evidence, recomme
 
 ### 2.2 `capabilities`
 
+Each pillar contains 5 capabilities (40 capabilities total across the framework).
+
 | Column | Type | Notes |
 |---|---|---|
 | `id` | text | PK, e.g. `P1.1` |
 | `pillar_id` | int | FK  ->  pillars.id |
 | `name` | text | e.g. "Technology Readiness" |
 | `number` | int | 1-5 within the pillar |
-| `description` | text | Optional, from source |
+| `description` | text | Authoritative Capability Focus Question (e.g. *"Does the farm understand its operational needs..."*) |
 
 ### 2.3 `questions`
 

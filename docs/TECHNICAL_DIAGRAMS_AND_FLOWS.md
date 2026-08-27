@@ -116,7 +116,7 @@ All interactive HTML diagrams are located in [`docs/diagrams/`](file:///c:/Users
 ### Continuous Integration & Cloud Deployment:
 1. **Developer Action:** Commit to `main` branch or merge Pull Request.
 2. **GitHub Actions CI Runner:**
-   - Pytest execution: **36 / 36 unit and integration tests passing (100% pass rate)**.
+    - Pytest execution: **75 / 75 unit, integration, and ML accuracy tests passing (100% pass rate)**.
    - Ruff linting and formatting.
    - Alembic database migration idempotency validation.
    - ML data validation via Great Expectations.

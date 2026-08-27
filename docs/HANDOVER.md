@@ -57,7 +57,7 @@ The Future Farms Framework (FFF) Digital Platform pilot implementation is **100%
 | **M1: Foundation Ready** | Schema, Seeding, Infra | 8 Pillars, 40 Capabilities, 200 Questions seeded; Docker Compose stack running | **100% Verified** |
 | **M2: Core Assessment Live** | Scoring & Recommendation Engines | Deterministic 5-tier classification, Quick-Wins priority recommendations, Offline SPA | **100% Verified** |
 | **M3: Verification & AI** | FFV Evidence & Batch ML | FFV evidence submission, verifier workflow, Claude narrative with fallback, Celery ML | **100% Verified** |
-| **M4: Pilot & Handover** | End-to-End Test & Handover | 36/36 unit/integration tests passing, Docker containers verified, Handover Guide complete | **100% Verified** |
+| **M4: Pilot & Handover** | End-to-End Test & Handover | 75/75 unit/integration/ML tests passing, Docker containers verified, Handover Guide complete | **100% Verified** |
 
 ---
 
@@ -78,7 +78,7 @@ docker compose exec backend python -m app.scripts.seed_framework
 ```powershell
 # Local environment execution
 cd src\backend
-& .venv\Scripts\pytest.exe -v
+& .venv\Scripts\python.exe -m pytest -v
 ```
 
 ### 4.4 Triggering Celery Batch ML Jobs
@@ -95,6 +95,6 @@ docker compose exec worker celery -A app.worker.run_evidence_anomaly
 **Recommendation:** **GO FOR PILOT LAUNCH**
 
 - **Technical Readiness:** 100% of functional requirements implemented and verified.
-- **Reliability:** 36 / 36 automated unit, API, scoring, and ML tests passing cleanly.
+- **Reliability:** 75 / 75 automated unit, API, scoring, and ML accuracy tests passing cleanly.
 - **Auditable Quality:** Deterministic scoring engine verified to produce consistent, repeatable results tagged with rule version `v1.0.0`.
 - **Infrastructure Safety:** Isolated LLM narrative generation with graceful fallback guarantees system uptime during network or API outages.

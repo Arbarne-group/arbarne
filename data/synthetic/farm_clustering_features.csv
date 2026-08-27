@@ -1,0 +1,1001 @@
+farm_id,farm_name,region,county,crop_type,acreage,archetype,archetype_id,ffmi_score,tier,tier_classification,pillar_1_score,pillar_2_score,pillar_3_score,pillar_4_score,pillar_5_score,pillar_6_score,pillar_7_score,pillar_8_score
+92b0517c-b047-5780-9959-ff1b7b61f471,Kilifi Coconut Farm #0001,Coastal Lowlands,Kilifi,Coconut,6.62,Transitioning Agribusiness,1,13.32,3,Structured Farm,0.56,0.44,0.6,0.72,0.52,0.6,0.64,0.36
+41c99529-6a7c-5946-83d6-9a68b7a2e328,Murang'a Macadamia Farm #0002,Central Highlands,Murang'a,Macadamia,2.17,Informal Smallholder,0,4.92,5,Future Ready Farm,0.16,0.16,0.24,0.44,0.16,0.2,0.24,0.04
+6fd01488-9fa8-54cf-90f6-a1940173f1ad,Tharaka Nithi Green Grams Farm #0003,Eastern Semi-Arid,Tharaka Nithi,Green Grams,27.16,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.76,0.84,0.88,0.76,0.8,0.96,0.88,0.8
+469f0080-90a5-518a-8922-d9ba63976053,Murang'a Coffee Farm #0004,Central Highlands,Murang'a,Coffee,2.99,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.52,0.56,0.6,0.6,0.36,0.48,0.6,0.4
+3f3edc20-bcb1-5687-8d69-a7cffeebb82e,Uasin Gishu Potatoes Farm #0005,Rift Valley,Uasin Gishu,Potatoes,3.89,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.04,0.4,0.12,0.6,0.2,0.28,0.16,0.2
+ead843ac-7cb8-523b-8d81-e9c3eddd4c7e,Lamu Coconut Farm #0006,Coastal Lowlands,Lamu,Coconut,27.33,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.68,0.76,0.88,0.84,0.88,0.84,0.84,0.8
+7777540e-befc-5e18-83a6-83491da0993b,Kiambu Horticulture Farm #0007,Central Highlands,Kiambu,Horticulture,3.72,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.32,0.36,0.48,0.8,0.52,0.52,0.6,0.36
+280d3820-6aff-5deb-9de8-def150c2c841,Taita Taveta Fish Farming Farm #0008,Coastal Lowlands,Taita Taveta,Fish Farming,9.03,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.44,0.52,0.6,0.72,0.48,0.68,0.52,0.36
+9b41820c-6c6b-5940-93fc-944e5b46c00d,Kakamega Horticulture Farm #0009,Western Kenya,Kakamega,Horticulture,1.19,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.24,0.12,0.32,0.44,0.16,0.28,0.16,0.12
+f75f7adb-8a86-55ca-8406-53ef006009bf,Embu Coffee Farm #0010,Central Highlands,Embu,Coffee,2.49,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.2,0.16,0.2,0.56,0.04,0.32,0.16,0.04
+5e7613b7-6d52-5ee5-b693-89b41183d41d,Nandi Maize Farm #0011,Rift Valley,Nandi,Maize,2.71,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.28,0.44,0.28,0.4,0.16,0.24,0.2,0.08
+4c7de370-d11a-5439-b7f3-dc6cfad694db,Kakamega Sugarcane Farm #0012,Western Kenya,Kakamega,Sugarcane,33.31,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.88,0.8,0.96,0.72,0.76,0.84,0.92,0.68
+acfc4358-76b6-590c-a8ad-3204fd52c5ad,Kiambu Coffee Farm #0013,Central Highlands,Kiambu,Coffee,7.22,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.64,0.4,0.76,0.72,0.32,0.76,0.48,0.24
+1724006f-e9ac-55d5-826d-1f2616f0d031,Bomet Horticulture Farm #0014,Rift Valley,Bomet,Horticulture,6.01,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.6,0.36,0.52,0.8,0.48,0.52,0.52,0.24
+326d6ba7-1e0a-5974-911e-8a7229a8f86d,Makueni Livestock Farm #0015,Eastern Semi-Arid,Makueni,Livestock,0.99,Informal Smallholder,0,4.8,5,Future Ready Farm,0.0,0.2,0.24,0.44,0.2,0.24,0.16,0.12
+aab5cbaa-f6d6-54f8-9268-c472c9b99c62,Machakos Mangoes Farm #0016,Eastern Semi-Arid,Machakos,Mangoes,2.76,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.08,0.24,0.6,0.16,0.32,0.2,0.12
+77127a86-05a3-5fe7-9a2a-db432dcf98c9,Kwale Cashew Farm #0017,Coastal Lowlands,Kwale,Cashew,11.91,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.32,0.48,0.6,0.76,0.44,0.72,0.44,0.36
+8067886e-21c9-519c-93f0-ebad992b555d,Vihiga Poultry Farm #0018,Western Kenya,Vihiga,Poultry,0.69,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.24,0.24,0.12,0.64,0.04,0.2,0.24,0.16
+30d6a9a5-ce22-5952-832a-4bdd601c73a9,Kitui Green Grams Farm #0019,Eastern Semi-Arid,Kitui,Green Grams,6.5,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.4,0.36,0.56,0.68,0.44,0.72,0.52,0.28
+e66ee568-72c3-5839-a7ec-aeafae9c57ca,Machakos Cowpeas Farm #0020,Eastern Semi-Arid,Machakos,Cowpeas,5.35,Transitioning Agribusiness,1,10.8,3,Structured Farm,0.36,0.36,0.64,0.52,0.52,0.44,0.36,0.4
+423d0e08-8aac-5c74-82e8-c741f4f0922d,Tharaka Nithi Sorghum Farm #0021,Eastern Semi-Arid,Tharaka Nithi,Sorghum,4.3,Transitioning Agribusiness,1,11.04,3,Structured Farm,0.44,0.44,0.44,0.76,0.4,0.44,0.48,0.28
+dc90a3bb-8741-5b47-ac53-2afdebd197a6,Kericho Wheat Farm #0022,Rift Valley,Kericho,Wheat,1.21,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.2,0.16,0.32,0.56,0.16,0.32,0.2,0.2
+d91a72d9-cde1-52ae-8f09-e5b32c1ebd97,Lamu Cassava Farm #0023,Coastal Lowlands,Lamu,Cassava,25.33,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.88,0.76,0.88,0.72,0.84,0.88,0.92,0.88
+d1634aa9-9231-5c14-a5f5-79d7f24cfb1d,Bungoma Cassava Farm #0024,Western Kenya,Bungoma,Cassava,24.4,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.84,0.76,0.84,0.76,0.8,0.88,0.92,0.76
+6909e58e-4938-50c6-8b44-17a98562bf57,Busia Maize Farm #0025,Western Kenya,Busia,Maize,2.33,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.4,0.48,0.32,0.68,0.48,0.52,0.68,0.4
+ffe9520d-7a36-5089-bbb7-408052b8af2c,Makueni Green Grams Farm #0026,Eastern Semi-Arid,Makueni,Green Grams,1.09,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.28,0.16,0.4,0.64,0.12,0.2,0.12,0.08
+88295350-85bc-5f69-87a8-a0e6325b7b98,Taita Taveta Cassava Farm #0027,Coastal Lowlands,Taita Taveta,Cassava,0.5,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.16,0.28,0.24,0.64,0.08,0.4,0.28,0.04
+ba5faa2b-8e0a-5a63-8570-f93535185615,Lamu Cassava Farm #0028,Coastal Lowlands,Lamu,Cassava,2.77,Informal Smallholder,0,4.92,5,Future Ready Farm,0.08,0.2,0.2,0.4,0.12,0.24,0.24,0.16
+1174fed8-008e-5ff6-97a4-e595225fb3eb,Taita Taveta Cassava Farm #0029,Coastal Lowlands,Taita Taveta,Cassava,1.09,Informal Smallholder,0,4.8,5,Future Ready Farm,0.12,0.12,0.08,0.56,0.16,0.28,0.2,0.08
+04924650-c80a-5d70-91a8-de2c96642d63,Kwale Cassava Farm #0030,Coastal Lowlands,Kwale,Cassava,3.39,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.44,0.44,0.44,0.68,0.56,0.52,0.48,0.4
+1b4dc038-79d3-5732-90e3-a5e965a7e96b,Lamu Vegetables Farm #0031,Coastal Lowlands,Lamu,Vegetables,7.46,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.52,0.44,0.6,0.64,0.36,0.56,0.64,0.28
+057bf5ec-f5fd-5332-9b9c-b8499d0b78d1,Kilifi Cassava Farm #0032,Coastal Lowlands,Kilifi,Cassava,5.0,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.92,0.88,0.84,0.76,0.76,0.84,0.88,0.84
+0cbb86d7-ddd5-53dd-aaf6-75ca23909918,Taita Taveta Cassava Farm #0033,Coastal Lowlands,Taita Taveta,Cassava,3.99,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.12,0.2,0.28,0.52,0.12,0.16,0.12,0.16
+d8c1926a-4560-5935-b3d5-29d32afe8775,Kiambu Tea Farm #0034,Central Highlands,Kiambu,Tea,3.14,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.04,0.32,0.16,0.48,0.24,0.32,0.32,0.04
+140638c9-c4e5-5282-9198-97f33094fcf9,Kiambu Dairy Farm #0035,Central Highlands,Kiambu,Dairy,2.56,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.28,0.28,0.28,0.64,0.12,0.36,0.16,0.04
+95481682-ebb4-52ff-93ef-d2b4c6643802,Uasin Gishu Maize Farm #0036,Rift Valley,Uasin Gishu,Maize,3.64,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.08,0.28,0.16,0.64,0.16,0.28,0.08,0.24
+db7e8a8c-ce1f-5060-bbf1-14a20acd197c,Kitui Mangoes Farm #0037,Eastern Semi-Arid,Kitui,Mangoes,2.83,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.28,0.24,0.52,0.12,0.36,0.2,0.0
+a36e1072-1d22-55bd-8973-ca86ded209bc,Makueni Green Grams Farm #0038,Eastern Semi-Arid,Makueni,Green Grams,1.92,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.2,0.2,0.44,0.08,0.52,0.2,0.04
+8f385f0c-9eda-58d5-be04-5719da33bd82,Siaya Dairy Farm #0039,Western Kenya,Siaya,Dairy,2.45,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.04,0.28,0.28,0.52,0.16,0.24,0.16,0.12
+ec1f3f47-7081-5467-b843-89e2f94e64f0,Lamu Coconut Farm #0040,Coastal Lowlands,Lamu,Coconut,8.89,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.32,0.4,0.56,0.68,0.6,0.52,0.28,0.4
+3de37f74-16be-5890-ab7b-8239dee8ab42,Kiambu Horticulture Farm #0041,Central Highlands,Kiambu,Horticulture,1.55,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.24,0.24,0.28,0.48,0.08,0.12,0.08,0.24
+3b3268b5-07d6-583c-af5f-fd44514b690d,Makueni Mangoes Farm #0042,Eastern Semi-Arid,Makueni,Mangoes,6.15,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.4,0.44,0.56,0.52,0.52,0.32,0.64,0.48
+70089432-a0a2-52b2-a353-399fc5e66a84,Busia Cassava Farm #0043,Western Kenya,Busia,Cassava,5.05,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.4,0.6,0.48,0.6,0.4,0.64,0.48,0.32
+3f17eed4-2c28-5416-af5e-6a58f1b01f24,Taita Taveta Cassava Farm #0044,Coastal Lowlands,Taita Taveta,Cassava,1.47,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.16,0.24,0.2,0.52,0.12,0.28,0.28,0.12
+9c7778ce-1a93-5c6a-890a-9b76e964e597,Murang'a Avocado Farm #0045,Central Highlands,Murang'a,Avocado,3.44,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.32,0.44,0.72,0.76,0.6,0.4,0.4,0.28
+a364094b-0dc7-559f-a8a3-393be260ae34,Kisumu Sugarcane Farm #0046,Western Kenya,Kisumu,Sugarcane,8.69,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.48,0.48,0.64,0.68,0.28,0.56,0.4,0.28
+7fb1de75-82c6-504d-a97c-8b76c169d754,Kakamega Maize Farm #0047,Western Kenya,Kakamega,Maize,3.71,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.2,0.16,0.44,0.6,0.2,0.2,0.28,0.08
+844b4dd6-6f5b-5b12-abb1-f18a6b0a9cb7,Kisumu Sugarcane Farm #0048,Western Kenya,Kisumu,Sugarcane,3.45,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.24,0.16,0.2,0.6,0.08,0.2,0.16,0.08
+9757b6e4-95d7-5b4e-8949-0ed42784f290,Tharaka Nithi Sorghum Farm #0049,Eastern Semi-Arid,Tharaka Nithi,Sorghum,1.5,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.52,0.52,0.64,0.6,0.36,0.56,0.6,0.24
+7471688e-cb6d-56cb-afa3-3e9bbf3bf99a,Embu Macadamia Farm #0050,Central Highlands,Embu,Macadamia,1.7,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.28,0.32,0.48,0.24,0.24,0.08,0.04
+0db603dd-2aab-5095-a530-2fdf46e8dcb2,Siaya Cassava Farm #0051,Western Kenya,Siaya,Cassava,3.99,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.24,0.28,0.48,0.12,0.2,0.28,0.08
+47b9c4eb-b046-5375-ac49-198bbac76e20,Embu Coffee Farm #0052,Central Highlands,Embu,Coffee,2.99,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.2,0.16,0.08,0.56,0.32,0.36,0.08,0.0
+bc1b45e8-3cc4-5d07-b32c-44d63ad651b6,Taita Taveta Cashew Farm #0053,Coastal Lowlands,Taita Taveta,Cashew,6.73,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.4,0.4,0.48,0.6,0.48,0.56,0.4,0.4
+9f05a59c-db5e-5afa-aa5e-2f863aa2341d,Embu Dairy Farm #0054,Central Highlands,Embu,Dairy,7.47,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.44,0.6,0.56,0.72,0.36,0.64,0.52,0.28
+b7edcd50-0bd7-5b9c-a0e4-3e1f2be5a65c,Machakos Mangoes Farm #0055,Eastern Semi-Arid,Machakos,Mangoes,6.76,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.4,0.64,0.48,0.72,0.48,0.4,0.56,0.32
+51951e84-f675-5b2e-9d34-f67b189a619d,Trans Nzoia Potatoes Farm #0056,Rift Valley,Trans Nzoia,Potatoes,12.05,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.44,0.52,0.56,0.88,0.48,0.52,0.48,0.44
+bac50350-65e9-5ea0-881a-152819de634f,Murang'a Avocado Farm #0057,Central Highlands,Murang'a,Avocado,1.95,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.24,0.28,0.24,0.64,0.04,0.28,0.32,0.16
+3d7a65db-5338-545f-98e2-1c9469b64c48,Nandi Potatoes Farm #0058,Rift Valley,Nandi,Potatoes,5.73,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.48,0.36,0.64,0.6,0.44,0.68,0.56,0.28
+f0d24f80-ff59-5df1-ace4-20e2523eb1ae,Lamu Cashew Farm #0059,Coastal Lowlands,Lamu,Cashew,2.3,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.16,0.2,0.24,0.56,0.2,0.2,0.2,0.12
+1894c2fa-25c5-59f1-8bfc-881d8044c705,Machakos Pigeon Peas Farm #0060,Eastern Semi-Arid,Machakos,Pigeon Peas,3.32,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.24,0.12,0.6,0.16,0.36,0.2,0.0
+720adb47-d238-5b6e-bbf5-39c0f70bea97,Siaya Sugarcane Farm #0061,Western Kenya,Siaya,Sugarcane,10.64,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.4,0.48,0.48,0.72,0.44,0.64,0.4,0.24
+823bf789-483d-54ae-bab0-871a0204488f,Embu Coffee Farm #0062,Central Highlands,Embu,Coffee,0.5,Informal Smallholder,0,6.84,2,Emerging Agribusiness,0.32,0.2,0.32,0.6,0.32,0.36,0.12,0.04
+0c4fa962-656e-5c36-8230-65162a01698d,Kisumu Maize Farm #0063,Western Kenya,Kisumu,Maize,6.32,Transitioning Agribusiness,1,11.04,3,Structured Farm,0.4,0.36,0.52,0.6,0.44,0.52,0.56,0.28
+8af18190-6a75-5bf7-aa39-17aef6061303,Trans Nzoia Dairy Farm #0064,Rift Valley,Trans Nzoia,Dairy,1.5,Transitioning Agribusiness,1,12.6,3,Structured Farm,0.48,0.48,0.48,0.56,0.52,0.68,0.48,0.52
+0bab0f41-ca4a-5ad0-bf32-48066df6be6a,Tharaka Nithi Green Grams Farm #0065,Eastern Semi-Arid,Tharaka Nithi,Green Grams,12.04,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.24,0.52,0.6,0.76,0.6,0.68,0.48,0.36
+c86a9977-b853-5ebe-acb0-9d84aefff94a,Uasin Gishu Dairy Farm #0066,Rift Valley,Uasin Gishu,Dairy,10.53,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.52,0.48,0.52,0.72,0.64,0.64,0.4,0.36
+5fc2c3c6-e6f2-52c3-b7b2-3e9262533964,Makueni Sorghum Farm #0067,Eastern Semi-Arid,Makueni,Sorghum,5.95,Transitioning Agribusiness,1,10.92,3,Structured Farm,0.52,0.28,0.4,0.64,0.44,0.56,0.52,0.28
+61b3ba29-c971-56ae-bc38-1d6077552ea8,Lamu Vegetables Farm #0068,Coastal Lowlands,Lamu,Vegetables,0.5,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.12,0.28,0.12,0.68,0.16,0.24,0.16,0.2
+e53d11b6-9fd3-54f2-9198-4cbebdd3a4a8,Meru Avocado Farm #0069,Central Highlands,Meru,Avocado,2.15,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.12,0.28,0.28,0.48,0.16,0.28,0.2,0.08
+21b918ec-fea5-5791-bddd-08f2bce5b45d,Embu Coffee Farm #0070,Central Highlands,Embu,Coffee,2.21,Informal Smallholder,0,4.92,5,Future Ready Farm,0.08,0.2,0.24,0.6,0.24,0.12,0.08,0.08
+11a1501d-ef84-5168-9e99-76b508058dbd,Kiambu Coffee Farm #0071,Central Highlands,Kiambu,Coffee,2.04,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.12,0.2,0.24,0.56,0.16,0.4,0.16,0.12
+64811cfe-c53c-5391-a5b5-952324eb61e9,Meru Macadamia Farm #0072,Central Highlands,Meru,Macadamia,0.56,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.2,0.12,0.28,0.64,0.12,0.2,0.08,0.08
+ecc2e9a8-1f50-54f5-885c-09fe6a19ace4,Meru Horticulture Farm #0073,Central Highlands,Meru,Horticulture,28.66,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.72,0.84,1.0,0.64,0.76,0.92,0.92,0.8
+0667c98b-c01b-5d9d-bc95-3703faeaf891,Tharaka Nithi Sorghum Farm #0074,Eastern Semi-Arid,Tharaka Nithi,Sorghum,2.99,Informal Smallholder,0,4.56,5,Future Ready Farm,0.12,0.16,0.28,0.44,0.08,0.2,0.08,0.16
+63735fe0-280b-562e-b76b-42a3e57cad85,Siaya Maize Farm #0075,Western Kenya,Siaya,Maize,4.17,Informal Smallholder,0,6.84,2,Emerging Agribusiness,0.2,0.12,0.36,0.68,0.24,0.4,0.16,0.12
+5bc37249-306d-578e-b528-c764e77fb90f,Meru Tea Farm #0076,Central Highlands,Meru,Tea,2.9,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.2,0.16,0.32,0.6,0.16,0.32,0.2,0.08
+a0edac43-e52a-5723-8b9b-832a031fbeea,Kilifi Vegetables Farm #0077,Coastal Lowlands,Kilifi,Vegetables,2.23,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.28,0.2,0.4,0.44,0.08,0.24,0.24,0.04
+cfdde529-725f-5624-9ee0-8566501b30ab,Busia Horticulture Farm #0078,Western Kenya,Busia,Horticulture,7.11,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.6,0.4,0.6,0.76,0.6,0.44,0.56,0.44
+43ea3aea-f673-5511-890c-80cc896de8ea,Vihiga Poultry Farm #0079,Western Kenya,Vihiga,Poultry,3.44,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.44,0.6,0.68,0.64,0.28,0.56,0.56,0.4
+d7bda7d2-12d1-5aed-9a6b-defe1dc9109f,Lamu Cashew Farm #0080,Coastal Lowlands,Lamu,Cashew,5.7,Transitioning Agribusiness,1,10.92,3,Structured Farm,0.6,0.36,0.4,0.52,0.44,0.36,0.44,0.52
+37cabefd-6208-5cbc-8402-cff6689d42b1,Tharaka Nithi Pigeon Peas Farm #0081,Eastern Semi-Arid,Tharaka Nithi,Pigeon Peas,3.77,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.52,0.36,0.6,0.68,0.56,0.48,0.64,0.28
+9b3de8dd-cf11-5c89-bc68-b769f9c569a5,Machakos Green Grams Farm #0082,Eastern Semi-Arid,Machakos,Green Grams,2.35,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.2,0.16,0.2,0.56,0.28,0.24,0.28,0.08
+9a5b4356-7fe8-5381-aa32-d6ee028f16cb,Nandi Maize Farm #0083,Rift Valley,Nandi,Maize,3.89,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.52,0.32,0.68,0.56,0.48,0.48,0.48,0.28
+7773c976-5b86-5d22-97f5-3dc18f781b3a,Lamu Vegetables Farm #0084,Coastal Lowlands,Lamu,Vegetables,4.62,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.2,0.24,0.28,0.52,0.08,0.36,0.2,0.08
+2649dbfa-b263-5a05-88d2-8d205c530d17,Nakuru Tea Farm #0085,Rift Valley,Nakuru,Tea,2.76,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.2,0.2,0.56,0.12,0.32,0.12,0.08
+ddd95349-8077-5a77-bd45-ba4d6fc52bfe,Kwale Vegetables Farm #0086,Coastal Lowlands,Kwale,Vegetables,0.5,Informal Smallholder,0,4.8,5,Future Ready Farm,0.24,0.2,0.24,0.36,0.04,0.16,0.28,0.08
+fc172af0-92ce-5c16-a3d5-de67f1d412b7,Embu Horticulture Farm #0087,Central Highlands,Embu,Horticulture,4.81,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.52,0.6,0.6,0.76,0.52,0.44,0.56,0.4
+87a336ee-c8a3-5e6c-af0a-467f62cc4408,Taita Taveta Cassava Farm #0088,Coastal Lowlands,Taita Taveta,Cassava,0.5,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.2,0.36,0.2,0.6,0.2,0.28,0.24,0.12
+1583c52c-7f9d-5ac7-849b-4626055494c6,Embu Macadamia Farm #0089,Central Highlands,Embu,Macadamia,0.5,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.04,0.28,0.16,0.48,0.16,0.32,0.24,0.08
+853fdd6f-30ab-5e34-b39d-dc05ad99190f,Kwale Fish Farming Farm #0090,Coastal Lowlands,Kwale,Fish Farming,10.09,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.64,0.32,0.48,0.48,0.44,0.56,0.48,0.44
+803ad5b6-6214-5c07-94dd-ab24790049cc,Tharaka Nithi Sorghum Farm #0091,Eastern Semi-Arid,Tharaka Nithi,Sorghum,1.61,Informal Smallholder,0,4.8,5,Future Ready Farm,0.16,0.2,0.16,0.56,0.16,0.2,0.12,0.04
+7e608219-3ce4-559d-ac9f-56af6118ae0e,Kwale Vegetables Farm #0092,Coastal Lowlands,Kwale,Vegetables,7.88,Transitioning Agribusiness,1,10.92,3,Structured Farm,0.4,0.32,0.48,0.68,0.44,0.52,0.56,0.24
+88a6ec55-3636-53d3-9d47-db0e25248842,Trans Nzoia Tea Farm #0093,Rift Valley,Trans Nzoia,Tea,1.12,Informal Smallholder,0,4.44,5,Future Ready Farm,0.08,0.16,0.16,0.48,0.16,0.32,0.04,0.08
+33fac84f-4e59-55bc-880a-b4b3e4f6bf99,Bungoma Sugarcane Farm #0094,Western Kenya,Bungoma,Sugarcane,2.03,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.2,0.24,0.68,0.12,0.32,0.16,0.0
+808ea3de-d98b-5b16-a08f-edee089ec49e,Tharaka Nithi Livestock Farm #0095,Eastern Semi-Arid,Tharaka Nithi,Livestock,3.52,Informal Smallholder,0,4.8,5,Future Ready Farm,0.08,0.28,0.2,0.56,0.12,0.28,0.08,0.0
+ede91749-8b0a-50c2-a403-f42e87f96fec,Bungoma Cassava Farm #0096,Western Kenya,Bungoma,Cassava,5.77,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.52,0.52,0.68,0.48,0.44,0.56,0.48,0.56
+4c3cb467-2b01-588d-b2cc-8130772c7b39,Bungoma Maize Farm #0097,Western Kenya,Bungoma,Maize,0.5,Informal Smallholder,0,4.8,5,Future Ready Farm,0.2,0.12,0.12,0.52,0.12,0.32,0.16,0.04
+2659476b-967e-5a10-8f7a-17394979ffd5,Kirinyaga Macadamia Farm #0098,Central Highlands,Kirinyaga,Macadamia,3.64,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.08,0.28,0.32,0.36,0.16,0.2,0.4,0.0
+26d08bc9-3308-54e4-8ffb-443aa733f37c,Vihiga Maize Farm #0099,Western Kenya,Vihiga,Maize,2.03,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.24,0.28,0.24,0.44,0.2,0.24,0.16,0.16
+69debbed-73c3-5924-9553-9755a7f97382,Taita Taveta Vegetables Farm #0100,Coastal Lowlands,Taita Taveta,Vegetables,19.9,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.72,0.8,0.96,0.92,0.68,0.92,0.88,0.64
+c7967544-4a7b-5993-8cee-8d365e412840,Meru Coffee Farm #0101,Central Highlands,Meru,Coffee,24.59,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.84,0.8,0.72,0.8,0.88,0.84,0.84,0.8
+e362e9d5-a95a-57cc-9097-f1dc374d8874,Vihiga Horticulture Farm #0102,Western Kenya,Vihiga,Horticulture,8.15,Transitioning Agribusiness,1,10.44,3,Structured Farm,0.28,0.32,0.6,0.68,0.48,0.44,0.4,0.28
+b00f83d1-b9eb-52ec-b709-0fb937859127,Kwale Coconut Farm #0103,Coastal Lowlands,Kwale,Coconut,3.26,Informal Smallholder,0,6.84,2,Emerging Agribusiness,0.32,0.28,0.32,0.6,0.2,0.16,0.24,0.16
+0f5ce9e8-a75c-55a6-bde9-4a3a551c8e09,Kericho Wheat Farm #0104,Rift Valley,Kericho,Wheat,38.1,Commercial Market Leader,2,20.4,5,Future Ready Farm,0.76,0.92,0.92,0.8,0.92,0.92,0.88,0.68
+4c1565b6-6199-54db-a894-c4abf0997132,Lamu Vegetables Farm #0105,Coastal Lowlands,Lamu,Vegetables,2.13,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.44,0.6,0.52,0.72,0.48,0.52,0.36,0.4
+70ae28cf-c522-5728-913f-371e129b5675,Kericho Horticulture Farm #0106,Rift Valley,Kericho,Horticulture,2.56,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.36,0.36,0.6,0.68,0.44,0.64,0.68,0.32
+ab770a9a-85d9-51bc-96e3-2fa539a62224,Nandi Wheat Farm #0107,Rift Valley,Nandi,Wheat,0.5,Informal Smallholder,0,4.8,5,Future Ready Farm,0.2,0.2,0.2,0.44,0.12,0.28,0.08,0.08
+552fdd5d-91da-5cbd-8678-712fbaa7920d,Tharaka Nithi Sorghum Farm #0108,Eastern Semi-Arid,Tharaka Nithi,Sorghum,0.5,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.24,0.24,0.16,0.76,0.08,0.32,0.08,0.12
+cc3180cb-1fd6-5e63-95d4-363aacd26a24,Bomet Horticulture Farm #0109,Rift Valley,Bomet,Horticulture,2.83,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.16,0.16,0.32,0.6,0.28,0.32,0.12,0.08
+548ca0d0-350a-5b96-9ff7-d2dc21990732,Nyeri Avocado Farm #0110,Central Highlands,Nyeri,Avocado,46.35,Commercial Market Leader,2,19.32,4,Investment Ready Farm,0.76,0.68,0.88,0.8,0.76,0.88,0.8,0.88
+27db2805-6979-5ab7-826d-e157e9da6a6e,Lamu Cassava Farm #0111,Coastal Lowlands,Lamu,Cassava,2.61,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.2,0.12,0.24,0.6,0.16,0.4,0.2,0.08
+e20b7bca-0a3d-5387-a7ce-7cf0d74ed8d2,Nyeri Avocado Farm #0112,Central Highlands,Nyeri,Avocado,0.5,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.28,0.16,0.44,0.08,0.32,0.2,0.12
+c42995b4-cb01-50c1-ad3b-950d6426783c,Kilifi Cassava Farm #0113,Coastal Lowlands,Kilifi,Cassava,0.5,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.16,0.2,0.24,0.56,0.2,0.32,0.2,0.08
+b2d91f7a-c195-558c-8d79-a69f3a0d1dae,Kirinyaga Coffee Farm #0114,Central Highlands,Kirinyaga,Coffee,7.21,Transitioning Agribusiness,1,13.92,3,Structured Farm,0.56,0.44,0.52,0.72,0.56,0.68,0.64,0.52
+70e06dfa-5e20-5eb9-b5cd-d53dabc452b8,Kericho Horticulture Farm #0115,Rift Valley,Kericho,Horticulture,0.5,Informal Smallholder,0,4.8,5,Future Ready Farm,0.08,0.16,0.2,0.68,0.04,0.24,0.12,0.08
+a96b05fc-0ab1-58f0-97b4-4e15042265e0,Nyeri Tea Farm #0116,Central Highlands,Nyeri,Tea,38.74,Commercial Market Leader,2,19.08,4,Investment Ready Farm,0.6,0.76,0.92,0.8,0.84,0.76,0.88,0.8
+35b5a623-6070-5d84-bb3f-abfad2288e35,Uasin Gishu Dairy Farm #0117,Rift Valley,Uasin Gishu,Dairy,6.86,Transitioning Agribusiness,1,12.6,3,Structured Farm,0.64,0.56,0.44,0.68,0.48,0.56,0.48,0.36
+046af8e5-fb7a-5d8d-8032-a316ef9e8054,Taita Taveta Cashew Farm #0118,Coastal Lowlands,Taita Taveta,Cashew,8.79,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.52,0.36,0.64,0.6,0.52,0.44,0.52,0.24
+8246cbfd-9352-5c22-9ac7-e0d0f64d847e,Kericho Tea Farm #0119,Rift Valley,Kericho,Tea,2.46,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.08,0.16,0.24,0.64,0.16,0.32,0.24,0.08
+96eb7acc-e2d0-5d90-a684-62d69928db1a,Bomet Wheat Farm #0120,Rift Valley,Bomet,Wheat,6.07,Transitioning Agribusiness,1,13.08,3,Structured Farm,0.56,0.44,0.6,0.6,0.56,0.64,0.48,0.48
+b570d393-f74d-50f1-93b4-6a4a37e564c4,Taita Taveta Coconut Farm #0121,Coastal Lowlands,Taita Taveta,Coconut,3.13,Transitioning Agribusiness,1,14.88,3,Structured Farm,0.56,0.44,0.68,0.72,0.56,0.88,0.72,0.4
+f573f9fa-7ed7-57ac-bbfd-24618ebc3551,Nandi Horticulture Farm #0122,Rift Valley,Nandi,Horticulture,1.5,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.4,0.56,0.48,0.76,0.56,0.56,0.4,0.4
+45f35cdc-ac39-5ebb-b282-b4801183d0fc,Kitui Cowpeas Farm #0123,Eastern Semi-Arid,Kitui,Cowpeas,3.4,Informal Smallholder,0,4.56,5,Future Ready Farm,0.12,0.2,0.2,0.52,0.12,0.2,0.04,0.12
+931f48d6-6a7a-5416-841e-24a5bc731899,Embu Avocado Farm #0124,Central Highlands,Embu,Avocado,1.51,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.28,0.16,0.24,0.6,0.12,0.28,0.16,0.08
+3faed9f5-26f1-5831-b6a4-f77ee4589332,Bungoma Poultry Farm #0125,Western Kenya,Bungoma,Poultry,1.33,Informal Smallholder,0,4.32,5,Future Ready Farm,0.0,0.12,0.08,0.52,0.12,0.32,0.2,0.08
+8e0ba323-d928-5232-ad87-c7ef72ed12fb,Makueni Sorghum Farm #0126,Eastern Semi-Arid,Makueni,Sorghum,3.17,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.12,0.2,0.36,0.48,0.2,0.08,0.24,0.12
+95e53ed5-481d-5cd9-a319-69a1e928c1e6,Machakos Sorghum Farm #0127,Eastern Semi-Arid,Machakos,Sorghum,2.43,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.08,0.28,0.28,0.6,0.16,0.4,0.12,0.08
+fde8e2e3-f978-5ca2-90e1-57921ddf1f7e,Vihiga Sugarcane Farm #0128,Western Kenya,Vihiga,Sugarcane,0.66,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.16,0.2,0.24,0.64,0.16,0.44,0.2,0.0
+d16174e5-6b20-593b-bfec-44c2387590d7,Tharaka Nithi Sorghum Farm #0129,Eastern Semi-Arid,Tharaka Nithi,Sorghum,2.96,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.16,0.24,0.24,0.48,0.12,0.2,0.36,0.04
+2d77858a-8dcd-543a-ac32-8c67ccd806b9,Murang'a Horticulture Farm #0130,Central Highlands,Murang'a,Horticulture,7.24,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.44,0.4,0.52,0.76,0.56,0.52,0.56,0.28
+e942c15e-ef26-5ac7-a038-0cee4a089fcc,Meru Horticulture Farm #0131,Central Highlands,Meru,Horticulture,1.86,Informal Smallholder,0,4.68,5,Future Ready Farm,0.24,0.04,0.16,0.32,0.16,0.28,0.28,0.08
+d6aa6f62-cfb2-56d6-be37-be8aa5ef9c90,Uasin Gishu Tea Farm #0132,Rift Valley,Uasin Gishu,Tea,13.91,Commercial Market Leader,2,19.92,4,Investment Ready Farm,0.92,0.72,0.96,0.76,0.76,0.8,0.96,0.76
+27e36994-f83f-5829-b8ae-17b25ec9a747,Murang'a Macadamia Farm #0133,Central Highlands,Murang'a,Macadamia,1.5,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.52,0.44,0.6,0.56,0.36,0.48,0.48,0.32
+70f78c30-ecf5-582a-8ca9-9bc3abb92d76,Taita Taveta Coconut Farm #0134,Coastal Lowlands,Taita Taveta,Coconut,2.91,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.28,0.04,0.32,0.52,0.04,0.32,0.28,0.16
+e0fd6565-341b-5faf-862f-c8708408eeec,Kilifi Cassava Farm #0135,Coastal Lowlands,Kilifi,Cassava,1.5,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.36,0.52,0.52,0.64,0.44,0.64,0.64,0.16
+0bdfc630-8b60-5edd-b256-5b00feb13144,Siaya Cassava Farm #0136,Western Kenya,Siaya,Cassava,1.15,Informal Smallholder,0,6.72,2,Emerging Agribusiness,0.32,0.2,0.28,0.68,0.2,0.24,0.12,0.2
+785b4c0f-e5df-5789-89da-26fe6dda2bc2,Kericho Wheat Farm #0137,Rift Valley,Kericho,Wheat,47.73,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.96,0.76,0.76,0.76,0.84,0.84,0.92,0.84
+772eb3aa-afce-565d-8191-48767df1365b,Bomet Wheat Farm #0138,Rift Valley,Bomet,Wheat,1.18,Informal Smallholder,0,4.44,5,Future Ready Farm,0.2,0.16,0.08,0.44,0.2,0.12,0.2,0.08
+3116b465-a722-5915-916f-c658fbefe066,Uasin Gishu Dairy Farm #0139,Rift Valley,Uasin Gishu,Dairy,1.5,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.6,0.48,0.6,0.68,0.48,0.6,0.48,0.24
+5ed3fc90-e0f5-5f94-9066-84ac5ce9de09,Uasin Gishu Potatoes Farm #0140,Rift Valley,Uasin Gishu,Potatoes,3.84,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.28,0.2,0.24,0.56,0.04,0.32,0.08,0.12
+10defaf7-c342-5033-8329-e8ee36fa922d,Kericho Tea Farm #0141,Rift Valley,Kericho,Tea,4.56,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.12,0.16,0.24,0.64,0.08,0.24,0.08,0.12
+a7cd92e1-bfad-55eb-98b3-06195194a2db,Murang'a Coffee Farm #0142,Central Highlands,Murang'a,Coffee,1.8,Informal Smallholder,0,4.32,5,Future Ready Farm,0.24,0.16,0.2,0.32,0.08,0.16,0.12,0.16
+79f26a26-a851-5a9b-8814-b1c8c899833b,Lamu Fish Farming Farm #0143,Coastal Lowlands,Lamu,Fish Farming,26.4,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.72,0.64,0.84,0.88,0.96,0.92,0.84,0.88
+4a4e2044-cb89-5192-80a2-60b50b9ee098,Murang'a Dairy Farm #0144,Central Highlands,Murang'a,Dairy,5.93,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.4,0.52,0.56,0.72,0.52,0.52,0.52,0.4
+7efc102f-ef4b-5fed-91cc-801e75d305d0,Makueni Livestock Farm #0145,Eastern Semi-Arid,Makueni,Livestock,6.4,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.08,0.2,0.28,0.56,0.12,0.28,0.2,0.08
+950ef01a-c848-58c1-80c9-413cdf8a559c,Tharaka Nithi Livestock Farm #0146,Eastern Semi-Arid,Tharaka Nithi,Livestock,4.1,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.08,0.16,0.32,0.48,0.2,0.32,0.16,0.12
+c9cc0ac5-d3e8-57a6-a121-bcd365ff7a37,Machakos Pigeon Peas Farm #0147,Eastern Semi-Arid,Machakos,Pigeon Peas,0.5,Informal Smallholder,0,4.68,5,Future Ready Farm,0.16,0.2,0.28,0.36,0.16,0.2,0.08,0.12
+68e1d28b-aa4e-5bac-9ec8-4a6f0ee74efa,Nandi Horticulture Farm #0148,Rift Valley,Nandi,Horticulture,2.29,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.52,0.44,0.56,0.72,0.56,0.52,0.64,0.28
+506e961b-c8b5-5175-9543-17d51f6d8bed,Kirinyaga Avocado Farm #0149,Central Highlands,Kirinyaga,Avocado,3.09,Informal Smallholder,0,4.92,5,Future Ready Farm,0.12,0.24,0.24,0.44,0.08,0.24,0.2,0.08
+ba68c7c7-0e46-557d-965c-ab42adb34b4a,Taita Taveta Vegetables Farm #0150,Coastal Lowlands,Taita Taveta,Vegetables,3.45,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.08,0.2,0.24,0.64,0.08,0.24,0.12,0.2
+52e6b138-d6f7-528a-8fa3-b84da2cd0cc9,Kwale Cashew Farm #0151,Coastal Lowlands,Kwale,Cashew,7.3,Transitioning Agribusiness,1,12.6,3,Structured Farm,0.52,0.44,0.52,0.68,0.4,0.68,0.56,0.4
+87c33ae9-e9ee-57fd-9129-147484c79e1f,Uasin Gishu Dairy Farm #0152,Rift Valley,Uasin Gishu,Dairy,26.15,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.88,0.68,0.84,0.84,0.84,0.88,0.88,0.76
+b316ad12-1865-5c24-9eb8-0850147e8b4c,Kwale Vegetables Farm #0153,Coastal Lowlands,Kwale,Vegetables,3.16,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.0,0.24,0.32,0.52,0.04,0.36,0.12,0.08
+fa88084b-392c-5f03-8c61-f1718b01c8b4,Uasin Gishu Maize Farm #0154,Rift Valley,Uasin Gishu,Maize,4.49,Transitioning Agribusiness,1,13.08,3,Structured Farm,0.48,0.52,0.48,0.8,0.44,0.64,0.52,0.48
+92734301-3e1f-581f-b40d-2149ba810277,Taita Taveta Cassava Farm #0155,Coastal Lowlands,Taita Taveta,Cassava,2.42,Informal Smallholder,0,4.92,5,Future Ready Farm,0.12,0.2,0.16,0.48,0.2,0.24,0.12,0.12
+0faab241-3ea2-578e-97a0-740822d7c452,Machakos Cowpeas Farm #0156,Eastern Semi-Arid,Machakos,Cowpeas,12.25,Transitioning Agribusiness,1,10.8,3,Structured Farm,0.44,0.48,0.52,0.36,0.48,0.56,0.4,0.36
+4f3f5096-b785-5fe7-a6b5-03be737fb1c4,Meru Avocado Farm #0157,Central Highlands,Meru,Avocado,2.51,Informal Smallholder,0,4.8,5,Future Ready Farm,0.04,0.32,0.16,0.48,0.16,0.24,0.12,0.08
+84122626-c8c7-5b7e-9fb7-835ec1a7fcad,Nakuru Tea Farm #0158,Rift Valley,Nakuru,Tea,4.42,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.44,0.44,0.52,0.64,0.44,0.6,0.48,0.28
+7864dde6-0b10-5a00-88c6-019df87f2bb3,Nyeri Avocado Farm #0159,Central Highlands,Nyeri,Avocado,1.5,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.56,0.6,0.48,0.72,0.44,0.6,0.48,0.36
+a5b93dc1-cef0-5d2f-9b76-9cfccb94de12,Bungoma Horticulture Farm #0160,Western Kenya,Bungoma,Horticulture,2.44,Transitioning Agribusiness,1,13.08,3,Structured Farm,0.56,0.6,0.4,0.72,0.48,0.52,0.68,0.4
+dbeb8ed0-1ca7-5cb4-adc7-b61f3c0e6125,Kilifi Cashew Farm #0161,Coastal Lowlands,Kilifi,Cashew,0.98,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.16,0.32,0.48,0.28,0.32,0.08,0.08
+b18cc86a-52fa-5ab6-8e1c-ecc44757764e,Kisumu Poultry Farm #0162,Western Kenya,Kisumu,Poultry,19.17,Commercial Market Leader,2,20.88,5,Future Ready Farm,0.88,0.92,0.88,0.8,0.88,0.84,0.88,0.88
+d36f1ca3-f56c-55f6-9f18-6c2aa5989bc0,Lamu Vegetables Farm #0163,Coastal Lowlands,Lamu,Vegetables,2.74,Informal Smallholder,0,6.72,2,Emerging Agribusiness,0.24,0.24,0.4,0.52,0.2,0.28,0.2,0.16
+ef7dd7a9-a82d-5a96-88e8-6799842d9637,Kericho Maize Farm #0164,Rift Valley,Kericho,Maize,4.57,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.2,0.2,0.16,0.52,0.2,0.44,0.28,0.12
+f52c5f91-8224-59a6-99c8-d5bd731abf0c,Makueni Mangoes Farm #0165,Eastern Semi-Arid,Makueni,Mangoes,8.61,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.52,0.52,0.56,0.6,0.4,0.68,0.4,0.28
+42e861f7-a13f-5908-bba6-954a1cc273aa,Kwale Coconut Farm #0166,Coastal Lowlands,Kwale,Coconut,2.98,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.32,0.28,0.32,0.4,0.04,0.2,0.08,0.12
+36fdb6ad-b04a-5685-9ead-4cfdf121dfe9,Kiambu Dairy Farm #0167,Central Highlands,Kiambu,Dairy,7.92,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.48,0.56,0.48,0.56,0.36,0.6,0.64,0.36
+820e982e-221b-535b-8f9a-76604375632b,Taita Taveta Coconut Farm #0168,Coastal Lowlands,Taita Taveta,Coconut,4.58,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.48,0.48,0.68,0.6,0.32,0.48,0.44,0.52
+3ce478f4-c8f1-59e2-b3f9-1cdd222276f1,Kwale Cassava Farm #0169,Coastal Lowlands,Kwale,Cassava,0.71,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.16,0.16,0.24,0.44,0.12,0.32,0.12,0.12
+f060c5a5-19da-553e-a621-3097b0bbad6e,Kilifi Fish Farming Farm #0170,Coastal Lowlands,Kilifi,Fish Farming,12.25,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.92,0.8,0.88,0.8,0.96,0.88,0.84,0.76
+2ea3383a-aa4e-5c00-afa9-69fa5190c582,Kisumu Dairy Farm #0171,Western Kenya,Kisumu,Dairy,4.51,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.16,0.04,0.24,0.68,0.28,0.24,0.12,0.04
+8a1f1edf-043e-5fcd-a0a3-9274aa2f0d5b,Murang'a Horticulture Farm #0172,Central Highlands,Murang'a,Horticulture,4.22,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.56,0.4,0.48,0.68,0.52,0.36,0.52,0.32
+29d6b6f1-4222-5ba8-8ad4-1cf9d7c84249,Makueni Livestock Farm #0173,Eastern Semi-Arid,Makueni,Livestock,1.95,Informal Smallholder,0,7.08,2,Emerging Agribusiness,0.4,0.28,0.32,0.6,0.24,0.24,0.16,0.12
+934777b7-2572-5847-9336-f4b3ecdbce22,Embu Dairy Farm #0174,Central Highlands,Embu,Dairy,36.85,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.84,0.72,0.92,0.72,0.84,0.8,0.96,0.72
+0cbaac27-d408-5697-87e6-eab064628af0,Murang'a Macadamia Farm #0175,Central Highlands,Murang'a,Macadamia,3.67,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.16,0.24,0.32,0.6,0.16,0.52,0.04,0.08
+9a64b4be-a06e-5e1c-8bca-4494fa5b7d0c,Murang'a Tea Farm #0176,Central Highlands,Murang'a,Tea,2.08,Informal Smallholder,0,3.84,1,Informal Farm,0.04,0.04,0.16,0.6,0.12,0.04,0.16,0.12
+ece669d3-c548-5130-9ccd-5825753657a3,Bomet Maize Farm #0177,Rift Valley,Bomet,Maize,3.26,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.16,0.32,0.16,0.56,0.08,0.16,0.28,0.08
+d3afa609-d27c-54d0-9e7f-094ec310f17f,Kisumu Dairy Farm #0178,Western Kenya,Kisumu,Dairy,28.46,Commercial Market Leader,2,18.96,4,Investment Ready Farm,0.88,0.64,0.88,0.84,0.68,0.76,0.96,0.68
+f4e6b7ae-c0ff-533e-818c-dcb0fc0a0962,Makueni Mangoes Farm #0179,Eastern Semi-Arid,Makueni,Mangoes,20.75,Commercial Market Leader,2,19.08,4,Investment Ready Farm,0.8,0.72,0.96,0.8,0.76,0.8,0.84,0.68
+fd791216-9785-5830-b79a-45ec8c7c9ca0,Kirinyaga Macadamia Farm #0180,Central Highlands,Kirinyaga,Macadamia,9.85,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.36,0.52,0.48,0.56,0.44,0.6,0.4,0.44
+429ed824-cc50-5448-a78c-3c9c7c57a89a,Embu Tea Farm #0181,Central Highlands,Embu,Tea,38.08,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.88,0.88,0.8,0.72,0.76,0.84,0.88,0.84
+ff813166-e5bc-5d66-b26b-b9e8336bde7a,Murang'a Macadamia Farm #0182,Central Highlands,Murang'a,Macadamia,13.43,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.92,0.8,0.88,0.8,0.88,0.8,0.8,0.68
+6a41889f-4816-54c5-955a-02c4636179dd,Kirinyaga Tea Farm #0183,Central Highlands,Kirinyaga,Tea,1.53,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.52,0.44,0.44,0.52,0.48,0.56,0.48,0.32
+9436b2da-6141-5d5c-9e64-0632c069fecf,Bomet Potatoes Farm #0184,Rift Valley,Bomet,Potatoes,3.15,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.16,0.2,0.2,0.6,0.2,0.12,0.16,0.08
+111c7a61-ebb9-5412-8ecf-c7e8310ce5bc,Trans Nzoia Potatoes Farm #0185,Rift Valley,Trans Nzoia,Potatoes,1.71,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.56,0.4,0.68,0.64,0.44,0.56,0.68,0.44
+82def4b3-014c-5cf4-8631-c3012532ffe0,Vihiga Horticulture Farm #0186,Western Kenya,Vihiga,Horticulture,6.13,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.44,0.4,0.52,0.68,0.52,0.56,0.32,0.44
+e7aa63d4-ac4b-528b-8a59-5ebec00bd803,Siaya Dairy Farm #0187,Western Kenya,Siaya,Dairy,1.91,Informal Smallholder,0,4.8,5,Future Ready Farm,0.04,0.12,0.2,0.6,0.2,0.2,0.12,0.12
+791962d6-269d-5a4d-b4c4-90293420d91a,Nyeri Avocado Farm #0188,Central Highlands,Nyeri,Avocado,0.91,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.16,0.28,0.16,0.4,0.2,0.28,0.24,0.08
+ca49fac6-82f1-58ba-a097-2401a36af906,Tharaka Nithi Pigeon Peas Farm #0189,Eastern Semi-Arid,Tharaka Nithi,Pigeon Peas,8.64,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.28,0.4,0.56,0.72,0.52,0.64,0.44,0.36
+6493022c-bad9-5a85-9d20-249d70927971,Murang'a Coffee Farm #0190,Central Highlands,Murang'a,Coffee,1.02,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.16,0.28,0.12,0.4,0.2,0.32,0.16,0.08
+847831bf-d59b-5852-ae2b-2c3e113412bf,Kakamega Cassava Farm #0191,Western Kenya,Kakamega,Cassava,12.14,Commercial Market Leader,2,18.6,4,Investment Ready Farm,0.88,0.76,0.72,0.72,0.84,0.68,0.92,0.68
+6cf4cdd3-ebc6-5a96-8067-05a20ca3bcb9,Trans Nzoia Dairy Farm #0192,Rift Valley,Trans Nzoia,Dairy,0.5,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.12,0.12,0.24,0.64,0.12,0.16,0.24,0.08
+3e3b7304-9238-5e6e-b0eb-b77a781483ad,Bungoma Sugarcane Farm #0193,Western Kenya,Bungoma,Sugarcane,2.75,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.24,0.24,0.2,0.44,0.16,0.16,0.2,0.08
+fc932c68-1ecc-5c7e-8bbe-25152b53dec8,Murang'a Macadamia Farm #0194,Central Highlands,Murang'a,Macadamia,6.2,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.48,0.44,0.56,0.64,0.44,0.52,0.48,0.48
+4c0c5a89-08d6-51b2-b7d6-1b6e416a709d,Machakos Green Grams Farm #0195,Eastern Semi-Arid,Machakos,Green Grams,0.5,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.24,0.32,0.32,0.52,0.08,0.36,0.12,0.12
+995a55a3-d146-585a-87c9-5118d0b77f3c,Bungoma Maize Farm #0196,Western Kenya,Bungoma,Maize,1.08,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.12,0.12,0.32,0.44,0.08,0.44,0.16,0.12
+575833be-de97-5eed-adcd-fcc2f47f04cb,Busia Cassava Farm #0197,Western Kenya,Busia,Cassava,5.62,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.56,0.68,0.36,0.8,0.4,0.56,0.36,0.32
+3f9b2066-fd06-5b2f-8c04-36a331bb38dd,Kirinyaga Macadamia Farm #0198,Central Highlands,Kirinyaga,Macadamia,15.79,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.8,0.76,0.84,0.8,0.88,0.96,0.8,0.84
+5104ff55-1c2e-5569-9140-5bc6a2942e3f,Machakos Livestock Farm #0199,Eastern Semi-Arid,Machakos,Livestock,1.71,Informal Smallholder,0,4.44,5,Future Ready Farm,0.12,0.28,0.16,0.44,0.04,0.28,0.08,0.08
+5b948dd8-0f12-5a36-bc2d-30f3a5de3027,Makueni Cowpeas Farm #0200,Eastern Semi-Arid,Makueni,Cowpeas,3.1,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.16,0.28,0.6,0.16,0.24,0.12,0.16
+677f7e39-1428-57b0-b686-8c03f355e468,Bungoma Sugarcane Farm #0201,Western Kenya,Bungoma,Sugarcane,3.19,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.56,0.32,0.6,0.68,0.6,0.64,0.32,0.32
+62745e2d-1128-5c44-b299-2928e6652093,Nakuru Dairy Farm #0202,Rift Valley,Nakuru,Dairy,24.87,Commercial Market Leader,2,19.32,4,Investment Ready Farm,0.68,0.92,0.8,0.76,0.84,0.8,0.92,0.72
+e3a76b96-96cc-5639-9d66-eb109c1abe38,Nyeri Horticulture Farm #0203,Central Highlands,Nyeri,Horticulture,5.43,Transitioning Agribusiness,1,13.56,3,Structured Farm,0.56,0.36,0.6,0.64,0.44,0.68,0.68,0.56
+fd50398b-72dc-5086-9ccf-bc6b6bb79b9c,Makueni Pigeon Peas Farm #0204,Eastern Semi-Arid,Makueni,Pigeon Peas,2.58,Informal Smallholder,0,4.08,5,Future Ready Farm,0.16,0.2,0.08,0.36,0.16,0.08,0.28,0.04
+270aaae6-000b-5993-a607-748960bf0c78,Lamu Cassava Farm #0205,Coastal Lowlands,Lamu,Cassava,2.98,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.28,0.28,0.24,0.6,0.04,0.28,0.12,0.12
+8ec468db-0022-5d96-ac4a-2bd19b238b0f,Bomet Wheat Farm #0206,Rift Valley,Bomet,Wheat,3.1,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.28,0.36,0.52,0.12,0.2,0.08,0.12
+339740f4-70c6-5cad-b9d7-78c4f68a49ef,Bomet Potatoes Farm #0207,Rift Valley,Bomet,Potatoes,3.34,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.12,0.28,0.16,0.52,0.12,0.32,0.08,0.08
+fd3d3ace-78eb-5825-b921-c6681b8613d9,Kwale Coconut Farm #0208,Coastal Lowlands,Kwale,Coconut,4.75,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.4,0.64,0.64,0.8,0.36,0.48,0.52,0.12
+409ba0aa-4af9-55f0-971c-10f56c81c860,Kitui Cowpeas Farm #0209,Eastern Semi-Arid,Kitui,Cowpeas,1.07,Informal Smallholder,0,4.44,5,Future Ready Farm,0.12,0.12,0.28,0.4,0.2,0.24,0.04,0.08
+a5d41f19-a7ca-55c8-94da-f9ca2aafe8a0,Kiambu Tea Farm #0210,Central Highlands,Kiambu,Tea,2.06,Transitioning Agribusiness,1,12.6,3,Structured Farm,0.44,0.4,0.6,0.64,0.44,0.72,0.52,0.44
+a21ae073-4f4a-5a1b-b73a-4bcdb031200b,Nakuru Horticulture Farm #0211,Rift Valley,Nakuru,Horticulture,12.55,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.36,0.44,0.52,0.56,0.6,0.56,0.52,0.52
+80acd08d-0910-5c12-adb2-d677d1151df3,Uasin Gishu Tea Farm #0212,Rift Valley,Uasin Gishu,Tea,3.86,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.48,0.56,0.72,0.64,0.44,0.64,0.64,0.28
+62ce5c42-7417-5522-bb8f-191e519c679b,Machakos Livestock Farm #0213,Eastern Semi-Arid,Machakos,Livestock,3.0,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.16,0.12,0.44,0.48,0.08,0.32,0.2,0.08
+593fe80c-f9b1-5f91-9762-73fbcdfcc5a9,Lamu Cashew Farm #0214,Coastal Lowlands,Lamu,Cashew,8.36,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.48,0.48,0.6,0.6,0.44,0.48,0.4,0.32
+20197ce0-fb40-5a49-b537-a12ea1ec4653,Kirinyaga Coffee Farm #0215,Central Highlands,Kirinyaga,Coffee,5.19,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.48,0.52,0.48,0.56,0.56,0.56,0.48,0.4
+85fff2c3-eead-5005-88a1-d71f740f7436,Kiambu Horticulture Farm #0216,Central Highlands,Kiambu,Horticulture,3.92,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.48,0.4,0.6,0.6,0.36,0.6,0.52,0.24
+f065b8d6-e5de-5afe-a42e-2971d90fafd1,Machakos Mangoes Farm #0217,Eastern Semi-Arid,Machakos,Mangoes,2.13,Informal Smallholder,0,4.68,5,Future Ready Farm,0.08,0.28,0.12,0.6,0.08,0.2,0.16,0.04
+f739acd5-35d6-5adc-9f2d-1e724c5a1179,Meru Tea Farm #0218,Central Highlands,Meru,Tea,2.26,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.24,0.16,0.24,0.56,0.16,0.36,0.2,0.08
+ae9d6665-073a-543d-9eb3-a518d8a00915,Tharaka Nithi Livestock Farm #0219,Eastern Semi-Arid,Tharaka Nithi,Livestock,49.91,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.88,0.84,0.92,0.84,0.84,0.88,0.8,0.76
+6d77e744-ec5a-5992-a7e1-e4d13f11cd13,Makueni Green Grams Farm #0220,Eastern Semi-Arid,Makueni,Green Grams,2.74,Informal Smallholder,0,4.2,5,Future Ready Farm,0.12,0.2,0.12,0.4,0.08,0.2,0.24,0.04
+e23d521e-c62b-54c6-9ca2-aa5375ddc29f,Taita Taveta Fish Farming Farm #0221,Coastal Lowlands,Taita Taveta,Fish Farming,2.52,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.2,0.32,0.32,0.52,0.2,0.28,0.28,0.0
+251a8bc6-489e-5b43-b802-49aad839028a,Uasin Gishu Maize Farm #0222,Rift Valley,Uasin Gishu,Maize,1.08,Informal Smallholder,0,6.96,2,Emerging Agribusiness,0.36,0.16,0.44,0.72,0.12,0.24,0.28,0.0
+369a61c6-bf35-5c4b-ade8-47a954c2e092,Kirinyaga Coffee Farm #0223,Central Highlands,Kirinyaga,Coffee,6.72,Transitioning Agribusiness,1,11.04,3,Structured Farm,0.44,0.56,0.72,0.48,0.32,0.52,0.44,0.2
+f459649c-fe0c-5c1a-b4ec-e865adaa6191,Taita Taveta Cashew Farm #0224,Coastal Lowlands,Taita Taveta,Cashew,36.6,Commercial Market Leader,2,20.64,5,Future Ready Farm,0.84,0.8,0.88,0.88,0.88,0.96,0.88,0.76
+1612a12c-3cc1-58c1-9c45-6b47a0605104,Kilifi Fish Farming Farm #0225,Coastal Lowlands,Kilifi,Fish Farming,3.13,Informal Smallholder,0,4.8,5,Future Ready Farm,0.04,0.24,0.28,0.36,0.16,0.2,0.2,0.12
+0ac9c68b-5147-57ec-8815-927a87a819a3,Kericho Dairy Farm #0226,Rift Valley,Kericho,Dairy,35.45,Commercial Market Leader,2,20.76,5,Future Ready Farm,0.96,0.72,0.88,0.96,0.88,0.88,0.92,0.72
+21cebda7-6202-5da8-882b-9a0d125897e6,Nakuru Tea Farm #0227,Rift Valley,Nakuru,Tea,0.5,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.16,0.24,0.28,0.48,0.2,0.36,0.12,0.12
+bd96ec3d-3e5f-539a-bb7d-e2b707b1ebce,Kisumu Dairy Farm #0228,Western Kenya,Kisumu,Dairy,1.56,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.48,0.36,0.48,0.72,0.36,0.4,0.56,0.36
+72d4ff5e-1129-5d48-ada0-501cb6d31ce8,Machakos Pigeon Peas Farm #0229,Eastern Semi-Arid,Machakos,Pigeon Peas,8.95,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.56,0.32,0.48,0.68,0.4,0.64,0.64,0.32
+75b88d89-58b3-5e7f-8d20-606fb70b12c9,Trans Nzoia Maize Farm #0230,Rift Valley,Trans Nzoia,Maize,3.56,Informal Smallholder,0,4.92,5,Future Ready Farm,0.08,0.12,0.24,0.52,0.2,0.24,0.16,0.08
+a3443671-cb43-5351-a27c-4ca75777a431,Taita Taveta Fish Farming Farm #0231,Coastal Lowlands,Taita Taveta,Fish Farming,1.55,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.24,0.12,0.2,0.52,0.04,0.28,0.12,0.16
+007362a9-9127-5709-9b3f-0aa9efdab8c0,Kakamega Dairy Farm #0232,Western Kenya,Kakamega,Dairy,2.45,Informal Smallholder,0,7.2,2,Emerging Agribusiness,0.24,0.16,0.32,0.64,0.24,0.4,0.2,0.2
+23dccb67-d0a2-5cf5-9425-2bf30f4f6e68,Nyeri Horticulture Farm #0233,Central Highlands,Nyeri,Horticulture,5.0,Commercial Market Leader,2,20.64,5,Future Ready Farm,0.88,0.88,0.88,0.92,0.88,0.72,0.92,0.8
+2433cd43-92d9-530e-967e-a7e81d83bcbf,Kilifi Cassava Farm #0234,Coastal Lowlands,Kilifi,Cassava,4.8,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.36,0.56,0.6,0.64,0.48,0.4,0.56,0.28
+0743abea-9ee6-5380-9b77-b7a24b6523c5,Kwale Cassava Farm #0235,Coastal Lowlands,Kwale,Cassava,12.93,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.68,0.88,0.92,0.76,0.88,0.8,0.96,0.72
+4ae36f3e-0533-58b8-b566-bb277f022c75,Nyeri Coffee Farm #0236,Central Highlands,Nyeri,Coffee,3.26,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.36,0.68,0.52,0.8,0.4,0.4,0.44,0.4
+7af32a6e-405d-5a69-93b0-ff5774ac71ab,Kwale Fish Farming Farm #0237,Coastal Lowlands,Kwale,Fish Farming,2.25,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.04,0.16,0.36,0.4,0.24,0.24,0.12,0.16
+343f8120-2d77-58f9-9d8d-50b2dcd79b6c,Trans Nzoia Tea Farm #0238,Rift Valley,Trans Nzoia,Tea,2.5,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.4,0.28,0.64,0.8,0.28,0.6,0.44,0.28
+8310e16f-8f7c-50a0-ac11-fa4b4c17437e,Kakamega Dairy Farm #0239,Western Kenya,Kakamega,Dairy,3.58,Informal Smallholder,0,4.92,5,Future Ready Farm,0.16,0.08,0.16,0.48,0.28,0.16,0.24,0.08
+79221b52-2669-5631-810e-68ef3fe3b42b,Nyeri Tea Farm #0240,Central Highlands,Nyeri,Tea,1.23,Informal Smallholder,0,4.92,5,Future Ready Farm,0.24,0.2,0.24,0.48,0.2,0.08,0.16,0.04
+d829d6f2-c21e-529f-80bb-8a33765065f7,Machakos Mangoes Farm #0241,Eastern Semi-Arid,Machakos,Mangoes,10.94,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.36,0.36,0.52,0.8,0.44,0.4,0.64,0.4
+c77cc8bb-6564-5b3f-927a-ef0bd0a437a7,Vihiga Maize Farm #0242,Western Kenya,Vihiga,Maize,6.89,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.32,0.52,0.64,0.64,0.48,0.56,0.64,0.2
+386ef9b2-b588-5480-836d-0f0ece223005,Kwale Cassava Farm #0243,Coastal Lowlands,Kwale,Cassava,1.36,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.12,0.24,0.24,0.56,0.16,0.28,0.12,0.08
+bc5cb581-38a9-5aa8-a811-9c557c866c97,Bungoma Cassava Farm #0244,Western Kenya,Bungoma,Cassava,4.49,Transitioning Agribusiness,1,10.68,3,Structured Farm,0.36,0.52,0.36,0.68,0.36,0.56,0.4,0.32
+fb17c044-109e-58c7-a050-47bd217a430c,Kwale Fish Farming Farm #0245,Coastal Lowlands,Kwale,Fish Farming,6.15,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.52,0.48,0.6,0.72,0.4,0.56,0.52,0.44
+ed2adc50-df1b-5545-9c06-7cb6e4e32dde,Kilifi Cashew Farm #0246,Coastal Lowlands,Kilifi,Cashew,61.68,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.84,0.72,0.96,0.88,0.84,0.8,0.92,0.76
+409d6199-7dda-509e-9979-3cb67ae3c690,Bomet Wheat Farm #0247,Rift Valley,Bomet,Wheat,6.7,Transitioning Agribusiness,1,13.08,3,Structured Farm,0.56,0.36,0.68,0.76,0.52,0.56,0.48,0.44
+9b487a94-8fe8-5330-a110-820392d6e9bf,Lamu Vegetables Farm #0248,Coastal Lowlands,Lamu,Vegetables,2.34,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.16,0.28,0.16,0.64,0.12,0.36,0.24,0.12
+701d7788-25cd-56da-946f-898f86384c8e,Nandi Horticulture Farm #0249,Rift Valley,Nandi,Horticulture,1.96,Informal Smallholder,0,4.8,5,Future Ready Farm,0.12,0.08,0.36,0.44,0.16,0.32,0.12,0.0
+53c3679f-f17c-5d3c-9e2f-cde2dc0eba96,Lamu Vegetables Farm #0250,Coastal Lowlands,Lamu,Vegetables,0.5,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.16,0.24,0.2,0.68,0.2,0.24,0.16,0.12
+7f1e9fe3-9cb3-5b6a-8927-b5e2678d1ce5,Kitui Sorghum Farm #0251,Eastern Semi-Arid,Kitui,Sorghum,5.46,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.48,0.6,0.48,0.8,0.44,0.48,0.64,0.32
+eca310a3-ff29-5a55-b339-552827e73cff,Lamu Cashew Farm #0252,Coastal Lowlands,Lamu,Cashew,7.28,Commercial Market Leader,2,20.4,5,Future Ready Farm,0.92,0.76,0.96,0.84,0.92,0.84,0.84,0.72
+52fb5962-7e69-5f84-8f75-a122466a9f72,Busia Cassava Farm #0253,Western Kenya,Busia,Cassava,1.96,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.2,0.2,0.68,0.04,0.16,0.2,0.12
+c3bb0794-91bc-5f6b-9b90-bcc50fdd1f47,Machakos Sorghum Farm #0254,Eastern Semi-Arid,Machakos,Sorghum,0.81,Informal Smallholder,0,7.2,2,Emerging Agribusiness,0.12,0.24,0.44,0.64,0.28,0.28,0.36,0.04
+29f37c17-16ac-5079-a9ae-3970177f8b20,Uasin Gishu Tea Farm #0255,Rift Valley,Uasin Gishu,Tea,1.62,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.16,0.12,0.4,0.52,0.04,0.32,0.16,0.08
+6960b77e-0394-521a-8c25-0b1a43186619,Busia Poultry Farm #0256,Western Kenya,Busia,Poultry,5.34,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.52,0.4,0.56,0.64,0.44,0.44,0.36,0.44
+e394806b-9d7e-5f4f-8c03-130c46466537,Kilifi Vegetables Farm #0257,Coastal Lowlands,Kilifi,Vegetables,5.25,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.52,0.56,0.52,0.76,0.44,0.56,0.56,0.4
+4b4e29ab-c1fa-542f-8122-f41af7e816bf,Kisumu Poultry Farm #0258,Western Kenya,Kisumu,Poultry,1.01,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.08,0.2,0.32,0.52,0.08,0.36,0.16,0.12
+7880f6d1-1da2-5113-b657-8b307ac062d7,Uasin Gishu Wheat Farm #0259,Rift Valley,Uasin Gishu,Wheat,2.91,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.2,0.24,0.24,0.52,0.08,0.28,0.08,0.12
+0b3270d4-ab2e-53aa-8cc0-87b431863abd,Trans Nzoia Wheat Farm #0260,Rift Valley,Trans Nzoia,Wheat,9.67,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.4,0.56,0.6,0.8,0.52,0.36,0.52,0.24
+6b137c83-94d9-5d48-9e30-89bda24c077b,Siaya Dairy Farm #0261,Western Kenya,Siaya,Dairy,1.36,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.28,0.24,0.24,0.48,0.2,0.24,0.16,0.04
+4f5afacc-3ec4-5c96-b228-2507aade08c1,Kiambu Macadamia Farm #0262,Central Highlands,Kiambu,Macadamia,6.5,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.48,0.32,0.64,0.68,0.44,0.56,0.52,0.48
+c69f40fc-e355-5bfe-b083-52a506926ac1,Kilifi Cashew Farm #0263,Coastal Lowlands,Kilifi,Cashew,2.57,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.16,0.36,0.52,0.12,0.36,0.16,0.04
+92d12425-b5f3-5636-aa25-40f8e01e957c,Taita Taveta Fish Farming Farm #0264,Coastal Lowlands,Taita Taveta,Fish Farming,2.55,Informal Smallholder,0,4.8,5,Future Ready Farm,0.12,0.2,0.28,0.48,0.08,0.32,0.04,0.08
+940f2504-f461-5500-8686-264d5b954feb,Trans Nzoia Dairy Farm #0265,Rift Valley,Trans Nzoia,Dairy,6.74,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.84,0.76,0.88,0.84,0.8,0.8,0.88,0.76
+4b311b83-2b71-5068-9402-b9552ba216f6,Trans Nzoia Wheat Farm #0266,Rift Valley,Trans Nzoia,Wheat,3.73,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.32,0.24,0.28,0.44,0.16,0.4,0.16,0.16
+eff05dec-860f-5967-8213-7426bebda5bc,Bomet Potatoes Farm #0267,Rift Valley,Bomet,Potatoes,4.15,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.08,0.12,0.32,0.52,0.16,0.36,0.16,0.12
+b3c5075b-51d5-54d5-a133-18c884dfac15,Busia Maize Farm #0268,Western Kenya,Busia,Maize,3.45,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.08,0.32,0.2,0.64,0.2,0.28,0.16,0.12
+2ed5fb90-db79-5883-b51c-7bb24d1e7889,Murang'a Coffee Farm #0269,Central Highlands,Murang'a,Coffee,4.34,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.2,0.36,0.4,0.32,0.16,0.32,0.32,0.12
+ba68fa7f-5f35-5011-a91d-045282c8b8bf,Machakos Sorghum Farm #0270,Eastern Semi-Arid,Machakos,Sorghum,1.79,Informal Smallholder,0,6.72,2,Emerging Agribusiness,0.28,0.2,0.28,0.76,0.12,0.32,0.2,0.08
+a8e03211-57e0-5cfc-a5d0-78793c47da7c,Lamu Fish Farming Farm #0271,Coastal Lowlands,Lamu,Fish Farming,1.34,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.2,0.28,0.2,0.52,0.08,0.16,0.28,0.12
+a3605e14-9d9e-5c94-9838-cf10bbf1b185,Nandi Dairy Farm #0272,Rift Valley,Nandi,Dairy,3.5,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.08,0.2,0.24,0.44,0.12,0.2,0.4,0.08
+9698e9f8-1ec6-5c75-b810-f165c4c51cec,Kiambu Macadamia Farm #0273,Central Highlands,Kiambu,Macadamia,0.94,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.2,0.2,0.12,0.52,0.16,0.24,0.24,0.04
+8c46b8e9-c48f-51ed-989b-0c09871f3ccc,Lamu Cassava Farm #0274,Coastal Lowlands,Lamu,Cassava,8.25,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.64,0.48,0.36,0.68,0.44,0.56,0.36,0.44
+43566b71-1403-5d14-8a0b-b04fee8e8df9,Kitui Sorghum Farm #0275,Eastern Semi-Arid,Kitui,Sorghum,8.07,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.48,0.52,0.44,0.68,0.56,0.52,0.44,0.24
+a7e16839-9d12-5ada-9831-98d59a4359b1,Lamu Cashew Farm #0276,Coastal Lowlands,Lamu,Cashew,4.04,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.08,0.2,0.24,0.64,0.08,0.28,0.36,0.12
+b6e5f0f0-93c4-570c-b065-745faebeb97d,Murang'a Tea Farm #0277,Central Highlands,Murang'a,Tea,0.5,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.24,0.16,0.2,0.6,0.16,0.44,0.16,0.12
+1d149bd0-7ebc-5db4-bfd4-98230b2586f3,Makueni Mangoes Farm #0278,Eastern Semi-Arid,Makueni,Mangoes,1.5,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.44,0.56,0.6,0.64,0.48,0.4,0.6,0.36
+6d4e672f-6c9c-5b08-976c-241670b24c3a,Busia Dairy Farm #0279,Western Kenya,Busia,Dairy,14.07,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.92,0.84,0.92,0.84,0.84,0.76,0.8,0.84
+47a32f35-3408-5e83-adac-f15774ffb695,Tharaka Nithi Cowpeas Farm #0280,Eastern Semi-Arid,Tharaka Nithi,Cowpeas,16.79,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.92,0.76,0.88,0.8,0.8,0.84,0.92,0.8
+90288ab7-2d16-5925-9606-9f773d08e7d1,Embu Dairy Farm #0281,Central Highlands,Embu,Dairy,3.92,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.24,0.12,0.12,0.44,0.04,0.52,0.08,0.16
+36ec2546-2ee7-5781-afba-572ac88d8d5f,Kitui Mangoes Farm #0282,Eastern Semi-Arid,Kitui,Mangoes,2.47,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.24,0.28,0.24,0.72,0.04,0.32,0.2,0.12
+05ac455f-0293-5036-abf9-62cd4d8cb163,Bungoma Horticulture Farm #0283,Western Kenya,Bungoma,Horticulture,2.22,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.24,0.2,0.2,0.56,0.24,0.28,0.16,0.08
+00522069-f004-589a-af25-e8612a19b06d,Busia Cassava Farm #0284,Western Kenya,Busia,Cassava,3.01,Informal Smallholder,0,6.84,2,Emerging Agribusiness,0.28,0.24,0.36,0.56,0.2,0.28,0.32,0.04
+98d45d9d-ab60-575d-9750-5622dd82dcb5,Tharaka Nithi Sorghum Farm #0285,Eastern Semi-Arid,Tharaka Nithi,Sorghum,6.9,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.4,0.48,0.4,0.72,0.64,0.56,0.32,0.32
+315220a1-59ef-5743-b92d-5615811dcab3,Tharaka Nithi Livestock Farm #0286,Eastern Semi-Arid,Tharaka Nithi,Livestock,4.15,Informal Smallholder,0,4.92,5,Future Ready Farm,0.2,0.2,0.16,0.44,0.12,0.28,0.12,0.12
+4aa4c9bc-988e-5c75-9b10-32a728daa351,Kwale Cashew Farm #0287,Coastal Lowlands,Kwale,Cashew,1.69,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.36,0.24,0.48,0.04,0.44,0.12,0.04
+db37a900-52db-5ada-870d-b2f0944e663e,Taita Taveta Cashew Farm #0288,Coastal Lowlands,Taita Taveta,Cashew,1.97,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.04,0.16,0.2,0.52,0.2,0.32,0.2,0.16
+4bbe86c5-1c76-5aeb-bb5b-4d6fb3395e7b,Nandi Potatoes Farm #0289,Rift Valley,Nandi,Potatoes,1.5,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.52,0.52,0.68,0.76,0.48,0.52,0.44,0.16
+5fbb762b-94a0-5a3e-b1f3-b208407f8230,Machakos Cowpeas Farm #0290,Eastern Semi-Arid,Machakos,Cowpeas,0.5,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.2,0.16,0.52,0.2,0.32,0.28,0.04
+f4b92775-3729-595d-9099-dd029f35dc09,Kirinyaga Dairy Farm #0291,Central Highlands,Kirinyaga,Dairy,5.93,Transitioning Agribusiness,1,10.92,3,Structured Farm,0.2,0.44,0.44,0.68,0.52,0.56,0.48,0.32
+e6040cee-1500-5c43-8636-f3a5447d3526,Kilifi Cashew Farm #0292,Coastal Lowlands,Kilifi,Cashew,0.5,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.12,0.24,0.24,0.56,0.2,0.28,0.2,0.12
+a70f18ee-9f00-5786-a47e-3561c0ef5a37,Vihiga Sugarcane Farm #0293,Western Kenya,Vihiga,Sugarcane,52.44,Commercial Market Leader,2,19.2,4,Investment Ready Farm,0.84,0.8,0.84,0.88,0.76,0.84,0.76,0.68
+71631cd4-b26d-5904-91f6-dd98321976ae,Bomet Dairy Farm #0294,Rift Valley,Bomet,Dairy,2.33,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.08,0.28,0.24,0.68,0.24,0.24,0.24,0.12
+8597c8de-fe48-57e9-88ec-da5b2c09e50d,Kwale Cashew Farm #0295,Coastal Lowlands,Kwale,Cashew,4.56,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.24,0.4,0.68,0.68,0.64,0.64,0.56,0.28
+16645bcb-96d6-5788-bac8-118a5ceabf11,Makueni Cowpeas Farm #0296,Eastern Semi-Arid,Makueni,Cowpeas,29.03,Commercial Market Leader,2,20.76,5,Future Ready Farm,0.84,0.88,0.96,0.64,0.88,0.92,0.92,0.88
+e6eee381-e205-5d61-b3fc-3f44af871393,Taita Taveta Cashew Farm #0297,Coastal Lowlands,Taita Taveta,Cashew,52.2,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.76,0.88,0.92,0.8,0.8,0.76,0.8,0.88
+e3af7cc8-0808-569c-9809-217e4223d89b,Vihiga Poultry Farm #0298,Western Kenya,Vihiga,Poultry,5.39,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.44,0.6,0.52,0.48,0.4,0.44,0.48,0.36
+b7c2971c-ae40-5903-ac07-03ff31a09ca4,Kiambu Horticulture Farm #0299,Central Highlands,Kiambu,Horticulture,1.89,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.44,0.52,0.52,0.64,0.56,0.64,0.56,0.2
+3fe7a0e2-75cf-5496-9553-11e08fbb01cd,Kakamega Horticulture Farm #0300,Western Kenya,Kakamega,Horticulture,1.5,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.52,0.48,0.56,0.68,0.4,0.52,0.44,0.24
+daaa53b1-ddfa-5ebf-b788-91853e446457,Trans Nzoia Tea Farm #0301,Rift Valley,Trans Nzoia,Tea,3.48,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.44,0.72,0.68,0.72,0.48,0.4,0.56,0.28
+e91861a9-02ef-54e2-852f-07746ab5f6f1,Tharaka Nithi Sorghum Farm #0302,Eastern Semi-Arid,Tharaka Nithi,Sorghum,2.2,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.32,0.2,0.2,0.72,0.28,0.24,0.08,0.04
+48e6ebdd-121a-562b-b078-d65316b18849,Kitui Livestock Farm #0303,Eastern Semi-Arid,Kitui,Livestock,13.12,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.48,0.32,0.6,0.64,0.4,0.52,0.48,0.36
+2d80bec9-6f45-531c-96f4-e5f8789d9d88,Kiambu Avocado Farm #0304,Central Highlands,Kiambu,Avocado,6.2,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.44,0.4,0.56,0.6,0.56,0.64,0.48,0.16
+8b9634b2-6035-515f-b470-71c3e56db02b,Murang'a Horticulture Farm #0305,Central Highlands,Murang'a,Horticulture,22.46,Commercial Market Leader,2,19.92,4,Investment Ready Farm,0.76,0.72,0.88,0.8,0.88,0.96,0.88,0.76
+ae907f24-f776-5eb4-8129-c974983718b4,Kilifi Cassava Farm #0306,Coastal Lowlands,Kilifi,Cassava,2.58,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.12,0.2,0.64,0.2,0.24,0.28,0.04
+14dd0915-d367-5c4a-9ff0-d8009d00ce80,Makueni Pigeon Peas Farm #0307,Eastern Semi-Arid,Makueni,Pigeon Peas,0.5,Informal Smallholder,0,4.92,5,Future Ready Farm,0.12,0.2,0.24,0.4,0.16,0.32,0.16,0.04
+30a07758-24e4-5569-a800-6db8f20db113,Tharaka Nithi Green Grams Farm #0308,Eastern Semi-Arid,Tharaka Nithi,Green Grams,1.5,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.56,0.36,0.64,0.84,0.6,0.52,0.56,0.24
+b4746351-d91a-5abe-a2cc-71d918151a99,Kisumu Dairy Farm #0309,Western Kenya,Kisumu,Dairy,1.45,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.32,0.2,0.32,0.56,0.08,0.28,0.24,0.08
+ea077e24-32a9-5dbf-809c-def3771e4850,Bomet Maize Farm #0310,Rift Valley,Bomet,Maize,3.37,Informal Smallholder,0,6.96,2,Emerging Agribusiness,0.2,0.24,0.24,0.6,0.2,0.36,0.28,0.2
+3bed6ebe-6b17-51c5-9ea1-6857680a6140,Vihiga Maize Farm #0311,Western Kenya,Vihiga,Maize,1.58,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.24,0.16,0.24,0.48,0.24,0.32,0.16,0.16
+600233c2-3265-543e-996e-3fd21020af1d,Vihiga Maize Farm #0312,Western Kenya,Vihiga,Maize,1.45,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.36,0.16,0.12,0.56,0.04,0.24,0.16,0.04
+fc63bede-3019-56f2-8680-5b52ad210d50,Machakos Cowpeas Farm #0313,Eastern Semi-Arid,Machakos,Cowpeas,0.95,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.28,0.2,0.16,0.52,0.08,0.24,0.12,0.12
+f3697a94-6ea6-5f92-bf77-3878d8c011de,Embu Dairy Farm #0314,Central Highlands,Embu,Dairy,5.08,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.16,0.16,0.24,0.44,0.16,0.48,0.28,0.16
+90180040-0985-5ed0-a6af-ca9a6c3cbef3,Nandi Wheat Farm #0315,Rift Valley,Nandi,Wheat,1.99,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.16,0.16,0.2,0.6,0.24,0.24,0.16,0.2
+bcc33b6e-627f-519b-8801-822ed5cc9ce6,Makueni Pigeon Peas Farm #0316,Eastern Semi-Arid,Makueni,Pigeon Peas,0.5,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.08,0.08,0.24,0.8,0.08,0.2,0.08,0.12
+61cbf967-ae55-5fe9-9c6f-277c8a610043,Lamu Vegetables Farm #0317,Coastal Lowlands,Lamu,Vegetables,4.14,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.12,0.28,0.28,0.48,0.08,0.36,0.28,0.04
+e1552303-257d-594c-b136-89f3dfe1d287,Taita Taveta Cashew Farm #0318,Coastal Lowlands,Taita Taveta,Cashew,10.5,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.36,0.56,0.6,0.64,0.64,0.56,0.56,0.36
+4670c779-5f2d-5959-84d2-54fe44ab727a,Embu Macadamia Farm #0319,Central Highlands,Embu,Macadamia,2.0,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.24,0.2,0.2,0.52,0.16,0.32,0.16,0.08
+6e7a917c-467f-580b-aad4-13fccf129efc,Nandi Tea Farm #0320,Rift Valley,Nandi,Tea,23.45,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.84,0.76,0.84,0.84,0.88,0.88,0.76,0.8
+c81ec6a3-89fb-525e-b481-b04a4b6d9c7e,Siaya Dairy Farm #0321,Western Kenya,Siaya,Dairy,14.41,Commercial Market Leader,2,20.4,5,Future Ready Farm,0.8,0.76,0.92,0.76,0.92,0.88,0.92,0.84
+6c354f75-7805-5b97-89e2-404b4bb7f073,Kwale Fish Farming Farm #0322,Coastal Lowlands,Kwale,Fish Farming,0.71,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.16,0.08,0.08,0.52,0.24,0.24,0.16,0.2
+ff9be028-7130-52cd-8fef-3ad0a1aedd51,Bungoma Cassava Farm #0323,Western Kenya,Bungoma,Cassava,0.5,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.2,0.12,0.32,0.44,0.08,0.2,0.2,0.2
+a594976d-02f9-571c-9b9b-c9773a1f1041,Embu Avocado Farm #0324,Central Highlands,Embu,Avocado,5.7,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.52,0.48,0.56,0.64,0.56,0.44,0.56,0.28
+1931ba95-058b-5f3d-8f30-e6e63db47cb5,Meru Tea Farm #0325,Central Highlands,Meru,Tea,2.68,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.6,0.4,0.68,0.72,0.36,0.52,0.48,0.28
+ff850ab5-b00c-5ede-ae45-5b2b9866f9a9,Uasin Gishu Tea Farm #0326,Rift Valley,Uasin Gishu,Tea,4.74,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.6,0.44,0.44,0.76,0.48,0.48,0.56,0.32
+f2109ffd-b719-5790-866d-ea8d119ff516,Nakuru Horticulture Farm #0327,Rift Valley,Nakuru,Horticulture,7.25,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.32,0.36,0.6,0.8,0.48,0.44,0.64,0.4
+c97e372f-fa2b-5e4b-9ab2-0bccca667604,Busia Sugarcane Farm #0328,Western Kenya,Busia,Sugarcane,6.78,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.4,0.56,0.56,0.72,0.36,0.72,0.6,0.36
+d7f26643-8755-592f-a6bc-3609cc03f6fa,Kilifi Fish Farming Farm #0329,Coastal Lowlands,Kilifi,Fish Farming,8.76,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.32,0.52,0.52,0.8,0.52,0.36,0.52,0.2
+2f644d77-2a9d-5f56-97cc-348595bca40a,Makueni Sorghum Farm #0330,Eastern Semi-Arid,Makueni,Sorghum,0.77,Informal Smallholder,0,7.08,2,Emerging Agribusiness,0.16,0.36,0.28,0.72,0.16,0.28,0.28,0.12
+41f9ad7f-4562-5501-aa35-4f021e9c7fba,Makueni Livestock Farm #0331,Eastern Semi-Arid,Makueni,Livestock,2.72,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.48,0.4,0.56,0.56,0.48,0.44,0.56,0.44
+4509b4bc-bc8c-55d8-b101-1b109e3cf7e0,Kilifi Coconut Farm #0332,Coastal Lowlands,Kilifi,Coconut,2.17,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.4,0.2,0.36,0.4,0.08,0.36,0.16,0.16
+e2345a51-454f-5a4b-bb0b-b43cbcbe8a33,Bomet Horticulture Farm #0333,Rift Valley,Bomet,Horticulture,9.3,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.52,0.32,0.44,0.68,0.56,0.52,0.56,0.24
+fd581aa2-c5c0-5489-96b7-43c620c6f086,Kericho Dairy Farm #0334,Rift Valley,Kericho,Dairy,24.13,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.8,0.84,0.84,0.8,0.76,0.8,0.88,0.8
+01ead88a-3c43-5564-b1b3-db06a6e9d8dc,Embu Avocado Farm #0335,Central Highlands,Embu,Avocado,3.37,Informal Smallholder,0,6.72,2,Emerging Agribusiness,0.28,0.24,0.2,0.52,0.24,0.48,0.24,0.04
+7993b49a-a0f1-5391-b0e1-bf4ab2964d6b,Vihiga Dairy Farm #0336,Western Kenya,Vihiga,Dairy,7.64,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.52,0.48,0.56,0.76,0.48,0.48,0.44,0.32
+6b224d3d-c1d4-511d-906b-833c15a4738e,Tharaka Nithi Sorghum Farm #0337,Eastern Semi-Arid,Tharaka Nithi,Sorghum,0.5,Informal Smallholder,0,4.8,5,Future Ready Farm,0.16,0.16,0.12,0.48,0.16,0.24,0.2,0.08
+327f64ca-2493-568d-a28e-3056fd5f75f0,Kwale Coconut Farm #0338,Coastal Lowlands,Kwale,Coconut,2.24,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.52,0.44,0.48,0.52,0.48,0.56,0.44,0.52
+85793c88-f637-5245-87dd-c30a481e2eb4,Machakos Green Grams Farm #0339,Eastern Semi-Arid,Machakos,Green Grams,0.5,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.08,0.36,0.24,0.64,0.16,0.24,0.12,0.08
+1261bcec-c02d-5d6c-83fe-9ded2f2f213f,Vihiga Horticulture Farm #0340,Western Kenya,Vihiga,Horticulture,5.0,Commercial Market Leader,2,19.44,4,Investment Ready Farm,0.68,0.76,0.92,0.84,0.88,0.8,0.88,0.72
+95186cad-8bdc-5915-b87b-f5ae322fe552,Trans Nzoia Horticulture Farm #0341,Rift Valley,Trans Nzoia,Horticulture,3.53,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.16,0.24,0.08,0.6,0.08,0.44,0.32,0.04
+d7a2b034-2b4f-5794-a468-87f5b19a8f35,Taita Taveta Vegetables Farm #0342,Coastal Lowlands,Taita Taveta,Vegetables,15.62,Commercial Market Leader,2,19.32,4,Investment Ready Farm,0.8,0.64,0.8,0.76,0.96,0.76,0.92,0.8
+7c5399ad-7ddc-5a34-b669-d55d1ac9ade5,Murang'a Coffee Farm #0343,Central Highlands,Murang'a,Coffee,5.42,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.32,0.48,0.72,0.72,0.32,0.52,0.48,0.32
+2fed7380-5f76-5c5d-a0de-65ead53128e0,Makueni Mangoes Farm #0344,Eastern Semi-Arid,Makueni,Mangoes,8.46,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.48,0.48,0.52,0.76,0.56,0.64,0.48,0.48
+a5d4f55d-0962-5904-a616-58209da024e2,Bomet Potatoes Farm #0345,Rift Valley,Bomet,Potatoes,9.41,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.52,0.6,0.52,0.72,0.48,0.52,0.4,0.4
+4e000a97-cd94-5d17-942b-f6034dc685e2,Kitui Mangoes Farm #0346,Eastern Semi-Arid,Kitui,Mangoes,9.69,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.56,0.48,0.6,0.64,0.48,0.52,0.32,0.32
+16848e99-bdfc-569d-8abe-41a5a897cfb7,Makueni Mangoes Farm #0347,Eastern Semi-Arid,Makueni,Mangoes,22.55,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.88,0.84,0.76,0.72,0.84,0.92,0.8,0.84
+2663fa75-8d05-50be-94d0-efcb578b70d1,Nakuru Horticulture Farm #0348,Rift Valley,Nakuru,Horticulture,1.67,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.12,0.16,0.24,0.56,0.12,0.32,0.2,0.0
+24b5961f-917b-5d9d-98d8-4f31f03b8bc0,Bomet Horticulture Farm #0349,Rift Valley,Bomet,Horticulture,13.93,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.48,0.56,0.68,0.72,0.56,0.56,0.36,0.4
+d31240e5-9224-515e-87ef-400f872b8fa8,Siaya Sugarcane Farm #0350,Western Kenya,Siaya,Sugarcane,2.77,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.16,0.32,0.72,0.08,0.16,0.12,0.04
+b27c4b27-3566-50b9-aa29-23dffc52bede,Siaya Dairy Farm #0351,Western Kenya,Siaya,Dairy,5.65,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.52,0.44,0.44,0.76,0.52,0.36,0.52,0.32
+b7d2e923-d29b-5cae-897b-fbc9f0a92570,Machakos Pigeon Peas Farm #0352,Eastern Semi-Arid,Machakos,Pigeon Peas,2.69,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.24,0.24,0.48,0.28,0.24,0.12,0.0
+2456c41d-f760-5871-8f0b-384b44ec680c,Nandi Dairy Farm #0353,Rift Valley,Nandi,Dairy,3.9,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.56,0.32,0.44,0.64,0.48,0.52,0.52,0.28
+f7f6902c-c07b-5814-b452-bd6632db19f7,Embu Macadamia Farm #0354,Central Highlands,Embu,Macadamia,10.54,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.44,0.56,0.56,0.64,0.48,0.64,0.48,0.36
+6ad9f059-5d2b-52ab-b65a-994ddbd5f834,Kericho Maize Farm #0355,Rift Valley,Kericho,Maize,0.5,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.2,0.2,0.64,0.16,0.2,0.2,0.12
+a3cf5eb4-488d-532f-86cc-91e8152d42b5,Machakos Sorghum Farm #0356,Eastern Semi-Arid,Machakos,Sorghum,9.94,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.48,0.2,0.68,0.8,0.56,0.6,0.48,0.28
+c86a3b42-9042-5b40-a2dd-f1b3d2459727,Meru Dairy Farm #0357,Central Highlands,Meru,Dairy,4.29,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.28,0.44,0.6,0.6,0.56,0.64,0.48,0.24
+ca5187e7-be88-5423-b8d5-50031df74671,Busia Cassava Farm #0358,Western Kenya,Busia,Cassava,5.75,Transitioning Agribusiness,1,12.6,3,Structured Farm,0.44,0.56,0.6,0.6,0.56,0.52,0.52,0.4
+b3f120a4-b553-50f8-b6a7-9675e18d15f3,Nyeri Avocado Farm #0359,Central Highlands,Nyeri,Avocado,4.15,Informal Smallholder,0,4.56,5,Future Ready Farm,0.16,0.08,0.28,0.56,0.0,0.24,0.12,0.08
+c0b57633-d80c-5c2d-817b-5b13d737862f,Kilifi Vegetables Farm #0360,Coastal Lowlands,Kilifi,Vegetables,11.04,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.56,0.36,0.52,0.68,0.36,0.56,0.56,0.4
+86a2eb65-4684-5ff8-95b3-9af2420413cf,Machakos Green Grams Farm #0361,Eastern Semi-Arid,Machakos,Green Grams,47.29,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.8,0.72,0.8,0.76,0.88,0.8,0.92,0.84
+808de489-ce54-5afb-9986-a256a8aeccf7,Kilifi Cassava Farm #0362,Coastal Lowlands,Kilifi,Cassava,1.58,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.12,0.24,0.24,0.56,0.12,0.28,0.12,0.04
+bbc7a99f-385a-51c1-8c44-ce282b44a38e,Vihiga Sugarcane Farm #0363,Western Kenya,Vihiga,Sugarcane,2.92,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.16,0.12,0.4,0.52,0.12,0.28,0.04,0.16
+f9c6a9f7-6b09-5f7e-8d69-3179c0a4cbb5,Bungoma Cassava Farm #0364,Western Kenya,Bungoma,Cassava,2.64,Informal Smallholder,0,7.2,2,Emerging Agribusiness,0.2,0.28,0.16,0.56,0.2,0.6,0.2,0.2
+c5702e9c-f86a-503f-a20d-1b0341ffbf97,Kilifi Cashew Farm #0365,Coastal Lowlands,Kilifi,Cashew,5.7,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.24,0.36,0.6,0.64,0.48,0.56,0.6,0.36
+17ab2bf9-6d6b-53dd-a2f7-1f85017b81cf,Kitui Livestock Farm #0366,Eastern Semi-Arid,Kitui,Livestock,2.65,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.32,0.2,0.2,0.52,0.16,0.12,0.28,0.08
+dfa8dbe2-ddf5-5429-8665-5f47cb550c72,Nyeri Dairy Farm #0367,Central Highlands,Nyeri,Dairy,2.41,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.48,0.6,0.64,0.56,0.4,0.44,0.44,0.24
+8d8574d5-e92b-58c4-8cd4-5f95b808bb27,Vihiga Horticulture Farm #0368,Western Kenya,Vihiga,Horticulture,3.3,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.4,0.52,0.6,0.48,0.44,0.68,0.48,0.36
+ba9c8969-c9c5-5e17-b8ec-8283e1570dd4,Makueni Mangoes Farm #0369,Eastern Semi-Arid,Makueni,Mangoes,2.62,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.16,0.28,0.32,0.56,0.04,0.4,0.16,0.12
+14a96803-0ad2-5a00-8e72-019fc007c20a,Bungoma Sugarcane Farm #0370,Western Kenya,Bungoma,Sugarcane,29.49,Commercial Market Leader,2,21.0,5,Future Ready Farm,1.0,0.88,0.96,0.88,0.92,0.84,0.92,0.6
+c2d92820-ed1b-50da-94d2-43e25735ccc5,Lamu Vegetables Farm #0371,Coastal Lowlands,Lamu,Vegetables,8.3,Transitioning Agribusiness,1,10.8,3,Structured Farm,0.2,0.44,0.44,0.64,0.56,0.4,0.52,0.4
+f15fdca7-0c21-550d-9017-fff69a882e10,Kitui Pigeon Peas Farm #0372,Eastern Semi-Arid,Kitui,Pigeon Peas,2.46,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.04,0.28,0.28,0.52,0.2,0.2,0.16,0.04
+8e0a05c9-6faf-51d2-8e48-afc21b6d197e,Kwale Coconut Farm #0373,Coastal Lowlands,Kwale,Coconut,1.03,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.04,0.24,0.2,0.72,0.28,0.2,0.24,0.04
+9bb323b5-334b-5c5b-acb7-1d96755c0c03,Murang'a Dairy Farm #0374,Central Highlands,Murang'a,Dairy,5.32,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.32,0.08,0.2,0.52,0.08,0.24,0.24,0.16
+58ee1c25-e8ce-592e-8078-7e41c27d0e8a,Nandi Dairy Farm #0375,Rift Valley,Nandi,Dairy,1.64,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.2,0.2,0.16,0.6,0.16,0.24,0.2,0.04
+2fd6af9b-5884-56e8-96b7-0e74738a7c37,Nandi Tea Farm #0376,Rift Valley,Nandi,Tea,3.03,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.28,0.2,0.36,0.56,0.16,0.36,0.12,0.0
+b3820143-6e4b-51c9-bbd3-d305d33e7a91,Lamu Cashew Farm #0377,Coastal Lowlands,Lamu,Cashew,14.18,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.84,0.92,0.92,0.8,0.8,0.68,0.92,0.72
+b0ec08b5-a515-55d3-9f0c-cc62b912a0b6,Lamu Vegetables Farm #0378,Coastal Lowlands,Lamu,Vegetables,2.68,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.2,0.16,0.2,0.52,0.16,0.16,0.16,0.12
+4739748f-9aed-52e4-8608-0842a0587358,Kitui Mangoes Farm #0379,Eastern Semi-Arid,Kitui,Mangoes,4.12,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.08,0.24,0.24,0.6,0.32,0.28,0.08,0.04
+17cae109-cdb4-5c16-83b9-794aecd4fd8a,Taita Taveta Cashew Farm #0380,Coastal Lowlands,Taita Taveta,Cashew,5.92,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.56,0.4,0.64,0.68,0.4,0.64,0.52,0.44
+87804444-0a3d-54cd-87f7-014f78ebd963,Makueni Cowpeas Farm #0381,Eastern Semi-Arid,Makueni,Cowpeas,1.5,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.32,0.52,0.56,0.56,0.44,0.48,0.52,0.32
+886a734c-f512-5699-b13c-5df0adb01cd8,Vihiga Horticulture Farm #0382,Western Kenya,Vihiga,Horticulture,39.81,Commercial Market Leader,2,18.84,4,Investment Ready Farm,0.8,0.6,0.88,0.68,0.72,0.96,0.76,0.88
+4a226ee6-fc06-5ea1-b0c9-130bcbda31a7,Nakuru Maize Farm #0383,Rift Valley,Nakuru,Maize,5.15,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.36,0.6,0.64,0.64,0.4,0.36,0.68,0.32
+66e40756-5416-50fb-bdd5-8c1ea2f061cd,Makueni Green Grams Farm #0384,Eastern Semi-Arid,Makueni,Green Grams,1.87,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.08,0.32,0.28,0.44,0.04,0.28,0.28,0.0
+b3c86a7b-c8e3-5581-93b3-435b4c2d9837,Machakos Mangoes Farm #0385,Eastern Semi-Arid,Machakos,Mangoes,0.57,Informal Smallholder,0,4.56,5,Future Ready Farm,0.2,0.16,0.08,0.6,0.16,0.16,0.08,0.08
+ecb4de5f-a410-5203-a0c8-a0cb12ab01a8,Siaya Maize Farm #0386,Western Kenya,Siaya,Maize,40.84,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.88,0.8,0.92,0.84,0.88,0.8,0.88,0.84
+3c599d82-23b7-5b0d-bb41-00a6156d09c8,Kiambu Coffee Farm #0387,Central Highlands,Kiambu,Coffee,1.5,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.44,0.36,0.56,0.64,0.48,0.52,0.52,0.32
+372dd3ea-fa00-5e54-8fe8-e080204a2347,Nandi Potatoes Farm #0388,Rift Valley,Nandi,Potatoes,27.78,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.72,0.8,0.88,0.76,0.88,0.8,0.92,0.8
+131a8bcf-527f-5572-8f9b-74c04d64860c,Nakuru Tea Farm #0389,Rift Valley,Nakuru,Tea,2.9,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.16,0.24,0.24,0.72,0.08,0.32,0.16,0.12
+492a936a-e495-5d30-bf3a-058dec2e713d,Vihiga Maize Farm #0390,Western Kenya,Vihiga,Maize,41.4,Commercial Market Leader,2,18.6,4,Investment Ready Farm,0.84,0.64,0.76,0.72,0.8,0.76,0.88,0.8
+42a03eca-9f36-59b7-8c15-9dbb8efbc1f9,Tharaka Nithi Livestock Farm #0391,Eastern Semi-Arid,Tharaka Nithi,Livestock,1.5,Transitioning Agribusiness,1,12.6,3,Structured Farm,0.52,0.4,0.68,0.72,0.48,0.6,0.4,0.4
+f758350e-15e8-5380-a935-ba46e1532412,Kirinyaga Tea Farm #0392,Central Highlands,Kirinyaga,Tea,2.74,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.24,0.12,0.2,0.52,0.16,0.4,0.16,0.12
+0bb175e9-1a93-5522-abdb-2aa10e7c7b38,Nakuru Dairy Farm #0393,Rift Valley,Nakuru,Dairy,7.81,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.56,0.56,0.64,0.6,0.4,0.64,0.36,0.28
+74581549-8a60-58ff-a087-1d5571eae895,Siaya Sugarcane Farm #0394,Western Kenya,Siaya,Sugarcane,6.66,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.4,0.4,0.68,0.68,0.4,0.4,0.52,0.48
+b0b47111-a759-54b7-a1d1-910fd1d7c456,Trans Nzoia Dairy Farm #0395,Rift Valley,Trans Nzoia,Dairy,2.76,Informal Smallholder,0,4.92,5,Future Ready Farm,0.16,0.2,0.16,0.64,0.2,0.16,0.08,0.04
+e950a381-a655-5cad-ac9b-f60986bbfede,Trans Nzoia Dairy Farm #0396,Rift Valley,Trans Nzoia,Dairy,2.57,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.12,0.28,0.52,0.12,0.36,0.08,0.12
+1e076579-e527-56f6-b820-c1a1b690dd24,Uasin Gishu Horticulture Farm #0397,Rift Valley,Uasin Gishu,Horticulture,9.76,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.36,0.4,0.52,0.56,0.48,0.64,0.48,0.36
+2654c28d-80c4-57aa-b7fd-92601e4125d5,Bungoma Maize Farm #0398,Western Kenya,Bungoma,Maize,3.03,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.28,0.2,0.24,0.48,0.08,0.28,0.08,0.04
+b994c990-b5f1-56f1-b1f7-638b690bd0dd,Nyeri Dairy Farm #0399,Central Highlands,Nyeri,Dairy,3.37,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.24,0.2,0.24,0.6,0.24,0.32,0.16,0.0
+dcb93bfd-c07d-58fe-9f0c-996bca9cfca4,Vihiga Poultry Farm #0400,Western Kenya,Vihiga,Poultry,1.76,Informal Smallholder,0,4.68,5,Future Ready Farm,0.2,0.32,0.12,0.36,0.12,0.2,0.16,0.08
+bd245278-d02e-512f-9b44-981ca6db4b00,Tharaka Nithi Sorghum Farm #0401,Eastern Semi-Arid,Tharaka Nithi,Sorghum,3.26,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.24,0.28,0.28,0.4,0.2,0.24,0.2,0.04
+25a218cd-c6ab-58e5-95a8-d9cade8867ec,Taita Taveta Coconut Farm #0402,Coastal Lowlands,Taita Taveta,Coconut,16.42,Commercial Market Leader,2,19.2,4,Investment Ready Farm,0.88,0.56,0.88,0.68,0.92,0.8,0.92,0.76
+c6b98d93-4d2f-57e3-bbb6-01f7ad05e9fa,Makueni Pigeon Peas Farm #0403,Eastern Semi-Arid,Makueni,Pigeon Peas,3.98,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.32,0.44,0.52,0.72,0.52,0.56,0.6,0.44
+2317f013-49a8-50e1-9a35-e1a9e815bb70,Bomet Maize Farm #0404,Rift Valley,Bomet,Maize,3.06,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.2,0.16,0.2,0.64,0.24,0.28,0.24,0.08
+fd354a20-d69f-52d3-b641-d2c6b0c04c16,Lamu Coconut Farm #0405,Coastal Lowlands,Lamu,Coconut,29.52,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.88,0.8,0.96,0.72,0.88,0.72,0.92,0.8
+c0376419-ec74-50ba-ba84-f84e2934bd23,Uasin Gishu Wheat Farm #0406,Rift Valley,Uasin Gishu,Wheat,5.0,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.96,0.76,0.84,0.92,0.84,0.8,0.96,0.76
+665e64a7-52f1-5186-a759-783c8d3dd63f,Kisumu Sugarcane Farm #0407,Western Kenya,Kisumu,Sugarcane,2.44,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.24,0.2,0.28,0.84,0.2,0.16,0.08,0.08
+b86e8992-56c9-53a5-82c5-c1e72ec4bdd4,Nyeri Dairy Farm #0408,Central Highlands,Nyeri,Dairy,11.69,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.56,0.44,0.56,0.52,0.36,0.64,0.36,0.36
+d6224d38-a293-5033-8d49-8624eeb98757,Murang'a Tea Farm #0409,Central Highlands,Murang'a,Tea,1.09,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.16,0.32,0.24,0.56,0.16,0.2,0.16,0.04
+275987c3-df1d-544f-8a8f-cbea57168759,Uasin Gishu Tea Farm #0410,Rift Valley,Uasin Gishu,Tea,17.53,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.84,0.76,0.96,0.72,0.88,0.88,0.92,0.8
+c5107e5e-e784-5233-a1a3-ea04ce8a6562,Murang'a Tea Farm #0411,Central Highlands,Murang'a,Tea,8.03,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.4,0.32,0.48,0.68,0.48,0.52,0.56,0.28
+913bb142-dde1-57eb-b412-4f25897a3f31,Tharaka Nithi Sorghum Farm #0412,Eastern Semi-Arid,Tharaka Nithi,Sorghum,4.52,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.36,0.56,0.72,0.6,0.44,0.52,0.56,0.4
+85b40498-5050-5ea8-9fae-5a31a2f6145d,Siaya Sugarcane Farm #0413,Western Kenya,Siaya,Sugarcane,0.5,Informal Smallholder,0,7.8,2,Emerging Agribusiness,0.36,0.24,0.4,0.64,0.24,0.44,0.16,0.12
+d2e8fc40-c5da-5bb1-a417-82e56177b0cc,Uasin Gishu Tea Farm #0414,Rift Valley,Uasin Gishu,Tea,29.3,Commercial Market Leader,2,20.4,5,Future Ready Farm,1.0,0.76,0.84,0.8,0.88,0.84,0.92,0.76
+401375dd-52d7-5ae5-93e0-643b6afe72dc,Kisumu Horticulture Farm #0415,Western Kenya,Kisumu,Horticulture,3.08,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.2,0.28,0.28,0.52,0.16,0.2,0.04,0.0
+f93cb39e-afda-5cd1-bba3-628288d0ca75,Kwale Coconut Farm #0416,Coastal Lowlands,Kwale,Coconut,2.42,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.16,0.08,0.2,0.68,0.08,0.24,0.24,0.12
+c9991c9e-8eac-5c1e-b4f8-89192ab9e229,Nakuru Potatoes Farm #0417,Rift Valley,Nakuru,Potatoes,2.08,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.2,0.24,0.2,0.56,0.2,0.28,0.28,0.16
+33e3cfd9-2b1f-5d85-bb6b-6c14573e7574,Nandi Horticulture Farm #0418,Rift Valley,Nandi,Horticulture,8.27,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.44,0.48,0.6,0.68,0.36,0.44,0.4,0.4
+1ccd033c-ac8e-5fbb-9649-44eabe30754b,Meru Macadamia Farm #0419,Central Highlands,Meru,Macadamia,1.42,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.08,0.36,0.2,0.64,0.12,0.32,0.04,0.0
+d8c4f914-bb81-5df0-aa1f-10b0cce055eb,Kilifi Fish Farming Farm #0420,Coastal Lowlands,Kilifi,Fish Farming,5.0,Commercial Market Leader,2,20.4,5,Future Ready Farm,0.8,0.84,0.84,0.84,0.84,0.84,1.0,0.8
+ee219093-3786-5cb7-a5a4-b7a9c5678355,Bungoma Cassava Farm #0421,Western Kenya,Bungoma,Cassava,10.66,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.44,0.44,0.56,0.8,0.52,0.52,0.6,0.44
+e2505503-7125-5e2a-911c-6b16a6b74635,Nyeri Tea Farm #0422,Central Highlands,Nyeri,Tea,3.7,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.12,0.16,0.2,0.52,0.08,0.28,0.28,0.16
+a30cec32-92f4-5e85-932d-16e81e929923,Nyeri Macadamia Farm #0423,Central Highlands,Nyeri,Macadamia,2.38,Informal Smallholder,0,4.68,5,Future Ready Farm,0.24,0.24,0.12,0.4,0.12,0.08,0.16,0.2
+6d23e309-af46-58c2-86a5-28a88ae0592a,Kisumu Horticulture Farm #0424,Western Kenya,Kisumu,Horticulture,3.15,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.24,0.28,0.36,0.4,0.12,0.2,0.2,0.08
+1e47c791-3d98-5515-9642-01d9cb78e265,Kericho Wheat Farm #0425,Rift Valley,Kericho,Wheat,12.19,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.44,0.48,0.68,0.68,0.48,0.6,0.44,0.36
+cfc452aa-b65e-57df-939c-c5b863b918f2,Uasin Gishu Tea Farm #0426,Rift Valley,Uasin Gishu,Tea,2.96,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.64,0.56,0.56,0.52,0.52,0.68,0.64,0.28
+d6aa5bfc-62dd-5ab7-94bb-02b21d501f7a,Bomet Dairy Farm #0427,Rift Valley,Bomet,Dairy,3.22,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.28,0.24,0.12,0.56,0.08,0.32,0.12,0.04
+5e35bbdb-f47e-50fc-9aec-7b259eb1b6b5,Uasin Gishu Horticulture Farm #0428,Rift Valley,Uasin Gishu,Horticulture,5.7,Transitioning Agribusiness,1,10.68,3,Structured Farm,0.4,0.32,0.2,0.72,0.48,0.56,0.6,0.28
+412eebc1-c22e-568f-9bf2-12016f0cbd02,Kakamega Poultry Farm #0429,Western Kenya,Kakamega,Poultry,1.18,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.16,0.2,0.48,0.56,0.12,0.32,0.2,0.08
+bdb40337-f2b9-5dd1-aa84-6139c5667ffc,Busia Horticulture Farm #0430,Western Kenya,Busia,Horticulture,6.62,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.52,0.4,0.52,0.72,0.56,0.6,0.52,0.32
+1cc664c7-f8c7-5c28-b2b8-9bad1b6daeae,Embu Coffee Farm #0431,Central Highlands,Embu,Coffee,21.5,Commercial Market Leader,2,19.92,4,Investment Ready Farm,0.84,0.64,0.96,0.88,0.76,0.88,0.92,0.76
+93c654e9-543f-5f41-b431-9f15ffa593a1,Kirinyaga Dairy Farm #0432,Central Highlands,Kirinyaga,Dairy,8.18,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.4,0.64,0.52,0.64,0.56,0.72,0.52,0.4
+6d2757dd-3ff1-5b65-8f01-9d3abd530838,Busia Horticulture Farm #0433,Western Kenya,Busia,Horticulture,6.82,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.36,0.4,0.6,0.76,0.52,0.4,0.52,0.4
+97eae74a-2f91-5e15-b796-9f2dadc93aea,Kericho Potatoes Farm #0434,Rift Valley,Kericho,Potatoes,6.88,Transitioning Agribusiness,1,14.28,3,Structured Farm,0.4,0.52,0.68,0.72,0.64,0.64,0.68,0.48
+47a41b84-ab0b-5c32-9015-86390303aa91,Busia Dairy Farm #0435,Western Kenya,Busia,Dairy,1.58,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.12,0.2,0.28,0.6,0.12,0.44,0.28,0.12
+7b7740de-44d9-5e9b-83e5-76027962fae5,Bomet Maize Farm #0436,Rift Valley,Bomet,Maize,0.5,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.12,0.2,0.32,0.64,0.08,0.28,0.08,0.04
+c28972d6-e28d-5163-b0fe-1cef829f6121,Kilifi Cassava Farm #0437,Coastal Lowlands,Kilifi,Cassava,2.04,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.16,0.2,0.2,0.48,0.12,0.36,0.16,0.16
+fcc7af96-1e10-58d3-99a4-13606f463a02,Kitui Mangoes Farm #0438,Eastern Semi-Arid,Kitui,Mangoes,1.5,Transitioning Agribusiness,1,14.04,3,Structured Farm,0.48,0.56,0.56,0.76,0.72,0.6,0.6,0.4
+8bcd2a17-ae60-58b3-8172-3d13e4831537,Kisumu Sugarcane Farm #0439,Western Kenya,Kisumu,Sugarcane,12.17,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.52,0.48,0.64,0.68,0.28,0.56,0.44,0.32
+0c14f667-f62d-5fe0-8720-40eba72d8166,Taita Taveta Cashew Farm #0440,Coastal Lowlands,Taita Taveta,Cashew,5.27,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.36,0.4,0.64,0.72,0.4,0.56,0.64,0.28
+7e6308b7-92de-5b41-ba17-402c8a5f88ac,Machakos Pigeon Peas Farm #0441,Eastern Semi-Arid,Machakos,Pigeon Peas,24.25,Commercial Market Leader,2,18.84,4,Investment Ready Farm,0.72,0.72,0.84,0.84,0.84,0.8,0.84,0.68
+b076b4f7-4b9d-5382-94f2-b73f7406a93a,Busia Horticulture Farm #0442,Western Kenya,Busia,Horticulture,0.51,Informal Smallholder,0,4.68,5,Future Ready Farm,0.12,0.2,0.2,0.48,0.08,0.24,0.08,0.16
+9df51bfa-4e80-50ba-960d-1768f758bc97,Bomet Tea Farm #0443,Rift Valley,Bomet,Tea,4.89,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.52,0.48,0.64,0.76,0.48,0.52,0.44,0.28
+7ca11995-366e-5768-a700-da8649c593f4,Nyeri Tea Farm #0444,Central Highlands,Nyeri,Tea,0.81,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.36,0.16,0.2,0.48,0.12,0.28,0.16,0.16
+c98eff32-5096-5d6f-8da8-4db9adc8b2e2,Bomet Maize Farm #0445,Rift Valley,Bomet,Maize,2.65,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.2,0.24,0.2,0.52,0.2,0.32,0.24,0.08
+2cc667f0-7fb6-5ba0-b65f-8afd45c43aac,Kiambu Avocado Farm #0446,Central Highlands,Kiambu,Avocado,1.5,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.56,0.32,0.56,0.84,0.52,0.6,0.52,0.24
+0cff414d-ff23-585d-8e04-d0ca87a7372f,Embu Horticulture Farm #0447,Central Highlands,Embu,Horticulture,52.74,Commercial Market Leader,2,20.88,5,Future Ready Farm,0.88,0.84,0.92,0.8,0.88,0.84,0.92,0.88
+48e68490-abb3-53a3-854a-175fd1e5a582,Kilifi Coconut Farm #0448,Coastal Lowlands,Kilifi,Coconut,5.2,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.52,0.48,0.72,0.68,0.44,0.64,0.52,0.4
+cd774cfd-6ff5-5041-ba59-d4ad0c6606d0,Kirinyaga Macadamia Farm #0449,Central Highlands,Kirinyaga,Macadamia,1.8,Informal Smallholder,0,4.8,5,Future Ready Farm,0.2,0.16,0.32,0.32,0.16,0.24,0.12,0.08
+1b0c318d-1284-5cab-ab6c-18e00d585ee4,Kitui Green Grams Farm #0450,Eastern Semi-Arid,Kitui,Green Grams,8.23,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.68,0.44,0.56,0.72,0.4,0.44,0.52,0.4
+b190883a-41fe-54b4-96ca-53f9abcae5f8,Trans Nzoia Maize Farm #0451,Rift Valley,Trans Nzoia,Maize,3.03,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.16,0.12,0.2,0.52,0.16,0.36,0.12,0.08
+e6f9a555-78d5-5db6-9b88-7806d27d146a,Kilifi Vegetables Farm #0452,Coastal Lowlands,Kilifi,Vegetables,13.01,Commercial Market Leader,2,19.32,4,Investment Ready Farm,0.96,0.68,0.88,0.68,0.76,0.92,0.84,0.72
+3a79334b-393a-5066-aea8-a9061a625d29,Kilifi Coconut Farm #0453,Coastal Lowlands,Kilifi,Coconut,8.97,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.56,0.48,0.48,0.76,0.4,0.48,0.52,0.4
+a38d9bef-c321-5f8f-8c97-b9343c5f7c48,Nyeri Macadamia Farm #0454,Central Highlands,Nyeri,Macadamia,5.28,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.2,0.28,0.2,0.56,0.16,0.16,0.16,0.04
+a261df4e-a8d1-5c66-a11c-e4bdd537b820,Lamu Cassava Farm #0455,Coastal Lowlands,Lamu,Cassava,1.36,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.08,0.28,0.12,0.52,0.08,0.32,0.2,0.12
+6c1efb85-15ab-50da-9f17-d6ea02845939,Uasin Gishu Tea Farm #0456,Rift Valley,Uasin Gishu,Tea,3.14,Informal Smallholder,0,4.8,5,Future Ready Farm,0.12,0.12,0.32,0.56,0.04,0.32,0.08,0.04
+951cd2a5-57b0-556a-8bd8-6f51e7861c56,Kakamega Cassava Farm #0457,Western Kenya,Kakamega,Cassava,23.57,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.88,0.88,0.76,0.76,0.92,0.8,0.88,0.84
+7c199030-93c8-56f7-b3a1-679471655fdc,Kwale Vegetables Farm #0458,Coastal Lowlands,Kwale,Vegetables,2.3,Informal Smallholder,0,6.72,2,Emerging Agribusiness,0.08,0.24,0.36,0.64,0.12,0.36,0.28,0.16
+f5156b5f-0c30-5e96-8d49-9a676c8c6513,Embu Horticulture Farm #0459,Central Highlands,Embu,Horticulture,5.47,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.4,0.48,0.44,0.76,0.48,0.56,0.52,0.28
+cf82d44e-f50a-5a5d-a43d-2e0f6f8e32e5,Tharaka Nithi Green Grams Farm #0460,Eastern Semi-Arid,Tharaka Nithi,Green Grams,4.84,Transitioning Agribusiness,1,13.32,3,Structured Farm,0.6,0.44,0.84,0.68,0.4,0.72,0.44,0.32
+33a1ba31-b7f9-5534-83bb-7500b752ebf0,Kisumu Poultry Farm #0461,Western Kenya,Kisumu,Poultry,8.6,Transitioning Agribusiness,1,14.16,3,Structured Farm,0.48,0.36,0.64,0.92,0.6,0.72,0.64,0.36
+4948f09f-0039-5d77-abfc-cef46b35195f,Busia Sugarcane Farm #0462,Western Kenya,Busia,Sugarcane,3.08,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.28,0.24,0.24,0.44,0.04,0.28,0.12,0.12
+83cf3ad7-3009-564d-8f0f-0d6a6fa7f146,Kirinyaga Dairy Farm #0463,Central Highlands,Kirinyaga,Dairy,28.89,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.88,0.8,0.8,0.8,0.8,0.8,0.96,0.76
+3a91d105-2de4-5675-9579-017f427c9651,Kirinyaga Macadamia Farm #0464,Central Highlands,Kirinyaga,Macadamia,3.61,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.36,0.24,0.16,0.56,0.12,0.36,0.16,0.08
+83b49571-8e8a-55d7-aa78-6a3701d940bd,Kitui Mangoes Farm #0465,Eastern Semi-Arid,Kitui,Mangoes,20.14,Transitioning Agribusiness,1,13.32,3,Structured Farm,0.52,0.48,0.64,0.8,0.64,0.6,0.52,0.24
+65b0190e-97f2-5221-9b98-d3c601c602a7,Taita Taveta Vegetables Farm #0466,Coastal Lowlands,Taita Taveta,Vegetables,5.16,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.44,0.44,0.52,0.68,0.64,0.6,0.52,0.28
+26e1d8b3-b787-52d3-936f-b46e279fdae7,Kitui Sorghum Farm #0467,Eastern Semi-Arid,Kitui,Sorghum,2.21,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.48,0.52,0.6,0.64,0.44,0.52,0.56,0.32
+f6112f18-b202-5465-a8d9-c55f238bffb4,Vihiga Poultry Farm #0468,Western Kenya,Vihiga,Poultry,15.11,Commercial Market Leader,2,19.44,4,Investment Ready Farm,0.88,0.8,0.88,0.72,0.84,0.76,0.88,0.72
+fd32870e-45d9-526c-9191-ac9d488b0e81,Taita Taveta Coconut Farm #0469,Coastal Lowlands,Taita Taveta,Coconut,2.13,Informal Smallholder,0,6.72,2,Emerging Agribusiness,0.28,0.2,0.2,0.56,0.2,0.44,0.24,0.12
+9e33ff15-840f-5e34-a46b-62b5963939f5,Meru Dairy Farm #0470,Central Highlands,Meru,Dairy,2.85,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.52,0.6,0.44,0.6,0.56,0.6,0.52,0.24
+4a28aeee-a0fb-50c5-a1db-961c18147508,Lamu Fish Farming Farm #0471,Coastal Lowlands,Lamu,Fish Farming,2.0,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.2,0.16,0.36,0.6,0.08,0.28,0.2,0.08
+0392601d-b3c3-55b5-9158-bba0b010932a,Kakamega Dairy Farm #0472,Western Kenya,Kakamega,Dairy,3.89,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.24,0.16,0.12,0.56,0.16,0.16,0.28,0.12
+312ea422-2c91-5f9d-a01a-efe381920131,Nandi Potatoes Farm #0473,Rift Valley,Nandi,Potatoes,1.65,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.16,0.44,0.44,0.08,0.28,0.12,0.16
+86506231-0ad0-5c3f-bcc8-4fa0627417db,Makueni Mangoes Farm #0474,Eastern Semi-Arid,Makueni,Mangoes,1.47,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.2,0.2,0.36,0.48,0.12,0.24,0.12,0.12
+0b0a4437-6093-57d1-99d2-a508192af50a,Busia Dairy Farm #0475,Western Kenya,Busia,Dairy,3.74,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.32,0.2,0.2,0.52,0.16,0.2,0.2,0.12
+7d17dfe9-2583-56fa-97e7-dee95961e27b,Trans Nzoia Maize Farm #0476,Rift Valley,Trans Nzoia,Maize,3.36,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.24,0.12,0.24,0.44,0.12,0.4,0.04,0.16
+d3296490-357a-5cd9-9154-c8422f4be2de,Kilifi Fish Farming Farm #0477,Coastal Lowlands,Kilifi,Fish Farming,2.82,Informal Smallholder,0,4.44,5,Future Ready Farm,0.16,0.28,0.12,0.4,0.12,0.16,0.12,0.12
+f553b64d-b32d-5e15-8769-920f3e08d23c,Kisumu Dairy Farm #0478,Western Kenya,Kisumu,Dairy,1.77,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.64,0.6,0.52,0.76,0.52,0.36,0.52,0.36
+6703552a-462b-56ba-a02b-f564d5c71a1d,Kericho Maize Farm #0479,Rift Valley,Kericho,Maize,9.8,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.6,0.56,0.52,0.52,0.44,0.64,0.56,0.08
+3c6fa12f-ab59-5cb2-8a01-b98c8c639861,Nakuru Horticulture Farm #0480,Rift Valley,Nakuru,Horticulture,0.5,Informal Smallholder,0,4.44,5,Future Ready Farm,0.16,0.2,0.12,0.32,0.16,0.2,0.12,0.2
+99d7838e-49ce-55b4-80c9-0f784b3d4ca4,Embu Avocado Farm #0481,Central Highlands,Embu,Avocado,2.59,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.12,0.16,0.32,0.52,0.12,0.2,0.16,0.08
+51b48a65-d463-50e3-aa09-8d228cf2b24c,Taita Taveta Vegetables Farm #0482,Coastal Lowlands,Taita Taveta,Vegetables,1.81,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.16,0.32,0.16,0.52,0.16,0.24,0.2,0.04
+e3ec1dc9-d08a-5bb1-aa8c-5a51692bdb27,Kakamega Maize Farm #0483,Western Kenya,Kakamega,Maize,14.28,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.4,0.48,0.68,0.6,0.4,0.44,0.56,0.28
+12a2e828-c1b8-5e72-b580-0b3fe1d9c267,Kirinyaga Avocado Farm #0484,Central Highlands,Kirinyaga,Avocado,3.36,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.24,0.2,0.28,0.56,0.16,0.36,0.16,0.12
+447326b7-63cb-51c2-bc12-35d17aae158f,Meru Dairy Farm #0485,Central Highlands,Meru,Dairy,3.73,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.12,0.36,0.16,0.64,0.0,0.28,0.2,0.2
+2c6ee904-6aa8-5507-9919-1bf343c7ca90,Siaya Horticulture Farm #0486,Western Kenya,Siaya,Horticulture,2.75,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.24,0.44,0.24,0.6,0.16,0.28,0.16,0.04
+fe61155f-202b-5c4c-b475-1a69670bd066,Murang'a Horticulture Farm #0487,Central Highlands,Murang'a,Horticulture,0.68,Informal Smallholder,0,4.56,5,Future Ready Farm,0.08,0.12,0.4,0.44,0.04,0.36,0.04,0.04
+9a104887-03c8-5c82-b6bc-55fbcf193e63,Kakamega Dairy Farm #0488,Western Kenya,Kakamega,Dairy,3.62,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.12,0.16,0.2,0.6,0.12,0.24,0.2,0.08
+0dbf227f-c977-5c80-a962-99fc4705732d,Machakos Pigeon Peas Farm #0489,Eastern Semi-Arid,Machakos,Pigeon Peas,9.22,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.36,0.44,0.36,0.56,0.52,0.56,0.48,0.44
+e1c2619c-d990-55d1-bf60-46d90dec6a0f,Nakuru Tea Farm #0490,Rift Valley,Nakuru,Tea,1.97,Transitioning Agribusiness,1,13.44,3,Structured Farm,0.64,0.52,0.44,0.72,0.64,0.56,0.56,0.4
+7eb7bbe7-122d-53e2-87fe-ab937037c61c,Taita Taveta Cashew Farm #0491,Coastal Lowlands,Taita Taveta,Cashew,12.26,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.52,0.36,0.4,0.64,0.56,0.68,0.44,0.4
+c566d35b-7b60-5227-a60b-19622a947ba2,Vihiga Poultry Farm #0492,Western Kenya,Vihiga,Poultry,2.21,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.6,0.44,0.68,0.56,0.32,0.64,0.44,0.4
+5110914a-d10f-5d62-b5f3-72afd1f97299,Taita Taveta Cashew Farm #0493,Coastal Lowlands,Taita Taveta,Cashew,4.93,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.52,0.44,0.64,0.72,0.52,0.68,0.44,0.36
+5e5f447e-9ded-578c-a50a-68c04c4d263c,Siaya Cassava Farm #0494,Western Kenya,Siaya,Cassava,2.47,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.32,0.32,0.16,0.44,0.12,0.2,0.24,0.04
+72d5abbb-009e-575e-b902-daa44b9f70e4,Taita Taveta Fish Farming Farm #0495,Coastal Lowlands,Taita Taveta,Fish Farming,8.89,Transitioning Agribusiness,1,11.04,3,Structured Farm,0.44,0.44,0.52,0.6,0.44,0.52,0.4,0.32
+501f0bf7-c805-5831-8639-f0ed66aecaf8,Kitui Livestock Farm #0496,Eastern Semi-Arid,Kitui,Livestock,6.48,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.4,0.44,0.64,0.6,0.56,0.52,0.32,0.48
+b3925f45-7819-5b11-b568-2f3f56cbcadb,Embu Horticulture Farm #0497,Central Highlands,Embu,Horticulture,4.09,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.2,0.16,0.28,0.6,0.24,0.12,0.16,0.2
+d98be75c-3e2d-591c-a56f-46f27eb40e82,Tharaka Nithi Green Grams Farm #0498,Eastern Semi-Arid,Tharaka Nithi,Green Grams,5.75,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.56,0.32,0.44,0.68,0.52,0.48,0.52,0.32
+5948643b-6e1e-536b-8dd4-d37555601d31,Kwale Cashew Farm #0499,Coastal Lowlands,Kwale,Cashew,2.51,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.32,0.16,0.24,0.64,0.24,0.2,0.16,0.12
+5d213b3f-806b-57d7-ac51-ba11e74a4e52,Kericho Wheat Farm #0500,Rift Valley,Kericho,Wheat,6.41,Transitioning Agribusiness,1,10.92,3,Structured Farm,0.6,0.4,0.36,0.64,0.32,0.56,0.36,0.4
+763d0300-3489-590b-a962-9c510176a35a,Kericho Maize Farm #0501,Rift Valley,Kericho,Maize,5.87,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.44,0.56,0.52,0.52,0.48,0.48,0.32,0.4
+af1689c4-8674-5194-9469-348d51e7df0f,Meru Horticulture Farm #0502,Central Highlands,Meru,Horticulture,9.18,Commercial Market Leader,2,20.88,5,Future Ready Farm,0.88,0.84,0.84,0.88,0.8,0.92,1.0,0.8
+cff2e7f0-3b92-53cf-8238-8d91742a6262,Busia Horticulture Farm #0503,Western Kenya,Busia,Horticulture,18.99,Commercial Market Leader,2,19.92,4,Investment Ready Farm,0.88,0.76,0.88,0.8,0.8,0.84,0.88,0.8
+f3d84e34-6fd4-519f-85b2-cd2274b3dc49,Kisumu Maize Farm #0504,Western Kenya,Kisumu,Maize,6.64,Transitioning Agribusiness,1,11.04,3,Structured Farm,0.68,0.44,0.56,0.44,0.48,0.48,0.36,0.24
+6a0ecc08-4069-5d21-9f04-76d830aa50aa,Busia Cassava Farm #0505,Western Kenya,Busia,Cassava,7.8,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.48,0.48,0.6,0.8,0.48,0.48,0.48,0.44
+e14c07f0-51a6-5df6-8070-e1e8dba2eb8d,Taita Taveta Vegetables Farm #0506,Coastal Lowlands,Taita Taveta,Vegetables,11.88,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.52,0.36,0.56,0.76,0.48,0.56,0.4,0.28
+b2af5f71-5443-530b-b163-0672e5cd7a4b,Murang'a Horticulture Farm #0507,Central Highlands,Murang'a,Horticulture,2.18,Informal Smallholder,0,6.96,2,Emerging Agribusiness,0.24,0.12,0.44,0.6,0.16,0.36,0.32,0.08
+74459781-ac05-50db-8318-4fc94ed68d52,Bungoma Poultry Farm #0508,Western Kenya,Bungoma,Poultry,7.92,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.4,0.44,0.56,0.72,0.56,0.56,0.44,0.36
+cc13146b-6535-5982-a17c-380eafffeaf5,Taita Taveta Cashew Farm #0509,Coastal Lowlands,Taita Taveta,Cashew,1.76,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.28,0.12,0.28,0.56,0.24,0.2,0.16,0.16
+6a88a05e-d0d6-534a-86d4-899b18758efd,Embu Dairy Farm #0510,Central Highlands,Embu,Dairy,2.2,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.04,0.4,0.2,0.4,0.16,0.12,0.16,0.2
+8d2cc6f4-0055-58ea-8c18-de54a53de577,Nandi Dairy Farm #0511,Rift Valley,Nandi,Dairy,1.46,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.36,0.2,0.2,0.56,0.12,0.36,0.2,0.12
+7c1cc152-c34c-5fb2-8c09-af87073573ff,Machakos Cowpeas Farm #0512,Eastern Semi-Arid,Machakos,Cowpeas,9.79,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.56,0.44,0.6,0.72,0.48,0.6,0.36,0.28
+a591a307-0e2e-53f4-b02e-4fa77aa1f17c,Bungoma Cassava Farm #0513,Western Kenya,Bungoma,Cassava,2.58,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.12,0.16,0.28,0.68,0.24,0.24,0.08,0.16
+9f13d8a7-ae0d-5b57-92a6-81155c6459b6,Uasin Gishu Maize Farm #0514,Rift Valley,Uasin Gishu,Maize,2.16,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.12,0.32,0.2,0.56,0.08,0.4,0.2,0.12
+768d1856-b173-5bf6-9ba6-e521e49b6886,Kitui Pigeon Peas Farm #0515,Eastern Semi-Arid,Kitui,Pigeon Peas,2.95,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.24,0.2,0.2,0.56,0.28,0.28,0.24,0.12
+a35d712c-a69d-5f1b-9c5f-062c79852263,Tharaka Nithi Sorghum Farm #0516,Eastern Semi-Arid,Tharaka Nithi,Sorghum,4.36,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.2,0.24,0.2,0.48,0.08,0.24,0.28,0.12
+b6cf1fbb-fa11-517c-a1c0-83fb661648d5,Kericho Dairy Farm #0517,Rift Valley,Kericho,Dairy,2.63,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.24,0.08,0.64,0.16,0.28,0.2,0.12
+8ac42d0c-26a9-5c48-91b7-65eaf46e5d4e,Kisumu Maize Farm #0518,Western Kenya,Kisumu,Maize,4.86,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.24,0.36,0.64,0.64,0.48,0.56,0.52,0.36
+ba9f6ea8-0f6b-5c8e-9179-fd616ed1421e,Kitui Livestock Farm #0519,Eastern Semi-Arid,Kitui,Livestock,2.13,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.16,0.24,0.36,0.56,0.12,0.32,0.16,0.08
+8d5b8365-9982-5968-a207-04604ebd16a5,Uasin Gishu Horticulture Farm #0520,Rift Valley,Uasin Gishu,Horticulture,5.03,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.32,0.36,0.6,0.68,0.4,0.56,0.6,0.2
+de6bc714-0b75-5328-ac26-4fd4bc70db15,Bungoma Maize Farm #0521,Western Kenya,Bungoma,Maize,14.01,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.96,0.8,0.96,0.64,0.84,0.72,0.92,0.68
+8513f354-9bee-5803-a056-4748bc6362b2,Makueni Cowpeas Farm #0522,Eastern Semi-Arid,Makueni,Cowpeas,1.93,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.28,0.16,0.36,0.48,0.16,0.28,0.04,0.04
+c332763f-beed-56bc-a74b-14f52e05ced9,Makueni Pigeon Peas Farm #0523,Eastern Semi-Arid,Makueni,Pigeon Peas,1.22,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.16,0.12,0.6,0.2,0.32,0.24,0.08
+27e64be3-68ae-5642-9dfe-245274e48a92,Taita Taveta Fish Farming Farm #0524,Coastal Lowlands,Taita Taveta,Fish Farming,4.17,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.64,0.36,0.6,0.72,0.48,0.56,0.44,0.32
+ed3d957f-aa87-5062-a96a-be53fc6f6d9e,Bungoma Poultry Farm #0525,Western Kenya,Bungoma,Poultry,3.3,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.36,0.2,0.2,0.52,0.16,0.48,0.16,0.12
+c837f387-80da-5c44-bdc4-c78c0a3b820a,Bungoma Horticulture Farm #0526,Western Kenya,Bungoma,Horticulture,1.94,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.2,0.2,0.48,0.2,0.2,0.28,0.12
+beb47044-3352-5a88-98ff-6bd606caa7a8,Kirinyaga Coffee Farm #0527,Central Highlands,Kirinyaga,Coffee,31.81,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.96,0.76,0.96,0.76,0.84,0.88,0.92,0.76
+0ef673d5-0948-51c1-825a-43c5b9ce9c4e,Uasin Gishu Potatoes Farm #0528,Rift Valley,Uasin Gishu,Potatoes,27.86,Commercial Market Leader,2,20.88,5,Future Ready Farm,0.84,0.8,0.88,0.88,0.88,0.84,0.96,0.88
+5ae18f38-0a2e-541a-beff-3c4ae9afb7cf,Meru Dairy Farm #0529,Central Highlands,Meru,Dairy,13.01,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.48,0.44,0.64,0.76,0.6,0.44,0.44,0.36
+7bd41146-78c7-516e-b198-0b9285f9273e,Vihiga Cassava Farm #0530,Western Kenya,Vihiga,Cassava,2.09,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.16,0.24,0.4,0.68,0.16,0.16,0.2,0.12
+50795050-2c1e-5db2-a3e7-1cc888499744,Lamu Coconut Farm #0531,Coastal Lowlands,Lamu,Coconut,5.3,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.52,0.36,0.48,0.56,0.48,0.6,0.36,0.48
+ae7f10e1-0d09-57f0-861b-442227ef8014,Kiambu Coffee Farm #0532,Central Highlands,Kiambu,Coffee,8.21,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.48,0.4,0.6,0.76,0.32,0.56,0.44,0.52
+64540a46-2010-5abb-8f02-3944986afd1d,Tharaka Nithi Sorghum Farm #0533,Eastern Semi-Arid,Tharaka Nithi,Sorghum,1.87,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.16,0.16,0.76,0.12,0.2,0.12,0.08
+28c0f5f1-bd91-5e1f-9212-fa0c9f763f68,Siaya Dairy Farm #0534,Western Kenya,Siaya,Dairy,7.74,Transitioning Agribusiness,1,13.44,3,Structured Farm,0.48,0.4,0.56,0.72,0.56,0.76,0.52,0.48
+cada0f77-5b77-54a3-bedb-1a3533cabb55,Lamu Fish Farming Farm #0535,Coastal Lowlands,Lamu,Fish Farming,3.49,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.24,0.24,0.32,0.48,0.2,0.2,0.28,0.04
+e0fc70dc-c336-5312-906e-12b11974e7f4,Tharaka Nithi Pigeon Peas Farm #0536,Eastern Semi-Arid,Tharaka Nithi,Pigeon Peas,1.07,Informal Smallholder,0,4.32,5,Future Ready Farm,0.08,0.16,0.08,0.52,0.12,0.28,0.16,0.04
+3875d388-425c-5500-89d2-3b817467ec10,Busia Dairy Farm #0537,Western Kenya,Busia,Dairy,10.25,Transitioning Agribusiness,1,11.04,3,Structured Farm,0.56,0.36,0.48,0.64,0.52,0.32,0.48,0.32
+ab5118be-9d72-512f-9a5c-ddc4b811c6e9,Embu Horticulture Farm #0538,Central Highlands,Embu,Horticulture,3.7,Informal Smallholder,0,4.92,5,Future Ready Farm,0.2,0.08,0.2,0.56,0.08,0.16,0.2,0.16
+693561a8-fdab-50d5-8e3d-65c600998b03,Nakuru Maize Farm #0539,Rift Valley,Nakuru,Maize,1.23,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.2,0.12,0.2,0.72,0.16,0.24,0.2,0.12
+22dc9894-9911-5b69-bd26-faa4c5db7260,Uasin Gishu Potatoes Farm #0540,Rift Valley,Uasin Gishu,Potatoes,7.98,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.48,0.44,0.56,0.68,0.36,0.56,0.36,0.4
+27c3bdcd-9844-5ebf-8420-6bb1992d0a2e,Kakamega Maize Farm #0541,Western Kenya,Kakamega,Maize,17.19,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.88,0.72,0.8,0.88,0.92,0.88,0.92,0.76
+319a0b8a-16b7-5d72-9b1e-3bb88b71e7c4,Kakamega Poultry Farm #0542,Western Kenya,Kakamega,Poultry,3.16,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.44,0.32,0.56,0.68,0.44,0.52,0.6,0.2
+3119aadf-0c96-5993-8e0b-00913672fed8,Nandi Horticulture Farm #0543,Rift Valley,Nandi,Horticulture,1.5,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.6,0.44,0.6,0.68,0.48,0.52,0.36,0.4
+8a1548d9-3f74-5b5b-88f1-717de3cd8206,Busia Cassava Farm #0544,Western Kenya,Busia,Cassava,12.0,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.72,0.92,0.92,0.8,0.84,0.88,0.88,0.72
+7bfaa6dd-cb28-54e6-9caf-12f6a26940ce,Siaya Cassava Farm #0545,Western Kenya,Siaya,Cassava,2.09,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.2,0.28,0.36,0.56,0.32,0.2,0.12,0.12
+54a3a678-b23b-5fd5-a6ca-e437fc70b3da,Kitui Sorghum Farm #0546,Eastern Semi-Arid,Kitui,Sorghum,1.63,Informal Smallholder,0,6.96,2,Emerging Agribusiness,0.2,0.16,0.2,0.68,0.24,0.4,0.28,0.16
+0becb2c8-3004-5297-b088-bca85793b066,Taita Taveta Cassava Farm #0547,Coastal Lowlands,Taita Taveta,Cassava,0.5,Informal Smallholder,0,4.56,5,Future Ready Farm,0.12,0.08,0.28,0.56,0.08,0.24,0.08,0.08
+7b4ed74d-2e1f-5207-b8d2-bda3bfde0484,Kirinyaga Tea Farm #0548,Central Highlands,Kirinyaga,Tea,0.5,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.28,0.12,0.16,0.64,0.24,0.2,0.2,0.08
+87536790-7470-5898-a351-70a9be7019fd,Makueni Pigeon Peas Farm #0549,Eastern Semi-Arid,Makueni,Pigeon Peas,7.23,Transitioning Agribusiness,1,13.08,3,Structured Farm,0.52,0.6,0.68,0.72,0.52,0.32,0.56,0.44
+5045a45f-7ea1-563f-a59c-5e64729b2266,Trans Nzoia Wheat Farm #0550,Rift Valley,Trans Nzoia,Wheat,0.5,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.2,0.32,0.36,0.64,0.08,0.16,0.24,0.12
+b975b184-2941-54a4-902e-dda952b37344,Kirinyaga Horticulture Farm #0551,Central Highlands,Kirinyaga,Horticulture,0.5,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.16,0.36,0.52,0.16,0.32,0.16,0.04
+6d14603e-1eab-5f9e-b122-f0665dd49004,Tharaka Nithi Green Grams Farm #0552,Eastern Semi-Arid,Tharaka Nithi,Green Grams,2.34,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.24,0.32,0.08,0.52,0.12,0.24,0.16,0.08
+733036ea-f2aa-5a84-a6c0-59996a727343,Kiambu Avocado Farm #0553,Central Highlands,Kiambu,Avocado,0.74,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.24,0.12,0.24,0.64,0.24,0.36,0.16,0.04
+16458798-3114-541d-afd4-7b9dc1fe37d5,Taita Taveta Fish Farming Farm #0554,Coastal Lowlands,Taita Taveta,Fish Farming,31.56,Commercial Market Leader,2,19.32,4,Investment Ready Farm,0.72,0.72,0.84,0.84,0.76,0.84,0.92,0.8
+75d962b4-f3fa-591f-8a2c-2608697a6407,Murang'a Tea Farm #0555,Central Highlands,Murang'a,Tea,2.69,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.12,0.28,0.12,0.6,0.28,0.4,0.16,0.0
+3e5b698c-5af9-597d-b4d6-0e92505ffdb8,Machakos Mangoes Farm #0556,Eastern Semi-Arid,Machakos,Mangoes,0.69,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.16,0.2,0.36,0.72,0.04,0.32,0.16,0.08
+e1978193-e2ca-5c80-a7ca-15aca14b1499,Tharaka Nithi Livestock Farm #0557,Eastern Semi-Arid,Tharaka Nithi,Livestock,1.85,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.4,0.32,0.28,0.48,0.08,0.12,0.28,0.12
+b8cbbfea-5a68-57ef-9419-1373d915d67a,Nakuru Tea Farm #0558,Rift Valley,Nakuru,Tea,3.01,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.08,0.08,0.32,0.56,0.08,0.24,0.32,0.04
+9ea37e5b-9081-50b5-9973-a9ac7b02b81f,Nakuru Wheat Farm #0559,Rift Valley,Nakuru,Wheat,9.6,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.44,0.48,0.44,0.6,0.48,0.72,0.64,0.44
+77e9106a-5265-5fa4-999b-5b0e10557dae,Kwale Cashew Farm #0560,Coastal Lowlands,Kwale,Cashew,2.22,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.12,0.28,0.08,0.56,0.16,0.28,0.12,0.08
+2717768c-c481-55d8-b60a-1949e6e72579,Kisumu Horticulture Farm #0561,Western Kenya,Kisumu,Horticulture,0.77,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.12,0.24,0.28,0.6,0.2,0.28,0.12,0.04
+628d4745-40cb-5622-b027-4925fa869461,Kirinyaga Horticulture Farm #0562,Central Highlands,Kirinyaga,Horticulture,1.62,Informal Smallholder,0,4.68,5,Future Ready Farm,0.16,0.16,0.36,0.36,0.12,0.4,0.0,0.0
+69ee55cc-03c4-5b1e-9c33-6028fe23eabf,Machakos Livestock Farm #0563,Eastern Semi-Arid,Machakos,Livestock,1.5,Transitioning Agribusiness,1,10.8,3,Structured Farm,0.36,0.44,0.48,0.72,0.56,0.4,0.48,0.16
+1faa9150-a83c-5153-a834-f2d0b37c534b,Kwale Cassava Farm #0564,Coastal Lowlands,Kwale,Cassava,3.41,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.48,0.16,0.52,0.72,0.24,0.6,0.68,0.4
+80b05fc8-716c-5845-876d-eb8cd79c55da,Bomet Potatoes Farm #0565,Rift Valley,Bomet,Potatoes,3.63,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.36,0.48,0.6,0.76,0.56,0.44,0.52,0.36
+4abe33b6-12db-51a9-92b2-81e9d994a0aa,Nandi Dairy Farm #0566,Rift Valley,Nandi,Dairy,10.53,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.56,0.4,0.72,0.6,0.44,0.64,0.48,0.4
+f9c8925f-a07c-5525-9cd7-2e8f37ffe0cb,Taita Taveta Vegetables Farm #0567,Coastal Lowlands,Taita Taveta,Vegetables,4.26,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.64,0.4,0.6,0.68,0.36,0.44,0.6,0.36
+0075aa7c-4bda-597b-95a0-b5edd8003c6f,Kericho Dairy Farm #0568,Rift Valley,Kericho,Dairy,4.23,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.24,0.2,0.32,0.56,0.24,0.32,0.12,0.08
+f994e9c1-3307-5762-a661-49d5fe1d50cc,Bungoma Dairy Farm #0569,Western Kenya,Bungoma,Dairy,2.25,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.16,0.08,0.2,0.52,0.2,0.32,0.08,0.12
+afce950e-c2c4-519f-a67d-d94f861e4817,Kericho Potatoes Farm #0570,Rift Valley,Kericho,Potatoes,9.83,Transitioning Agribusiness,1,10.2,3,Structured Farm,0.4,0.36,0.6,0.52,0.4,0.56,0.32,0.24
+e41f86e5-c11d-5bdb-8340-e9ffc70979d3,Murang'a Macadamia Farm #0571,Central Highlands,Murang'a,Macadamia,4.21,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.12,0.12,0.24,0.76,0.08,0.16,0.16,0.16
+d8b4b42a-a2ee-51b2-a823-977d8e4b645d,Kwale Cassava Farm #0572,Coastal Lowlands,Kwale,Cassava,12.15,Transitioning Agribusiness,1,14.16,3,Structured Farm,0.52,0.6,0.64,0.72,0.48,0.68,0.6,0.48
+9776c52a-9925-50bd-b40f-6105e2ddb175,Meru Macadamia Farm #0573,Central Highlands,Meru,Macadamia,5.33,Informal Smallholder,0,4.68,5,Future Ready Farm,0.04,0.2,0.16,0.4,0.24,0.24,0.24,0.04
+794eef32-3142-5098-8e70-a940c7f71893,Kirinyaga Coffee Farm #0574,Central Highlands,Kirinyaga,Coffee,7.67,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.44,0.44,0.44,0.72,0.32,0.52,0.48,0.36
+641aba18-441f-560c-b365-2aca7fba0ccf,Murang'a Dairy Farm #0575,Central Highlands,Murang'a,Dairy,11.73,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.92,0.68,0.88,0.72,0.84,0.84,0.92,0.8
+1c7479ee-9fac-57aa-9954-eaf482d46129,Vihiga Cassava Farm #0576,Western Kenya,Vihiga,Cassava,3.96,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.32,0.52,0.68,0.72,0.56,0.64,0.6,0.2
+5ea2f6a3-b494-578f-bce0-fee943493cef,Murang'a Macadamia Farm #0577,Central Highlands,Murang'a,Macadamia,33.1,Commercial Market Leader,2,18.12,4,Investment Ready Farm,0.84,0.72,0.76,0.76,0.68,0.76,0.84,0.68
+87a630c8-b553-5eff-bf0a-aa9b6814690a,Kiambu Coffee Farm #0578,Central Highlands,Kiambu,Coffee,3.55,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.6,0.44,0.48,0.56,0.4,0.44,0.48,0.32
+d7594af6-34a5-5e60-8c3e-99c8f09cdf65,Nandi Wheat Farm #0579,Rift Valley,Nandi,Wheat,26.78,Commercial Market Leader,2,19.92,4,Investment Ready Farm,0.92,0.8,0.88,0.6,0.96,0.84,0.96,0.68
+c333d610-2ed5-51b3-965c-2c032d630445,Kakamega Dairy Farm #0580,Western Kenya,Kakamega,Dairy,2.28,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.08,0.28,0.4,0.56,0.12,0.28,0.24,0.12
+14a01107-0fec-5029-a9f0-ae31d55a50a1,Kisumu Horticulture Farm #0581,Western Kenya,Kisumu,Horticulture,2.94,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.28,0.24,0.24,0.6,0.2,0.28,0.16,0.0
+eb736190-9a70-5197-8eeb-eba2a21088d1,Kakamega Maize Farm #0582,Western Kenya,Kakamega,Maize,2.83,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.44,0.56,0.64,0.44,0.36,0.48,0.52,0.32
+66d7b62e-ec93-524d-85e8-23cec63f682b,Murang'a Coffee Farm #0583,Central Highlands,Murang'a,Coffee,1.76,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.16,0.16,0.24,0.6,0.24,0.24,0.12,0.12
+2ab9592a-dda0-56a3-99d4-1eb0f18e70a0,Kwale Cassava Farm #0584,Coastal Lowlands,Kwale,Cassava,2.49,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.24,0.32,0.2,0.56,0.08,0.2,0.2,0.08
+d9e8c608-5256-5af2-ad3f-69976a56e37a,Makueni Green Grams Farm #0585,Eastern Semi-Arid,Makueni,Green Grams,36.41,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.92,0.76,0.88,0.76,0.92,0.8,0.84,0.88
+6e1ea4a2-11e8-5bd4-a807-2efbe37c861a,Kirinyaga Tea Farm #0586,Central Highlands,Kirinyaga,Tea,7.95,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.52,0.36,0.64,0.72,0.52,0.6,0.4,0.32
+5c6e3c26-5061-5395-8aad-8ffb211797da,Trans Nzoia Horticulture Farm #0587,Rift Valley,Trans Nzoia,Horticulture,2.68,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.24,0.12,0.2,0.48,0.24,0.36,0.32,0.16
+f46e29b5-0ca2-5c7b-836f-b13f0df64fc1,Nyeri Horticulture Farm #0588,Central Highlands,Nyeri,Horticulture,2.06,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.2,0.16,0.28,0.44,0.0,0.32,0.2,0.08
+d928d52e-49ae-5a64-9167-4da172244a2f,Kakamega Horticulture Farm #0589,Western Kenya,Kakamega,Horticulture,1.28,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.2,0.2,0.2,0.6,0.24,0.2,0.16,0.16
+786ca2eb-ff19-53bd-88ce-30068678ba21,Trans Nzoia Tea Farm #0590,Rift Valley,Trans Nzoia,Tea,0.5,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.24,0.2,0.32,0.44,0.12,0.28,0.08,0.08
+6c0d8f8b-bcf5-5e9f-bfdf-f07ba479972b,Lamu Vegetables Farm #0591,Coastal Lowlands,Lamu,Vegetables,49.61,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.64,0.92,0.96,0.68,0.84,0.72,0.84,0.92
+5b647ccd-7d10-5143-9e81-74218178be2f,Kwale Cassava Farm #0592,Coastal Lowlands,Kwale,Cassava,3.67,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.24,0.2,0.28,0.68,0.12,0.28,0.16,0.24
+457990b3-9e31-50c9-a4b3-819144d60866,Siaya Dairy Farm #0593,Western Kenya,Siaya,Dairy,3.88,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.24,0.16,0.16,0.6,0.08,0.28,0.16,0.16
+5dd41069-264a-5327-9752-1fd8e64fc72b,Meru Coffee Farm #0594,Central Highlands,Meru,Coffee,7.54,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.48,0.44,0.64,0.64,0.44,0.72,0.48,0.2
+4b617222-20ce-545e-98ea-f91ec677ecfe,Taita Taveta Cashew Farm #0595,Coastal Lowlands,Taita Taveta,Cashew,0.5,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.2,0.2,0.16,0.4,0.2,0.28,0.28,0.12
+afceac5d-ed9c-5ea0-80c1-4f5512715d97,Trans Nzoia Potatoes Farm #0596,Rift Valley,Trans Nzoia,Potatoes,1.22,Informal Smallholder,0,6.84,2,Emerging Agribusiness,0.28,0.2,0.32,0.6,0.32,0.28,0.16,0.12
+87a025f8-1919-57af-b2bc-29e3d7918ce3,Bomet Horticulture Farm #0597,Rift Valley,Bomet,Horticulture,8.27,Transitioning Agribusiness,1,12.6,3,Structured Farm,0.6,0.32,0.6,0.88,0.36,0.52,0.52,0.4
+fc619314-75b3-5a82-9c04-c580a5d1dd93,Makueni Sorghum Farm #0598,Eastern Semi-Arid,Makueni,Sorghum,8.28,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.36,0.32,0.56,0.76,0.52,0.52,0.56,0.32
+9001763e-b601-54cc-bad1-77ecabb01e81,Taita Taveta Vegetables Farm #0599,Coastal Lowlands,Taita Taveta,Vegetables,36.06,Commercial Market Leader,2,21.36,5,Future Ready Farm,0.84,0.84,1.0,0.92,0.88,0.88,0.84,0.92
+99925bf8-b8b3-5e92-a3e5-028e5a0fdd10,Vihiga Maize Farm #0600,Western Kenya,Vihiga,Maize,4.24,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.48,0.56,0.48,0.64,0.52,0.52,0.56,0.4
+4b59bbb3-26b1-528a-aaa2-8d5d92aae36b,Taita Taveta Cassava Farm #0601,Coastal Lowlands,Taita Taveta,Cassava,2.93,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.04,0.2,0.2,0.6,0.2,0.32,0.16,0.08
+544082b3-41fc-57fb-820b-707d03fb3d26,Kakamega Cassava Farm #0602,Western Kenya,Kakamega,Cassava,8.27,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.48,0.4,0.56,0.76,0.44,0.6,0.28,0.32
+9d9eda2d-1f48-5d2b-856e-f02af87fba96,Machakos Pigeon Peas Farm #0603,Eastern Semi-Arid,Machakos,Pigeon Peas,33.73,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.92,0.84,0.92,0.72,0.96,0.8,0.84,0.76
+1a74022a-c233-5698-b55c-c58506e5a655,Kirinyaga Horticulture Farm #0604,Central Highlands,Kirinyaga,Horticulture,9.48,Transitioning Agribusiness,1,13.32,3,Structured Farm,0.6,0.48,0.64,0.72,0.6,0.48,0.44,0.48
+0522671e-3f23-5fd2-8aec-44f554fc2dea,Uasin Gishu Wheat Farm #0605,Rift Valley,Uasin Gishu,Wheat,20.12,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.84,0.72,1.0,0.8,0.8,0.88,0.92,0.72
+93b3d02e-0b47-565d-9a05-2c13208b9099,Kwale Cashew Farm #0606,Coastal Lowlands,Kwale,Cashew,11.79,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.44,0.44,0.6,0.6,0.6,0.48,0.52,0.36
+e9a87ce2-eff0-5344-9d63-aa5385902485,Murang'a Coffee Farm #0607,Central Highlands,Murang'a,Coffee,5.0,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.88,0.88,0.88,0.84,0.8,0.92,0.84,0.8
+f7a55b2a-8199-5c0b-82f4-a056d5e0bd51,Kisumu Maize Farm #0608,Western Kenya,Kisumu,Maize,0.5,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.24,0.24,0.16,0.48,0.08,0.28,0.28,0.12
+4ca5fc35-fd9e-57da-8038-0ebd747f44f2,Lamu Fish Farming Farm #0609,Coastal Lowlands,Lamu,Fish Farming,1.5,Transitioning Agribusiness,1,10.8,3,Structured Farm,0.4,0.32,0.6,0.6,0.44,0.44,0.56,0.24
+7e5552d1-ff62-5017-93bb-01cb06f334d6,Kilifi Cashew Farm #0610,Coastal Lowlands,Kilifi,Cashew,1.13,Informal Smallholder,0,4.56,5,Future Ready Farm,0.12,0.2,0.28,0.48,0.0,0.16,0.12,0.16
+949d1cd7-e5aa-58c5-bcee-33430ff44ca4,Vihiga Maize Farm #0611,Western Kenya,Vihiga,Maize,2.71,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.44,0.48,0.48,0.6,0.52,0.44,0.44,0.36
+a022386b-91b5-5025-bef2-16ef96374cfc,Bomet Horticulture Farm #0612,Rift Valley,Bomet,Horticulture,3.6,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.52,0.4,0.6,0.64,0.48,0.48,0.44,0.24
+cdb8d9f4-5ab9-5f82-899d-0fa071584233,Bungoma Maize Farm #0613,Western Kenya,Bungoma,Maize,38.46,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.88,0.8,0.92,0.76,0.84,0.72,0.88,0.8
+e70d8a5d-5626-5953-aa4e-23ffafb9a970,Kwale Cashew Farm #0614,Coastal Lowlands,Kwale,Cashew,7.45,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.76,0.76,0.96,0.92,0.84,0.84,0.84,0.92
+ad6a7796-05d2-5fba-ad08-f7fb24b04c5c,Bungoma Dairy Farm #0615,Western Kenya,Bungoma,Dairy,2.46,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.08,0.28,0.2,0.8,0.2,0.32,0.12,0.2
+c1d6ae38-8f7c-55be-8de5-6ac1f791891d,Machakos Pigeon Peas Farm #0616,Eastern Semi-Arid,Machakos,Pigeon Peas,4.09,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.6,0.32,0.68,0.68,0.44,0.4,0.44,0.4
+a328fd4b-1ba9-58ed-a217-21d5c98fc5cc,Tharaka Nithi Sorghum Farm #0617,Eastern Semi-Arid,Tharaka Nithi,Sorghum,8.34,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.4,0.56,0.36,0.64,0.64,0.68,0.36,0.44
+87c894f3-309b-552c-929e-96527498e75f,Embu Coffee Farm #0618,Central Highlands,Embu,Coffee,2.92,Informal Smallholder,0,7.2,2,Emerging Agribusiness,0.36,0.32,0.16,0.72,0.04,0.4,0.2,0.2
+f18b4e76-a08c-58f1-9369-9a5e537b064e,Kwale Cashew Farm #0619,Coastal Lowlands,Kwale,Cashew,2.87,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.12,0.4,0.12,0.68,0.12,0.24,0.12,0.16
+db493172-b7b0-567a-814c-b43394a71bea,Bomet Maize Farm #0620,Rift Valley,Bomet,Maize,0.5,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.16,0.32,0.24,0.56,0.2,0.24,0.24,0.04
+2e7c6f9b-4592-585f-8325-b3c0483a7b2d,Uasin Gishu Maize Farm #0621,Rift Valley,Uasin Gishu,Maize,7.87,Transitioning Agribusiness,1,10.56,3,Structured Farm,0.4,0.6,0.44,0.44,0.36,0.44,0.36,0.48
+baff7501-6b95-53af-b349-41bff626c6f9,Kisumu Cassava Farm #0622,Western Kenya,Kisumu,Cassava,0.79,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.08,0.2,0.2,0.52,0.08,0.32,0.32,0.2
+2f1e4109-3ea3-5cfa-ae18-87c793bd3451,Meru Macadamia Farm #0623,Central Highlands,Meru,Macadamia,35.64,Commercial Market Leader,2,19.92,4,Investment Ready Farm,0.8,0.8,0.92,0.8,0.72,0.84,0.92,0.84
+7a5122ce-f654-5e01-b2fe-3eecf66e77f5,Makueni Sorghum Farm #0624,Eastern Semi-Arid,Makueni,Sorghum,0.5,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.24,0.12,0.48,0.2,0.4,0.12,0.12
+04868cde-a482-5948-ae96-9049462ce973,Bomet Maize Farm #0625,Rift Valley,Bomet,Maize,47.87,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.76,0.72,0.92,0.72,0.88,0.8,0.92,0.84
+c942022b-07a3-5877-9514-258fefcb1c7f,Kisumu Cassava Farm #0626,Western Kenya,Kisumu,Cassava,1.21,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.2,0.12,0.24,0.52,0.08,0.24,0.12,0.24
+bc16f870-d7ad-59a7-8e4d-c13d78a75a7c,Kirinyaga Coffee Farm #0627,Central Highlands,Kirinyaga,Coffee,6.37,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.6,0.48,0.56,0.6,0.56,0.4,0.52,0.36
+f29e2387-2070-553e-9cac-42ee91cd5895,Kisumu Sugarcane Farm #0628,Western Kenya,Kisumu,Sugarcane,2.31,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.04,0.2,0.24,0.52,0.16,0.32,0.16,0.08
+edd7bff6-bf01-5c51-b103-b14e642e74d6,Embu Avocado Farm #0629,Central Highlands,Embu,Avocado,13.67,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.56,0.48,0.72,0.6,0.44,0.48,0.4,0.24
+70ec208c-d55c-5a90-a5c4-05e2dbaae995,Machakos Sorghum Farm #0630,Eastern Semi-Arid,Machakos,Sorghum,11.49,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.32,0.6,0.52,0.52,0.52,0.36,0.48,0.56
+8c815c52-6937-5c30-8638-54cbc0fb41c5,Taita Taveta Vegetables Farm #0631,Coastal Lowlands,Taita Taveta,Vegetables,36.96,Commercial Market Leader,2,20.76,5,Future Ready Farm,0.92,0.88,0.88,0.68,0.92,0.84,0.88,0.92
+0f379db5-3f1c-5469-abfb-9a3d74135601,Bungoma Sugarcane Farm #0632,Western Kenya,Bungoma,Sugarcane,9.61,Transitioning Agribusiness,1,10.8,3,Structured Farm,0.32,0.44,0.56,0.44,0.36,0.56,0.52,0.4
+2ee0c4f4-37e5-507d-b6c6-a88f08744d1f,Vihiga Maize Farm #0633,Western Kenya,Vihiga,Maize,0.5,Informal Smallholder,0,4.92,5,Future Ready Farm,0.24,0.24,0.12,0.48,0.28,0.16,0.12,0.0
+af34c8be-67a5-5e7e-9930-a1f42b0a4821,Tharaka Nithi Green Grams Farm #0634,Eastern Semi-Arid,Tharaka Nithi,Green Grams,1.6,Informal Smallholder,0,4.8,5,Future Ready Farm,0.04,0.2,0.12,0.52,0.28,0.24,0.16,0.04
+3dc75cee-520f-50fb-9830-5a113089ee91,Bomet Potatoes Farm #0635,Rift Valley,Bomet,Potatoes,0.87,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.12,0.24,0.36,0.52,0.16,0.4,0.12,0.08
+3bd01355-0785-5651-b207-bb1768bf71f4,Kericho Horticulture Farm #0636,Rift Valley,Kericho,Horticulture,1.89,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.32,0.32,0.2,0.44,0.16,0.2,0.28,0.08
+f5fe5004-c487-54a9-ad2d-6adf0a43b729,Bungoma Dairy Farm #0637,Western Kenya,Bungoma,Dairy,4.23,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.48,0.48,0.6,0.72,0.44,0.56,0.6,0.2
+6df25fd9-696f-581f-9116-e0612a1caaf8,Vihiga Poultry Farm #0638,Western Kenya,Vihiga,Poultry,12.3,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.52,0.52,0.64,0.76,0.32,0.44,0.44,0.28
+a9c2814d-060b-5ee6-8b5d-8cc4593d4c7a,Nandi Wheat Farm #0639,Rift Valley,Nandi,Wheat,7.57,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.48,0.4,0.52,0.56,0.56,0.52,0.68,0.44
+aece2337-0df4-5cad-93fa-ce11ea51b3c0,Kwale Vegetables Farm #0640,Coastal Lowlands,Kwale,Vegetables,46.23,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.76,0.84,0.96,0.88,0.88,0.84,0.8,0.76
+a1c1e3e3-1c0f-5f40-b7d7-c5b771b62794,Kwale Cashew Farm #0641,Coastal Lowlands,Kwale,Cashew,9.5,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.52,0.52,0.44,0.52,0.52,0.56,0.64,0.4
+32a4e4fe-50ae-5d18-a295-fc059cdb346b,Lamu Vegetables Farm #0642,Coastal Lowlands,Lamu,Vegetables,4.78,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.36,0.48,0.56,0.8,0.48,0.64,0.36,0.44
+648eb412-e33e-5ff4-ba1d-742ff3e721d5,Uasin Gishu Maize Farm #0643,Rift Valley,Uasin Gishu,Maize,3.96,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.24,0.16,0.24,0.52,0.16,0.36,0.04,0.12
+1ecec016-edd0-5f8c-80c1-93db79812160,Siaya Poultry Farm #0644,Western Kenya,Siaya,Poultry,1.22,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.28,0.16,0.6,0.16,0.32,0.04,0.04
+804ae2a7-3f13-5b86-99d7-5c23185097fa,Lamu Vegetables Farm #0645,Coastal Lowlands,Lamu,Vegetables,6.57,Transitioning Agribusiness,1,13.68,3,Structured Farm,0.56,0.48,0.64,0.72,0.6,0.64,0.48,0.44
+6f32185d-ec7b-5c06-a395-f25e9f1153d7,Lamu Cashew Farm #0646,Coastal Lowlands,Lamu,Cashew,13.04,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.76,0.76,0.92,0.72,0.96,0.88,0.84,0.76
+e761fef6-7050-509b-9953-2f44135291ca,Makueni Green Grams Farm #0647,Eastern Semi-Arid,Makueni,Green Grams,1.81,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.2,0.16,0.2,0.52,0.08,0.36,0.12,0.12
+f7108cdf-d8e8-584a-9b65-24d4b5ada1e1,Bomet Tea Farm #0648,Rift Valley,Bomet,Tea,6.91,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.52,0.32,0.6,0.72,0.44,0.4,0.6,0.44
+e450ca0a-ad87-58a3-8453-bbe9218224fc,Nyeri Avocado Farm #0649,Central Highlands,Nyeri,Avocado,5.81,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.4,0.44,0.6,0.72,0.36,0.64,0.56,0.36
+f251656d-b045-5767-ad87-7ccb67e8d57a,Meru Tea Farm #0650,Central Highlands,Meru,Tea,1.57,Informal Smallholder,0,7.08,2,Emerging Agribusiness,0.16,0.24,0.28,0.64,0.2,0.32,0.36,0.16
+555d9a54-e382-56ab-ac6a-c5daff740a5b,Uasin Gishu Wheat Farm #0651,Rift Valley,Uasin Gishu,Wheat,2.76,Informal Smallholder,0,4.56,5,Future Ready Farm,0.12,0.28,0.16,0.52,0.16,0.12,0.08,0.08
+b85751d9-a3ba-523e-a664-bcb33e01dbe0,Kitui Green Grams Farm #0652,Eastern Semi-Arid,Kitui,Green Grams,8.87,Commercial Market Leader,2,20.64,5,Future Ready Farm,0.8,0.88,0.96,0.88,0.84,0.84,0.84,0.84
+85fc5c4c-28d1-5f3b-8d89-f5f573c402ea,Bungoma Dairy Farm #0653,Western Kenya,Bungoma,Dairy,8.53,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.52,0.4,0.64,0.68,0.48,0.48,0.4,0.44
+9df01279-1de1-5ad6-a461-e13aaed630da,Kakamega Horticulture Farm #0654,Western Kenya,Kakamega,Horticulture,4.1,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.12,0.32,0.32,0.6,0.16,0.16,0.12,0.2
+892a78c3-f6d7-51c1-b713-bf2e92962258,Trans Nzoia Wheat Farm #0655,Rift Valley,Trans Nzoia,Wheat,22.07,Commercial Market Leader,2,18.48,4,Investment Ready Farm,0.64,0.84,0.84,0.76,0.72,0.84,0.76,0.76
+8613787b-0118-56d2-9199-cdf19d066216,Taita Taveta Cashew Farm #0656,Coastal Lowlands,Taita Taveta,Cashew,3.93,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.16,0.2,0.36,0.6,0.0,0.36,0.16,0.04
+edea5127-a7ce-56db-8710-b5c97fea98f1,Kirinyaga Macadamia Farm #0657,Central Highlands,Kirinyaga,Macadamia,30.22,Commercial Market Leader,2,21.36,5,Future Ready Farm,0.92,0.8,0.96,0.84,0.88,0.84,1.0,0.88
+f16acfc7-60de-59ff-8c6e-dd83bdcc626e,Lamu Fish Farming Farm #0658,Coastal Lowlands,Lamu,Fish Farming,2.81,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.16,0.2,0.32,0.48,0.08,0.4,0.2,0.16
+c6b95cd7-1e83-5571-a61f-19159cbfcaa1,Uasin Gishu Dairy Farm #0659,Rift Valley,Uasin Gishu,Dairy,8.03,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.32,0.36,0.56,0.8,0.4,0.56,0.6,0.36
+f6611cb6-e266-5680-8a6b-09ea637969a0,Nandi Maize Farm #0660,Rift Valley,Nandi,Maize,1.52,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.12,0.24,0.28,0.56,0.16,0.36,0.2,0.16
+f7a1826e-875e-5b75-8a24-c54716d1edfa,Trans Nzoia Maize Farm #0661,Rift Valley,Trans Nzoia,Maize,1.12,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.32,0.16,0.32,0.44,0.16,0.32,0.12,0.08
+0f9da962-0574-599f-816e-b8b8b179e4c0,Taita Taveta Cashew Farm #0662,Coastal Lowlands,Taita Taveta,Cashew,25.87,Commercial Market Leader,2,19.44,4,Investment Ready Farm,0.72,0.72,0.84,0.8,0.88,0.8,0.92,0.8
+1b30062e-7cc7-51ff-8ad5-7716da724837,Taita Taveta Vegetables Farm #0663,Coastal Lowlands,Taita Taveta,Vegetables,1.69,Informal Smallholder,0,4.44,5,Future Ready Farm,0.08,0.08,0.12,0.52,0.0,0.36,0.16,0.16
+102c0292-44e7-56e3-9b19-79ebd717666d,Kericho Tea Farm #0664,Rift Valley,Kericho,Tea,1.82,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.12,0.16,0.28,0.44,0.12,0.44,0.16,0.08
+5a2a2570-b404-5c73-b451-e431da9f408e,Kericho Maize Farm #0665,Rift Valley,Kericho,Maize,3.25,Informal Smallholder,0,6.72,2,Emerging Agribusiness,0.16,0.28,0.16,0.64,0.28,0.36,0.2,0.16
+f125903a-70de-5e2c-9028-4c3a0c584cbd,Kitui Mangoes Farm #0666,Eastern Semi-Arid,Kitui,Mangoes,6.41,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.52,0.36,0.48,0.72,0.48,0.52,0.4,0.44
+402d1dc1-7ee3-584b-90d8-7fd2e0eaaf4c,Vihiga Maize Farm #0667,Western Kenya,Vihiga,Maize,4.83,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.48,0.28,0.6,0.76,0.48,0.6,0.56,0.36
+24856e4b-80b1-5fa9-8e7d-8e62d61dc533,Kwale Cassava Farm #0668,Coastal Lowlands,Kwale,Cassava,5.0,Commercial Market Leader,2,20.76,5,Future Ready Farm,0.8,0.84,0.84,0.84,0.92,0.88,0.92,0.88
+929a6eaa-ef3f-544a-8aeb-dad1e1efce0a,Busia Dairy Farm #0669,Western Kenya,Busia,Dairy,2.47,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.28,0.32,0.32,0.56,0.12,0.24,0.08,0.12
+ee783712-456c-52b3-9a5f-59260efb79cf,Nandi Horticulture Farm #0670,Rift Valley,Nandi,Horticulture,1.61,Informal Smallholder,0,4.08,5,Future Ready Farm,0.2,0.0,0.24,0.52,0.08,0.12,0.16,0.04
+9a549481-43c5-5d1e-a665-14108590e3cd,Makueni Livestock Farm #0671,Eastern Semi-Arid,Makueni,Livestock,2.28,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.32,0.24,0.24,0.72,0.08,0.2,0.28,0.04
+de8e4787-f8c4-508c-9701-8c3d7558f10b,Murang'a Avocado Farm #0672,Central Highlands,Murang'a,Avocado,10.94,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.44,0.52,0.56,0.6,0.44,0.6,0.32,0.4
+48cab04c-b281-5143-ac03-960c57edb0f9,Machakos Sorghum Farm #0673,Eastern Semi-Arid,Machakos,Sorghum,31.9,Commercial Market Leader,2,18.84,4,Investment Ready Farm,0.76,0.68,0.84,0.76,0.72,0.84,0.92,0.76
+e2673f0c-2a69-5e95-8d6c-ff808a99c56a,Taita Taveta Cassava Farm #0674,Coastal Lowlands,Taita Taveta,Cassava,11.57,Transitioning Agribusiness,1,13.08,3,Structured Farm,0.72,0.4,0.6,0.72,0.56,0.64,0.44,0.28
+6084e7a5-898e-5088-b8b0-8088398b4b20,Kwale Fish Farming Farm #0675,Coastal Lowlands,Kwale,Fish Farming,8.49,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.44,0.48,0.48,0.64,0.6,0.64,0.48,0.4
+8cc7eb27-2b0a-5a3f-8cd7-d785d49e5453,Kwale Vegetables Farm #0676,Coastal Lowlands,Kwale,Vegetables,1.1,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.04,0.08,0.64,0.16,0.32,0.2,0.16
+e7bf277d-3b52-518b-b5d9-cacc3949b68d,Bomet Dairy Farm #0677,Rift Valley,Bomet,Dairy,41.42,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.84,0.68,0.92,0.88,0.92,0.76,0.84,0.88
+49ee1708-0566-5889-a315-987f8b51fdf2,Meru Avocado Farm #0678,Central Highlands,Meru,Avocado,2.06,Informal Smallholder,0,4.92,5,Future Ready Farm,0.04,0.24,0.12,0.56,0.24,0.32,0.08,0.04
+70eae28f-e656-526c-8e8c-13d282ee624a,Kwale Vegetables Farm #0679,Coastal Lowlands,Kwale,Vegetables,4.98,Informal Smallholder,0,6.72,2,Emerging Agribusiness,0.2,0.2,0.32,0.52,0.2,0.36,0.32,0.12
+a74acc2b-2530-50f5-87ed-d815079f16cc,Kakamega Sugarcane Farm #0680,Western Kenya,Kakamega,Sugarcane,2.41,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.08,0.28,0.24,0.56,0.16,0.36,0.24,0.12
+194cb1b7-61d4-5936-98af-b2176b4fd25e,Nyeri Macadamia Farm #0681,Central Highlands,Nyeri,Macadamia,1.47,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.2,0.24,0.28,0.52,0.16,0.32,0.24,0.04
+8e4b0051-feab-50a5-b6a9-f777649910fa,Kilifi Vegetables Farm #0682,Coastal Lowlands,Kilifi,Vegetables,0.62,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.12,0.24,0.12,0.68,0.24,0.28,0.2,0.04
+f4613b73-30d2-5cc9-85cc-85be0e711eb5,Nyeri Avocado Farm #0683,Central Highlands,Nyeri,Avocado,0.5,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.04,0.24,0.32,0.56,0.08,0.36,0.12,0.16
+bbbf4587-8245-5a54-8238-d6a062aee145,Meru Coffee Farm #0684,Central Highlands,Meru,Coffee,2.89,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.08,0.24,0.24,0.44,0.2,0.28,0.04,0.16
+eb35f883-ce2b-5603-9a12-5b11a871693f,Machakos Sorghum Farm #0685,Eastern Semi-Arid,Machakos,Sorghum,11.15,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.44,0.52,0.52,0.8,0.64,0.48,0.44,0.2
+1e34919f-1a44-573d-bb66-e658d0d09df8,Uasin Gishu Horticulture Farm #0686,Rift Valley,Uasin Gishu,Horticulture,2.86,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.12,0.24,0.16,0.48,0.2,0.28,0.24,0.04
+a9d1c18f-9ab5-5540-9687-00c50c5cf586,Kwale Fish Farming Farm #0687,Coastal Lowlands,Kwale,Fish Farming,0.68,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.32,0.28,0.24,0.6,0.12,0.32,0.2,0.12
+422b83cb-ae4d-545a-85bc-7399cb0ce465,Machakos Sorghum Farm #0688,Eastern Semi-Arid,Machakos,Sorghum,39.44,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.84,0.88,0.88,0.76,0.84,0.8,0.88,0.88
+fc686225-9d5d-53c2-80e4-81a4b5ca91e0,Kitui Mangoes Farm #0689,Eastern Semi-Arid,Kitui,Mangoes,1.5,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.56,0.52,0.64,0.52,0.36,0.56,0.6,0.36
+31628654-bfff-5483-9206-57f6b1565790,Vihiga Maize Farm #0690,Western Kenya,Vihiga,Maize,1.5,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.44,0.44,0.68,0.68,0.56,0.48,0.56,0.4
+46ca795f-ed41-5474-a6a7-b800ddf49778,Kwale Cashew Farm #0691,Coastal Lowlands,Kwale,Cashew,2.8,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.16,0.12,0.2,0.4,0.12,0.36,0.2,0.12
+557e7e06-89fc-59bf-9d8b-3c9c225f86f9,Kericho Maize Farm #0692,Rift Valley,Kericho,Maize,33.56,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.8,0.68,0.96,0.92,0.8,0.72,0.84,0.88
+2cbf1e71-3185-5dc6-98a0-b3f34212efa6,Nyeri Coffee Farm #0693,Central Highlands,Nyeri,Coffee,0.92,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.24,0.28,0.24,0.4,0.2,0.36,0.12,0.04
+1c105410-deb5-5f3f-b6bd-810db49424b8,Kakamega Maize Farm #0694,Western Kenya,Kakamega,Maize,3.84,Informal Smallholder,0,4.44,5,Future Ready Farm,0.0,0.16,0.2,0.76,0.04,0.12,0.16,0.04
+83db861b-5670-572f-8633-103497a75b6b,Machakos Pigeon Peas Farm #0695,Eastern Semi-Arid,Machakos,Pigeon Peas,22.03,Commercial Market Leader,2,19.08,4,Investment Ready Farm,0.8,0.64,0.88,0.88,0.76,0.76,0.88,0.76
+f3b48c77-7097-5205-bbaf-ac27bd5239a4,Siaya Maize Farm #0696,Western Kenya,Siaya,Maize,12.44,Transitioning Agribusiness,1,10.8,3,Structured Farm,0.56,0.48,0.44,0.56,0.52,0.6,0.28,0.16
+ca5c1046-855d-5c59-afbd-c514a5eda498,Nandi Wheat Farm #0697,Rift Valley,Nandi,Wheat,1.5,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.4,0.44,0.44,0.8,0.36,0.6,0.36,0.48
+760344f2-0a74-53de-8a51-e14664f0e821,Bomet Wheat Farm #0698,Rift Valley,Bomet,Wheat,12.15,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.52,0.52,0.64,0.68,0.52,0.68,0.48,0.28
+e9bdc610-2121-5102-9bfc-0939035e1750,Uasin Gishu Dairy Farm #0699,Rift Valley,Uasin Gishu,Dairy,2.02,Transitioning Agribusiness,1,10.92,3,Structured Farm,0.44,0.4,0.52,0.64,0.48,0.48,0.44,0.24
+5b63fa65-f73b-5749-acce-764475dc3f88,Lamu Fish Farming Farm #0700,Coastal Lowlands,Lamu,Fish Farming,1.86,Informal Smallholder,0,4.8,5,Future Ready Farm,0.12,0.12,0.32,0.52,0.08,0.24,0.04,0.16
+4c4ac0ae-4d06-5065-b841-9775b32eb241,Embu Macadamia Farm #0701,Central Highlands,Embu,Macadamia,2.58,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.12,0.2,0.12,0.52,0.16,0.36,0.12,0.08
+7aeb6d44-a05b-595e-8879-39462effcd13,Kwale Vegetables Farm #0702,Coastal Lowlands,Kwale,Vegetables,1.22,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.24,0.2,0.32,0.52,0.16,0.32,0.08,0.12
+25a5ebdd-a88a-5cfd-8bdf-e510a9f7f9aa,Kiambu Tea Farm #0703,Central Highlands,Kiambu,Tea,4.25,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.16,0.32,0.48,0.2,0.36,0.16,0.04
+e01bed5c-4596-5f18-9472-3f360cf8818c,Murang'a Dairy Farm #0704,Central Highlands,Murang'a,Dairy,34.1,Commercial Market Leader,2,18.84,4,Investment Ready Farm,0.56,0.92,0.88,0.8,0.76,0.84,0.84,0.68
+84abd549-9a28-54e6-91a3-959d48fe3833,Taita Taveta Vegetables Farm #0705,Coastal Lowlands,Taita Taveta,Vegetables,3.0,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.08,0.24,0.68,0.12,0.24,0.2,0.16
+f23644b6-f048-5525-850b-5fe72e2ab1f7,Nakuru Horticulture Farm #0706,Rift Valley,Nakuru,Horticulture,2.73,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.48,0.6,0.6,0.72,0.44,0.44,0.72,0.4
+2b1996b6-0d2a-54b2-9d01-10d723b6f0fa,Tharaka Nithi Cowpeas Farm #0707,Eastern Semi-Arid,Tharaka Nithi,Cowpeas,1.98,Transitioning Agribusiness,1,10.2,3,Structured Farm,0.52,0.48,0.44,0.48,0.4,0.48,0.28,0.32
+a0675fa6-20f6-5006-bfb3-063425062f22,Kitui Green Grams Farm #0708,Eastern Semi-Arid,Kitui,Green Grams,7.56,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.4,0.52,0.56,0.8,0.36,0.56,0.36,0.28
+71179a01-01d8-5b8c-99b7-417ebf531cb0,Kiambu Avocado Farm #0709,Central Highlands,Kiambu,Avocado,2.0,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.28,0.24,0.16,0.48,0.32,0.28,0.16,0.12
+685182f4-c2c4-5bd4-8a39-0494459365ca,Makueni Cowpeas Farm #0710,Eastern Semi-Arid,Makueni,Cowpeas,2.98,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.08,0.28,0.64,0.2,0.16,0.2,0.04
+f37e63a1-3084-54f2-bb61-f74503e0606a,Nyeri Tea Farm #0711,Central Highlands,Nyeri,Tea,9.97,Commercial Market Leader,2,19.32,4,Investment Ready Farm,0.92,0.76,0.76,0.72,0.88,0.8,0.88,0.72
+6b32b881-6152-5d79-a5ec-deb72eea44ee,Kakamega Horticulture Farm #0712,Western Kenya,Kakamega,Horticulture,7.64,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.64,0.32,0.72,0.6,0.56,0.68,0.4,0.36
+bf2a4c85-7b67-5ab2-8745-603c22d34dfa,Kakamega Maize Farm #0713,Western Kenya,Kakamega,Maize,13.88,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.44,0.6,0.56,0.64,0.64,0.64,0.56,0.32
+59128b52-6a15-55af-a611-7510a0eb66a1,Kilifi Coconut Farm #0714,Coastal Lowlands,Kilifi,Coconut,29.57,Commercial Market Leader,2,20.4,5,Future Ready Farm,0.96,0.76,0.84,0.72,0.88,0.96,0.96,0.72
+9f5f2795-075e-530e-b6aa-05d84bee9c60,Bungoma Horticulture Farm #0715,Western Kenya,Bungoma,Horticulture,8.96,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.68,0.44,0.56,0.64,0.4,0.56,0.44,0.28
+18bb14ee-90d6-5d8e-b774-8ecd85d3ccc4,Nyeri Horticulture Farm #0716,Central Highlands,Nyeri,Horticulture,2.74,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.12,0.2,0.28,0.36,0.16,0.28,0.28,0.08
+df851d38-1471-58f3-a663-076c594dd712,Kitui Sorghum Farm #0717,Eastern Semi-Arid,Kitui,Sorghum,1.5,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.44,0.44,0.52,0.68,0.36,0.6,0.44,0.32
+d3a34ac5-eaf3-5d59-81db-58b7814d06cf,Trans Nzoia Maize Farm #0718,Rift Valley,Trans Nzoia,Maize,4.68,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.16,0.16,0.28,0.56,0.08,0.2,0.2,0.04
+25c07c2f-b76e-56d8-876e-36f4306c6870,Nakuru Maize Farm #0719,Rift Valley,Nakuru,Maize,7.67,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.48,0.48,0.56,0.68,0.44,0.6,0.48,0.32
+3e47f26f-2811-58ac-8710-0ae8d78796f2,Kwale Fish Farming Farm #0720,Coastal Lowlands,Kwale,Fish Farming,23.54,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.8,0.88,0.96,0.76,0.8,0.92,0.76,0.84
+c115c29a-d37b-55bd-9b54-d7616f186871,Kitui Pigeon Peas Farm #0721,Eastern Semi-Arid,Kitui,Pigeon Peas,1.5,Transitioning Agribusiness,1,10.92,3,Structured Farm,0.52,0.44,0.44,0.64,0.44,0.48,0.44,0.24
+62ac5f8a-3501-5c2d-8ce6-f5d86a91e8e5,Kisumu Horticulture Farm #0722,Western Kenya,Kisumu,Horticulture,2.3,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.16,0.2,0.16,0.6,0.12,0.24,0.16,0.08
+07f97080-0bec-57a8-8b2a-a6d2da7faad1,Vihiga Dairy Farm #0723,Western Kenya,Vihiga,Dairy,2.45,Informal Smallholder,0,4.92,5,Future Ready Farm,0.12,0.28,0.2,0.4,0.16,0.2,0.12,0.16
+33c0337a-3b7c-5528-97db-afb5d1075956,Murang'a Avocado Farm #0724,Central Highlands,Murang'a,Avocado,13.29,Commercial Market Leader,2,18.96,4,Investment Ready Farm,0.88,0.64,0.88,0.72,0.88,0.8,0.84,0.68
+9d325872-afdb-5af8-b412-1ab5db5177ea,Busia Cassava Farm #0725,Western Kenya,Busia,Cassava,2.09,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.32,0.12,0.6,0.16,0.16,0.2,0.12
+7b0ae9b4-982d-5489-a9a8-d10093014a56,Embu Dairy Farm #0726,Central Highlands,Embu,Dairy,2.9,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.24,0.12,0.28,0.68,0.16,0.32,0.2,0.04
+3e863399-5fea-5ab4-8b5e-f62fd01a6c55,Vihiga Dairy Farm #0727,Western Kenya,Vihiga,Dairy,3.95,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.2,0.2,0.24,0.4,0.16,0.24,0.16,0.08
+762495cb-7b79-56cb-99a4-991f2dcde138,Uasin Gishu Maize Farm #0728,Rift Valley,Uasin Gishu,Maize,1.96,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.16,0.32,0.28,0.4,0.16,0.24,0.32,0.12
+2154957e-cb8f-5351-b4c8-7b7e7b8c7697,Taita Taveta Cashew Farm #0729,Coastal Lowlands,Taita Taveta,Cashew,4.87,Informal Smallholder,0,6.96,2,Emerging Agribusiness,0.36,0.24,0.36,0.44,0.28,0.28,0.12,0.24
+8f23e51e-47e0-5300-bded-41562fba8cc3,Trans Nzoia Tea Farm #0730,Rift Valley,Trans Nzoia,Tea,10.2,Transitioning Agribusiness,1,13.08,3,Structured Farm,0.56,0.56,0.48,0.92,0.44,0.68,0.44,0.28
+b1044c31-3d76-5bb1-8ba8-e6de2b505757,Murang'a Horticulture Farm #0731,Central Highlands,Murang'a,Horticulture,4.26,Informal Smallholder,0,3.72,1,Informal Farm,0.08,0.12,0.08,0.36,0.2,0.08,0.24,0.08
+08f19744-d320-56e3-8840-233c2a1a7ca9,Kisumu Cassava Farm #0732,Western Kenya,Kisumu,Cassava,0.5,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.32,0.24,0.2,0.56,0.24,0.2,0.24,0.04
+72aea0ea-aa80-5efe-bd33-345d441b963e,Kwale Cassava Farm #0733,Coastal Lowlands,Kwale,Cassava,1.12,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.36,0.12,0.28,0.48,0.12,0.28,0.2,0.16
+912bb6b1-14ff-5db1-ad81-112d21b1603d,Siaya Sugarcane Farm #0734,Western Kenya,Siaya,Sugarcane,2.17,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.16,0.28,0.32,0.44,0.16,0.28,0.16,0.08
+4cd07f3a-a706-55dd-bd0a-31245f7aa0b9,Kericho Potatoes Farm #0735,Rift Valley,Kericho,Potatoes,2.54,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.24,0.24,0.36,0.52,0.2,0.28,0.08,0.12
+0d288ef8-5694-50cd-b07f-4c16bf87c3c6,Tharaka Nithi Green Grams Farm #0736,Eastern Semi-Arid,Tharaka Nithi,Green Grams,10.14,Transitioning Agribusiness,1,13.68,3,Structured Farm,0.44,0.52,0.64,0.72,0.44,0.72,0.64,0.44
+ed35f155-4852-58da-a92c-a976c2c91c94,Bungoma Maize Farm #0737,Western Kenya,Bungoma,Maize,3.28,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.16,0.28,0.56,0.08,0.32,0.28,0.0
+c98eaea1-e5a7-53d5-9ec0-df02a2ee0fd6,Kericho Potatoes Farm #0738,Rift Valley,Kericho,Potatoes,1.24,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.24,0.28,0.2,0.6,0.12,0.2,0.32,0.04
+52cebda8-fae6-5422-a671-30621ce3ec43,Tharaka Nithi Green Grams Farm #0739,Eastern Semi-Arid,Tharaka Nithi,Green Grams,4.03,Informal Smallholder,0,4.92,5,Future Ready Farm,0.04,0.32,0.24,0.44,0.08,0.28,0.04,0.2
+f06d9061-60d5-501a-9926-cb24b1417d75,Uasin Gishu Maize Farm #0740,Rift Valley,Uasin Gishu,Maize,2.41,Informal Smallholder,0,4.8,5,Future Ready Farm,0.24,0.04,0.12,0.64,0.08,0.2,0.12,0.16
+f3826678-494e-5d64-bb79-3c0205f59dfd,Bungoma Horticulture Farm #0741,Western Kenya,Bungoma,Horticulture,2.36,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.2,0.28,0.16,0.64,0.16,0.44,0.12,0.12
+82fd4eee-1572-5436-ad26-3c71e2e8f16f,Tharaka Nithi Green Grams Farm #0742,Eastern Semi-Arid,Tharaka Nithi,Green Grams,3.71,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.28,0.28,0.28,0.68,0.12,0.16,0.16,0.16
+75ebd0a1-c56d-5d43-b7b4-81c37affb2e1,Bomet Tea Farm #0743,Rift Valley,Bomet,Tea,27.64,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.76,0.92,0.92,0.84,0.88,0.84,0.92,0.68
+9bc2a2db-107c-5676-96ed-afa84468f73a,Nyeri Avocado Farm #0744,Central Highlands,Nyeri,Avocado,4.61,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.28,0.16,0.36,0.68,0.08,0.2,0.2,0.08
+6a88538f-ec10-51c7-aa7b-4e0148bf3d6d,Vihiga Cassava Farm #0745,Western Kenya,Vihiga,Cassava,3.62,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.48,0.36,0.48,0.72,0.48,0.64,0.56,0.2
+464e4777-e057-53d5-a5c7-cc10abc5b3c4,Embu Macadamia Farm #0746,Central Highlands,Embu,Macadamia,2.11,Informal Smallholder,0,4.44,5,Future Ready Farm,0.12,0.28,0.12,0.52,0.04,0.2,0.2,0.0
+d67593ec-904f-5b4c-9323-2d7377a79041,Bungoma Cassava Farm #0747,Western Kenya,Bungoma,Cassava,1.36,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.12,0.44,0.2,0.52,0.16,0.32,0.16,0.08
+7b006ab9-f3b6-5ff1-b650-f36a13f91849,Trans Nzoia Maize Farm #0748,Rift Valley,Trans Nzoia,Maize,2.29,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.24,0.2,0.6,0.24,0.24,0.08,0.12
+8577eeb4-d454-544e-82fb-a57caa4609d0,Embu Avocado Farm #0749,Central Highlands,Embu,Avocado,4.86,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.56,0.4,0.64,0.72,0.32,0.44,0.64,0.28
+1f5d49e6-860d-5c11-972f-3cc6712e893d,Taita Taveta Cashew Farm #0750,Coastal Lowlands,Taita Taveta,Cashew,3.14,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.48,0.44,0.64,0.72,0.48,0.52,0.44,0.36
+26a88fba-0a39-514d-a42a-ece36a7f0239,Nakuru Wheat Farm #0751,Rift Valley,Nakuru,Wheat,5.14,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.04,0.12,0.12,0.64,0.24,0.36,0.2,0.0
+2800834d-d6a4-5545-98d0-54b9e6e4d456,Kericho Maize Farm #0752,Rift Valley,Kericho,Maize,3.35,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.28,0.16,0.12,0.6,0.16,0.2,0.16,0.24
+243e9f22-e10f-576a-9d65-a510eb4e6edf,Lamu Vegetables Farm #0753,Coastal Lowlands,Lamu,Vegetables,1.59,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.2,0.24,0.2,0.68,0.16,0.32,0.24,0.12
+8c49a3f8-0d0b-54fb-9d9b-00dd32e3a4e8,Nyeri Avocado Farm #0754,Central Highlands,Nyeri,Avocado,3.58,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.28,0.12,0.32,0.68,0.2,0.24,0.08,0.24
+8e25be7f-16b2-50f2-afd6-af2ac6d2c8bc,Kisumu Dairy Farm #0755,Western Kenya,Kisumu,Dairy,9.0,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.48,0.4,0.4,0.64,0.52,0.84,0.52,0.28
+62c4fec2-74f4-56d7-a418-9639f0c8774d,Taita Taveta Fish Farming Farm #0756,Coastal Lowlands,Taita Taveta,Fish Farming,2.9,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.24,0.28,0.28,0.48,0.2,0.28,0.2,0.16
+602b5f53-a012-5bd3-a691-898e9c850de7,Kwale Coconut Farm #0757,Coastal Lowlands,Kwale,Coconut,1.64,Informal Smallholder,0,4.68,5,Future Ready Farm,0.12,0.04,0.2,0.56,0.2,0.2,0.16,0.08
+7f871221-ed14-5004-af8e-f21201016c87,Makueni Livestock Farm #0758,Eastern Semi-Arid,Makueni,Livestock,18.92,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.8,0.92,0.88,0.84,0.88,0.84,1.0,0.6
+bc6c6c7a-f252-5288-b002-d12b209eb087,Kiambu Dairy Farm #0759,Central Highlands,Kiambu,Dairy,3.37,Informal Smallholder,0,4.68,5,Future Ready Farm,0.16,0.16,0.24,0.4,0.12,0.32,0.08,0.08
+659d0cac-88ea-5552-a629-cf27c37f6883,Tharaka Nithi Green Grams Farm #0760,Eastern Semi-Arid,Tharaka Nithi,Green Grams,1.66,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.16,0.2,0.56,0.16,0.32,0.16,0.16
+30cb883c-3f28-5ffb-9abe-d755e58efa28,Embu Horticulture Farm #0761,Central Highlands,Embu,Horticulture,1.5,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.4,0.48,0.6,0.72,0.4,0.44,0.52,0.4
+ef50d48e-73b1-5385-9157-8f467ee04dae,Busia Poultry Farm #0762,Western Kenya,Busia,Poultry,1.12,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.12,0.16,0.2,0.52,0.12,0.4,0.16,0.04
+3423add0-e38b-5f7a-bb50-be9f912e0216,Makueni Green Grams Farm #0763,Eastern Semi-Arid,Makueni,Green Grams,2.38,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.2,0.24,0.2,0.48,0.12,0.36,0.16,0.08
+0af30ec1-421a-51d4-911d-db3e039961f9,Kericho Wheat Farm #0764,Rift Valley,Kericho,Wheat,2.61,Informal Smallholder,0,3.84,1,Informal Farm,0.04,0.16,0.08,0.48,0.16,0.24,0.08,0.04
+c088da91-f812-55a2-9873-26cd7ca510d6,Machakos Green Grams Farm #0765,Eastern Semi-Arid,Machakos,Green Grams,12.61,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.72,0.96,0.92,0.8,0.8,0.88,0.92,0.84
+ec841eb0-1baf-56ae-a777-425acd245a14,Vihiga Maize Farm #0766,Western Kenya,Vihiga,Maize,1.1,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.12,0.2,0.2,0.64,0.2,0.16,0.32,0.08
+0ad8100b-7aca-5902-8861-e8ba0cdc8dad,Makueni Livestock Farm #0767,Eastern Semi-Arid,Makueni,Livestock,2.69,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.24,0.2,0.32,0.48,0.08,0.32,0.16,0.12
+bcdd4bfc-a482-5950-8e82-4f344f6c3704,Kiambu Avocado Farm #0768,Central Highlands,Kiambu,Avocado,0.73,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.2,0.16,0.24,0.56,0.24,0.28,0.12,0.04
+33571d71-0eec-5f90-a24f-7131cae74fd6,Siaya Sugarcane Farm #0769,Western Kenya,Siaya,Sugarcane,2.77,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.12,0.12,0.4,0.44,0.12,0.4,0.16,0.12
+a1b14083-83d9-5488-b74c-bff31fe1ae87,Kitui Livestock Farm #0770,Eastern Semi-Arid,Kitui,Livestock,7.99,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.52,0.44,0.56,0.8,0.28,0.4,0.36,0.4
+38249c07-cac8-5ad8-bed2-3354842295a1,Siaya Dairy Farm #0771,Western Kenya,Siaya,Dairy,0.86,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.2,0.32,0.16,0.6,0.16,0.2,0.32,0.08
+4a736cf5-beb0-5f54-b47f-59c0c26c65e7,Kericho Dairy Farm #0772,Rift Valley,Kericho,Dairy,5.72,Transitioning Agribusiness,1,13.32,3,Structured Farm,0.44,0.6,0.48,0.56,0.64,0.68,0.6,0.44
+3c97c843-0bf2-5255-bcfa-36cdc0e37b59,Tharaka Nithi Pigeon Peas Farm #0773,Eastern Semi-Arid,Tharaka Nithi,Pigeon Peas,7.08,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.44,0.24,0.68,0.76,0.48,0.48,0.36,0.6
+1b8dfd81-eda0-52c0-a604-5a64ae896394,Kilifi Cashew Farm #0774,Coastal Lowlands,Kilifi,Cashew,3.65,Transitioning Agribusiness,1,11.04,3,Structured Farm,0.52,0.4,0.44,0.52,0.56,0.36,0.52,0.36
+e10b5cf8-e42f-5900-ab8c-b4a92ca034b3,Kilifi Coconut Farm #0775,Coastal Lowlands,Kilifi,Coconut,4.03,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.16,0.32,0.2,0.72,0.08,0.2,0.12,0.08
+a7ea1ecf-53db-5db6-9302-514390ab1c41,Nyeri Coffee Farm #0776,Central Highlands,Nyeri,Coffee,37.35,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.76,0.84,0.88,0.84,0.84,0.84,0.92,0.76
+b2b1fc4d-1105-50c5-924b-317b3a91f861,Tharaka Nithi Cowpeas Farm #0777,Eastern Semi-Arid,Tharaka Nithi,Cowpeas,7.48,Transitioning Agribusiness,1,10.8,3,Structured Farm,0.4,0.32,0.56,0.48,0.4,0.68,0.44,0.32
+3e2783e5-88f1-5585-b0ab-b2863fb612c0,Machakos Cowpeas Farm #0778,Eastern Semi-Arid,Machakos,Cowpeas,0.55,Informal Smallholder,0,4.8,5,Future Ready Farm,0.0,0.56,0.16,0.4,0.12,0.16,0.12,0.08
+a9ffd9df-f38c-5445-84a1-02cf0666d646,Kirinyaga Horticulture Farm #0779,Central Highlands,Kirinyaga,Horticulture,7.23,Transitioning Agribusiness,1,13.08,3,Structured Farm,0.6,0.32,0.92,0.56,0.48,0.56,0.56,0.36
+3198cb32-ebfc-53b6-8750-2425184bfc4f,Embu Tea Farm #0780,Central Highlands,Embu,Tea,26.32,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.88,0.8,0.88,0.8,0.92,0.72,0.88,0.8
+dad989ed-86df-5260-bbf0-0d1b3abe6c0d,Tharaka Nithi Mangoes Farm #0781,Eastern Semi-Arid,Tharaka Nithi,Mangoes,3.53,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.12,0.08,0.12,0.56,0.2,0.36,0.24,0.08
+13107a89-0a5a-5e73-9283-aa9369570865,Kericho Tea Farm #0782,Rift Valley,Kericho,Tea,52.03,Commercial Market Leader,2,18.96,4,Investment Ready Farm,0.8,0.76,0.88,0.72,0.84,0.72,0.84,0.76
+be0ed8d9-bad7-5911-8188-feb1a7130e0c,Nakuru Maize Farm #0783,Rift Valley,Nakuru,Maize,2.99,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.16,0.2,0.24,0.6,0.12,0.2,0.08,0.12
+f7a4c6c3-bf61-5197-b36a-784fc43c68bc,Kitui Mangoes Farm #0784,Eastern Semi-Arid,Kitui,Mangoes,7.64,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.56,0.4,0.52,0.64,0.52,0.64,0.44,0.4
+2f97de30-5914-5f05-b944-0275b41d52a7,Kirinyaga Avocado Farm #0785,Central Highlands,Kirinyaga,Avocado,55.66,Commercial Market Leader,2,20.64,5,Future Ready Farm,0.84,0.92,0.84,0.88,0.96,0.84,0.8,0.8
+1c7c7827-abeb-5a76-afac-b895a30b48d5,Nakuru Potatoes Farm #0786,Rift Valley,Nakuru,Potatoes,0.56,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.28,0.2,0.28,0.48,0.12,0.36,0.16,0.2
+d357ecb4-78ef-5b2f-b146-16306d8e8eb1,Taita Taveta Fish Farming Farm #0787,Coastal Lowlands,Taita Taveta,Fish Farming,7.72,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.48,0.52,0.64,0.64,0.36,0.52,0.6,0.36
+5d0ab2b0-b592-5cf2-a047-21ac028a1565,Uasin Gishu Maize Farm #0788,Rift Valley,Uasin Gishu,Maize,2.22,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.12,0.36,0.48,0.28,0.28,0.16,0.04
+29741c45-9ea6-5ccf-8af9-1ca7c09ba84a,Makueni Cowpeas Farm #0789,Eastern Semi-Arid,Makueni,Cowpeas,4.32,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.52,0.56,0.52,0.6,0.48,0.56,0.44,0.4
+e38cbf1d-3db1-5bf6-9186-e20e1cd9fd2c,Trans Nzoia Dairy Farm #0790,Rift Valley,Trans Nzoia,Dairy,1.5,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.56,0.56,0.48,0.68,0.28,0.64,0.52,0.44
+80f10146-b6de-581b-8f5e-4ba6337592b8,Lamu Fish Farming Farm #0791,Coastal Lowlands,Lamu,Fish Farming,3.27,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.24,0.2,0.36,0.56,0.12,0.12,0.2,0.12
+97d1b52b-709c-53b1-bcfd-7d248f6a2402,Machakos Green Grams Farm #0792,Eastern Semi-Arid,Machakos,Green Grams,2.65,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.24,0.08,0.6,0.12,0.4,0.04,0.12
+b0a8a2d9-cac1-5859-bb25-933642157f27,Nyeri Coffee Farm #0793,Central Highlands,Nyeri,Coffee,3.05,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.12,0.2,0.2,0.6,0.16,0.36,0.32,0.24
+c19c3852-bddb-56d6-bb23-454ff1dd714d,Bungoma Maize Farm #0794,Western Kenya,Bungoma,Maize,2.88,Informal Smallholder,0,4.8,5,Future Ready Farm,0.24,0.12,0.16,0.44,0.08,0.24,0.24,0.08
+9e5be02e-df9a-5a0b-b2ef-153de767b520,Nandi Tea Farm #0795,Rift Valley,Nandi,Tea,3.69,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.28,0.2,0.2,0.36,0.28,0.28,0.28,0.0
+38383ef0-2845-5356-96eb-65fb96a532d3,Uasin Gishu Dairy Farm #0796,Rift Valley,Uasin Gishu,Dairy,2.57,Informal Smallholder,0,4.68,5,Future Ready Farm,0.16,0.04,0.12,0.52,0.08,0.32,0.16,0.16
+83046cc3-73d6-5679-af2b-04653b749f61,Trans Nzoia Wheat Farm #0797,Rift Valley,Trans Nzoia,Wheat,3.52,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.2,0.2,0.24,0.64,0.16,0.2,0.12,0.08
+680105d8-25c4-5c3a-864e-aa76efed769a,Kiambu Coffee Farm #0798,Central Highlands,Kiambu,Coffee,2.27,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.08,0.28,0.4,0.6,0.16,0.08,0.08,0.0
+e8216e77-44f2-58d2-8d8b-77a42a5ec5ea,Meru Avocado Farm #0799,Central Highlands,Meru,Avocado,8.85,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.56,0.36,0.56,0.68,0.52,0.4,0.56,0.24
+f673ba69-41a5-5629-8d14-6fd4ca6dc13f,Tharaka Nithi Mangoes Farm #0800,Eastern Semi-Arid,Tharaka Nithi,Mangoes,14.49,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.6,0.4,0.68,0.6,0.52,0.56,0.44,0.28
+a298d5b6-eabd-565d-96e2-d53ae439f5df,Busia Horticulture Farm #0801,Western Kenya,Busia,Horticulture,8.19,Transitioning Agribusiness,1,10.56,3,Structured Farm,0.36,0.36,0.28,0.64,0.44,0.52,0.44,0.48
+c4334ab9-c52e-58aa-a19b-e9b84130f13e,Kitui Sorghum Farm #0802,Eastern Semi-Arid,Kitui,Sorghum,0.5,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.16,0.28,0.16,0.64,0.28,0.24,0.16,0.12
+e3f26cb2-f700-535d-8498-5e464e724654,Trans Nzoia Maize Farm #0803,Rift Valley,Trans Nzoia,Maize,42.45,Commercial Market Leader,2,19.44,4,Investment Ready Farm,0.8,0.84,0.92,0.72,0.8,0.88,0.92,0.6
+92a5b30c-0172-5f19-9b93-e2c18121254f,Busia Poultry Farm #0804,Western Kenya,Busia,Poultry,1.5,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.44,0.32,0.56,0.56,0.48,0.56,0.68,0.48
+12540198-cd08-59d7-ac99-5c9da5ed97f1,Nandi Tea Farm #0805,Rift Valley,Nandi,Tea,2.54,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.16,0.4,0.32,0.48,0.04,0.2,0.24,0.2
+5f92c371-0b93-5d6d-8564-f5cd0d68b57c,Nandi Tea Farm #0806,Rift Valley,Nandi,Tea,3.12,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.2,0.12,0.24,0.52,0.16,0.28,0.16,0.12
+3d5f897f-777d-5f43-91f6-015eb700559a,Makueni Cowpeas Farm #0807,Eastern Semi-Arid,Makueni,Cowpeas,15.81,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.52,0.32,0.6,0.72,0.52,0.6,0.32,0.4
+f5edcfb6-70da-59bb-894e-df9aa17b8378,Kirinyaga Avocado Farm #0808,Central Highlands,Kirinyaga,Avocado,3.71,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.12,0.16,0.28,0.52,0.24,0.24,0.08,0.16
+5d754bfd-a8d6-5fad-8a84-592e49926a42,Bomet Dairy Farm #0809,Rift Valley,Bomet,Dairy,5.57,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.52,0.48,0.6,0.72,0.32,0.52,0.44,0.4
+89b25977-15e7-5129-91d1-c31f2270c3f2,Trans Nzoia Wheat Farm #0810,Rift Valley,Trans Nzoia,Wheat,41.71,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.8,0.84,0.88,0.8,0.8,0.92,0.8,0.72
+1062e376-ed21-59c3-9703-18bffd48af51,Kiambu Avocado Farm #0811,Central Highlands,Kiambu,Avocado,3.56,Informal Smallholder,0,4.44,5,Future Ready Farm,0.08,0.12,0.32,0.56,0.04,0.16,0.08,0.12
+0e56d597-2781-56c7-ba0c-f8b9b7eed148,Kitui Green Grams Farm #0812,Eastern Semi-Arid,Kitui,Green Grams,3.68,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.16,0.24,0.6,0.2,0.24,0.28,0.0
+68bdd2ce-dd69-5d87-a1fd-af2c14a57571,Tharaka Nithi Cowpeas Farm #0813,Eastern Semi-Arid,Tharaka Nithi,Cowpeas,29.59,Commercial Market Leader,2,21.0,5,Future Ready Farm,0.88,0.84,0.84,0.84,0.96,0.92,0.92,0.8
+23be1895-bc7d-5e1e-8b1c-6c684ebf3d2b,Nyeri Coffee Farm #0814,Central Highlands,Nyeri,Coffee,7.12,Transitioning Agribusiness,1,12.6,3,Structured Farm,0.52,0.48,0.72,0.76,0.44,0.52,0.44,0.32
+eb9f3717-5e7c-56ca-bd1c-53638288013e,Tharaka Nithi Pigeon Peas Farm #0815,Eastern Semi-Arid,Tharaka Nithi,Pigeon Peas,2.03,Informal Smallholder,0,6.84,2,Emerging Agribusiness,0.16,0.36,0.28,0.48,0.28,0.32,0.28,0.12
+280902cf-aa8e-587f-bc5b-c9c9bd08d847,Kwale Fish Farming Farm #0816,Coastal Lowlands,Kwale,Fish Farming,18.92,Commercial Market Leader,2,19.32,4,Investment Ready Farm,0.8,0.84,0.8,0.76,0.84,0.76,0.8,0.84
+5495616c-e888-5b5e-afea-7872be7b5cbe,Nakuru Wheat Farm #0817,Rift Valley,Nakuru,Wheat,25.17,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.88,0.88,0.88,0.8,0.76,0.84,0.88,0.92
+afc22483-b27a-5010-8208-7d22a93459e1,Kilifi Cassava Farm #0818,Coastal Lowlands,Kilifi,Cassava,8.55,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.4,0.44,0.6,0.72,0.44,0.6,0.52,0.2
+6164dc05-5c9f-5cf4-bdaa-1a58718ff29e,Tharaka Nithi Cowpeas Farm #0819,Eastern Semi-Arid,Tharaka Nithi,Cowpeas,5.83,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.72,0.4,0.68,0.6,0.52,0.52,0.52,0.32
+09baba8c-d792-54a8-8b8c-b3f60aa37f08,Kitui Green Grams Farm #0820,Eastern Semi-Arid,Kitui,Green Grams,3.83,Informal Smallholder,0,7.2,2,Emerging Agribusiness,0.2,0.24,0.48,0.64,0.2,0.32,0.24,0.08
+3ae91734-7cd7-5e36-b334-d2d1710408d7,Tharaka Nithi Mangoes Farm #0821,Eastern Semi-Arid,Tharaka Nithi,Mangoes,0.5,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.12,0.16,0.24,0.68,0.08,0.4,0.2,0.12
+ea93292d-c2cf-5e7e-9bb0-2a503694ad8f,Lamu Coconut Farm #0822,Coastal Lowlands,Lamu,Coconut,4.44,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.44,0.48,0.56,0.48,0.48,0.6,0.48,0.44
+a3efb082-4f34-5bce-bec9-9e4a97c0a6ae,Taita Taveta Cashew Farm #0823,Coastal Lowlands,Taita Taveta,Cashew,4.26,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.08,0.28,0.32,0.6,0.16,0.4,0.2,0.16
+65626e86-f6a0-5298-96d8-5c404236fe5a,Lamu Coconut Farm #0824,Coastal Lowlands,Lamu,Coconut,11.13,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.36,0.6,0.44,0.76,0.6,0.56,0.44,0.28
+3c94f0cf-13b2-5b62-bef0-ced06cfb3c77,Bungoma Cassava Farm #0825,Western Kenya,Bungoma,Cassava,5.87,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.48,0.4,0.56,0.76,0.36,0.68,0.56,0.48
+36140195-18d1-569d-9505-3a794869ed91,Makueni Livestock Farm #0826,Eastern Semi-Arid,Makueni,Livestock,0.5,Informal Smallholder,0,4.56,5,Future Ready Farm,0.16,0.12,0.12,0.52,0.04,0.24,0.16,0.16
+e09b6b2e-56ef-583e-8111-93389581d124,Trans Nzoia Horticulture Farm #0827,Rift Valley,Trans Nzoia,Horticulture,9.71,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.48,0.4,0.4,0.64,0.52,0.6,0.52,0.28
+724bd628-afdf-5325-8eea-fa6c39bb7204,Siaya Dairy Farm #0828,Western Kenya,Siaya,Dairy,3.13,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.24,0.16,0.28,0.56,0.04,0.2,0.16,0.08
+c71e66d8-64e6-5acb-9ec4-e37aa649bd4c,Kisumu Cassava Farm #0829,Western Kenya,Kisumu,Cassava,5.0,Commercial Market Leader,2,19.44,4,Investment Ready Farm,0.84,0.72,0.88,0.72,0.88,0.8,0.88,0.76
+cb2cc7c4-033b-5d54-af6e-f0a8f61ecc2a,Kakamega Cassava Farm #0830,Western Kenya,Kakamega,Cassava,2.19,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.28,0.32,0.24,0.52,0.16,0.2,0.04,0.16
+06fab413-6dd6-50aa-88e1-8959fc194877,Lamu Cassava Farm #0831,Coastal Lowlands,Lamu,Cassava,6.23,Transitioning Agribusiness,1,11.04,3,Structured Farm,0.36,0.4,0.52,0.68,0.44,0.56,0.44,0.28
+54e79063-d006-59b8-814e-6685142570b1,Murang'a Avocado Farm #0832,Central Highlands,Murang'a,Avocado,7.37,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.44,0.44,0.64,0.64,0.44,0.52,0.6,0.36
+2c35afdf-3834-5b50-a409-5529aece4c2a,Taita Taveta Fish Farming Farm #0833,Coastal Lowlands,Taita Taveta,Fish Farming,1.71,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.28,0.2,0.24,0.36,0.16,0.32,0.36,0.04
+6f977f55-6851-5307-b495-2ae7b9edcf9d,Kiambu Horticulture Farm #0834,Central Highlands,Kiambu,Horticulture,6.54,Transitioning Agribusiness,1,13.2,3,Structured Farm,0.4,0.52,0.64,0.72,0.52,0.64,0.52,0.44
+e742a542-abc8-5b9b-8b81-0e5148384a34,Kitui Green Grams Farm #0835,Eastern Semi-Arid,Kitui,Green Grams,6.8,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.6,0.4,0.56,0.76,0.32,0.6,0.32,0.44
+ec6164e2-65d3-56d6-a180-7d46a8d64b75,Kitui Livestock Farm #0836,Eastern Semi-Arid,Kitui,Livestock,10.99,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.44,0.44,0.56,0.6,0.56,0.48,0.44,0.32
+cfe62d9c-618c-51a4-b803-06822dfb15e0,Murang'a Avocado Farm #0837,Central Highlands,Murang'a,Avocado,12.48,Transitioning Agribusiness,1,13.32,3,Structured Farm,0.6,0.36,0.52,0.76,0.68,0.6,0.6,0.32
+c31711ea-75a4-5191-9039-bb3370c41274,Kakamega Horticulture Farm #0838,Western Kenya,Kakamega,Horticulture,21.1,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.8,0.92,0.92,0.8,0.8,0.84,0.88,0.76
+ffcc8947-db7c-58cd-8138-bded0d845626,Bomet Horticulture Farm #0839,Rift Valley,Bomet,Horticulture,2.95,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.16,0.24,0.2,0.56,0.12,0.44,0.24,0.12
+0c49e123-faaf-5ffb-b4a2-9b0eb72b9106,Machakos Green Grams Farm #0840,Eastern Semi-Arid,Machakos,Green Grams,6.15,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.6,0.36,0.48,0.68,0.36,0.6,0.4,0.44
+a445a859-9c6c-549f-8c90-cbc82b9de192,Kakamega Sugarcane Farm #0841,Western Kenya,Kakamega,Sugarcane,0.59,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.16,0.32,0.16,0.44,0.28,0.2,0.2,0.04
+ecf5d7ad-055f-5d9f-8057-05599a32c314,Kisumu Horticulture Farm #0842,Western Kenya,Kisumu,Horticulture,5.4,Transitioning Agribusiness,1,11.64,3,Structured Farm,0.28,0.32,0.72,0.68,0.52,0.52,0.44,0.4
+23c76ea4-b4b2-5921-9828-90bd402817fe,Kakamega Cassava Farm #0843,Western Kenya,Kakamega,Cassava,4.41,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.56,0.6,0.48,0.68,0.64,0.4,0.48,0.32
+01da4efa-4e73-5601-8561-d2c140e27cff,Meru Horticulture Farm #0844,Central Highlands,Meru,Horticulture,2.8,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.28,0.2,0.12,0.56,0.2,0.28,0.08,0.2
+430587c4-cce0-5205-b5cd-5e8ea0107a6f,Kwale Cashew Farm #0845,Coastal Lowlands,Kwale,Cashew,4.87,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.24,0.08,0.24,0.6,0.08,0.32,0.12,0.04
+45595a50-9649-5085-b084-bb3a3891214a,Nakuru Potatoes Farm #0846,Rift Valley,Nakuru,Potatoes,5.0,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.88,0.92,0.8,0.92,0.92,0.92,0.88,0.6
+63db95c5-1d6b-51be-842a-d856f3dc34c7,Uasin Gishu Dairy Farm #0847,Rift Valley,Uasin Gishu,Dairy,2.68,Informal Smallholder,0,6.72,2,Emerging Agribusiness,0.2,0.44,0.2,0.48,0.2,0.44,0.16,0.12
+741e8bb2-b56c-5fde-8c51-6494b92db65e,Siaya Sugarcane Farm #0848,Western Kenya,Siaya,Sugarcane,3.27,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.52,0.56,0.48,0.72,0.48,0.56,0.48,0.36
+5c23972b-029d-5667-b6a3-e6b86d10b024,Kitui Mangoes Farm #0849,Eastern Semi-Arid,Kitui,Mangoes,4.07,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.2,0.16,0.16,0.68,0.04,0.36,0.04,0.16
+cf6e081b-181c-598e-b006-02d89d538654,Makueni Livestock Farm #0850,Eastern Semi-Arid,Makueni,Livestock,31.59,Commercial Market Leader,2,19.08,4,Investment Ready Farm,0.8,0.72,0.92,0.68,0.92,0.88,0.88,0.56
+65bf4614-2b8f-51c5-aaa3-29ee7a8ef298,Bomet Tea Farm #0851,Rift Valley,Bomet,Tea,0.5,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.12,0.2,0.2,0.48,0.16,0.36,0.12,0.04
+df80e7f0-26f6-5a1d-9dc2-6248c3408c2d,Machakos Livestock Farm #0852,Eastern Semi-Arid,Machakos,Livestock,1.03,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.16,0.16,0.24,0.6,0.08,0.36,0.16,0.12
+c7245bf1-05d6-5039-b6f7-3d412283580c,Meru Macadamia Farm #0853,Central Highlands,Meru,Macadamia,5.0,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.8,0.76,0.96,0.84,0.84,0.88,0.72,0.76
+6d5cfb62-2080-5dd1-bfab-4bb9652cb0e8,Trans Nzoia Potatoes Farm #0854,Rift Valley,Trans Nzoia,Potatoes,35.7,Commercial Market Leader,2,19.44,4,Investment Ready Farm,0.76,0.64,0.88,0.88,0.92,0.8,0.88,0.72
+89353af7-5db2-5205-9fd3-7d1c8f9cd9b0,Kirinyaga Macadamia Farm #0855,Central Highlands,Kirinyaga,Macadamia,1.86,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.08,0.2,0.32,0.48,0.16,0.28,0.16,0.08
+54e10d02-9f5c-56f5-b3f6-130de01e3b61,Kilifi Vegetables Farm #0856,Coastal Lowlands,Kilifi,Vegetables,1.44,Informal Smallholder,0,4.92,5,Future Ready Farm,0.24,0.16,0.2,0.52,0.16,0.2,0.16,0.0
+6dae4494-ce87-55b2-9fc8-91a567d22b49,Trans Nzoia Horticulture Farm #0857,Rift Valley,Trans Nzoia,Horticulture,12.61,Transitioning Agribusiness,1,13.56,3,Structured Farm,0.52,0.6,0.64,0.84,0.4,0.56,0.44,0.52
+e6e55cb7-3773-5f4f-a107-b8299646eefa,Makueni Sorghum Farm #0858,Eastern Semi-Arid,Makueni,Sorghum,13.97,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.88,0.92,1.0,0.92,0.72,0.8,0.76,0.72
+94066ddf-3a2f-5b75-b83c-18ddd1bbe024,Meru Avocado Farm #0859,Central Highlands,Meru,Avocado,3.95,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.32,0.2,0.28,0.6,0.24,0.28,0.0,0.08
+0426e213-4d4f-536a-ac84-b1cf496648bd,Kakamega Dairy Farm #0860,Western Kenya,Kakamega,Dairy,9.99,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.44,0.56,0.56,0.76,0.48,0.56,0.52,0.4
+c35d0abe-d06c-590d-b236-e7518b414fa1,Lamu Cassava Farm #0861,Coastal Lowlands,Lamu,Cassava,6.13,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.48,0.4,0.64,0.72,0.44,0.56,0.56,0.48
+d14e2412-f8a6-5876-ba50-e2b2482f3992,Kilifi Cashew Farm #0862,Coastal Lowlands,Kilifi,Cashew,6.92,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.44,0.48,0.52,0.52,0.4,0.52,0.56,0.36
+0b0bac7b-f1b0-59da-84c6-4efccb243838,Machakos Cowpeas Farm #0863,Eastern Semi-Arid,Machakos,Cowpeas,2.16,Transitioning Agribusiness,1,10.92,3,Structured Farm,0.64,0.4,0.44,0.84,0.4,0.24,0.36,0.32
+2a1cd62f-7113-5201-a535-3c2f6c831d25,Kericho Horticulture Farm #0864,Rift Valley,Kericho,Horticulture,5.76,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.48,0.52,0.6,0.64,0.56,0.52,0.44,0.32
+f562209c-f673-5df6-8931-1bbeacb210be,Vihiga Sugarcane Farm #0865,Western Kenya,Vihiga,Sugarcane,2.16,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.2,0.12,0.44,0.56,0.16,0.4,0.12,0.08
+e5207871-a400-5696-9c9a-3e8c191eb03b,Kitui Sorghum Farm #0866,Eastern Semi-Arid,Kitui,Sorghum,24.04,Commercial Market Leader,2,21.12,5,Future Ready Farm,0.92,0.88,0.84,0.84,0.88,0.88,0.84,0.96
+118db014-9c19-5b7b-9cef-c5fe7cb2c02d,Machakos Green Grams Farm #0867,Eastern Semi-Arid,Machakos,Green Grams,25.23,Commercial Market Leader,2,20.4,5,Future Ready Farm,0.76,0.68,1.0,0.88,0.92,0.88,0.88,0.8
+2daec52e-2a9a-537e-bb38-1d31e6b98ac0,Meru Macadamia Farm #0868,Central Highlands,Meru,Macadamia,7.07,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.56,0.56,0.48,0.56,0.56,0.44,0.32,0.52
+4c9b0d28-bc23-5e93-aeda-6e3b0e7399f2,Uasin Gishu Potatoes Farm #0869,Rift Valley,Uasin Gishu,Potatoes,2.44,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.12,0.2,0.28,0.68,0.12,0.24,0.2,0.04
+db7413f8-6031-51ae-9be3-38e8ab082d1b,Taita Taveta Vegetables Farm #0870,Coastal Lowlands,Taita Taveta,Vegetables,0.5,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.04,0.32,0.24,0.64,0.24,0.4,0.24,0.08
+3ff83b64-4379-5c62-bf2c-bee6691a6dfb,Uasin Gishu Horticulture Farm #0871,Rift Valley,Uasin Gishu,Horticulture,6.64,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.4,0.48,0.44,0.68,0.44,0.44,0.56,0.36
+d3dd77c7-6e4a-5928-87a1-a55fd0d43aa0,Nakuru Wheat Farm #0872,Rift Valley,Nakuru,Wheat,3.66,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.16,0.24,0.2,0.32,0.2,0.48,0.24,0.16
+dfe1ce50-6eff-5974-a25d-7b9947234e07,Tharaka Nithi Sorghum Farm #0873,Eastern Semi-Arid,Tharaka Nithi,Sorghum,9.19,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.72,0.72,0.92,0.88,0.72,0.84,0.96,0.8
+051dc436-1797-5597-8cda-25545be60889,Vihiga Maize Farm #0874,Western Kenya,Vihiga,Maize,3.89,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.2,0.24,0.12,0.72,0.08,0.28,0.16,0.08
+8c134fd3-6d18-5ce9-8893-d2c239e53035,Tharaka Nithi Green Grams Farm #0875,Eastern Semi-Arid,Tharaka Nithi,Green Grams,5.7,Transitioning Agribusiness,1,12.48,3,Structured Farm,0.52,0.56,0.6,0.64,0.44,0.64,0.32,0.44
+d426786d-505b-5d1f-ad38-4aaa6a7d1f3b,Lamu Cashew Farm #0876,Coastal Lowlands,Lamu,Cashew,19.13,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.92,0.76,0.76,0.76,0.8,0.8,0.84,0.92
+be3c3a97-b9bd-599f-b945-1ee90325a85c,Tharaka Nithi Green Grams Farm #0877,Eastern Semi-Arid,Tharaka Nithi,Green Grams,3.54,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.28,0.12,0.44,0.28,0.16,0.28,0.04
+89832a16-158f-5b52-8799-8f1bba7b6bdb,Lamu Coconut Farm #0878,Coastal Lowlands,Lamu,Coconut,1.67,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.16,0.24,0.2,0.6,0.12,0.4,0.28,0.12
+3834e3c3-bfb3-5092-9b0c-decd8887165b,Kwale Cashew Farm #0879,Coastal Lowlands,Kwale,Cashew,3.89,Transitioning Agribusiness,1,13.08,3,Structured Farm,0.48,0.56,0.56,0.8,0.56,0.44,0.6,0.36
+6f75819a-4977-5dd8-8baa-492ea1e06407,Siaya Dairy Farm #0880,Western Kenya,Siaya,Dairy,2.52,Transitioning Agribusiness,1,12.36,3,Structured Farm,0.52,0.52,0.68,0.6,0.44,0.64,0.48,0.24
+18f03d26-f5a4-5775-9165-b297bfe6c3cf,Nandi Maize Farm #0881,Rift Valley,Nandi,Maize,3.21,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.28,0.2,0.24,0.48,0.24,0.16,0.12,0.0
+48cd6b43-5bc8-56dd-bde8-7721df4cf5f3,Kilifi Fish Farming Farm #0882,Coastal Lowlands,Kilifi,Fish Farming,1.5,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.44,0.52,0.52,0.76,0.52,0.48,0.48,0.28
+ceeb26c5-721f-5b18-9be1-3ca3b3dc0d94,Vihiga Horticulture Farm #0883,Western Kenya,Vihiga,Horticulture,48.66,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.68,0.92,0.92,0.84,0.72,0.92,0.96,0.76
+abd23e73-6e5a-5565-885c-4cdd2f925fa2,Kilifi Coconut Farm #0884,Coastal Lowlands,Kilifi,Coconut,3.51,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.28,0.32,0.32,0.52,0.2,0.36,0.12,0.08
+e701e858-bd05-55bd-a2ec-aa8fa74492ef,Siaya Dairy Farm #0885,Western Kenya,Siaya,Dairy,2.22,Informal Smallholder,0,4.08,5,Future Ready Farm,0.08,0.08,0.28,0.48,0.04,0.28,0.12,0.0
+6689e50d-a743-5005-9d14-08765f881802,Busia Maize Farm #0886,Western Kenya,Busia,Maize,3.52,Informal Smallholder,0,5.04,2,Emerging Agribusiness,0.2,0.12,0.24,0.48,0.04,0.24,0.2,0.16
+5d31215c-dc08-54f2-9761-30f0a53e9a17,Bomet Maize Farm #0887,Rift Valley,Bomet,Maize,2.12,Informal Smallholder,0,6.48,2,Emerging Agribusiness,0.2,0.32,0.28,0.72,0.08,0.32,0.08,0.16
+f9bb12d3-c33a-5b54-bbf9-a35c17f509f0,Kiambu Macadamia Farm #0888,Central Highlands,Kiambu,Macadamia,2.88,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.2,0.24,0.36,0.56,0.08,0.08,0.08,0.2
+f9e765fa-c5d6-5aec-ae15-d0dff84bbd22,Machakos Sorghum Farm #0889,Eastern Semi-Arid,Machakos,Sorghum,1.8,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.12,0.04,0.24,0.64,0.2,0.2,0.28,0.08
+4f360f66-9bae-52f7-8b0b-39127c11ce38,Nyeri Macadamia Farm #0890,Central Highlands,Nyeri,Macadamia,6.44,Transitioning Agribusiness,1,12.24,3,Structured Farm,0.48,0.44,0.6,0.64,0.6,0.48,0.48,0.36
+86650f2d-8a6f-5a46-84ee-09aeb1b27f33,Siaya Cassava Farm #0891,Western Kenya,Siaya,Cassava,3.95,Informal Smallholder,0,4.8,5,Future Ready Farm,0.2,0.24,0.2,0.48,0.08,0.2,0.2,0.0
+4fe15979-a7b3-5718-a13c-37ab8ab44810,Taita Taveta Fish Farming Farm #0892,Coastal Lowlands,Taita Taveta,Fish Farming,19.82,Commercial Market Leader,2,21.12,5,Future Ready Farm,0.88,0.92,0.88,0.84,0.96,0.84,0.88,0.84
+f5027fdf-0315-5114-800d-39dcb4c41c83,Siaya Maize Farm #0893,Western Kenya,Siaya,Maize,0.73,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.2,0.32,0.12,0.52,0.12,0.28,0.12,0.08
+8fbbca95-f137-53a0-863a-933e2ba5b0ec,Lamu Vegetables Farm #0894,Coastal Lowlands,Lamu,Vegetables,3.02,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.2,0.28,0.2,0.64,0.16,0.2,0.24,0.12
+d042fdd9-ff7a-5e79-8bff-3ce6ffe18ff1,Kwale Cassava Farm #0895,Coastal Lowlands,Kwale,Cassava,1.5,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.56,0.64,0.6,0.64,0.6,0.6,0.52,0.16
+4dca09ec-a9b9-53dd-9ae8-d339b779eaff,Bungoma Dairy Farm #0896,Western Kenya,Bungoma,Dairy,25.6,Commercial Market Leader,2,20.52,5,Future Ready Farm,0.72,0.92,0.88,0.8,0.88,0.96,0.84,0.84
+acee0af4-fea8-5a96-a465-c0971dce7960,Trans Nzoia Wheat Farm #0897,Rift Valley,Trans Nzoia,Wheat,3.19,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.28,0.08,0.24,0.56,0.04,0.28,0.2,0.12
+efccd5f1-d17d-5bea-ba7c-f7a1be3908e4,Kiambu Avocado Farm #0898,Central Highlands,Kiambu,Avocado,3.16,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.16,0.24,0.12,0.6,0.0,0.28,0.32,0.28
+dcaece4f-69c7-584b-993a-6f9a2b31ec9e,Uasin Gishu Horticulture Farm #0899,Rift Valley,Uasin Gishu,Horticulture,0.5,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.24,0.2,0.2,0.36,0.24,0.32,0.16,0.12
+7b5d366b-5ae7-59a4-beb6-fefddedc52e4,Embu Macadamia Farm #0900,Central Highlands,Embu,Macadamia,5.25,Transitioning Agribusiness,1,11.28,3,Structured Farm,0.44,0.28,0.64,0.6,0.56,0.48,0.32,0.44
+f1aa45d3-17d2-5c9d-9e22-254edbbec837,Lamu Vegetables Farm #0901,Coastal Lowlands,Lamu,Vegetables,3.85,Informal Smallholder,0,5.16,2,Emerging Agribusiness,0.16,0.24,0.24,0.52,0.24,0.2,0.0,0.12
+77af65d3-1b33-522c-a733-75389c723d5f,Vihiga Horticulture Farm #0902,Western Kenya,Vihiga,Horticulture,1.74,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.16,0.16,0.36,0.56,0.16,0.36,0.2,0.12
+e8671222-cac4-5b1e-b196-2dca24036507,Nyeri Dairy Farm #0903,Central Highlands,Nyeri,Dairy,1.94,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.28,0.2,0.44,0.48,0.16,0.08,0.24,0.16
+572edfb4-e6f1-57bb-9869-25caf7831f3d,Kwale Cashew Farm #0904,Coastal Lowlands,Kwale,Cashew,1.27,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.28,0.12,0.56,0.12,0.32,0.2,0.0
+98a361dc-bd44-5d48-a0dc-f6d8bb654981,Makueni Mangoes Farm #0905,Eastern Semi-Arid,Makueni,Mangoes,22.6,Commercial Market Leader,2,19.92,4,Investment Ready Farm,0.88,0.8,0.92,0.68,0.84,0.84,0.92,0.76
+a807fdc2-a540-5985-bef7-5715aee7a940,Kilifi Cassava Farm #0906,Coastal Lowlands,Kilifi,Cassava,2.45,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.44,0.36,0.6,0.68,0.4,0.52,0.48,0.32
+ffe82cd6-e7d0-5c4f-b2ca-a0ddee340407,Embu Coffee Farm #0907,Central Highlands,Embu,Coffee,2.61,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.24,0.16,0.2,0.68,0.16,0.28,0.2,0.08
+e337538e-b120-5f63-b824-206586fd493f,Meru Horticulture Farm #0908,Central Highlands,Meru,Horticulture,3.42,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.16,0.2,0.32,0.48,0.16,0.28,0.16,0.12
+4e97a0e5-35a5-5d8c-b422-83ed11196061,Machakos Mangoes Farm #0909,Eastern Semi-Arid,Machakos,Mangoes,1.3,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.16,0.36,0.64,0.12,0.2,0.16,0.08
+61de3932-7df4-5ade-a13b-06c6a55694eb,Nandi Wheat Farm #0910,Rift Valley,Nandi,Wheat,1.07,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.24,0.12,0.36,0.48,0.16,0.36,0.08,0.12
+f692a55f-4acf-5d9a-ab21-a4e04f23a121,Nakuru Potatoes Farm #0911,Rift Valley,Nakuru,Potatoes,13.84,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.44,0.36,0.48,0.72,0.44,0.56,0.36,0.36
+6d681308-a049-5861-b924-8016b0c449fc,Kitui Cowpeas Farm #0912,Eastern Semi-Arid,Kitui,Cowpeas,30.54,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.76,0.76,0.96,0.84,0.88,0.84,0.92,0.8
+a6e7b061-c7b4-5646-8384-f986c514446b,Tharaka Nithi Mangoes Farm #0913,Eastern Semi-Arid,Tharaka Nithi,Mangoes,26.04,Commercial Market Leader,2,20.16,5,Future Ready Farm,0.92,0.76,0.84,0.76,0.8,0.88,0.96,0.8
+40bdcec9-e11b-5279-b71f-e895f9d8e19d,Nyeri Tea Farm #0914,Central Highlands,Nyeri,Tea,24.45,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.76,0.8,0.84,0.84,0.88,0.84,0.92,0.64
+4a87f0b5-d819-59b9-ad00-23e2a8d9432c,Taita Taveta Cassava Farm #0915,Coastal Lowlands,Taita Taveta,Cassava,21.17,Commercial Market Leader,2,19.44,4,Investment Ready Farm,0.76,0.96,0.68,0.76,0.84,0.8,0.8,0.88
+0708c4a5-c6d9-54cb-aece-600ceb750d7a,Nyeri Coffee Farm #0916,Central Highlands,Nyeri,Coffee,16.86,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.8,0.76,0.84,0.88,0.8,0.88,0.92,0.88
+7a1fdfa3-74e7-5503-a60a-4615bd3ea106,Nandi Dairy Farm #0917,Rift Valley,Nandi,Dairy,3.74,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.2,0.28,0.24,0.52,0.08,0.24,0.24,0.16
+e6089d17-061a-5ad6-bfe4-f9af305124f2,Lamu Vegetables Farm #0918,Coastal Lowlands,Lamu,Vegetables,2.59,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.2,0.12,0.12,0.6,0.2,0.32,0.2,0.04
+0ecfd359-a485-5729-8579-1f8d1bb9b5aa,Meru Macadamia Farm #0919,Central Highlands,Meru,Macadamia,1.67,Informal Smallholder,0,7.08,2,Emerging Agribusiness,0.28,0.32,0.28,0.56,0.16,0.52,0.2,0.04
+9827b774-c613-527a-b3c6-221cfd13c2e0,Kericho Potatoes Farm #0920,Rift Valley,Kericho,Potatoes,1.5,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.4,0.36,0.4,0.52,0.48,0.52,0.68,0.36
+bcba998d-5d1b-5b2d-809a-b232bb06c3c4,Taita Taveta Vegetables Farm #0921,Coastal Lowlands,Taita Taveta,Vegetables,2.43,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.28,0.24,0.36,0.56,0.2,0.2,0.08,0.12
+d0047bb9-95d3-512c-91b9-823b583f21e3,Kiambu Horticulture Farm #0922,Central Highlands,Kiambu,Horticulture,7.86,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.56,0.28,0.56,0.6,0.52,0.52,0.44,0.52
+e2f9c120-2d48-5554-bc6a-f12a76dc7325,Lamu Cashew Farm #0923,Coastal Lowlands,Lamu,Cashew,6.31,Transitioning Agribusiness,1,10.92,3,Structured Farm,0.36,0.48,0.44,0.6,0.4,0.56,0.48,0.32
+81cf6f88-1ed0-5ac9-9bb2-15cbef109545,Busia Dairy Farm #0924,Western Kenya,Busia,Dairy,4.67,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.6,0.4,0.64,0.8,0.4,0.52,0.6,0.36
+0cb60c45-4ecf-5a15-9e73-eb3281ea2080,Kitui Mangoes Farm #0925,Eastern Semi-Arid,Kitui,Mangoes,3.62,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.2,0.08,0.2,0.56,0.08,0.32,0.24,0.12
+b7a0375f-1078-564b-bacd-cda075bbc422,Taita Taveta Fish Farming Farm #0926,Coastal Lowlands,Taita Taveta,Fish Farming,3.5,Informal Smallholder,0,4.68,5,Future Ready Farm,0.04,0.2,0.24,0.44,0.2,0.16,0.16,0.12
+36fa8a23-4be5-5bfd-8348-eb3b39e8b373,Tharaka Nithi Pigeon Peas Farm #0927,Eastern Semi-Arid,Tharaka Nithi,Pigeon Peas,2.02,Informal Smallholder,0,4.56,5,Future Ready Farm,0.04,0.24,0.16,0.44,0.08,0.32,0.2,0.04
+422b39c8-0e7c-571e-aa9e-6ad42e17e296,Kitui Sorghum Farm #0928,Eastern Semi-Arid,Kitui,Sorghum,18.24,Commercial Market Leader,2,19.2,4,Investment Ready Farm,0.64,0.72,0.88,0.8,0.92,0.76,0.96,0.72
+2a20bf5a-7ad1-5374-ad05-4bd48e55238c,Machakos Mangoes Farm #0929,Eastern Semi-Arid,Machakos,Mangoes,5.64,Transitioning Agribusiness,1,12.96,3,Structured Farm,0.48,0.44,0.64,0.68,0.48,0.56,0.56,0.48
+3c594a02-fbd3-5e3b-8d91-1ff8d4cd47ff,Makueni Green Grams Farm #0930,Eastern Semi-Arid,Makueni,Green Grams,13.22,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.64,0.48,0.68,0.72,0.52,0.32,0.56,0.36
+0ae3258f-bf04-5269-a281-3d9daadeeba7,Bungoma Sugarcane Farm #0931,Western Kenya,Bungoma,Sugarcane,3.15,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.16,0.16,0.56,0.16,0.32,0.16,0.2
+b7eefd03-a3f4-5d0e-a624-33dedf778aa0,Kirinyaga Tea Farm #0932,Central Highlands,Kirinyaga,Tea,3.15,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.36,0.28,0.2,0.44,0.12,0.4,0.12,0.04
+dc3826f1-2a96-5aed-a293-46160f8e6a50,Kiambu Macadamia Farm #0933,Central Highlands,Kiambu,Macadamia,1.2,Informal Smallholder,0,4.92,5,Future Ready Farm,0.16,0.12,0.24,0.52,0.16,0.2,0.2,0.04
+ec836136-92b2-5d52-8721-d433d6adea69,Kitui Sorghum Farm #0934,Eastern Semi-Arid,Kitui,Sorghum,9.02,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.4,0.52,0.44,0.56,0.6,0.48,0.44,0.36
+4f5b6486-3704-57ab-984b-e6c129047f07,Kitui Livestock Farm #0935,Eastern Semi-Arid,Kitui,Livestock,3.13,Transitioning Agribusiness,1,11.88,3,Structured Farm,0.4,0.36,0.68,0.76,0.52,0.44,0.44,0.36
+4d1ab816-93a0-5cd1-916a-822cbed90812,Trans Nzoia Wheat Farm #0936,Rift Valley,Trans Nzoia,Wheat,2.26,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.16,0.36,0.44,0.52,0.08,0.2,0.04,0.08
+95df54db-d92a-5050-8fda-9df4e39bd12a,Taita Taveta Coconut Farm #0937,Coastal Lowlands,Taita Taveta,Coconut,9.25,Commercial Market Leader,2,18.72,4,Investment Ready Farm,0.68,0.76,0.88,0.72,0.68,0.88,0.92,0.72
+217fa27f-63c0-50a3-b8bb-5b8e615d6815,Vihiga Maize Farm #0938,Western Kenya,Vihiga,Maize,2.53,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.16,0.24,0.32,0.52,0.04,0.32,0.28,0.2
+fbf0230f-bad0-51bd-875d-09034cadc746,Murang'a Avocado Farm #0939,Central Highlands,Murang'a,Avocado,35.49,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.8,0.88,0.92,0.88,0.72,0.76,0.92,0.8
+f6b3ebef-a32b-53f5-bf3c-cb26af8a983f,Murang'a Macadamia Farm #0940,Central Highlands,Murang'a,Macadamia,2.83,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.12,0.16,0.32,0.64,0.16,0.28,0.28,0.12
+27bb8213-e7f2-5c89-85cb-ead6f84d4ec3,Murang'a Macadamia Farm #0941,Central Highlands,Murang'a,Macadamia,2.84,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.08,0.2,0.16,0.6,0.24,0.32,0.16,0.16
+5c494b24-f14c-50e2-983d-5fbf9ea32502,Nakuru Maize Farm #0942,Rift Valley,Nakuru,Maize,3.9,Transitioning Agribusiness,1,11.16,3,Structured Farm,0.48,0.4,0.4,0.6,0.48,0.6,0.44,0.32
+f2c61563-a669-57cc-bf31-07c50718d8a1,Tharaka Nithi Sorghum Farm #0943,Eastern Semi-Arid,Tharaka Nithi,Sorghum,3.23,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.24,0.28,0.2,0.48,0.12,0.32,0.2,0.2
+4e4a1203-556a-518c-b14c-8a5113ca32a9,Nandi Potatoes Farm #0944,Rift Valley,Nandi,Potatoes,1.47,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.04,0.28,0.24,0.68,0.08,0.2,0.28,0.08
+c7e6f934-c5ce-5da2-8310-bd7239a57ec0,Bomet Maize Farm #0945,Rift Valley,Bomet,Maize,1.19,Informal Smallholder,0,4.8,5,Future Ready Farm,0.08,0.2,0.12,0.6,0.04,0.24,0.24,0.08
+821be915-7af3-5d0c-9639-2393f0d2557c,Taita Taveta Cassava Farm #0946,Coastal Lowlands,Taita Taveta,Cassava,2.56,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.16,0.24,0.32,0.64,0.16,0.16,0.2,0.04
+39255c9d-7acb-5b72-b807-d415ed941be9,Makueni Pigeon Peas Farm #0947,Eastern Semi-Arid,Makueni,Pigeon Peas,1.8,Transitioning Agribusiness,1,13.68,3,Structured Farm,0.56,0.6,0.64,0.72,0.56,0.48,0.48,0.52
+f4a377a3-5ea0-57ec-ad6c-d962ecd9ebe8,Embu Coffee Farm #0948,Central Highlands,Embu,Coffee,5.0,Commercial Market Leader,2,19.68,4,Investment Ready Farm,0.92,0.72,0.88,0.72,0.92,0.92,0.72,0.76
+8caf969d-0cfa-5ad1-b121-54affef460bd,Kitui Mangoes Farm #0949,Eastern Semi-Arid,Kitui,Mangoes,27.66,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.92,0.92,0.88,0.8,0.92,0.84,0.84,0.64
+d5cad778-c8f4-5f39-8cd6-5160a5fa9229,Nandi Wheat Farm #0950,Rift Valley,Nandi,Wheat,2.7,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.32,0.12,0.12,0.72,0.12,0.32,0.16,0.04
+fdf189d8-4ecc-54fd-a6ba-07b8434cf495,Taita Taveta Cassava Farm #0951,Coastal Lowlands,Taita Taveta,Cassava,7.23,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.44,0.44,0.68,0.68,0.36,0.64,0.52,0.28
+004a7542-b496-5333-982d-dd05cc4b29ed,Trans Nzoia Horticulture Farm #0952,Rift Valley,Trans Nzoia,Horticulture,1.95,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.16,0.12,0.2,0.4,0.2,0.24,0.4,0.12
+d3ac0648-0390-58ca-88ce-eec279988ceb,Busia Cassava Farm #0953,Western Kenya,Busia,Cassava,1.1,Informal Smallholder,0,5.64,2,Emerging Agribusiness,0.12,0.36,0.28,0.44,0.24,0.24,0.16,0.04
+b4f89da9-bd64-58d4-815d-29070f95c632,Makueni Mangoes Farm #0954,Eastern Semi-Arid,Makueni,Mangoes,1.2,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.2,0.2,0.2,0.56,0.12,0.32,0.2,0.0
+96a9d0e1-b2cd-5de7-beb1-c43ddfb0d810,Bungoma Poultry Farm #0955,Western Kenya,Bungoma,Poultry,26.75,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.64,0.8,0.92,0.84,0.88,0.88,0.76,0.8
+894e22dd-0129-53ca-8973-6936c4aa8db9,Bomet Potatoes Farm #0956,Rift Valley,Bomet,Potatoes,13.55,Commercial Market Leader,2,19.56,4,Investment Ready Farm,0.76,0.72,0.96,0.92,0.84,0.88,0.72,0.72
+751c7c61-d403-5a9c-9c94-600d948571fe,Machakos Pigeon Peas Farm #0957,Eastern Semi-Arid,Machakos,Pigeon Peas,7.75,Transitioning Agribusiness,1,12.84,3,Structured Farm,0.44,0.56,0.6,0.64,0.6,0.64,0.48,0.32
+eeb27c92-e571-57fc-8ede-cc628ec4b168,Bungoma Cassava Farm #0958,Western Kenya,Bungoma,Cassava,11.78,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.56,0.52,0.52,0.8,0.44,0.68,0.48,0.24
+fbf1ebfa-cbdd-5745-82a4-782bd18a2e7e,Embu Tea Farm #0959,Central Highlands,Embu,Tea,3.56,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.12,0.12,0.32,0.52,0.28,0.32,0.16,0.08
+7410256a-4e41-5693-a930-74611b486adc,Kitui Cowpeas Farm #0960,Eastern Semi-Arid,Kitui,Cowpeas,5.76,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.4,0.48,0.6,0.6,0.48,0.52,0.64,0.28
+5bf1779a-0281-57e9-81a1-8ee3e823aab2,Busia Horticulture Farm #0961,Western Kenya,Busia,Horticulture,6.07,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.56,0.32,0.52,0.72,0.44,0.48,0.6,0.2
+c44b0520-33c5-52f3-bfc0-190e00276a75,Tharaka Nithi Cowpeas Farm #0962,Eastern Semi-Arid,Tharaka Nithi,Cowpeas,1.21,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.2,0.12,0.28,0.48,0.12,0.24,0.36,0.12
+c5b25a97-b464-594b-a266-eb75d08e6157,Lamu Vegetables Farm #0963,Coastal Lowlands,Lamu,Vegetables,2.42,Informal Smallholder,0,5.52,2,Emerging Agribusiness,0.12,0.24,0.2,0.64,0.2,0.24,0.2,0.0
+ade12c46-3559-552f-b260-56052bc1afcd,Murang'a Dairy Farm #0964,Central Highlands,Murang'a,Dairy,1.31,Informal Smallholder,0,4.56,5,Future Ready Farm,0.08,0.2,0.16,0.44,0.04,0.32,0.2,0.08
+2571d5ad-6730-5b6f-b9b9-b0395f2dd879,Lamu Coconut Farm #0965,Coastal Lowlands,Lamu,Coconut,20.81,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.8,0.72,1.0,0.76,0.84,0.96,0.96,0.64
+8bea8cd0-f553-5735-8f1e-30b3405900ab,Kiambu Dairy Farm #0966,Central Highlands,Kiambu,Dairy,1.02,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.24,0.36,0.16,0.48,0.16,0.4,0.2,0.08
+3f20fc83-b8d2-503f-8db8-f8a787a76dd8,Kitui Pigeon Peas Farm #0967,Eastern Semi-Arid,Kitui,Pigeon Peas,5.0,Commercial Market Leader,2,20.64,5,Future Ready Farm,0.88,0.76,0.88,0.88,0.88,0.84,0.96,0.8
+87c1d03a-43c7-5256-896d-ecca1b2fd0a1,Machakos Pigeon Peas Farm #0968,Eastern Semi-Arid,Machakos,Pigeon Peas,1.57,Informal Smallholder,0,4.92,5,Future Ready Farm,0.2,0.24,0.2,0.48,0.12,0.16,0.16,0.08
+c9d81acd-94b0-550f-8736-63d7edc15b57,Kwale Coconut Farm #0969,Coastal Lowlands,Kwale,Coconut,11.74,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.48,0.4,0.64,0.6,0.48,0.2,0.44,0.6
+ce7970c5-40aa-524a-9992-d1f3bd5b136d,Bomet Wheat Farm #0970,Rift Valley,Bomet,Wheat,1.57,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.2,0.2,0.28,0.56,0.16,0.4,0.16,0.12
+de9426e7-bfbe-59ca-b513-5adbd45ab742,Embu Tea Farm #0971,Central Highlands,Embu,Tea,2.7,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.28,0.36,0.56,0.04,0.16,0.12,0.08
+1c87b39f-8817-53e5-a7e5-e641fac663aa,Kilifi Cashew Farm #0972,Coastal Lowlands,Kilifi,Cashew,2.34,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.2,0.32,0.24,0.64,0.16,0.24,0.2,0.04
+00347599-2a36-5662-bbc8-6fb87a2f3bff,Nyeri Avocado Farm #0973,Central Highlands,Nyeri,Avocado,0.5,Informal Smallholder,0,5.76,2,Emerging Agribusiness,0.12,0.08,0.24,0.52,0.16,0.4,0.2,0.2
+a394aadd-67f7-5102-8b7e-c9fd39fedf4d,Taita Taveta Fish Farming Farm #0974,Coastal Lowlands,Taita Taveta,Fish Farming,17.79,Commercial Market Leader,2,20.28,5,Future Ready Farm,0.92,0.8,0.8,0.92,0.88,0.88,0.8,0.76
+79c90679-eb62-5e78-9e35-1927be6ee6c1,Bungoma Cassava Farm #0975,Western Kenya,Bungoma,Cassava,1.84,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.24,0.2,0.32,0.4,0.2,0.24,0.32,0.16
+286dfd71-e5ae-568e-8160-0f29bf84d134,Kwale Fish Farming Farm #0976,Coastal Lowlands,Kwale,Fish Farming,4.88,Transitioning Agribusiness,1,12.6,3,Structured Farm,0.44,0.64,0.56,0.76,0.48,0.48,0.48,0.36
+c34c34aa-cf29-54f3-af40-3e121dbe1a96,Embu Coffee Farm #0977,Central Highlands,Embu,Coffee,2.25,Informal Smallholder,0,6.84,2,Emerging Agribusiness,0.24,0.4,0.2,0.64,0.12,0.36,0.2,0.12
+1c9755cd-0852-52c6-b4d7-c80610dff288,Bomet Tea Farm #0978,Rift Valley,Bomet,Tea,2.75,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.16,0.2,0.24,0.6,0.08,0.2,0.2,0.08
+2b1b4988-09de-5eda-9758-5f81a2d6e6b2,Kericho Maize Farm #0979,Rift Valley,Kericho,Maize,10.5,Transitioning Agribusiness,1,12.72,3,Structured Farm,0.64,0.52,0.52,0.68,0.52,0.52,0.44,0.4
+b64d6829-fc3f-5cd2-8a99-21eb0133990d,Taita Taveta Cashew Farm #0980,Coastal Lowlands,Taita Taveta,Cashew,3.46,Informal Smallholder,0,5.88,2,Emerging Agribusiness,0.12,0.2,0.16,0.6,0.32,0.28,0.16,0.12
+5c600a04-b0d4-51f8-9d1b-ae36889f97bf,Murang'a Avocado Farm #0981,Central Highlands,Murang'a,Avocado,45.43,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.8,0.6,0.88,0.92,0.84,0.84,0.88,0.84
+cd5f801c-df5a-5aa5-940c-29ca8f16ba3f,Makueni Mangoes Farm #0982,Eastern Semi-Arid,Makueni,Mangoes,4.76,Transitioning Agribusiness,1,11.52,3,Structured Farm,0.48,0.48,0.48,0.56,0.36,0.72,0.44,0.32
+ad013e90-b320-5f98-bcc6-ea2b5251cb4f,Embu Horticulture Farm #0983,Central Highlands,Embu,Horticulture,8.11,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.4,0.56,0.36,0.68,0.44,0.6,0.48,0.4
+8a98b936-3e78-5565-b288-8d18db5a66d1,Makueni Green Grams Farm #0984,Eastern Semi-Arid,Makueni,Green Grams,3.06,Informal Smallholder,0,6.0,2,Emerging Agribusiness,0.12,0.2,0.4,0.72,0.08,0.28,0.08,0.12
+f8344afd-68cb-52c7-bf3d-d86023f9ce15,Kiambu Dairy Farm #0985,Central Highlands,Kiambu,Dairy,4.49,Informal Smallholder,0,5.28,2,Emerging Agribusiness,0.08,0.32,0.36,0.44,0.08,0.24,0.08,0.16
+6336d47e-7bb5-52ff-a311-fb7a079647c0,Nyeri Dairy Farm #0986,Central Highlands,Nyeri,Dairy,21.34,Commercial Market Leader,2,20.04,5,Future Ready Farm,0.76,0.72,0.92,0.92,0.88,0.92,0.84,0.72
+a78a99de-0398-5f3f-a7e8-bcbdbfb767ac,Kericho Potatoes Farm #0987,Rift Valley,Kericho,Potatoes,1.88,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.32,0.36,0.16,0.52,0.12,0.28,0.28,0.04
+70865b9a-9405-5979-a1b5-bf0c68cb1ec6,Kilifi Cassava Farm #0988,Coastal Lowlands,Kilifi,Cassava,3.45,Informal Smallholder,0,4.56,5,Future Ready Farm,0.2,0.24,0.2,0.48,0.08,0.2,0.12,0.0
+fa81fa7d-585f-5f36-826d-54acc9822727,Kitui Sorghum Farm #0989,Eastern Semi-Arid,Kitui,Sorghum,2.73,Informal Smallholder,0,6.12,2,Emerging Agribusiness,0.28,0.28,0.2,0.48,0.2,0.32,0.08,0.2
+ebede96f-41d4-5129-afd3-e0d2bc46bde8,Makueni Mangoes Farm #0990,Eastern Semi-Arid,Makueni,Mangoes,3.61,Transitioning Agribusiness,1,12.0,3,Structured Farm,0.48,0.4,0.44,0.8,0.44,0.56,0.48,0.4
+894bdea9-8ffd-5cbe-aa3b-378ecc956dea,Makueni Mangoes Farm #0991,Eastern Semi-Arid,Makueni,Mangoes,7.3,Transitioning Agribusiness,1,11.04,3,Structured Farm,0.44,0.4,0.6,0.8,0.44,0.4,0.44,0.16
+679433d5-f78c-5cf5-ac7e-baab58f27f04,Tharaka Nithi Pigeon Peas Farm #0992,Eastern Semi-Arid,Tharaka Nithi,Pigeon Peas,5.42,Transitioning Agribusiness,1,12.12,3,Structured Farm,0.48,0.36,0.6,0.68,0.44,0.64,0.48,0.36
+e49a742e-22fe-5db0-9bb3-e7846af98da5,Nakuru Horticulture Farm #0993,Rift Valley,Nakuru,Horticulture,6.78,Transitioning Agribusiness,1,11.76,3,Structured Farm,0.4,0.44,0.72,0.64,0.56,0.4,0.4,0.36
+b196da5d-18f6-5465-85a2-9b90625425b5,Taita Taveta Cassava Farm #0994,Coastal Lowlands,Taita Taveta,Cassava,2.54,Informal Smallholder,0,6.36,2,Emerging Agribusiness,0.16,0.16,0.44,0.56,0.12,0.28,0.32,0.08
+cbdf9748-866a-5126-91de-5a4386862dfd,Kwale Fish Farming Farm #0995,Coastal Lowlands,Kwale,Fish Farming,22.83,Commercial Market Leader,2,18.72,4,Investment Ready Farm,0.72,0.72,0.92,0.72,0.84,0.8,0.8,0.72
+b4b449cc-559d-5ece-8a7b-c54d0f6177a9,Kisumu Sugarcane Farm #0996,Western Kenya,Kisumu,Sugarcane,0.5,Informal Smallholder,0,6.6,2,Emerging Agribusiness,0.24,0.2,0.44,0.52,0.28,0.12,0.28,0.12
+542d8710-3f4a-5245-9e5c-555130a4db07,Embu Horticulture Farm #0997,Central Highlands,Embu,Horticulture,8.58,Transitioning Agribusiness,1,11.4,3,Structured Farm,0.4,0.52,0.44,0.64,0.44,0.48,0.56,0.32
+3d361951-ac59-5f31-8c27-6fcf2d9f75d9,Meru Coffee Farm #0998,Central Highlands,Meru,Coffee,3.31,Informal Smallholder,0,5.4,2,Emerging Agribusiness,0.2,0.2,0.2,0.56,0.16,0.24,0.12,0.12
+9f6d7780-4015-52a3-8f4d-f12d35c28c38,Taita Taveta Coconut Farm #0999,Coastal Lowlands,Taita Taveta,Coconut,35.97,Commercial Market Leader,2,19.8,4,Investment Ready Farm,0.76,0.8,0.92,0.96,0.88,0.72,0.92,0.64
+5c64da6c-8909-5f61-baff-8eb265f20229,Uasin Gishu Dairy Farm #1000,Rift Valley,Uasin Gishu,Dairy,0.5,Informal Smallholder,0,6.24,2,Emerging Agribusiness,0.0,0.2,0.24,0.6,0.28,0.32,0.32,0.12

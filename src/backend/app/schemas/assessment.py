@@ -8,14 +8,19 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.recommendations.engine import Recommendation
+from app.schemas.framework import QuestionOut
 
 
 class FarmCreate(BaseModel):
     """Request payload: create a farm and start an assessment."""
 
     name: str | None = None
-    region: str | None = None
-    crop_type: str | None = None
+    region: str | None = "Western Kenya"
+    crop_type: str | None = "Mixed Crop & Livestock"
+    size_acres: float | None = 5.0
+    scope: str = Field("full", description="'full' for 8 pillars or 'pillar' for single pillar")
+    target_pillar_id: int | None = Field(None, description="1..8 if scope is 'pillar'")
+    reassessment_of_id: uuid.UUID | None = Field(None, description="Parent assessment ID if reassessment")
 
 
 class StartAssessmentResponse(BaseModel):
@@ -24,6 +29,45 @@ class StartAssessmentResponse(BaseModel):
     assessment_id: uuid.UUID
     farm_id: uuid.UUID
     status: str
+    scope: str = "full"
+    target_pillar_id: int | None = None
+    question_count: int = 200
+    questions: list[QuestionOut] = Field(default_factory=list)
+
+
+class AssessmentHistoryItem(BaseModel):
+    """A summary item in the farm's historical assessment timeline."""
+
+    id: uuid.UUID
+    started_at: str
+    submitted_at: str | None
+    status: str
+    scope: str
+    target_pillar_id: int | None = None
+    target_pillar_name: str | None = None
+    ffmi_score: float | None = None
+    tier: int | None = None
+    tier_classification: str | None = None
+    pillar_scores: dict[str, float] = Field(default_factory=dict)
+
+
+class AssessmentComparisonResponse(BaseModel):
+    """Detailed longitudinal comparison between a baseline and a follow-up assessment."""
+
+    baseline_id: uuid.UUID
+    current_id: uuid.UUID
+    baseline_date: str
+    current_date: str
+    baseline_ffmi: float | None
+    current_ffmi: float | None
+    ffmi_delta: float
+    baseline_tier: int | None
+    current_tier: int | None
+    tier_advanced: bool
+    pillar_deltas: dict[str, dict[str, float]]
+    improved_capabilities: list[str]
+    new_gaps_identified: list[str]
+    summary_text: str
 
 
 class AnswerIn(BaseModel):
@@ -31,6 +75,28 @@ class AnswerIn(BaseModel):
 
     question_id: str = Field(..., description="Stable ID, e.g. P1.3.1")
     value: Literal["yes", "no"]
+
+
+class RecommendationOut(BaseModel):
+    """Per-gap transformation recommendation surfaced for a "No" answer.
+
+    Content is read verbatim from the question row (the FFF 5-field model):
+    Gap / Capability status / Recommended action / Recommended learning /
+    Potential service.
+    """
+
+    question_id: str | None = None
+    pillar_id: int | None = None
+    capability_id: str | None = None
+    capability_status: str | None = None
+    gap: str = ""
+    pillar_name: str = ""
+    capability_name: str = ""
+    recommended_action: str
+    recommended_learning: str
+    potential_service: str
+    priority: str
+    why_it_matters: str | None = None
 
 
 class SubmitAssessmentResponse(BaseModel):
@@ -50,7 +116,10 @@ class SubmitAssessmentResponse(BaseModel):
     capability_status: dict[str, str]
     strongest_pillar_id: int | None = None
     priority_gap_pillar_id: int | None = None
-    recommendations: list[Recommendation] = Field(default_factory=list)
+    recommendations: list[RecommendationOut] = Field(default_factory=list)
+    capability_feedback: dict[str, str] = Field(default_factory=dict)
+    capability_names: dict[str, str] = Field(default_factory=dict)
+    pillar_status: dict[int, str] = Field(default_factory=dict)
 
 
 class EvidenceIn(BaseModel):
@@ -89,4 +158,57 @@ class NarrativeReportResponse(BaseModel):
     assessment_id: uuid.UUID
     narrative: str
     is_fallback: bool = False
+
+
+class CapabilityAnalysisItem(BaseModel):
+    """Detailed status and score for a single capability within a section."""
+
+    capability_id: str
+    capability_name: str
+    capability_number: int
+    status: str
+    status_level: int
+    score_fraction: float
+    yes_count: int
+    total_questions: int = 5
+    feedback: str | None = None
+
+
+class SectionChartData(BaseModel):
+    """Chart dataset for plotting capability distributions and peer benchmarks."""
+
+    labels: list[str]
+    scores: list[float]
+    peer_benchmark: list[float]
+
+
+class SectionReportResponse(BaseModel):
+    """Diagnostic report and chart analysis for an individual assessment section (Pillar)."""
+
+    assessment_id: uuid.UUID
+    pillar_id: int
+    pillar_name: str
+    pillar_principle: str
+    pillar_guiding_question: str
+    section_score: float
+    section_score_pct: float
+    section_points: float
+    status_band: str
+    capabilities: list[CapabilityAnalysisItem]
+    chart_data: SectionChartData
+    strongest_capability: dict[str, str | float] | None = None
+    priority_gap_capability: dict[str, str | float] | None = None
+    recommendations: list[dict[str, str]] = Field(default_factory=list)
+    section_narrative: str
+
+
+class AllSectionsReportResponse(BaseModel):
+    """Diagnostic report and chart analysis across all 8 assessment sections."""
+
+    assessment_id: uuid.UUID
+    ffmi_score: float
+    tier: int
+    tier_classification: str
+    sections: list[SectionReportResponse]
+
 

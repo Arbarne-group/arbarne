@@ -11,7 +11,9 @@
 | *Future Farms Framework (FFF)* document | Google Drive PDF | ✅ Extracted (full body) | 2026-08-13 |
 | *FFF Assessment Model* | Google Doc | ❌ Re-share as PDF/Markdown |  --  |
 | *FFF Structure & Characteristics* | Google Doc | ❌ Re-share as PDF/Markdown |  --  |
-| *FFF Pillars & Questions* spreadsheet | Google Sheet | ✅ Extracted (Pillar 1 fully; Pillars 2-8 structurally identical) | 2026-08-13 |
+| *FFF Pillars & Questions* spreadsheet | Google Sheet | ✅ Extracted — all 8 pillars / 40 capabilities / 200 questions seeded verbatim | 2026-08-27 |
+| *FFF Scoring Model* | Local Markdown (user-supplied) | ✅ Extracted — canonical pillar status bands (0–25 scale) wired into the scoring engine | 2026-08-27 |
+| *FFF Recommendation Library* | Local Markdown (user-supplied) | ✅ Extracted — 240-paragraph capability feedback wired into the API | 2026-08-27 |
 
 ---
 
@@ -52,7 +54,7 @@
 **What we need it for:**
 
 - The canonical scoring rules (capability  ->  pillar  ->  FFMI mapping)
-- The FFMI band table  --  this is the conflict that's open decision #1
+- The FFMI band table  --  resolved as **Version A** (`0–4/5–9/10–15/16–20/21–24`) in `docs/DECISIONS.md` (decision #1). The pillar-level status bands (Critical Weakness → Strategic Advantage) were taken from the separate *FFF Scoring Model* document.
 - The full A-B-C-D evidence classification scheme (we have a working version in the PRD, but it should be confirmed against this source)
 - Any nuance on the 6-level capability status rating
 
@@ -95,14 +97,14 @@
 | Support Available | `support_available` | |
 | Priority | `priority` | 🟢 / 🟡 / 🔵 |
 
-**Status:** ✅ Extracted for Pillar 1 (25 questions fully). Pillar 2-8 are structured identically across separate tabs.
+**Status:** ✅ Extracted for **all 8 pillars** (40 capabilities, 200 questions) and seeded verbatim into the database via `app/scripts/seed_data.py`. Each pillar tab was parsed from its corresponding CSV (`Copy of FFF - Prod. Devs Team - Pillar N.csv`); capability `Focus:` rows supply the 40 canonical capability descriptions.
 
 **Used for (cross-references in the PRD):**
 
 | PRD section | What from the source |
 |---|---|
 | §7.3 | Priority distribution per pillar (10/10/5 = 40/40/20%) |
-| §7.4 | Pillar 1 capability map (5 capabilities, IDs P1.1-P1.5) |
+| §7.4 | Pillar 1 capability map (5 capabilities, IDs P1.1-P1.5 with authoritative Focus questions) |
 | §7.5 | Sample questions (P1.1.1, P1.3.1, P1.5.5) |
 | §7.6 | Per-question evidence requirements |
 | §7.7 | Question row schema (the 11 fields) |
@@ -112,15 +114,9 @@
 
 **Open tasks:**
 
-- [ ] **Nikki**  --  Extract Pillar 2 fully (Week 1)
-- [ ] **Nikki**  --  Extract Pillar 3 fully (Week 1)
-- [ ] **Nikki**  --  Extract Pillar 4 fully (Week 1)
-- [ ] **Nikki**  --  Extract Pillar 5 fully (Week 1)
-- [ ] **Nikki**  --  Extract Pillar 6 fully (Week 1)
-- [ ] **Nikki**  --  Extract Pillar 7 fully (Week 1)
-- [ ] **Nikki**  --  Extract Pillar 8 fully (Week 1)
+- [x] **Nikki**  --  Extract Pillars 2–8 fully — **Done**: all 8 pillars parsed from their CSV tabs and seeded (200 rows total).
 
-Priority: confirm all rows with the same shape; flag any rows that don't match the schema.
+Priority: confirm all rows with the same shape; flag any rows that don't match the schema. (Resolved — all 200 question rows seeded verbatim.)
 
 ---
 

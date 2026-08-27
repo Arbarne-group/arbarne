@@ -43,6 +43,14 @@ These are blocking Week 1 and must be resolved before the scoring engine is buil
 **Owner:** Victor (Team Lead)
 **Affects:** `app/scripts/seed_framework.py`, PRD §7.7, Decision #6.
 
+### 2026-08-27  --  Pillar status bands & Recommendation Library integration
+
+**Decision:** The deterministic scoring engine derives each pillar's status band from the canonical FFF **Scoring Model** (0–25 scale → 6 bands: Critical Weakness / Developing Area / Progressing / Core Strength / Strategic Advantage) via `pillar_status_from_score()` in `app/scoring/engine.py`. Per-capability feedback is surfaced **verbatim** from the **FFF Recommendation Library** (40 capabilities × 6 statuses = 240 paragraphs) via `app/recommendations/capability_feedback.py`. The submit response additionally returns `capability_feedback`, `capability_names`, and `pillar_status` keyed by capability/pillar id, and every recommendation now carries `pillar_name` / `capability_name`. The `/start` endpoint returns the full `questions` list so the frontend can render without a second fetch.
+**Rationale:** Honours CLAUDE.md rule #2 (farmer-facing wording verbatim from source) and makes the scored result self-explanatory to the frontend without re-deriving text client-side.
+**Alternatives considered:** Generating feedback in the frontend (rejected — would duplicate the verbatim source text and risk drift from the spreadsheet).
+**Owner:** Victor (Team Lead)
+**Affects:** `app/scoring/engine.py`, `app/recommendations/capability_feedback.py`, `app/api/assessments.py`, `app/schemas/assessment.py`, PRD §7.7 / §8.4.
+
 ### Template
 
 ```

@@ -13,14 +13,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from pathlib import Path
 
 from app.api.assessments import router as assessments_router
+from app.api.auth import router as auth_router
+from app.api.gamification import router as gamification_router
 from app.api.health import router as health_router
 from app.api.pillars import router as pillars_router
+from app.api.portal import router as portal_router
 from app.api.ml import router as ml_router
 from app.core.config import settings
+
 
 # ─── Logging ──────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -30,17 +34,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-from app.db.session import Base, engine
-
-
 # ─── Lifespan ─────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup/shutdown hooks."""
-    logger.info("FFF backend starting (env=%s, debug=%s)", settings.app_env, settings.app_debug)
+    """Lifespan event handler for FastAPI startup and shutdown."""
+    logger.info("FFF backend starting up")
+    from app.db.session import engine, Base
     try:
         Base.metadata.create_all(bind=engine)
-        logger.info("Database tables verified/created")
+        logger.info("Database tables verified/created successfully.")
     except Exception as exc:
         logger.warning("Could not auto-create tables on startup: %s", exc)
     yield
@@ -67,17 +69,31 @@ app.add_middleware(
 
 # ─── Routers ─────────────────────────────────────────────────────────
 app.include_router(health_router)
+app.include_router(auth_router, prefix="/api")
 app.include_router(pillars_router)
 app.include_router(assessments_router)
+app.include_router(portal_router, prefix="/api")
+app.include_router(gamification_router, prefix="/api")
 app.include_router(ml_router)
 
+
 # ─── Gradio Interactive ML Demo Route ───────────────────────────────
+@app.get("/ml-demo", include_in_schema=False)
+def redirect_to_gradio_demo():
+    return RedirectResponse(url="/ml-demo/", status_code=307)
+
+
 try:
     import gradio as gr
-    from app.api.gradio_app import create_gradio_app
+    from app.api.gradio_app import create_gradio_app, CHART_CACHE_DIR
     gradio_demo = create_gradio_app()
     if gradio_demo:
-        app = gr.mount_gradio_app(app, gradio_demo, path="/ml-demo")
+        app = gr.mount_gradio_app(
+            app,
+            gradio_demo,
+            path="/ml-demo",
+            allowed_paths=[str(CHART_CACHE_DIR.resolve())],
+        )
         logger.info("Gradio interactive ML scenario simulator mounted at /ml-demo")
 except Exception as exc:
     logger.warning("Could not mount Gradio demo route: %s", exc)
@@ -88,15 +104,20 @@ except Exception as exc:
 # nginx serves it and proxies /api to the backend.
 def _find_frontend_dir() -> Path | None:
     candidates = [
+        Path("/frontend/dist"),
         Path("/frontend/public"),
+        Path("/app/frontend_dist"),
         Path("/app/frontend_public"),
     ]
     parents = Path(__file__).resolve().parents
     if len(parents) > 3:
+        candidates.append(parents[3] / "src" / "frontend" / "dist")
         candidates.append(parents[3] / "src" / "frontend" / "public")
     if len(parents) > 2:
-        candidates.append(parents[2] / "frontend" / "public")
+        candidates.append(parents[2] / "src" / "frontend" / "dist")
         candidates.append(parents[2] / "src" / "frontend" / "public")
+        candidates.append(parents[2] / "frontend" / "dist")
+        candidates.append(parents[2] / "frontend" / "public")
     for candidate in candidates:
         if candidate and candidate.exists() and candidate.is_dir():
             return candidate

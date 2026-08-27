@@ -10,7 +10,7 @@ or invoked manually from the FastAPI backend.
 from __future__ import annotations
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import uuid4
 
 from celery import Celery
@@ -62,7 +62,7 @@ celery_app.conf.beat_schedule = {
 def run_segmentation() -> dict:
     """Cluster farms into segments for Insights."""
     run_id = str(uuid4())
-    log.info("Starting segmentation job %s at %s", run_id, datetime.utcnow())
+    log.info("Starting segmentation job %s at %s", run_id, datetime.now(timezone.utc))
     result = ml_jobs.farm_segmentation()
     log.info("Segmentation job %s done: %s", run_id, result)
     return {"run_id": run_id, "result": result}
@@ -72,7 +72,7 @@ def run_segmentation() -> dict:
 def run_risk_prediction() -> dict:
     """Predictive model of farm trajectory / risk score."""
     run_id = str(uuid4())
-    log.info("Starting risk prediction job %s at %s", run_id, datetime.utcnow())
+    log.info("Starting risk prediction job %s at %s", run_id, datetime.now(timezone.utc))
     result = ml_jobs.risk_prediction()
     log.info("Risk prediction job %s done: %s", run_id, result)
     return {"run_id": run_id, "result": result}
@@ -82,7 +82,7 @@ def run_risk_prediction() -> dict:
 def run_evidence_anomaly() -> dict:
     """Detect photos / GPS anomalies in FFV evidence."""
     run_id = str(uuid4())
-    log.info("Starting evidence anomaly job %s at %s", run_id, datetime.utcnow())
+    log.info("Starting evidence anomaly job %s at %s", run_id, datetime.now(timezone.utc))
     result = ml_jobs.evidence_anomaly_scan()
     log.info("Evidence anomaly job %s done: %s", run_id, result)
     return {"run_id": run_id, "result": result}

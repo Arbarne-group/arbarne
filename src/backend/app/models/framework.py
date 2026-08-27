@@ -9,7 +9,7 @@ foreign-key into them.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from sqlalchemy import (
@@ -134,7 +134,7 @@ class RuleVersion(Base):
 
     id: Mapped[str] = mapped_column(String(16), primary_key=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=datetime.utcnow
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
     )
     bands: Mapped[dict] = mapped_column(JSON, nullable=False)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)

@@ -87,14 +87,14 @@ def simulate_farm_scenario(
 
     # Fetch pillar names with canonical fallback map
     pillar_map = {
-        1: "Governance & Strategy",
-        2: "Soil & Land Health",
-        3: "Water Stewardship",
-        4: "Crop Management",
-        5: "Livestock Management",
-        6: "Financial Inclusion",
-        7: "Technology & Data",
-        8: "Market Access",
+        1: "Smart Farming and Digital Transformation",
+        2: "Productive Use of Renewable Energy",
+        3: "Food Safety and Compliance",
+        4: "Indigenous Knowledge and Climate Resilience",
+        5: "Farm Business Performance and Growth",
+        6: "Human Capital, Leadership and Farm Operations",
+        7: "Market Access, Customer Value and Competitiveness",
+        8: "Investment Readiness and Enterprise Development",
     }
     try:
         pillars = db.query(Pillar).all()

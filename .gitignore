@@ -33,6 +33,12 @@ yarn-error.log*
 .vscode/
 .idea/
 .claude/
+.agent/
+.agents/
+.codex/
+.cursor/
+.gemini/
+.impeccable/
 *.swp
 *.swo
 .DS_Store
@@ -48,8 +54,12 @@ logs/
 *.sqlite3
 *.db
 .uv-cache/
+mypy_output.txt
+test_*.txt
 
 # ─── Generated reports / artefacts ────────────────────────────────────
 reports/
 ml-artifacts/
 uploads/
+chart_cache/
+src/backend/app/ml/chart_cache/

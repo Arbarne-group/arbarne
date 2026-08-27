@@ -39,16 +39,14 @@ def list_capabilities(pillar_id: int, db: Session = Depends(get_db)) -> list[Cap
 
 
 @router.get("/questions", response_model=list[QuestionOut])
-def list_questions(db: Session = Depends(get_db)) -> list[QuestionOut]:
-    """GET /api/questions — return all 200 questions.
+def list_questions(pillar_id: int | None = None, db: Session = Depends(get_db)) -> list[QuestionOut]:
+    """GET /api/questions — return all 200 questions, or 25 questions for a specific pillar.
 
     Frontend caches this in IndexedDB on first load so the offline
     self-assessment works.
     """
-    questions = (
-        db.query(Question)
-        .options(selectinload(Question.capability))
-        .order_by(Question.id)
-        .all()
-    )
+    query = db.query(Question).options(selectinload(Question.capability))
+    if pillar_id is not None:
+        query = query.filter(Question.pillar_id == pillar_id)
+    questions = query.order_by(Question.id).all()
     return [QuestionOut.model_validate(q) for q in questions]

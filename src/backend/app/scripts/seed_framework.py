@@ -13,6 +13,7 @@ import sys
 
 from sqlalchemy import select
 
+import app.models  # noqa: F401 - ensure all ORM models are registered
 from app.db.session import Base, SessionLocal, engine
 from app.models.framework import Capability, Pillar, Question
 from app.scripts.seed_data import PILLARS, CAPABILITIES, QUESTIONS
@@ -43,32 +44,20 @@ def main() -> int:
 
 def _seed_pillars(db) -> None:
     for p in PILLARS:
-        existing = db.get(Pillar, p["id"])
-        if existing:
-            log.info("Pillar %s already present — skipping", p["id"])
-            continue
-        db.add(Pillar(**p))
-        log.info("Inserted pillar %s: %s", p["id"], p["name"])
+        db.merge(Pillar(**p))
+        log.info("Upserted pillar %s: %s", p["id"], p["name"])
 
 
 def _seed_capabilities(db) -> None:
     for c in CAPABILITIES:
-        existing = db.get(Capability, c["id"])
-        if existing:
-            log.info("Capability %s already present — skipping", c["id"])
-            continue
-        db.add(Capability(**c))
-        log.info("Inserted capability %s: %s", c["id"], c["name"])
+        db.merge(Capability(**c))
+        log.info("Upserted capability %s: %s", c["id"], c["name"])
 
 
 def _seed_questions(db) -> None:
     for q in QUESTIONS:
-        existing = db.get(Question, q["id"])
-        if existing:
-            log.info("Question %s already present — skipping", q["id"])
-            continue
-        db.add(Question(**q))
-        log.info("Inserted question %s", q["id"])
+        db.merge(Question(**q))
+        log.info("Upserted question %s", q["id"])
     db.flush()
 
 
