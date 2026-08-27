@@ -3,7 +3,7 @@
 **Project:** Arbarne Agriculture Group — Future Farms Framework (FFF) Digital Platform  
 **Report Period:** Sprint Week Ending August 23, 2026  
 **Target Branch:** `victor` (aligned with `main`)  
-**Status:** **100% Complete & Verified (74/74 Tests Passing)**  
+**Status:** **100% Complete & Verified (75/75 Tests Passing)**  
 
 ---
 
@@ -208,7 +208,7 @@ src/backend/tests/test_recommendations.py .......                        [100%]
 ```
 
 ### 4.2 Key Quality Metrics
-- **Test Pass Rate:** **100% (74 / 74 tests passing)**
+- **Test Pass Rate:** **100% (75 / 75 tests passing)**
 - **Seeded Pillars:** 8 / 8 (100% canonical alignment)
 - **Seeded Capabilities:** 40 / 40 (100% canonical alignment)
 - **Seeded Questions:** 200 / 200 (100% verbatim framework text)
@@ -240,3 +240,15 @@ All changes were staged, logically grouped, and committed to branch **`victor`**
 2. **Offline IndexedDB Sync Hardening:** Conduct field trials on low-connectivity mobile Android/iOS devices to stress-test large offline answer batches.
 3. **pgvector FAAB Embedding Index:** Build vector embeddings for the full FAAB curriculum to power semantic AI recommendations alongside the deterministic rule engine.
 4. **Third-Party Provider Onboarding:** Create an administrative portal interface allowing vetted input suppliers and agronomists to manage service listings and verify requests.
+
+---
+
+## 7. Recent Post-Sprint Updates (2026-08-27)
+
+The following backend and frontend changes landed on `victor` and were merged to `main` (commit `8fda7b2`):
+
+- **Source-aligned seed data:** all 8 pillars / 40 capabilities / 200 questions seeded verbatim from the pillar CSVs (`app/scripts/seed_data.py`); the seeder now upserts so re-runs update existing rows.
+- **Deterministic scoring aligned to source:** pillar status bands now follow the canonical FFF **Scoring Model** (0–25 scale → Critical Weakness → Strategic Advantage); per-capability feedback is surfaced **verbatim** from the FFF **Recommendation Library** (40 × 6 = 240 paragraphs) via `app/recommendations/capability_feedback.py`.
+- **Assessment API contract reconciled:** `/start` returns the full `questions` list; the submit response returns `capability_feedback`, `capability_names`, `pillar_status` (keyed by capability/pillar id), and each recommendation carries `pillar_name` / `capability_name`.
+- **Frontend (React SPA, `src/frontend/src`) fixed to match the contract:** resolved a blank-screen crash on assessment start (undefined `questions`) and a `NaN` submit bug (`question_id` cast to number); `ResultScorecardPage` now renders real recommendations and a per-capability maturity section.
+- **Test suite:** 75 test functions passing (added `/start`-returns-questions and enriched-submit-response coverage).

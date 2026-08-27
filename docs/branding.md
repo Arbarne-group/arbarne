@@ -19,7 +19,7 @@ Each pillar has its own permanent, distinct theme color.
 | Pillar | Theme | Color Name | Hex Code |
 | :---: | :--- | :--- | :--- |
 | **1** | Smart Farming & Digital Transformation | Blue | `#1E88E5` |
-| **2** | Productive Use of Renewable Energy (P.U.R.E) | Yellow / Amber | `#FDD835` |
+| **2** | Productive Use of Renewable Energy | Yellow / Amber | `#FDD835` |
 | **3** | Food Safety, Quality & Compliance | Green | `#43A047` |
 | **4** | Indigenous Knowledge & Climate Resilience | Dark Green | `#2E7D32` |
 | **5** | Farm Business Performance & Growth | Purple | `#8E24AA` |

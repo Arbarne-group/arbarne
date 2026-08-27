@@ -57,7 +57,7 @@ The Future Farms Framework (FFF) Digital Platform pilot implementation is **100%
 | **M1: Foundation Ready** | Schema, Seeding, Infra | 8 Pillars, 40 Capabilities, 200 Questions seeded; Docker Compose stack running | **100% Verified** |
 | **M2: Core Assessment Live** | Scoring & Recommendation Engines | Deterministic 5-tier classification, Quick-Wins priority recommendations, Offline SPA | **100% Verified** |
 | **M3: Verification & AI** | FFV Evidence & Batch ML | FFV evidence submission, verifier workflow, Claude narrative with fallback, Celery ML | **100% Verified** |
-| **M4: Pilot & Handover** | End-to-End Test & Handover | 74/74 unit/integration/ML tests passing, Docker containers verified, Handover Guide complete | **100% Verified** |
+| **M4: Pilot & Handover** | End-to-End Test & Handover | 75/75 unit/integration/ML tests passing, Docker containers verified, Handover Guide complete | **100% Verified** |
 
 ---
 
@@ -95,6 +95,6 @@ docker compose exec worker celery -A app.worker.run_evidence_anomaly
 **Recommendation:** **GO FOR PILOT LAUNCH**
 
 - **Technical Readiness:** 100% of functional requirements implemented and verified.
-- **Reliability:** 74 / 74 automated unit, API, scoring, and ML accuracy tests passing cleanly.
+- **Reliability:** 75 / 75 automated unit, API, scoring, and ML accuracy tests passing cleanly.
 - **Auditable Quality:** Deterministic scoring engine verified to produce consistent, repeatable results tagged with rule version `v1.0.0`.
 - **Infrastructure Safety:** Isolated LLM narrative generation with graceful fallback guarantees system uptime during network or API outages.

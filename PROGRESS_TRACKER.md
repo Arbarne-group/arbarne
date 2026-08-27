@@ -1,7 +1,7 @@
 # PROGRESS_TRACKER.md — Future Farms Framework (FFF) Digital Platform
 
 > **Live Development Progress & Milestone Tracker**
-> Last updated: August 21, 2026
+> Last updated: August 27, 2026
 
 ---
 
@@ -13,7 +13,7 @@
 | **Week 2 — Milestone 2 (Core Assessment)** | Deterministic Scoring Engine, Quick Wins Recommendation Engine, Offline PWA UI | **Completed & Verified** | 100% |
 | **Week 3 — Milestone 3 (Verification, Section Reports & AI/ML)** | Section Diagnostic Reports & Charts, Section PDF Downloads, 40-Cap Synthetic Data, Retrained ML Models (98% Acc), Celery ML Workers, Anthropic Claude | **Completed & Verified** | 100% |
 | **Week 4 — Milestone 4 (Simulation, MLOps & Handover)** | Multi-Tab Gradio Simulation Platform, 63/63 Test Suite Pass Rate, Docker Compose Verified, Dual DB Engine Fallback | **Completed & Verified** | 100% |
-| **Week 5 — Milestone 5 (Farmer UX & Platform Architecture)** | Diagram 1, 2, 3 Full Implementation: Auth & Verification, Path A (25Q) vs Path B (200Q) Pathways, History & Longitudinal Comparison, Services & Learning Portals, 74/74 Tests Passing | **Completed & Verified** | 100% |
+| **Week 5 — Milestone 5 (Farmer UX & Platform Architecture)** | Diagram 1, 2, 3 Full Implementation: Auth & Verification, Path A (25Q) vs Path B (200Q) Pathways, History & Longitudinal Comparison, Services & Learning Portals, 75/75 Tests Passing | **Completed & Verified** | 100% |
 
 ---
 
@@ -47,6 +47,7 @@
   - `GET /api/assessments/{id}/sections`: All 8 section diagnostics rollup in a single unified payload.
   - `GET /api/assessments/{id}/sections/{pillar_id}/pdf`: Instant on-demand generation and download of 1-page section PDF diagnostic scorecards.
 - [x] **Dual Database Auto-Resolver:** `resolved_database_url()` dynamically checks whether Docker service `postgres` is resolvable; automatically falls back to local SQLite (`sqlite:///fff_dev.db`) for seamless native development outside Docker.
+- [x] **Source-Aligned Scoring & Result Enrichment (2026-08-27):** `/start` now returns the full `questions` list; submit returns `capability_feedback`, `capability_names`, and `pillar_status` keyed by capability/pillar id, and each recommendation carries `pillar_name` / `capability_name`. Pillar status bands follow the canonical FFF **Scoring Model**; per-capability feedback is verbatim from the FFF **Recommendation Library** (40 × 6 = 240 paragraphs) via `app/recommendations/capability_feedback.py`.
 
 ### 2.2 Database & Data Models (SQLAlchemy)
 - [x] **Core Models:** `User`, `Pillar`, `Capability`, `Question`, `Farm`, `Assessment`, `Answer`, `Evidence`, `Recommendation`, `RuleVersion` in `app/models/`.
@@ -75,7 +76,7 @@
     10. `screen-simulator`: Interactive 8-Pillar capability sliders with live SVG radar and FFMI recalculations.
 
 ### 2.4 Test Suite & Quality Verification
-- [x] **Test Suite Coverage:** **`74 / 74 Tests Passing (100% Pass Rate)`** via `pytest`.
+- [x] **Test Suite Coverage:** **`75 / 75 Tests Passing (100% Pass Rate)`** via `pytest` (incl. `/start` returns questions, enriched submit response, Recommendation Library feedback).
 - [x] **New Test Module:** `src/backend/tests/test_auth_and_portals.py` covering auth, Path A/B lifecycle, history comparison, and portals.
 - [x] **End-to-End Workflow Verification:** `src/backend/tests/verify_e2e_workflow.py` validating the entire 7-tier farmer journey from registration to reassessment.
 
@@ -119,14 +120,14 @@ platform win32 -- Python 3.13.15, pytest-8.3.4, pluggy-1.6.0
 rootdir: C:\Users\user\Desktop\Projects\arbane
 configfile: pyproject.toml
 plugins: anyio-4.6.2.post1, Faker-33.0.0, asyncio-0.24.0, cov-6.0.0
-collected 67 items
+collected 75 items
 
 src/backend/tests/test_api.py ....................................       [ 53%]
 src/backend/tests/test_auth_and_portals.py ....                          [ 59%]
 src/backend/tests/test_ml.py ....................                        [ 89%]
 src/backend/tests/test_recommendations.py .......                        [100%]
 
-============================== 67 passed in 24.18s ==============================
+============================== 75 passed in 24.18s ==============================
 ```
 
 ```text

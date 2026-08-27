@@ -441,9 +441,11 @@ FastAPI backend at `backend:8000`.
 | `/api/portal/dashboard-summary` | — | — |
 
 **API Response Shapes (simplified):**
-- Assessment start: `{ assessment_id, scope, target_pillar_id, questions }`
-- Question: `{ question_text, pillar_id, capability_id, question_number, why_it_matters }`
-- Submit result: `{ ffmi_score, tier, tier_name, pillar_scores, recommendations, strongest_pillar, priority_gap_pillar }`
+- Assessment start: `{ assessment_id, farm_id, status, scope, target_pillar_id, question_count, questions: [QuestionOut] }`
+  - `QuestionOut`: `{ id, pillar_id, capability_id, question_number, question_text, why_it_matters, priority, support_available, ffv_evidence_required, if_no_recommendation, quick_win }`
+- Submit result: `{ assessment_id, ffmi_score, tier, tier_classification, pillar_scores, capability_status, strongest_pillar_id, priority_gap_pillar_id, recommendations: [RecommendationOut], capability_feedback, capability_names, pillar_status }`
+  - `RecommendationOut`: `{ question_id, pillar_id, capability_id, capability_status, gap, pillar_name, capability_name, recommended_action, recommended_learning, potential_service, priority, why_it_matters }`
+  - `capability_feedback` and `capability_names` are keyed by capability id (e.g. `P1.1`); `pillar_status` is keyed by pillar id (1–8). These surface the verbatim Recommendation Library text and the Scoring Model pillar band respectively.
 - Gamification: `{ total_xp, level, level_name, current_level_min_xp, next_level_xp, streak_days, badges: [{badge_key, is_unlocked}], active_quests: [{id, is_completed, is_claimed}] }`
 - Leaderboard: `{ top_entries: [{rank, farmer_name, farm_name, region, tier, tier_name, ffmi_score, level, total_xp, weekly_xp_delta, is_current_user}] }`
 
