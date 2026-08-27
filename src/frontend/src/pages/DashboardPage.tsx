@@ -15,7 +15,7 @@ export const DashboardPage: React.FC = () => {
   const latest = assessment.latestResult;
   const ffmiScore = latest ? latest.ffmi_score : user.ffmi_score || 13.8;
   const tier = latest ? latest.tier : user.tier || 3;
-  const tierName = latest ? latest.tier_name : user.tier_name || 'Structured Farm';
+  const tierName = latest ? latest.tier_classification : user.tier_name || 'Structured Farm';
 
   const dividendKes = latest?.economic_dividend?.dividend_gain_kes || 248685;
 

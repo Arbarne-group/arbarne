@@ -51,7 +51,7 @@ const DEFAULT_GAMIFICATION: GamificationState = {
 const CANONICAL_PILLARS: Pillar[] = [
   { id: 1, code: 'P1', name: 'Smart Farming & Digital Transformation', description: 'Digital records, telemetry & data-driven decision making' },
   { id: 2, code: 'P2', name: 'Productive Use of Renewable Energy', description: 'Solar irrigation, biogas, cold storage & clean energy' },
-  { id: 3, code: 'P3', name: 'Food Safety & Compliance', description: 'Traceability, chemical handling, hygiene & certifications' },
+  { id: 3, code: 'P3', name: 'Food Safety, Quality & Compliance', description: 'Traceability, chemical handling, hygiene & certifications' },
   { id: 4, code: 'P4', name: 'Indigenous Knowledge & Climate Resilience', description: 'Drought-tolerant varieties, heritage soil practices & biodiversity' },
   { id: 5, code: 'P5', name: 'Farm Business Performance & Growth', description: 'Enterprise budgeting, unit economics, gross margins & cash flow' },
   { id: 6, code: 'P6', name: 'Human Capital, Leadership & Farm Operations', description: 'Fair labor, safety standards, skill building & operational workflows' },
@@ -87,7 +87,7 @@ interface AppState {
     targetPillarId: number | null;
     questions: Question[];
     currentIndex: number;
-    answers: Record<number, 'yes' | 'no'>;
+    answers: Record<string, 'yes' | 'no'>;
     latestResult: AssessmentResult | null;
   };
 
@@ -118,7 +118,7 @@ interface AppState {
     questions: Question[],
     targetPillarId?: number | null
   ) => void;
-  setAnswer: (questionId: number, answer: 'yes' | 'no') => void;
+  setAnswer: (questionId: string, answer: 'yes' | 'no') => void;
   nextQuestion: () => void;
   prevQuestion: () => void;
   setAssessmentResult: (result: AssessmentResult) => void;
@@ -381,7 +381,7 @@ export const useAppStore = create<AppState>((set, get) => ({
         ...state.user,
         ffmi_score: result.ffmi_score,
         tier: result.tier,
-        tier_name: result.tier_name,
+        tier_name: result.tier_classification,
       },
       activeScreen: 'screen-result',
     }));

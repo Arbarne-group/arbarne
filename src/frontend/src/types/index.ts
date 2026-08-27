@@ -52,9 +52,9 @@ export interface Capability {
 }
 
 export interface Question {
-  id: number;
+  id: string;
   question_number: number;
-  capability_id: number;
+  capability_id: string;
   pillar_id: number;
   pillar_code?: string;
   capability_code?: string;
@@ -66,26 +66,32 @@ export interface Question {
 }
 
 export interface Recommendation {
-  id?: number;
-  pillar_id: number;
+  question_id?: string;
+  pillar_id: number | null;
+  capability_id?: string;
+  capability_status?: string;
   pillar_name: string;
   capability_name: string;
-  action_text: string;
+  recommended_action: string;
+  recommended_learning: string;
+  potential_service: string;
+  priority: 'quick_win' | 'medium_term' | 'strategic';
   why_it_matters?: string;
-  quick_win?: string;
-  priority: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
-  support_available?: string;
 }
 
 export interface AssessmentResult {
-  assessment_id: number;
+  assessment_id: number | string;
   ffmi_score: number;
   tier: number;
-  tier_name: string;
+  tier_classification: string;
   pillar_scores: Record<number, number>;
+  capability_status?: Record<string, string>;
+  capability_feedback?: Record<string, string>;
+  capability_names?: Record<string, string>;
+  pillar_status?: Record<number, string>;
+  strongest_pillar_id?: number | null;
+  priority_gap_pillar_id?: number | null;
   recommendations: Recommendation[];
-  strongest_pillar?: { id: number; name: string; score: number };
-  priority_gap_pillar?: { id: number; name: string; score: number };
   completed_at?: string;
   economic_dividend?: {
     current_yield_bags: number;
@@ -192,7 +198,7 @@ export const PILLAR_BRAND_COLORS: Record<number, PillarBrand> = {
   },
   2: {
     id: 2,
-    name: 'Productive Use of Renewable Energy (P.U.R.E)',
+    name: 'Productive Use of Renewable Energy',
     theme: 'Yellow/Amber',
     colorName: 'Yellow/Amber',
     hex: '#FDD835',

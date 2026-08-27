@@ -1,4 +1,4 @@
-"""End-to-end smoke test against an in-memory SQLite + FastAPI tests client.
+﻿"""End-to-end smoke test against an in-memory SQLite + FastAPI tests client.
 
 Verifies the API surfaces work as expected without Docker.
 """
@@ -18,7 +18,7 @@ from app.main import app
 from app.models.framework import Capability, Pillar, Question
 
 
-# ─── Fixtures ────────────────────────────────────────────────────────
+# â”€â”€â”€ Fixtures â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 @pytest.fixture
 def db_session(monkeypatch):
     """In-memory SQLite for tests."""
@@ -108,7 +108,7 @@ def client(db_session):
     return TestClient(app)
 
 
-# ─── Tests ───────────────────────────────────────────────────────────
+# â”€â”€â”€ Tests â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 def test_health(client):
     r = client.get("/health")
     assert r.status_code == 200
@@ -142,10 +142,15 @@ def test_list_questions(client):
 
 def test_assessment_end_to_end(client):
     """Start → answer → submit → see score and recommendations."""
-    # Start
+    # Start — response now includes the questions to render
     r = client.post("/api/assessments/start", json={"name": "Test Farm"})
     assert r.status_code == 200
-    assessment_id = r.json()["assessment_id"]
+    start = r.json()
+    assessment_id = start["assessment_id"]
+    assert "questions" in start
+    assert len(start["questions"]) == 10
+    assert start["questions"][0]["id"] == "P1.1.1"
+    assert start["questions"][0]["question_text"]
 
     # Answer all 5 questions in P1.1 with yes, all 5 in P2.1 with no
     answers = [{"question_id": f"P1.1.{i}", "value": "yes"} for i in range(1, 6)]
@@ -171,6 +176,20 @@ def test_assessment_end_to_end(client):
     # P1.1 was all yes → advanced; P2.1 was all no → non_existent
     assert data["capability_status"]["P1.1"] == "advanced"
     assert data["capability_status"]["P2.1"] == "non_existent"
+
+    # Per-capability bespoke feedback (Recommendation Library) + pillar bands
+    assert data["capability_feedback"]["P1.1"].startswith("Congratulations")
+    assert data["capability_feedback"]["P2.1"]
+    assert data["pillar_status"]["1"] in {
+        "Critical Weakness",
+        "Developing Area",
+        "Progressing",
+        "Core Strength",
+        "Strategic Advantage",
+    }
+    assert data["capability_names"]["P1.1"] == "Technology Readiness"
+    assert data["capability_names"]["P2.1"] == "Energy access"
+
     # 5 recommendations — one per "No" answer in P2.1
     assert len(data["recommendations"]) == 5
     for rec in data["recommendations"]:
@@ -178,6 +197,33 @@ def test_assessment_end_to_end(client):
         assert rec["gap"]
         assert rec["recommended_action"]
         assert rec["potential_service"]
+        # Display names are surfaced from the framework tables
+        assert rec["pillar_name"] == "Renewable Energy"
+        assert rec["capability_name"] == "Energy access"
+
+
+def test_start_returns_questions(client):
+    """/start returns the actual question list (pillar vs full scope)."""
+    # Pillar scope → only that pillar's 25 questions (5 here, fixture-seeded)
+    r = client.post(
+        "/api/assessments/start",
+        json={"name": "Pillar Farm", "scope": "pillar", "target_pillar_id": 1},
+    )
+    assert r.status_code == 200
+    data = r.json()
+    assert "questions" in data
+    assert len(data["questions"]) == 5
+    assert all(q["pillar_id"] == 1 for q in data["questions"])
+    assert data["questions"][0]["id"] == "P1.1.1"
+    assert data["questions"][0]["capability_id"] == "P1.1"
+    # Ordered by pillar → capability → question number
+    ids = [q["id"] for q in data["questions"]]
+    assert ids == ["P1.1.1", "P1.1.2", "P1.1.3", "P1.1.4", "P1.1.5"]
+
+    # Full scope → all seeded questions
+    r = client.post("/api/assessments/start", json={"name": "Full Farm", "scope": "full"})
+    assert r.status_code == 200
+    assert len(r.json()["questions"]) == 10
 
 
 def test_assessment_uniqueness_per_question(client):
@@ -193,7 +239,7 @@ def test_assessment_uniqueness_per_question(client):
     r = client.post(f"/api/assessments/{aid}/submit")
     assert r.status_code == 200
     data = r.json()
-    # Latest answer wins → P1.1.1 is "no" → P1.1 is non_existent
+    # Latest answer wins â†’ P1.1.1 is "no" â†’ P1.1 is non_existent
     assert data["capability_status"]["P1.1"] == "non_existent"
 
 

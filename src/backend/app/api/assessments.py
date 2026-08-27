@@ -15,7 +15,8 @@ from app.models.framework import Capability, Pillar, Question, RuleVersion
 from app.models.recommendation import Recommendation
 from app.models.user import User
 from app.recommendations.engine import build_recommendations, strongest_and_priority_pillars
-from app.scoring.engine import DEFAULT_FFMI_BANDS, score_assessment
+from app.recommendations.capability_feedback import get_capability_feedback
+from app.scoring.engine import DEFAULT_FFMI_BANDS, pillar_status_from_score, score_assessment
 from app.schemas.assessment import (
     AllSectionsReportResponse,
     AnswerIn,
@@ -26,12 +27,14 @@ from app.schemas.assessment import (
     EvidenceResponse,
     FarmCreate,
     NarrativeReportResponse,
+    RecommendationOut,
     SectionChartData,
     SectionReportResponse,
     StartAssessmentResponse,
     SubmitAssessmentResponse,
     VerifyAssessmentIn,
 )
+from app.schemas.framework import QuestionOut
 
 router = APIRouter(prefix="/api/assessments", tags=["assessments"])
 
@@ -72,6 +75,14 @@ def start_assessment(
     target_pillar_id = farm.target_pillar_id if scope == "pillar" else None
     q_count = 25 if scope == "pillar" else 200
 
+    # Fetch the actual questions for this scope so the client can render them.
+    q_query = db.query(Question)
+    if scope == "pillar" and target_pillar_id:
+        q_query = q_query.filter(Question.pillar_id == target_pillar_id)
+    questions = q_query.order_by(
+        Question.pillar_id, Question.capability_id, Question.question_number
+    ).all()
+
     assessment = Assessment(
         farm_id=new_farm.id,
         assessor_id=user_id,
@@ -92,6 +103,7 @@ def start_assessment(
         scope=assessment.scope,
         target_pillar_id=assessment.target_pillar_id,
         question_count=q_count,
+        questions=[QuestionOut.model_validate(q) for q in questions],
     )
 
 
@@ -342,6 +354,37 @@ def submit_assessment(
     db.commit()
     db.refresh(assessment)
 
+    # ─── Enrich recommendation output with display names ───────────
+    pillar_names = {p.id: p.name for p in db.query(Pillar).all()}
+    cap_names = {c.id: c.name for c in db.query(Capability).all()}
+    recommendation_out = [
+        RecommendationOut(
+            question_id=r.question_id,
+            pillar_id=r.pillar_id,
+            capability_id=r.capability_id,
+            capability_status=r.capability_status,
+            gap=r.gap,
+            pillar_name=pillar_names.get(r.pillar_id, ""),
+            capability_name=cap_names.get(r.capability_id, ""),
+            recommended_action=r.recommended_action,
+            recommended_learning=r.recommended_learning,
+            potential_service=r.potential_service,
+            priority=r.priority,
+            why_it_matters=r.why_it_matters,
+        )
+        for r in recs
+    ]
+
+    # ─── Per-capability bespoke feedback + pillar status bands ─────
+    capability_feedback_out = {
+        cap_id: get_capability_feedback(cap_id, status)
+        for cap_id, status in result.capability_status.items()
+    }
+    pillar_status_out = {
+        int(pid): pillar_status_from_score(score)["status"]
+        for pid, score in result.pillar_scores.items()
+    }
+
     return SubmitAssessmentResponse(
         assessment_id=assessment.id,
         ffmi_score=assessment.ffmi_score,
@@ -351,7 +394,10 @@ def submit_assessment(
         capability_status=result.capability_status,
         strongest_pillar_id=strongest_pillar,
         priority_gap_pillar_id=priority_gap_pillar,
-        recommendations=recs,
+        recommendations=recommendation_out,
+        capability_feedback=capability_feedback_out,
+        capability_names=cap_names,
+        pillar_status=pillar_status_out,
     )
 
 
@@ -666,6 +712,7 @@ def _build_section_analysis(assessment: Assessment, pillar_id: int, db: Session)
                 score_fraction=round(frac, 4),
                 yes_count=yes_count,
                 total_questions=5,
+                feedback=get_capability_feedback(cap_id, status),
             )
         )
         labels.append(cap_name)
@@ -682,17 +729,9 @@ def _build_section_analysis(assessment: Assessment, pillar_id: int, db: Session)
     section_score_pct = round(section_score * 100, 1)
     section_points = round(section_score * 3.0, 2)
 
-    # Status band for section
-    if section_score_pct >= 80:
-        status_band = "Advanced (Level 5/5)"
-    elif section_score_pct >= 60:
-        status_band = "Established (Level 4/5)"
-    elif section_score_pct >= 40:
-        status_band = "Developing (Level 3/5)"
-    elif section_score_pct >= 20:
-        status_band = "Emerging (Level 2/5)"
-    else:
-        status_band = "Non-Existent (Level 0-1/5)"
+    # Status band for section — aligned to the FFMI/24 Scoring Model pillar
+    # bands (Critical Weakness -> Strategic Advantage) on the 0..1 score.
+    status_band = pillar_status_from_score(section_score)["status"]
 
     # Identify strongest and priority gap capability
     sorted_caps = sorted(capabilities_items, key=lambda c: c.score_fraction, reverse=True)

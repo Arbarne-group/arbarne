@@ -9,7 +9,44 @@ import {
   AlertCircle,
   Sparkles,
 } from 'lucide-react';
-import { PILLAR_BRAND_COLORS, TIER_CLASSIFICATION_COLORS } from '../types';
+import { PILLAR_BRAND_COLORS, TIER_CLASSIFICATION_COLORS, MATURITY_STATUS_COLORS } from '../types';
+
+const STATUS_KEY: Record<string, keyof typeof MATURITY_STATUS_COLORS> = {
+  non_existent: 'nonExistent',
+  emerging: 'emerging',
+  basic: 'basic',
+  developing: 'developing',
+  established: 'established',
+  advanced: 'advanced',
+};
+
+const PILLAR_BAND_COLORS: Record<string, string> = {
+  'Critical Weakness': '#D32F2F',
+  'Developing Area': '#F57C00',
+  Progressing: '#FBC02D',
+  'Core Strength': '#388E3C',
+  'Strategic Advantage': '#1B5E20',
+};
+
+const PRIORITY_META: Record<string, { label: string; cls: string }> = {
+  quick_win: {
+    label: 'QUICK WIN',
+    cls: 'bg-[#009924]/15 text-[#009924] border border-[#009924]/30',
+  },
+  medium_term: {
+    label: 'MEDIUM TERM',
+    cls: 'bg-[#1E88E5]/15 text-[#1E88E5] border border-[#1E88E5]/30',
+  },
+  strategic: {
+    label: 'STRATEGIC',
+    cls: 'bg-[#FB8C00]/15 text-[#FB8C00] border border-[#FB8C00]/30',
+  },
+};
+
+function pillarName(fallback: string, pillarId?: number | null): string {
+  if (pillarId == null) return fallback;
+  return PILLAR_BRAND_COLORS[pillarId]?.name || fallback;
+}
 
 export const ResultScorecardPage: React.FC = () => {
   const { assessment, user, setScreen, showNotification } = useAppStore();
@@ -37,9 +74,18 @@ export const ResultScorecardPage: React.FC = () => {
 
   const tierMeta = TIER_CLASSIFICATION_COLORS[result.tier] || {
     tier: result.tier,
-    name: result.tier_name,
+    name: result.tier_classification,
     hex: '#045D61',
   };
+
+  const strongestId = result.strongest_pillar_id;
+  const gapId = result.priority_gap_pillar_id;
+  const strongestName = pillarName('Smart Farming & Digital Transformation', strongestId);
+  const strongestScore = strongestId != null ? result.pillar_scores[strongestId] ?? 0.72 : 0.72;
+  const gapName = pillarName('Productive Use of Renewable Energy', gapId);
+  const gapScore = gapId != null ? result.pillar_scores[gapId] ?? 0.45 : 0.45;
+
+  const pillars = [1, 2, 3, 4, 5, 6, 7, 8];
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -72,7 +118,7 @@ export const ResultScorecardPage: React.FC = () => {
                 className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full text-white mt-1 inline-block shadow-sm"
                 style={{ backgroundColor: tierMeta.hex }}
               >
-                Tier {result.tier}: {result.tier_name}
+                Tier {result.tier}: {result.tier_classification}
               </span>
             </div>
           </div>
@@ -123,8 +169,7 @@ export const ResultScorecardPage: React.FC = () => {
                   Strongest Capability Pillar
                 </span>
                 <p className="text-xs text-slate-700 mt-0.5">
-                  {result.strongest_pillar?.name || 'Smart Farming & Digital Transformation'} (Score:{' '}
-                  {((result.strongest_pillar?.score || 0.72) * 100).toFixed(0)}%)
+                  {strongestName} (Score: {((strongestScore || 0) * 100).toFixed(0)}%)
                 </p>
               </div>
             </div>
@@ -137,8 +182,7 @@ export const ResultScorecardPage: React.FC = () => {
                   Priority Improvement Area
                 </span>
                 <p className="text-xs text-slate-700 mt-0.5">
-                  {result.priority_gap_pillar?.name || 'Productive Use of Renewable Energy'} (Score:{' '}
-                  {((result.priority_gap_pillar?.score || 0.45) * 100).toFixed(0)}%)
+                  {gapName} (Score: {((gapScore || 0) * 100).toFixed(0)}%)
                 </p>
               </div>
             </div>
@@ -156,6 +200,96 @@ export const ResultScorecardPage: React.FC = () => {
         </div>
       </div>
 
+      {/* ─── Pillar Capability Maturity ─────────────────────────────── */}
+      <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm space-y-6">
+        <div>
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
+            Per-Capability Guidance
+          </span>
+          <h3 className="font-serif text-xl font-bold text-slate-900">
+            Pillar Capability Maturity
+          </h3>
+          <p className="text-xs text-slate-600 mt-1">
+            Each pillar is assessed across five capabilities. The status reflects the farm's
+            current maturity, and the guidance below is drawn from the FFF Recommendation Library.
+          </p>
+        </div>
+
+        <div className="space-y-5">
+          {pillars.map((pid) => {
+            const pBrand = PILLAR_BRAND_COLORS[pid] || {
+              name: `Pillar ${pid}`,
+              bgLight: 'bg-[#045D61]/10',
+              borderLight: 'border-[#045D61]/30',
+              textClass: 'text-[#045D61]',
+              hex: '#045D61',
+            };
+            const band = result.pillar_status?.[pid] || '';
+            const bandColor = PILLAR_BAND_COLORS[band] || '#045D61';
+            const caps = [1, 2, 3, 4, 5];
+
+            return (
+              <div
+                key={pid}
+                className={`p-5 rounded-2xl bg-white border ${pBrand.borderLight} shadow-sm space-y-3`}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${pBrand.bgLight} ${pBrand.borderLight} ${pBrand.textClass}`}
+                    >
+                      {pBrand.name}
+                    </span>
+                  </div>
+                  {band && (
+                    <span
+                      className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full text-white"
+                      style={{ backgroundColor: bandColor }}
+                    >
+                      {band}
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {caps.map((n) => {
+                    const capId = `P${pid}.${n}`;
+                    const status = result.capability_status?.[capId] || 'non_existent';
+                    const feedback = result.capability_feedback?.[capId] || '';
+                    const capName = result.capability_names?.[capId] || capId;
+                    const sk = STATUS_KEY[status] || 'nonExistent';
+                    const m = MATURITY_STATUS_COLORS[sk];
+                    return (
+                      <div
+                        key={capId}
+                        className="p-3 rounded-xl border border-slate-200/80 bg-slate-50/60 space-y-2"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-xs font-semibold text-slate-800">{capName}</span>
+                          <span
+                            className="text-[9px] font-extrabold px-2 py-0.5 rounded-full whitespace-nowrap"
+                            style={{
+                              backgroundColor: `${m.hex}22`,
+                              color: m.hex,
+                              border: `1px solid ${m.hex}55`,
+                            }}
+                          >
+                            {m.label}
+                          </span>
+                        </div>
+                        {feedback && (
+                          <p className="text-[11px] leading-relaxed text-slate-600">{feedback}</p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* ─── Structured Action Roadmap ───────────────────────────────── */}
       <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm space-y-6">
         <div>
@@ -169,12 +303,13 @@ export const ResultScorecardPage: React.FC = () => {
 
         <div className="space-y-4">
           {result.recommendations.map((rec, i) => {
-            const pBrand = PILLAR_BRAND_COLORS[rec.pillar_id] || {
+            const pBrand = PILLAR_BRAND_COLORS[rec.pillar_id ?? 0] || {
               hex: '#045D61',
               textClass: 'text-[#045D61]',
               bgLight: 'bg-[#045D61]/10',
               borderLight: 'border-[#045D61]/30',
             };
+            const prio = PRIORITY_META[rec.priority] || PRIORITY_META.medium_term;
 
             return (
               <div
@@ -193,19 +328,13 @@ export const ResultScorecardPage: React.FC = () => {
                     </span>
                   </div>
                   <span
-                    className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
-                      rec.priority === 'CRITICAL'
-                        ? 'bg-[#D32F2F]/15 text-[#D32F2F] border border-[#D32F2F]/30'
-                        : rec.priority === 'HIGH'
-                        ? 'bg-[#FB8C00]/15 text-[#FB8C00] border border-[#FB8C00]/30'
-                        : 'bg-[#1E88E5]/15 text-[#1E88E5] border border-[#1E88E5]/30'
-                    }`}
+                    className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${prio.cls}`}
                   >
-                    {rec.priority} PRIORITY
+                    {prio.label} PRIORITY
                   </span>
                 </div>
 
-                <p className="text-sm font-bold text-slate-900">{rec.action_text}</p>
+                <p className="text-sm font-bold text-slate-900">{rec.recommended_action}</p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-600 pt-1">
                   {rec.why_it_matters && (
@@ -214,10 +343,16 @@ export const ResultScorecardPage: React.FC = () => {
                       {rec.why_it_matters}
                     </div>
                   )}
-                  {rec.quick_win && (
+                  {rec.recommended_learning && (
                     <div className="text-[#009924]">
-                      <span className="font-bold">Quick win: </span>
-                      {rec.quick_win}
+                      <span className="font-bold">Recommended learning: </span>
+                      {rec.recommended_learning}
+                    </div>
+                  )}
+                  {rec.potential_service && (
+                    <div className="text-[#045D61]">
+                      <span className="font-bold">Potential service: </span>
+                      {rec.potential_service}
                     </div>
                   )}
                 </div>

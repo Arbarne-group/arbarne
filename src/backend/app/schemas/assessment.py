@@ -8,6 +8,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.recommendations.engine import Recommendation
+from app.schemas.framework import QuestionOut
 
 
 class FarmCreate(BaseModel):
@@ -31,6 +32,7 @@ class StartAssessmentResponse(BaseModel):
     scope: str = "full"
     target_pillar_id: int | None = None
     question_count: int = 200
+    questions: list[QuestionOut] = Field(default_factory=list)
 
 
 class AssessmentHistoryItem(BaseModel):
@@ -75,6 +77,28 @@ class AnswerIn(BaseModel):
     value: Literal["yes", "no"]
 
 
+class RecommendationOut(BaseModel):
+    """Per-gap transformation recommendation surfaced for a "No" answer.
+
+    Content is read verbatim from the question row (the FFF 5-field model):
+    Gap / Capability status / Recommended action / Recommended learning /
+    Potential service.
+    """
+
+    question_id: str | None = None
+    pillar_id: int | None = None
+    capability_id: str | None = None
+    capability_status: str | None = None
+    gap: str = ""
+    pillar_name: str = ""
+    capability_name: str = ""
+    recommended_action: str
+    recommended_learning: str
+    potential_service: str
+    priority: str
+    why_it_matters: str | None = None
+
+
 class SubmitAssessmentResponse(BaseModel):
     """The full scored assessment result.
 
@@ -92,7 +116,10 @@ class SubmitAssessmentResponse(BaseModel):
     capability_status: dict[str, str]
     strongest_pillar_id: int | None = None
     priority_gap_pillar_id: int | None = None
-    recommendations: list[Recommendation] = Field(default_factory=list)
+    recommendations: list[RecommendationOut] = Field(default_factory=list)
+    capability_feedback: dict[str, str] = Field(default_factory=dict)
+    capability_names: dict[str, str] = Field(default_factory=dict)
+    pillar_status: dict[int, str] = Field(default_factory=dict)
 
 
 class EvidenceIn(BaseModel):
@@ -144,6 +171,7 @@ class CapabilityAnalysisItem(BaseModel):
     score_fraction: float
     yes_count: int
     total_questions: int = 5
+    feedback: str | None = None
 
 
 class SectionChartData(BaseModel):

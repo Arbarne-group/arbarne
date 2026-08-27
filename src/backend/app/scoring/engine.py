@@ -27,11 +27,14 @@ _CAPABILITY_STATUS_BANDS: list[tuple[int, str]] = [
 ]
 
 # ─── FFMI band table (canonical, versioned) ──────────────────────────
-# Per PRD §12 open decision #1, the source contains two conflicting
-# tables. Until reconciled, we use a defensible default:
-#   0-4 → Tier 1, 5-9 → Tier 2, 10-15 → Tier 3, 16-20 → Tier 4, 21-24 → Tier 5
-# Once stakeholders sign off, the bands are updated and a new rule
-# version is created — historical assessments keep their original.
+# Authoritative per the Future Farms Maturity Index (FFMI/24) Scoring Model:
+#   0–4  → Tier 1 Informal Farm
+#   5–9  → Tier 2 Emerging Agribusiness
+#   10–15 → Tier 3 Structured Farm
+#   16–20 → Tier 4 Investment Ready Farm
+#   21–24 → Tier 5 Future Ready Farm
+# If stakeholders later amend the bands, a new rule version is created and
+# historical assessments keep their original.
 DEFAULT_FFMI_BANDS: list[dict] = [
     {"tier": 1, "low": 0, "high": 4, "classification": "Informal Farm"},
     {"tier": 2, "low": 5, "high": 9, "classification": "Emerging Agribusiness"},
@@ -39,6 +42,62 @@ DEFAULT_FFMI_BANDS: list[dict] = [
     {"tier": 4, "low": 16, "high": 20, "classification": "Investment Ready Farm"},
     {"tier": 5, "low": 21, "high": 24, "classification": "Future Ready Farm"},
 ]
+
+# ─── Pillar status bands (Scoring Model, Level 4) ────────────────────
+# The raw pillar score is 0..25 (5 capabilities x 5). The engine reports a
+# normalised 0..1 pillar score, so these thresholds are on the 0..1 scale
+# (divide the 0-25 thresholds by 25).
+PILLAR_STATUS_BANDS: list[dict] = [
+    {"low": 0.0, "high": 0.20, "status": "Critical Weakness",
+     "interpretation": "Immediate attention required. The pillar lacks foundational systems and practices."},
+    {"low": 0.21, "high": 0.40, "status": "Developing Area",
+     "interpretation": "Some practices are in place, but significant improvement is needed."},
+    {"low": 0.41, "high": 0.60, "status": "Progressing",
+     "interpretation": "Good progress has been made, but several capabilities require strengthening."},
+    {"low": 0.61, "high": 0.80, "status": "Core Strength",
+     "interpretation": "The pillar is performing well with only minor improvement opportunities."},
+    {"low": 0.81, "high": 1.0, "status": "Strategic Advantage",
+     "interpretation": "This is a high-performing pillar and can serve as a model for continuous improvement and peer learning."},
+]
+
+# ─── Generic capability status feedback (Scoring Model, Level 2-3) ────
+# Per-capability feedback (the 40 bespoke paragraphs in the Recommendation
+# Library) is surfaced separately; this is the framework-wide default used
+# when a capability-specific paragraph is unavailable.
+CAPABILITY_STATUS_FEEDBACK: dict[str, str] = {
+    "non_existent": (
+        "This capability has not yet been established on your farm. Focus on implementing the "
+        "foundational practices required under this capability before progressing to more advanced "
+        "actions. Building these fundamentals will strengthen your farm's resilience, productivity, "
+        "and readiness for future development."
+    ),
+    "emerging": (
+        "Your farm is beginning to develop this capability, but most of the foundational practices "
+        "are not yet in place. Start with the priority recommendations provided in your assessment and "
+        "focus on establishing simple, practical systems that can be applied consistently."
+    ),
+    "basic": (
+        "Your farm has established some of the foundational practices required under this capability, "
+        "but important gaps remain. Build on what is already working by addressing the identified "
+        "gaps, improving consistency, and strengthening the systems needed to progress to the next level."
+    ),
+    "developing": (
+        "Your farm demonstrates good progress in this capability, with most recommended practices "
+        "already in place. Focus on strengthening the remaining areas and embedding these practices "
+        "consistently across your farm to achieve advanced performance."
+    ),
+    "established": (
+        "Your farm demonstrates a well-established capability, with nearly all recommended practices "
+        "in place. Address the remaining gap, strengthen consistency and documentation, and begin "
+        "focusing on optimisation, measurement, innovation, and continuous improvement."
+    ),
+    "advanced": (
+        "Congratulations! Your farm demonstrates strong performance in this capability. Continue "
+        "monitoring performance, embracing innovation, and sharing good practices with others. "
+        "Maintaining this level of excellence will support long-term resilience, competitiveness, and "
+        "continuous improvement."
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -139,3 +198,31 @@ def _tier_for_score(score: float, bands: list[dict]) -> tuple[int, str]:
         return bands[0]["tier"], bands[0]["classification"]
     last = bands[-1]
     return last["tier"], last["classification"]
+
+
+def pillar_status_from_score(score: float) -> dict:
+    """Map a normalised (0..1) pillar score to its pillar-status band.
+
+    Bands and interpretations are taken verbatim from the FFMI/24 Scoring
+    Model (Level 4: Pillar Score).
+    """
+    for band in PILLAR_STATUS_BANDS:
+        if band["low"] <= score <= band["high"]:
+            return {
+                "status": band["status"],
+                "interpretation": band["interpretation"],
+            }
+    # Clamp to nearest band
+    if score <= PILLAR_STATUS_BANDS[0]["high"]:
+        b = PILLAR_STATUS_BANDS[0]
+    else:
+        b = PILLAR_STATUS_BANDS[-1]
+    return {"status": b["status"], "interpretation": b["interpretation"]}
+
+
+def capability_feedback(status: str) -> str:
+    """Return the framework-default feedback paragraph for a capability status."""
+    return CAPABILITY_STATUS_FEEDBACK.get(
+        status,
+        CAPABILITY_STATUS_FEEDBACK["non_existent"],
+    )

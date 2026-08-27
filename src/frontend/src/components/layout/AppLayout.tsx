@@ -93,7 +93,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               <div className="grid grid-cols-2 gap-2 text-[11px] text-white/60">
                 <span>1. Smart Farming & Digital</span>
                 <span>2. Renewable Energy</span>
-                <span>3. Food Safety & Compliance</span>
+                <span>3. Food Safety, Quality & Compliance</span>
                 <span>4. Climate Resilience</span>
                 <span>5. Farm Business Performance</span>
                 <span>6. Human Capital & Leadership</span>

@@ -74,7 +74,7 @@ export const QuestionnairePage: React.FC = () => {
     setSubmitting(true);
     try {
       const payload = Object.entries(finalAnswers).map(([qId, ans]) => ({
-        question_id: Number(qId),
+        question_id: qId,
         answer: ans,
       }));
 
@@ -83,7 +83,7 @@ export const QuestionnairePage: React.FC = () => {
 
       awardXp(150, 'Completed Assessment');
       showNotification(
-        `FFMI Scorecard calculated: Tier ${result.tier} (${result.tier_name})!`,
+        `FFMI Scorecard calculated: Tier ${result.tier} (${result.tier_classification})!`,
         'success',
         5000,
         'Assessment Finished'
