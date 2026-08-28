@@ -19,6 +19,11 @@ export interface AppNotification {
   durationMs?: number;
 }
 
+export interface ProfileAreaItem {
+  title: string;
+  description: string;
+}
+
 export interface User {
   id?: string | number;
   name: string;
@@ -30,9 +35,22 @@ export interface User {
   farm_region: string;
   farm_crop_type: string;
   farm_size_acres: number;
+  total_size_hectares?: number;
+  farm_registration_number?: string;
+  year_established?: string | number;
+  farm_description?: string;
+  soil_type?: string;
+  water_source?: string;
+  workforce?: string;
+  energy?: string;
+  verified?: boolean;
   tier?: number;
   tier_name?: string;
   ffmi_score?: number;
+  overall_score?: number;
+  percentile_rank?: string;
+  strongest_areas?: ProfileAreaItem[];
+  requires_attention?: ProfileAreaItem[];
 }
 
 export interface Pillar {
