@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppStore } from './store/useStore';
-import { authApi } from './services/api';
+import { authApi, portalApi, assessmentApi, adaptGamification } from './services/api';
 import { AppLayout } from './components/layout/AppLayout';
 import { ToastNotification } from './components/common/ToastNotification';
 import { DashboardPage } from './pages/DashboardPage';
@@ -13,10 +13,26 @@ import { SimulatorPage } from './pages/SimulatorPage';
 import { ServicesPage } from './pages/ServicesPage';
 import { LearningPage } from './pages/LearningPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { SettingsPage } from './pages/SettingsPage';
+import { PricingPage } from './pages/PricingPage';
+import { CheckoutPage } from './pages/CheckoutPage';
+import { ReportsPage } from './pages/ReportsPage';
+import { PillarDetailPage } from './pages/PillarDetailPage';
+import { OnboardingPage } from './pages/OnboardingPage';
 import { AuthPage } from './pages/AuthPage';
 
 export const App: React.FC = () => {
-  const { activeScreen, token, setUser, logout, setScreen } = useAppStore();
+  const {
+    activeScreen,
+    token,
+    setUser,
+    setDashboardSummary,
+    setGamification,
+    setPillars,
+    setAssessmentResult,
+    assessment,
+    logout,
+  } = useAppStore();
 
   useEffect(() => {
     // Listen for auth expiration events from apiRequest 401 responses
@@ -25,13 +41,12 @@ export const App: React.FC = () => {
     };
     window.addEventListener('fff_auth_expired', handleAuthExpired);
 
-    // Validate active session token and sync profile on app load.
-    // Only call the backend for real JWTs — offline/demo tokens (prefixed
-    // `demo.`/`reg.`) are not server-verifiable and would 401 and bounce the user out.
+    // Validate active session token and sync profile & live dashboard stats on app load.
     const isRealJwt =
       !!token &&
       token.split('.').length === 3 &&
       !/^(demo|reg)\./.test(token);
+
     if (token && isRealJwt) {
       authApi
         .getProfile()
@@ -41,6 +56,58 @@ export const App: React.FC = () => {
         .catch((err) => {
           console.warn('Session verification notice:', err);
         });
+
+      portalApi
+        .getDashboardSummary()
+        .then((summary) => {
+          setDashboardSummary(summary);
+          if (summary.ffmi_score !== null && summary.ffmi_score !== undefined) {
+            setUser({
+              ffmi_score: summary.ffmi_score,
+              tier: summary.tier || 3,
+              tier_name: summary.tier_name || 'Structured Farm',
+            });
+          }
+        })
+        .catch((err) => {
+          console.warn('Dashboard summary sync notice:', err);
+        });
+
+      portalApi
+        .getGamification()
+        .then((gState) => {
+          setGamification(adaptGamification(gState));
+        })
+
+      assessmentApi
+        .getPillars()
+        .then((livePillars) => {
+          setPillars(livePillars);
+        })
+        .catch((err) => {
+          console.warn('Pillars sync notice:', err);
+        });
+
+      if (!assessment.latestResult) {
+        assessmentApi
+          .getHistory()
+          .then((history) => {
+            if (history && history.length > 0) {
+              const latest = history[0];
+              if (latest.ffmi_score !== null && latest.ffmi_score !== undefined) {
+                // If full scorecard available
+                setUser({
+                  ffmi_score: latest.ffmi_score,
+                  tier: latest.tier || 3,
+                  tier_name: latest.tier_classification || 'Structured Farm',
+                });
+              }
+            }
+          })
+          .catch((err) => {
+            console.warn('History sync notice:', err);
+          });
+      }
     }
 
     return () => {
@@ -70,8 +137,12 @@ export const App: React.FC = () => {
         return <QuestionnairePage />;
       case 'screen-result':
         return <ResultScorecardPage />;
+      case 'screen-pillar-detail':
+        return <PillarDetailPage />;
       case 'screen-history':
         return <HistoryPage />;
+      case 'screen-reports':
+        return <ReportsPage />;
       case 'screen-simulator':
         return <SimulatorPage />;
       case 'screen-services':
@@ -80,6 +151,14 @@ export const App: React.FC = () => {
         return <LearningPage />;
       case 'screen-profile':
         return <ProfilePage />;
+      case 'screen-settings':
+        return <SettingsPage />;
+      case 'screen-pricing':
+        return <PricingPage />;
+      case 'screen-checkout':
+        return <CheckoutPage />;
+      case 'screen-onboarding':
+        return <OnboardingPage />;
       case 'screen-auth':
         return <AuthPage />;
       default:

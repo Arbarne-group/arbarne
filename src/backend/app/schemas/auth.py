@@ -26,7 +26,8 @@ class LoginIn(BaseModel):
 
 
 class RequestOtpIn(BaseModel):
-    phone: str = Field(..., description="Phone number to receive OTP")
+    phone: Optional[str] = Field(None, description="Phone number to receive OTP")
+    email: Optional[str] = Field(None, description="Email to resolve the registered phone for OTP")
 
 
 class AuthResponse(BaseModel):

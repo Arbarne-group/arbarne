@@ -5,9 +5,12 @@ import {
   Pillar,
   Question,
   AssessmentResult,
+  AssessmentHistoryItem,
+  DashboardSummary,
   GamificationState,
   AppNotification,
 } from '../types';
+import { portalApi } from '../services/api';
 import confetti from 'canvas-confetti';
 
 export function isJwtExpired(token: string | null): boolean {
@@ -24,17 +27,31 @@ export function isJwtExpired(token: string | null): boolean {
 }
 
 const DEFAULT_USER: User = {
-  name: 'Joseph Ochieng',
-  phone: '+254712345678',
-  email: 'joseph@example.com',
+  name: 'Grace Wanjiru',
+  phone: '+254 700 123 456',
+  email: 'farmer@arbarne.org',
   farm_name: 'Kakamega Demonstration Farm',
   farm_region: 'Western Kenya',
   farm_crop_type: 'Maize, Dairy & Vegetables',
   farm_size_acres: 5.0,
   tier: 3,
-  tier_name: 'Commercializing Farm',
+  tier_name: 'Structured Farm',
   ffmi_score: 13.8,
 };
+
+// Evict stale gamification cache if it's missing the badges array
+// (saved before the icon field existed). Forces a fresh backend fetch.
+const cachedGamification = localStorage.getItem('fff_gamification');
+if (cachedGamification) {
+  try {
+    const parsed = JSON.parse(cachedGamification);
+    if (!Array.isArray(parsed.badges) || parsed.badges.some((b: any) => !b.icon)) {
+      localStorage.removeItem('fff_gamification');
+    }
+  } catch {
+    localStorage.removeItem('fff_gamification');
+  }
+}
 
 const DEFAULT_GAMIFICATION: GamificationState = {
   total_xp: 620,
@@ -74,6 +91,7 @@ interface AppState {
   token: string | null;
   user: User;
   gamification: GamificationState;
+  dashboardSummary: DashboardSummary | null;
   activeScreen: ScreenId;
   pillars: Pillar[];
   sidebarOpen: boolean;
@@ -91,12 +109,37 @@ interface AppState {
     latestResult: AssessmentResult | null;
   };
 
+  // Checkout State
+  checkoutItem: {
+    scope: 'full' | 'pillar';
+    pillarId?: number | null;
+    title: string;
+    description: string;
+    priceUsd: number;
+    priceKes: number;
+  };
+  setCheckoutItem: (item: {
+    scope: 'full' | 'pillar';
+    pillarId?: number | null;
+    title: string;
+    description: string;
+    priceUsd: number;
+    priceKes: number;
+  }) => void;
+
+  // Pillar Detail Selection
+  selectedPillarDetailId: number;
+  setSelectedPillarDetailId: (id: number) => void;
+
   // Actions
   setScreen: (screen: ScreenId) => void;
   toggleSidebar: (open?: boolean) => void;
   toggleSidebarCollapsed: () => void;
   setToken: (token: string | null) => void;
   setUser: (user: Partial<User>) => void;
+  setDashboardSummary: (summary: DashboardSummary | null) => void;
+  setGamification: (state: Partial<GamificationState>) => void;
+  setPillars: (pillars: Pillar[]) => void;
   logout: () => void;
   awardXp: (amount: number, label?: string) => void;
   unlockBadge: (badgeKey: string) => void;
@@ -124,19 +167,54 @@ interface AppState {
   setAssessmentResult: (result: AssessmentResult) => void;
 }
 
+
+function getInitialScreen(): ScreenId {
+  const token = getInitialToken();
+  if (!token) return 'screen-auth';
+  const savedScreen = localStorage.getItem('fff_active_screen') as ScreenId;
+  const transientScreens: ScreenId[] = [
+    'screen-result',
+    'screen-question',
+    'screen-checkout',
+    'screen-auth',
+  ];
+  if (!savedScreen || transientScreens.includes(savedScreen)) {
+    return 'screen-dashboard';
+  }
+  return savedScreen;
+}
+
 export const useAppStore = create<AppState>((set, get) => ({
   token: getInitialToken(),
   user: JSON.parse(localStorage.getItem('fff_user') || 'null') || DEFAULT_USER,
   gamification:
     JSON.parse(localStorage.getItem('fff_gamification') || 'null') ||
     DEFAULT_GAMIFICATION,
-  activeScreen: getInitialToken()
-    ? (localStorage.getItem('fff_active_screen') as ScreenId) || 'screen-dashboard'
-    : 'screen-auth',
+  activeScreen: getInitialScreen(),
   pillars: CANONICAL_PILLARS,
   sidebarOpen: false,
   sidebarCollapsed: localStorage.getItem('fff_sidebar_collapsed') === 'true',
   toasts: [],
+  dashboardSummary: null,
+
+  setDashboardSummary: (summary) => {
+    set({ dashboardSummary: summary });
+  },
+
+  setGamification: (updated) => {
+    const nextGamification = { ...get().gamification, ...updated };
+    localStorage.setItem('fff_gamification', JSON.stringify(nextGamification));
+    set({ gamification: nextGamification });
+  },
+
+  setPillars: (live) => {
+    const base = get().pillars;
+    const merged = base.map((p) => {
+      const l = live.find((x) => x.id === p.id);
+      return l ? { ...p, name: l.name } : p;
+    });
+    set({ pillars: merged });
+  },
 
   assessment: {
     id: null,
@@ -146,6 +224,24 @@ export const useAppStore = create<AppState>((set, get) => ({
     currentIndex: 0,
     answers: {},
     latestResult: null,
+  },
+
+  checkoutItem: {
+    scope: 'full',
+    pillarId: null,
+    title: 'Full Future Farm Assessment',
+    description: 'Comprehensive data analysis & yield prediction report across 8 Pillars & 40 Capabilities.',
+    priceUsd: 10,
+    priceKes: 1300,
+  },
+
+  selectedPillarDetailId: 2,
+  setSelectedPillarDetailId: (id) => {
+    set({ selectedPillarDetailId: id });
+  },
+
+  setCheckoutItem: (item) => {
+    set({ checkoutItem: item });
   },
 
   setScreen: (screen) => {
@@ -189,7 +285,28 @@ export const useAppStore = create<AppState>((set, get) => ({
     localStorage.removeItem('fff_active_screen');
     set({
       token: null,
-      user: DEFAULT_USER,
+      user: {
+        name: '',
+        phone: '',
+        email: '',
+        farm_name: '',
+        farm_region: '',
+        farm_crop_type: '',
+        farm_size_acres: 0,
+        tier: 1,
+        tier_name: 'Informal Farm',
+        ffmi_score: 0,
+      },
+      dashboardSummary: null,
+      assessment: {
+        id: null,
+        scope: 'full',
+        targetPillarId: null,
+        questions: [],
+        currentIndex: 0,
+        answers: {},
+        latestResult: null,
+      },
       activeScreen: 'screen-auth',
       sidebarOpen: false,
     });
@@ -309,16 +426,42 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   claimQuest: (questId, rewardXp) => {
     const g = get().gamification;
-    if (!g.claimed_quest_ids.includes(questId)) {
-      const updated: GamificationState = {
-        ...g,
-        claimed_quest_ids: [...g.claimed_quest_ids, questId],
-      };
-      localStorage.setItem('fff_gamification', JSON.stringify(updated));
-      set({ gamification: updated });
-      get().awardXp(rewardXp, `Quest: ${questId}`);
-      get().showNotification(`✅ Quest Completed! +${rewardXp} XP Earned!`, 'success');
-    }
+    if (g.claimed_quest_ids.includes(questId)) return;
+
+    // Optimistic local update
+    const optimistic: GamificationState = {
+      ...g,
+      claimed_quest_ids: [...g.claimed_quest_ids, questId],
+    };
+    localStorage.setItem('fff_gamification', JSON.stringify(optimistic));
+    set({ gamification: optimistic });
+    get().showNotification(`✅ Quest Completed! +${rewardXp} XP Earned!`, 'success');
+
+    // Persist server-side
+    portalApi
+      .claimQuest(questId)
+      .then((res) => {
+        const updatedGamification: GamificationState = {
+          ...get().gamification,
+          total_xp: res.new_total_xp,
+          level: res.new_level,
+          level_name: res.new_level_name,
+        };
+        localStorage.setItem('fff_gamification', JSON.stringify(updatedGamification));
+        set({ gamification: updatedGamification });
+        if (res.level_up) {
+          try {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            get().showNotification(
+              `🎉 Level Up! You reached Level ${res.new_level}: ${res.new_level_name}!`,
+              'success'
+            );
+          } catch {}
+        }
+      })
+      .catch((err) => {
+        console.warn('Quest claim sync notice:', err);
+      });
   },
 
   startAssessment: (id, scope, questions, targetPillarId = null) => {
@@ -385,7 +528,6 @@ export const useAppStore = create<AppState>((set, get) => ({
       },
       activeScreen: 'screen-result',
     }));
-    localStorage.setItem('fff_active_screen', 'screen-result');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   },
 }));

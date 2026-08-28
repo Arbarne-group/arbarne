@@ -3,6 +3,9 @@ import {
   Pillar,
   Question,
   AssessmentResult,
+  AssessmentHistoryItem,
+  AssessmentComparison,
+  DashboardSummary,
   GamificationState,
   LeaderboardEntry,
   ServiceProvider,
@@ -84,7 +87,7 @@ export const authApi = {
       farm_size_acres: res.size_acres || 5.0,
       farm_crop_type: res.crop_type || 'Mixed Crop & Livestock',
       tier: 3,
-      tier_name: 'Commercializing Farm',
+      tier_name: 'Structured Farm',
       ffmi_score: 13.8,
     };
     return { access_token: res.access_token, user };
@@ -113,7 +116,7 @@ export const authApi = {
       farm_size_acres: res.size_acres || userData.farm_size_acres || 5.0,
       farm_crop_type: res.crop_type || userData.farm_crop_type || 'Mixed Crop & Livestock',
       tier: 1,
-      tier_name: 'Seedling Farm',
+      tier_name: 'Informal Farm',
       ffmi_score: 5.0,
     };
     return { access_token: res.access_token, user };
@@ -133,7 +136,7 @@ export const authApi = {
       farm_size_acres: res.farm_size_acres || 5.0,
       farm_crop_type: res.farm_crop || 'Mixed Crop & Livestock',
       tier: 3,
-      tier_name: 'Commercializing Farm',
+      tier_name: 'Structured Farm',
       ffmi_score: 13.8,
     };
   },
@@ -160,10 +163,45 @@ export const authApi = {
       farm_size_acres: res.farm_size_acres || data.farm_size_acres,
       farm_crop_type: res.farm_crop || data.farm_crop_type,
       tier: data.tier || 3,
-      tier_name: data.tier_name || 'Commercializing Farm',
+      tier_name: data.tier_name || 'Structured Farm',
       ffmi_score: data.ffmi_score || 13.8,
     };
   },
+
+  requestOtp: (email: string) =>
+    apiRequest<{ message: string }>('/api/auth/otp', 'POST', { email }),
+};
+
+export const mlApi = {
+  simulate: (payload: {
+    farm_name?: string;
+    region?: string;
+    crop_type?: string;
+    farm_size?: number;
+    pillar_scores: Record<number, number>;
+  }) =>
+    apiRequest<{
+      ffmi_score: number;
+      max_ffmi: number;
+      tier: number;
+      tier_classification: string;
+      strongest_pillar_id: number | null;
+      strongest_pillar_name: string;
+      priority_gap_pillar_id: number | null;
+      priority_gap_pillar_name: string;
+      trajectory_risk: string;
+      pillar_scores: Record<number, number>;
+      recommendations: Array<{
+        question_id: string;
+        pillar_id: number;
+        capability_id: string;
+        gap: string;
+        recommended_action: string;
+        recommended_learning: string;
+        potential_service: string;
+        priority: string;
+      }>;
+    }>('/api/ml/simulate', 'POST', payload),
 };
 
 export const assessmentApi = {
@@ -171,9 +209,12 @@ export const assessmentApi = {
 
   startAssessment: (scope: 'full' | 'pillar', targetPillarId?: number | null) =>
     apiRequest<{
-      assessment_id: number;
+      assessment_id: number | string;
+      farm_id: number | string;
+      status: string;
       scope: string;
-      target_pillar_id?: number;
+      target_pillar_id?: number | null;
+      question_count: number;
       questions: Question[];
     }>('/api/assessments/start', 'POST', {
       name: 'Farm Assessment',
@@ -185,7 +226,7 @@ export const assessmentApi = {
     assessmentId: number | string,
     answers: Array<{ question_id: number | string; answer: 'yes' | 'no' }>
   ) =>
-    apiRequest<{ message: string; saved: number }>(
+    apiRequest<{ assessment_id: string; saved: number }>(
       `/api/assessments/${assessmentId}/answers`,
       'POST',
       answers.map((a) => ({
@@ -197,38 +238,135 @@ export const assessmentApi = {
   calculateScore: (assessmentId: number | string) =>
     apiRequest<AssessmentResult>(`/api/assessments/${assessmentId}/submit`, 'POST'),
 
-  getHistory: () =>
-    apiRequest<Array<{ id: number; completed_at: string; score: number; tier: number }>>(
-      '/api/assessments/history'
+  getAssessment: (assessmentId: number | string) =>
+    apiRequest<AssessmentResult>(`/api/assessments/${assessmentId}`),
+
+  compareAssessments: (baselineId: string, currentId: string) =>
+    apiRequest<AssessmentComparison>(
+      `/api/assessments/compare?baseline_id=${encodeURIComponent(baselineId)}&current_id=${encodeURIComponent(currentId)}`
     ),
+
+  getHistory: async (): Promise<AssessmentHistoryItem[]> => {
+    const raw = await apiRequest<any[]>('/api/assessments/history');
+    return raw.map((item) => ({
+      id: item.id,
+      started_at: item.started_at,
+      submitted_at: item.submitted_at,
+      completed_at: item.submitted_at || item.completed_at || item.started_at,
+      status: item.status || 'completed',
+      scope: item.scope || 'full',
+      target_pillar_id: item.target_pillar_id,
+      target_pillar_name: item.target_pillar_name,
+      ffmi_score:
+        typeof item.ffmi_score === 'number'
+          ? item.ffmi_score
+          : typeof item.score === 'number'
+          ? item.score
+          : null,
+      score:
+        typeof item.ffmi_score === 'number'
+          ? item.ffmi_score
+          : typeof item.score === 'number'
+          ? item.score
+          : null,
+      tier: item.tier ?? 3,
+      tier_classification:
+        item.tier_classification || item.tier_name || 'Structured Farm',
+      tier_name: item.tier_classification || item.tier_name || 'Structured Farm',
+      pillar_scores: item.pillar_scores || {},
+    }));
+  },
 };
 
 export const portalApi = {
   getDashboardSummary: () =>
-    apiRequest<{
-      farmer_name: string;
-      farm_name: string;
-      tier: number;
-      tier_name: string;
-      ffmi_score: number;
-      active_recommendations_count: number;
-      completed_courses_count: number;
-    }>('/api/portal/dashboard-summary'),
+    apiRequest<DashboardSummary>('/api/portal/dashboard-summary'),
 
-  getServices: (category?: string) =>
-    apiRequest<ServiceProvider[]>(
+  getServices: async (category?: string): Promise<ServiceProvider[]> => {
+    const raw = await apiRequest<any[]>(
       category && category !== 'all'
         ? `/api/portal/services?category=${encodeURIComponent(category)}`
         : '/api/portal/services'
-      ),
+    );
+    return raw.map((s) => ({
+      id: s.id,
+      name: s.provider || s.name || 'Agro-Provider',
+      category: s.category || 'Agro-Services',
+      service_title: s.title || s.service_title || 'Agro-Enterprise Service',
+      description: s.description || '',
+      pricing_kes: typeof s.pricing_kes === 'number' ? s.pricing_kes : undefined,
+      pricing_unit: s.pricing_unit || 'unit',
+      cost_model:
+        s.cost_model ||
+        (typeof s.pricing_kes === 'number'
+          ? `KES ${s.pricing_kes.toLocaleString()} / ${s.pricing_unit || 'unit'}`
+          : 'Contact for pricing'),
+      region_served: s.region_served || 'Western & Rift Valley',
+      verified: s.verified ?? true,
+      rating: s.rating ?? 4.8,
+      pillar_id: s.pillar_id,
+      is_recommended: s.is_recommended ?? false,
+      contact_phone: s.contact_phone,
+    }));
+  },
 
-  getLearning: (pillarId?: number) =>
-    apiRequest<Course[]>(
+  requestService: (
+    serviceId: number | string,
+    assessmentId?: number | string | null,
+    notes?: string
+  ) =>
+    apiRequest<{
+      id: number;
+      service_id: number;
+      service_title: string;
+      status: string;
+      notes?: string;
+      requested_at: string;
+    }>('/api/portal/services/request', 'POST', {
+      service_id: Number(serviceId),
+      assessment_id: assessmentId ? String(assessmentId) : null,
+      notes: notes || 'Service requested via Future Farms portal.',
+    }),
+
+  deliverService: (serviceRequestId: number | string) =>
+    apiRequest<{
+      id: number;
+      service_id: number;
+      status: string;
+      delivered_at: string;
+    }>(`/api/portal/services/${serviceRequestId}/deliver`, 'POST'),
+
+  getLearning: async (pillarId?: number): Promise<Course[]> => {
+    const raw = await apiRequest<any[]>(
       pillarId ? `/api/portal/learning?pillar_id=${pillarId}` : '/api/portal/learning'
-    ),
+    );
+    return raw.map((m) => ({
+      id: m.id,
+      title: m.title || 'Learning Module',
+      pillar_id: m.pillar_id || 1,
+      pillar_name:
+        m.pillar_name || (m.pillar_id ? `Pillar ${m.pillar_id}` : 'Agronomic Practice'),
+      duration_mins: m.duration_minutes || m.duration_mins || 15,
+      level: m.level || 'Practical',
+      description: m.summary || m.description || '',
+      completed: m.status === 'completed' || m.completed || false,
+      is_recommended: m.is_recommended ?? false,
+    }));
+  },
+
+  completeCourse: (moduleId: number | string) =>
+    apiRequest<{
+      id: number;
+      module_id: number;
+      module_title: string;
+      status: string;
+      completed_at?: string;
+    }>(`/api/portal/learning/${moduleId}/complete`, 'POST', {
+      status: 'completed',
+    }),
 
   getGamification: () =>
-    apiRequest<GamificationState>('/api/portal/gamification/status'),
+    apiRequest<any>('/api/portal/gamification'),
 
   recordGamificationAction: (actionType: string, details?: any) =>
     apiRequest<{ xp_awarded: number; new_total_xp: number; level_up: boolean }>(
@@ -237,8 +375,54 @@ export const portalApi = {
       { action_type: actionType, details }
     ),
 
-  getLeaderboard: (region: string = 'Western Kenya') =>
+  claimQuest: (questId: string) =>
+    apiRequest<{
+      quest_id: string;
+      xp_awarded: number;
+      new_total_xp: number;
+      new_level: number;
+      new_level_name: string;
+      level_up: boolean;
+    }>('/api/portal/gamification/claim-quest', 'POST', { quest_id: questId }),
+
+  getLeaderboard: (region: string = 'All Regions') =>
     apiRequest<{ top_entries: LeaderboardEntry[] }>(
-      `/api/portal/leaderboard?region=${encodeURIComponent(region)}`
+      `/api/portal/gamification/leaderboard?region=${encodeURIComponent(region)}`
     ),
 };
+
+/**
+ * Adapts the backend GamificationStatusOut payload (object-based badges/quests)
+ * into the flat-array shape the UI store expects.
+ */
+export function adaptGamification(raw: any): GamificationState {
+  if (!raw) return raw;
+  const badges: any[] = raw.badges || [];
+  const quests: any[] = raw.active_quests || [];
+  const rarityMap: Record<string, 'Bronze' | 'Silver' | 'Gold' | 'Diamond'> = {
+    bronze: 'Bronze',
+    silver: 'Silver',
+    gold: 'Gold',
+    diamond: 'Diamond',
+  };
+  return {
+    total_xp: raw.total_xp ?? 0,
+    level: raw.level ?? 1,
+    level_name: raw.level_name ?? 'Seedling Pioneer',
+    current_level_min_xp: raw.current_level_min_xp ?? 0,
+    next_level_xp: raw.next_level_xp ?? 200,
+    streak_days: raw.streak_days ?? 0,
+    unlocked_badge_keys: badges.filter((b) => b.is_unlocked).map((b) => b.badge_key),
+    completed_quest_ids: quests.filter((q) => q.is_completed).map((q) => q.id),
+    claimed_quest_ids: quests.filter((q) => q.is_claimed).map((q) => q.id),
+    badges: badges.map((b) => ({
+      key: b.badge_key,
+      title: b.title,
+      description: b.description,
+      icon: b.icon,
+      rarity: rarityMap[(b.tier || 'bronze').toLowerCase()] || 'Bronze',
+      is_unlocked: !!b.is_unlocked,
+    })),
+  };
+}
+

@@ -15,6 +15,14 @@ import {
   X,
   PanelLeftClose,
   PanelLeftOpen,
+  BarChart3,
+  Settings,
+  Compass,
+  TrendingUp,
+  CreditCard,
+  PlayCircle,
+  ChevronRight,
+  BookOpen,
 } from 'lucide-react';
 
 interface NavItem {
@@ -22,6 +30,7 @@ interface NavItem {
   label: string;
   icon: React.ReactNode;
   pill?: string;
+  badge?: string;
 }
 
 export const SidebarNav: React.FC = () => {
@@ -50,38 +59,56 @@ export const SidebarNav: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [toggleSidebarCollapsed]);
 
-  const navGroups: Array<{ title: string; items: NavItem[] }> = [
+  const navGroups: Array<{ title: string; icon?: React.ReactNode; items: NavItem[] }> = [
     {
-      title: 'OVERVIEW',
+      title: 'HOME',
       items: [
         { id: 'screen-dashboard', label: 'Dashboard', icon: <Home className="w-4 h-4" /> },
         {
-          id: 'screen-journey',
-          label: 'Journey & Badges',
-          icon: <Trophy className="w-4 h-4" />,
-          pill: `🔥 ${gamification.streak_days}d`,
+          id: 'screen-onboarding',
+          label: 'Onboarding Flow',
+          icon: <Compass className="w-4 h-4" />,
+          badge: 'Setup',
         },
       ],
     },
     {
-      title: 'ASSESSMENT & ANALYTICS',
+      title: 'DIAGNOSTICS',
       items: [
-        { id: 'screen-assessment-choice', label: 'Assessment Hub', icon: <ClipboardList className="w-4 h-4" /> },
+        {
+          id: 'screen-assessment-choice',
+          label: 'Start Assessment',
+          icon: <PlayCircle className="w-4 h-4" />,
+          badge: 'Go',
+        },
+        { id: 'screen-reports', label: 'Reports & Insights', icon: <BarChart3 className="w-4 h-4" /> },
         { id: 'screen-history', label: 'History & Compare', icon: <History className="w-4 h-4" /> },
-        { id: 'screen-simulator', label: 'Scenario Simulator', icon: <Sparkles className="w-4 h-4" /> },
+        {
+          id: 'screen-simulator',
+          label: 'Scenario Simulator',
+          icon: <Sparkles className="w-4 h-4" />,
+        },
       ],
     },
     {
-      title: 'ECOSYSTEM & SERVICES',
+      title: 'GROWTH & RESOURCES',
       items: [
-        { id: 'screen-services', label: 'Services Portal', icon: <Wrench className="w-4 h-4" /> },
         { id: 'screen-learning', label: 'Learning Academy', icon: <GraduationCap className="w-4 h-4" /> },
+        { id: 'screen-services', label: 'Services Portal', icon: <Wrench className="w-4 h-4" /> },
       ],
     },
     {
-      title: 'ACCOUNT',
+      title: 'MY FARM',
       items: [
+        {
+          id: 'screen-journey',
+          label: 'Transformation Journey',
+          icon: <Trophy className="w-4 h-4" />,
+          pill: `🔥 ${gamification.streak_days}d`,
+        },
         { id: 'screen-profile', label: 'Farm Profile', icon: <User className="w-4 h-4" /> },
+        { id: 'screen-pricing', label: 'Pricing & Plans', icon: <CreditCard className="w-4 h-4" /> },
+        { id: 'screen-settings', label: 'Platform Settings', icon: <Settings className="w-4 h-4" /> },
       ],
     },
   ];
@@ -123,7 +150,7 @@ export const SidebarNav: React.FC = () => {
             onClick={() => setScreen('screen-dashboard')}
             title="Future Farms Framework"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#009924]/30 to-[#045D61] border border-[#009924]/40 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform backdrop-blur-md flex-shrink-0 glow-cyan">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#009924]/30 to-[#045D61] border border-[#009924]/40 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform backdrop-blur-md flex-shrink-0">
               <img
                 src="/assets/arbarne-emblem-white.png"
                 alt="FFF"
@@ -213,38 +240,51 @@ export const SidebarNav: React.FC = () => {
         )}
 
         {/* ─── Navigation Links ──────────────────────────────────────── */}
-        <nav className="flex-1 px-2.5 py-2 space-y-4">
+        <nav className="flex-1 px-2.5 py-2 space-y-5" aria-label="Main navigation">
           {navGroups.map((group) => (
             <div key={group.title}>
+              {/* Group Label */}
               {!sidebarCollapsed ? (
-                <div className="px-2.5 mb-1 text-[9px] font-extrabold tracking-wider text-white/60 uppercase">
-                  {group.title}
+                <div className="px-2.5 mb-1.5 flex items-center gap-2">
+                  <span className="text-[9px] font-extrabold tracking-widest text-white/45 uppercase">
+                    {group.title}
+                  </span>
+                  <div className="flex-1 h-px bg-white/10" />
                 </div>
               ) : (
-                <div className="w-6 h-px bg-white/10 mx-auto my-2" />
+                <div className="w-5 h-px bg-white/15 mx-auto my-2" />
               )}
 
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {group.items.map((item) => {
                   const isActive = activeScreen === item.id;
                   return (
                     <button
                       key={item.id}
-                      onClick={() => setScreen(item.id)}
+                      onClick={() => {
+                        setScreen(item.id);
+                        toggleSidebar(false);
+                      }}
                       title={sidebarCollapsed ? item.label : undefined}
+                      aria-current={isActive ? 'page' : undefined}
                       className={`w-full flex items-center rounded-xl text-xs font-medium transition-all group relative ${
                         sidebarCollapsed
                           ? 'justify-center p-2.5 h-10 w-10 mx-auto'
-                          : 'gap-3 px-3 py-2 text-sm'
+                          : 'gap-3 px-3 py-2.5 text-sm'
                       } ${
                         isActive
-                          ? 'bg-gradient-to-r from-[#009924]/35 to-[#009924]/15 text-white font-bold border border-[#009924]/40 shadow-inner'
-                          : 'text-white/75 hover:text-white hover:bg-white/10 hover:translate-x-0.5'
+                          ? 'bg-gradient-to-r from-[#009924]/35 to-[#009924]/10 text-white font-bold border border-[#009924]/35 shadow-inner'
+                          : 'text-white/70 hover:text-white hover:bg-white/8 active:scale-[0.99]'
                       }`}
                     >
+                      {/* Active left-edge accent bar */}
+                      {isActive && !sidebarCollapsed && (
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#FFD700] rounded-r-full" />
+                      )}
+
                       <span
-                        className={`flex-shrink-0 ${
-                          isActive ? 'text-[#FFD700]' : 'text-white/70 group-hover:text-white'
+                        className={`flex-shrink-0 transition-colors ${
+                          isActive ? 'text-[#FFD700]' : 'text-white/60 group-hover:text-white'
                         }`}
                       >
                         {item.icon}
@@ -253,17 +293,37 @@ export const SidebarNav: React.FC = () => {
                       {!sidebarCollapsed && (
                         <>
                           <span className="flex-1 text-left truncate">{item.label}</span>
+
+                          {/* Streak / Pill badge */}
                           {item.pill && (
                             <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-[#EF6C00]/25 border border-[#FFD700]/40 text-[#FFD700]">
                               {item.pill}
                             </span>
                           )}
+
+                          {/* New / Go / status badges */}
+                          {item.badge && (
+                            <span
+                              className={`text-[8px] font-extrabold px-1.5 py-0.5 rounded-full border ${
+                                item.badge === 'Go'
+                                  ? 'bg-[#009924]/25 border-[#009924]/50 text-[#7ffd7b]'
+                                  : 'bg-[#1E88E5]/20 border-[#1E88E5]/40 text-[#90CAF9]'
+                              }`}
+                            >
+                              {item.badge}
+                            </span>
+                          )}
+
+                          {/* Chevron on active item (optional affordance) */}
+                          {isActive && (
+                            <ChevronRight className="w-3.5 h-3.5 text-white/30 flex-shrink-0" />
+                          )}
                         </>
                       )}
 
-                      {/* Small notification dot when collapsed if pill exists */}
-                      {sidebarCollapsed && item.pill && (
-                        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#FFD700] animate-pulse" />
+                      {/* Collapsed notification dot for pill/badge items */}
+                      {sidebarCollapsed && (item.pill || item.badge) && (
+                        <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#FFD700] animate-pulse" />
                       )}
                     </button>
                   );
@@ -272,6 +332,20 @@ export const SidebarNav: React.FC = () => {
             </div>
           ))}
         </nav>
+
+        {/* ─── Upgrade Pro CTA ──────────────────────────────────────── */}
+        <div className="px-3 pb-2">
+          <button
+            onClick={() => setScreen('screen-pricing')}
+            className={`w-full bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 ${
+              sidebarCollapsed ? 'p-2.5 h-10 w-10 mx-auto' : 'py-2.5 px-3'
+            }`}
+            title="Assessment Pricing & Subscriptions"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#FFD700] flex-shrink-0" />
+            {!sidebarCollapsed && <span>Upgrade Pro</span>}
+          </button>
+        </div>
 
         {/* ─── Footer Identity & Auth ────────────────────────────────── */}
         <div className="p-2.5 border-t border-white/10 bg-[#012527]/80 space-y-2">

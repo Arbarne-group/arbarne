@@ -127,9 +127,9 @@ def test_generate_quests(db_session: Session):
 
 
 def test_generate_leaderboard(db_session: Session):
-    """Test generating the regional smallholder leaderboard with podium entries."""
+    """Test generating the national (all-region) smallholder leaderboard with podium entries."""
     res = generate_leaderboard(db_session, None, region="Western Kenya")
-    assert res.region == "Western Kenya"
+    assert res.region == "All Regions"
     assert res.total_participants > 0
     assert len(res.top_entries) >= 5
     # Ensure ranked in descending order by rank
@@ -170,7 +170,7 @@ def test_gamification_api_endpoints(db_session: Session):
         lb_res = client.get("/api/portal/gamification/leaderboard?region=Western+Kenya")
         assert lb_res.status_code == 200
         lb_data = lb_res.json()
-        assert lb_data["region"] == "Western Kenya"
+        assert lb_data["region"] == "All Regions"
         assert len(lb_data["top_entries"]) >= 5
 
         # 4. POST Claim Quest

@@ -48,8 +48,12 @@ class Settings(BaseSettings):
     )
 
     # ─── LLM ────────────────────────────────────────────────────────
-    anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
-    anthropic_model: str = Field(default="claude-sonnet-4-5", alias="ANTHROPIC_MODEL")
+    qwen_api_key: str = Field(default="", alias="QWEN_API_KEY")
+    qwen_model: str = Field(default="qwen3.7-plus", alias="QWEN_MODEL")
+    qwen_base_url: str = Field(
+        default="https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+        alias="QWEN_BASE_URL",
+    )
     llm_daily_token_budget: int = Field(default=200_000, alias="LLM_DAILY_TOKEN_BUDGET")
     llm_monthly_token_budget: int = Field(
         default=5_000_000, alias="LLM_MONTHLY_TOKEN_BUDGET"

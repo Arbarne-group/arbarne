@@ -1,7 +1,7 @@
 # PROGRESS_TRACKER.md — Future Farms Framework (FFF) Digital Platform
 
 > **Live Development Progress & Milestone Tracker**
-> Last updated: August 27, 2026
+> Last updated: August 28, 2026
 
 ---
 
@@ -14,6 +14,7 @@
 | **Week 3 — Milestone 3 (Verification, Section Reports & AI/ML)** | Section Diagnostic Reports & Charts, Section PDF Downloads, 40-Cap Synthetic Data, Retrained ML Models (98% Acc), Celery ML Workers, Anthropic Claude | **Completed & Verified** | 100% |
 | **Week 4 — Milestone 4 (Simulation, MLOps & Handover)** | Multi-Tab Gradio Simulation Platform, 63/63 Test Suite Pass Rate, Docker Compose Verified, Dual DB Engine Fallback | **Completed & Verified** | 100% |
 | **Week 5 — Milestone 5 (Farmer UX & Platform Architecture)** | Diagram 1, 2, 3 Full Implementation: Auth & Verification, Path A (25Q) vs Path B (200Q) Pathways, History & Longitudinal Comparison, Services & Learning Portals, 75/75 Tests Passing | **Completed & Verified** | 100% |
+| **Week 6 — Working Session (Frontend Rewrite & Platform Expansion)** | React/TypeScript SPA migration, unified Topbar/Sidebar shell, Onboarding + Auth gateway, Pillar Detail, Reports, Settings, Checkout/Pricing, Gamification engine (badges/quests/XP), Qwen LLM client, retrained ML models, live demo-data seed script | **Implemented — pushed, pending build/CI verification** | ~90% |
 
 ---
 
@@ -48,6 +49,12 @@
   - `GET /api/assessments/{id}/sections/{pillar_id}/pdf`: Instant on-demand generation and download of 1-page section PDF diagnostic scorecards.
 - [x] **Dual Database Auto-Resolver:** `resolved_database_url()` dynamically checks whether Docker service `postgres` is resolvable; automatically falls back to local SQLite (`sqlite:///fff_dev.db`) for seamless native development outside Docker.
 - [x] **Source-Aligned Scoring & Result Enrichment (2026-08-27):** `/start` now returns the full `questions` list; submit returns `capability_feedback`, `capability_names`, and `pillar_status` keyed by capability/pillar id, and each recommendation carries `pillar_name` / `capability_name`. Pillar status bands follow the canonical FFF **Scoring Model**; per-capability feedback is verbatim from the FFF **Recommendation Library** (40 × 6 = 240 paragraphs) via `app/recommendations/capability_feedback.py`.
+- [x] **Auth OTP by Email (2026-08-28):** `POST /api/auth/otp` now accepts an `email` (resolves the registered phone) in addition to `phone`, supporting the forgot-password flow (`schemas/auth.py`, `api/auth.py`).
+- [x] **PDF Farm Size Fix (2026-08-28):** Full + section PDF reports now use the real `farm.size_acres` instead of a hardcoded `5.0` (`api/assessments.py`).
+- [x] **Gamification Engine Expansion (2026-08-28):** `app/gamification/engine.py` badge/quest catalogue extended; previously contained a corrupted duplicate badge block (now repaired — see §5).
+- [x] **LLM Client Migration → Qwen / DashScope (2026-08-28):** `app/llm/client.py` now calls the OpenAI-compatible Qwen endpoint (`QWEN_API_KEY`, `QWEN_MODEL`, `QWEN_BASE_URL`) instead of Anthropic Claude; `openai` added to `requirements.txt`. **⚠️ Decision flag:** this deviates from the locked stack in `CLAUDE.md` (Anthropic Claude for pilot) — confirm with team lead before this becomes the pilot default.
+- [x] **Retrained ML Models (2026-08-28):** `evidence_anomaly_detector.joblib`, `farm_risk_classifier.joblib`, `farm_segmentation_kmeans.joblib` updated.
+- [x] **Live Demo-Data Seed Script (2026-08-28):** `app/scripts/seed_demo_live_data.py` + `tests/test_live_integration.py` added for populating/verifying a realistic pilot dataset.
 
 ### 2.2 Database & Data Models (SQLAlchemy)
 - [x] **Core Models:** `User`, `Pillar`, `Capability`, `Question`, `Farm`, `Assessment`, `Answer`, `Evidence`, `Recommendation`, `RuleVersion` in `app/models/`.
@@ -60,20 +67,26 @@
 - [x] **Portal Seed Data Script:** `app.scripts.seed_portal_data` populates vetted East African agro-services and educational modules.
 
 ### 2.3 Rich Dynamic Web Application (Frontend)
-- [x] **Modern UI/UX Design System (`src/frontend/public/`):**
-  - Built with clean semantic HTML5, Vanilla CSS design tokens (`styles.css`), and responsive JavaScript (`app.js`).
-  - Google Fonts ("Plus Jakarta Sans") typography, Forest Emerald & Harvest Gold color palette, micro-animations.
-  - 10 Functional Screens:
-    1. `screen-auth`: Log In / Register / OTP verification.
-    2. `screen-dashboard`: Farmer Hub, Key Metric Cards, Strengths vs Gaps alert, Action Cards.
-    3. `screen-assessment-choice`: Path A (Single Pillar) vs Path B (Full Assessment) chooser with 8 clickable pillar selector buttons.
-    4. `screen-question`: Progress bar, pillar badge, "Why it matters" prompt, Yes / No answering with keyboard shortcuts.
-    5. `screen-result`: Overall Scorecard, SVG Radar Chart, Peer Benchmark, 8-Section Deep Dive, Recommendations, PDF downloads, Reassess CTA.
-    6. `screen-history`: Assessment history timeline & Longitudinal score comparison with delta breakdown.
-    7. `screen-services`: Services catalogue with "Recommended for Your Gaps" filter pills and Request/Deliver actions.
-    8. `screen-learning`: Educational courses with "Recommended for Your Gaps" filter pills and Start/Complete actions.
-    9. `screen-profile`: Farmer & Farm enterprise metadata editor.
-    10. `screen-simulator`: Interactive 8-Pillar capability sliders with live SVG radar and FFMI recalculations.
+- [x] **React 18 + TypeScript SPA (`src/frontend/src/`):** Full migration away from the legacy vanilla-JS `public/app.js` shell to a Vite + React + TypeScript single-page app.
+  - Design system: Tailwind-style utility classes, FFF Forest Emerald (`#045D61`) / Harvest Gold (`#FFD700`) / Agri Green (`#009924`) palette, `framer-motion` animations, `lucide-react` icons.
+  - **App shell:** unified `AppTopbar` (notifications bell + dropdown, settings, farmer avatar, sidebar toggle) and collapsible `SidebarNav` icon rail with responsive margins; offline-mode indicator preserved.
+  - **Screens / pages (`src/frontend/src/pages/`):**
+    1. `AuthPage` — split-screen login/register, Google + LinkedIn SSO buttons, OTP verification, forgot-password flow.
+    2. `OnboardingPage` *(new)* — guided first-run farm profile setup.
+    3. `DashboardPage` ("Farm Insights") — streamlined KPI hero, priority/strongest pillar, recommended action, portal summary.
+    4. `AssessmentHubPage` — Path A (pillar) vs Path B (full) chooser, 8-pillar selector.
+    5. `QuestionnairePage` — capability assessment question flow.
+    6. `ResultScorecardPage` — FFMI scorecard, tier ladder, recommendations, PDF downloads, reassess CTA.
+    7. `HistoryPage` — longitudinal timeline & score deltas.
+    8. `JourneyPage` — transformation roadmap, badges & quests.
+    9. `ServicesPage` / `LearningPage` — gap-targeted portals with request/complete actions.
+    10. `ProfilePage` / `SettingsPage` *(new)* — farm profile + app settings.
+    11. `PillarDetailPage` *(new)* — per-pillar capability breakdown.
+    12. `ReportsPage` *(new)* — aggregated reporting view.
+    13. `SimulatorPage` — interactive 8-pillar sliders with live FFMI recompute.
+    14. `CheckoutPage` *(new)* / `PricingPage` *(new)* — subscription/pricing flow scaffold.
+  - **State & services:** `store/useStore.ts` (Zustand-style store: `user`, `gamification`, `pillars`, `assessment`, `answers`), `services/api.ts` (typed API client incl. `portalApi.getDashboardSummary`), `types/index.ts` extended with new models.
+  - **Build output:** Vite `dist/` assets; legacy `public/app.js`, `public/index.html`, `public/icon.svg` retained as static fallbacks.
 
 ### 2.4 Test Suite & Quality Verification
 - [x] **Test Suite Coverage:** **`75 / 75 Tests Passing (100% Pass Rate)`** via `pytest` (incl. `/start` returns questions, enriched submit response, Recommendation Library feedback).
@@ -157,3 +170,13 @@ src/backend/tests/test_recommendations.py .......                        [100%]
        - Courses Completed: 1
 [SUCCESS] ALL 7 SYSTEM TIERS & WORKFLOW PHASES FULLY VERIFIED AND PASSING 100%!
 ```
+
+---
+
+## 5. Working Session Notes (2026-08-28)
+
+- **Frontend rewrite pushed as uncommitted → `victor` branch.** Code is implemented but **not yet built/type-checked in CI** — a `npm run build` / `tsc` pass and the 75-test backend suite should be re-run after merge to confirm green.
+- **Repaired `app/gamification/engine.py`:** the working tree contained a corrupted duplicate badge block (a mangled `]ortal.` line plus a second copy of the `service_implementer` / `future_ready_100k` badges) that crashed backend startup with a `SyntaxError`. Removed the duplicate so the badges list closes cleanly; backend now starts (`/health` → `ok`).
+- **Smoke test updated:** `test_charts_smoke.py` now asserts `/healthz` (endpoint exists in `api/health.py`) instead of legacy `public/app.js` chart-container IDs; legacy root-HTML assertions retained.
+- **Stray file not committed:** `src/frontend/vite.config.js` is an untracked duplicate of `vite.config.ts` (identical content). Excluded from this commit to avoid dual-config ambiguity; delete if not needed.
+- **LLM provider flag:** see §2.1 — confirm Anthropic-vs-Qwen decision with team lead.

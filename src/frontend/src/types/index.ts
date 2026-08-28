@@ -4,11 +4,17 @@ export type ScreenId =
   | 'screen-assessment-choice'
   | 'screen-question'
   | 'screen-result'
+  | 'screen-pillar-detail'
   | 'screen-history'
+  | 'screen-reports'
+  | 'screen-simulator'
   | 'screen-services'
   | 'screen-learning'
   | 'screen-profile'
-  | 'screen-simulator'
+  | 'screen-settings'
+  | 'screen-pricing'
+  | 'screen-checkout'
+  | 'screen-onboarding'
   | 'screen-auth';
 
 export interface AppNotification {
@@ -33,6 +39,14 @@ export interface User {
   tier?: number;
   tier_name?: string;
   ffmi_score?: number;
+  farm_reg_number?: string;
+  year_established?: string | number;
+  farm_description?: string;
+  soil_type?: string;
+  water_source?: string;
+  workforce_count?: string | number;
+  energy_source?: string;
+  is_verified?: boolean;
 }
 
 export interface Pillar {
@@ -102,6 +116,23 @@ export interface AssessmentResult {
   };
 }
 
+export interface AssessmentHistoryItem {
+  id: number | string;
+  started_at?: string;
+  submitted_at?: string;
+  completed_at?: string;
+  status?: string;
+  scope?: 'full' | 'pillar' | string;
+  target_pillar_id?: number | null;
+  target_pillar_name?: string | null;
+  ffmi_score?: number | null;
+  score?: number | null;
+  tier?: number | null;
+  tier_classification?: string | null;
+  tier_name?: string | null;
+  pillar_scores?: Record<string | number, number>;
+}
+
 export interface GamificationState {
   total_xp: number;
   level: number;
@@ -112,6 +143,7 @@ export interface GamificationState {
   unlocked_badge_keys: string[];
   completed_quest_ids: string[];
   claimed_quest_ids: string[];
+  badges?: Badge[];
 }
 
 export interface Badge {
@@ -149,21 +181,24 @@ export interface LeaderboardEntry {
 }
 
 export interface ServiceProvider {
-  id: number;
+  id: number | string;
   name: string;
   category: string;
   service_title: string;
   description: string;
-  pricing_kes: number;
-  pricing_unit: string;
-  region_served: string;
-  verified: boolean;
-  rating: number;
+  pricing_kes?: number;
+  pricing_unit?: string;
+  cost_model?: string;
+  region_served?: string;
+  verified?: boolean;
+  rating?: number;
   pillar_id?: number;
+  is_recommended?: boolean;
+  contact_phone?: string;
 }
 
 export interface Course {
-  id: number;
+  id: number | string;
   title: string;
   pillar_id: number;
   pillar_name?: string;
@@ -171,6 +206,7 @@ export interface Course {
   level: string;
   description: string;
   completed?: boolean;
+  is_recommended?: boolean;
 }
 
 // ─── FFF Official Branding Guidelines Constants ─────────────────────────
@@ -284,4 +320,49 @@ export const TIER_CLASSIFICATION_COLORS: Record<number, { tier: number; name: st
   4: { tier: 4, name: 'Investment Ready', hex: '#045D61' },
   5: { tier: 5, name: 'Future-Ready Farm', hex: '#B88917' },
 };
+
+export interface DashboardSummary {
+  farmer_name: string;
+  farm_name: string;
+  region: string;
+  latest_assessment_id?: string | null;
+  ffmi_score?: number | null;
+  tier?: number | null;
+  tier_name?: string | null;
+  strongest_pillar?: string | null;
+  priority_gap?: string | null;
+  has_gaps: boolean;
+  gaps_count: number;
+  recommended_services_count: number;
+  recommended_courses_count: number;
+  completed_courses_count: number;
+  delivered_services_count: number;
+  total_assessments_count: number;
+}
+
+export interface AssessmentComparison {
+  baseline_id: string;
+  current_id: string;
+  baseline_date: string;
+  current_date: string;
+  baseline_ffmi?: number | null;
+  current_ffmi?: number | null;
+  ffmi_delta: number;
+  baseline_tier?: number | null;
+  current_tier?: number | null;
+  tier_advanced: boolean;
+  pillar_deltas: Record<
+    string,
+    {
+      baseline: number;
+      current: number;
+      delta: number;
+      delta_pct: number;
+    }
+  >;
+  improved_capabilities: string[];
+  new_gaps_identified: string[];
+  summary_text: string;
+}
+
 

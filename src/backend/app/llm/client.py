@@ -23,9 +23,10 @@ class LLMUnavailable(RuntimeError):
 
 
 class LLMClient:
-    """Thin wrapper around the Anthropic Claude API.
+    """Thin wrapper around the Qwen Cloud (Alibaba DashScope) API.
 
-    Lazy-loaded; the underlying SDK is only imported when actually called.
+    Uses the OpenAI-compatible endpoint exposed by DashScope. The underlying
+    SDK is lazy-loaded so the module imports even when `openai` is missing.
     """
 
     def __init__(self) -> None:
@@ -34,14 +35,17 @@ class LLMClient:
     def _get_client(self) -> Any:
         if self._client is None:
             try:
-                from anthropic import Anthropic  # type: ignore[import-not-found]
+                from openai import OpenAI  # type: ignore[import-not-found]
             except ImportError as e:
                 raise LLMUnavailable(
-                    "anthropic package not installed; cannot call LLM"
+                    "openai package not installed; cannot call LLM"
                 ) from e
-            if not settings.anthropic_api_key:
-                raise LLMUnavailable("ANTHROPIC_API_KEY not set")
-            self._client = Anthropic(api_key=settings.anthropic_api_key)
+            if not settings.qwen_api_key:
+                raise LLMUnavailable("QWEN_API_KEY not set")
+            self._client = OpenAI(
+                api_key=settings.qwen_api_key,
+                base_url=settings.qwen_base_url,
+            )
         return self._client
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=4))
@@ -66,21 +70,19 @@ class LLMClient:
                 "smallholder farmer. Never alter scores, recommendations, or "
                 "priorities — only rephrase and connect them."
             )
-            msg = client.messages.create(
-                model=settings.anthropic_model,
+            msg = client.chat.completions.create(
+                model=settings.qwen_model,
                 max_tokens=1024,
-                system=system,
                 messages=[
+                    {"role": "system", "content": system},
                     {
                         "role": "user",
                         "content": f"Report payload:\n{report_payload}",
-                    }
+                    },
                 ],
             )
-            # The SDK returns content as a list of typed blocks.
-            blocks = getattr(msg, "content", []) or []
-            text_parts = [getattr(b, "text", "") for b in blocks if getattr(b, "type", "") == "text"]
-            return "\n".join(text_parts).strip() or _fallback_narrative(report_payload)
+            content = getattr(msg.choices[0].message, "content", "") or ""
+            return content.strip() or _fallback_narrative(report_payload)
         except Exception as e:
             logger.warning("LLM unavailable, using fallback narrative: %s", e)
             return _fallback_narrative(report_payload)

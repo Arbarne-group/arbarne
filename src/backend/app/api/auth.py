@@ -143,11 +143,21 @@ def login(payload: LoginIn, db: Session = Depends(get_db)) -> AuthResponse:
 
 
 @router.post("/otp")
-def request_otp(payload: RequestOtpIn) -> dict:
-    """Request a simulated OTP code for SMS verification."""
+def request_otp(payload: RequestOtpIn, db: Session = Depends(get_db)) -> dict:
+    """Request a simulated OTP code for SMS verification.
+
+    Accepts either a ``phone`` (direct) or an ``email`` (resolved to the
+    user's registered phone) so the forgot-password flow can trigger it.
+    """
     code = generate_verification_code()
+    target_phone = payload.phone
+    if not target_phone and payload.email:
+        user = db.query(User).filter(User.email == payload.email).first()
+        if user and user.phone:
+            target_phone = user.phone
+    destination = target_phone or payload.email or "your registered contact"
     return {
-        "message": f"Verification code sent to {payload.phone}",
+        "message": f"Verification code sent to {destination}",
         "code": code,  # Provided in response for easy pilot verification testing
         "expires_in_seconds": 300,
     }

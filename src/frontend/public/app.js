@@ -823,10 +823,11 @@ function renderBadges(filter = state.badgeFilter) {
     });
 }
 
-async function renderLeaderboard(region = 'Western Kenya') {
+async function renderLeaderboard(region = 'All Regions') {
     state.leaderboardRegion = region;
     const podiumContainer = document.getElementById('leaderboard-podium-container');
     const tableContainer = document.getElementById('leaderboard-table-container');
+    const rankSummary = document.getElementById('journey-rank-summary');
 
     try {
         const res = await apiCall(`/api/portal/gamification/leaderboard?region=${encodeURIComponent(region)}`);
@@ -868,6 +869,7 @@ async function renderLeaderboard(region = 'Western Kenya') {
         }
 
         if (tableContainer) {
+            const listEntries = entries.slice(3);
             tableContainer.innerHTML = `
                 <table class="history-table">
                     <thead>
@@ -882,7 +884,7 @@ async function renderLeaderboard(region = 'Western Kenya') {
                         </tr>
                     </thead>
                     <tbody>
-                        ${entries.map(e => `
+                        ${listEntries.map(e => `
                             <tr class="${e.is_current_user ? 'leaderboard-row-highlight' : ''}">
                                 <td><strong>#${e.rank}</strong></td>
                                 <td>
@@ -902,6 +904,13 @@ async function renderLeaderboard(region = 'Western Kenya') {
         }
     } catch (err) {
         console.warn('Leaderboard error:', err);
+    }
+
+    if (rankSummary) {
+        const me = entries.find(e => e.is_current_user);
+        const rank = me ? me.rank : '—';
+        const regionLabel = me ? me.region : 'All Regions';
+        rankSummary.textContent = `Rank #${rank} of 1,240 farmers · ${regionLabel}`;
     }
 }
 
