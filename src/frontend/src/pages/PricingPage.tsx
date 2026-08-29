@@ -97,8 +97,8 @@ export const PricingPage: React.FC = () => {
     setCheckoutItem({
       scope: 'full',
       pillarId: null,
-      title: 'Full Future Farm Assessment',
-      description: 'Comprehensive data analysis & yield prediction report across 8 Pillars & 40 Capabilities.',
+      title: 'Full Farm Check',
+      description: 'A full check across all 8 areas of your farm with simple tips to improve.',
       priceUsd: 10,
       priceKes: 1300,
     });
@@ -110,8 +110,8 @@ export const PricingPage: React.FC = () => {
     setCheckoutItem({
       scope: 'pillar',
       pillarId: p.id,
-      title: `Pillar ${p.number}: ${p.name}`,
-      description: 'Targeted single-pillar capability assessment with instant feedback & recommendations.',
+      title: `Area ${p.number}: ${p.name}`,
+      description: 'A quick check of one area with instant tips and feedback.',
       priceUsd: 1,
       priceKes: 130,
     });
@@ -125,10 +125,10 @@ export const PricingPage: React.FC = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30 text-xs font-bold uppercase tracking-wider mb-2">
             <Sparkles className="w-4 h-4 text-[#009924]" />
-            <span>Future Farms Framework</span>
+            <span>Future Farms</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#004447]">
-            Assessment Pricing
+            Plans
           </h1>
           <p className="text-sm text-slate-600 mt-1">
             Choose how you want to assess and grow your farm.
@@ -161,7 +161,7 @@ export const PricingPage: React.FC = () => {
           <Info className="w-5 h-5" />
         </div>
         <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
-          Assess your farm across the Future Farms Framework (8 Pillars, 40 Capabilities) and get instant insights to improve, grow and thrive.
+          Check your farm across 8 areas and get simple tips to improve, grow and do well.
         </p>
       </div>
 
@@ -184,10 +184,10 @@ export const PricingPage: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-serif text-xl font-bold text-[#004447]">
-                    Individual Pillar Assessment
+                    Check One Area
                   </h3>
                   <p className="text-xs text-slate-500 mt-1">
-                    Assess any <strong className="text-slate-800">single pillar</strong> to understand your current capability level.
+                    Check any <strong className="text-slate-800">single area</strong> to see how your farm is doing.
                   </p>
                 </div>
               </div>
@@ -208,24 +208,24 @@ export const PricingPage: React.FC = () => {
               {/* Inclusions */}
               <div>
                 <p className="text-xs font-bold text-[#004447] mb-4 uppercase tracking-wider">
-                  Includes:
+                  This gives you:
                 </p>
                 <ul className="space-y-3.5 pl-1">
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>Assessment of <strong>1 Pillar</strong> (5 Capabilities, ~25 Questions)</span>
+                     <span>A check of <strong>1 area</strong></span>
                   </li>
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>Instant recommendations for 'No' answers</span>
+                     <span>Instant tips for anything you answer 'No' to</span>
                   </li>
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>Capability status feedback</span>
+                     <span>Feedback on each question</span>
                   </li>
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>Pillar score</span>
+                     <span>Your area score</span>
                   </li>
                 </ul>
               </div>
@@ -235,7 +235,7 @@ export const PricingPage: React.FC = () => {
               onClick={() => handleGoToPillarCheckout(1)}
               className="mt-8 w-full bg-white text-[#009924] hover:bg-[#009924] hover:text-white font-bold text-xs sm:text-sm py-3.5 rounded-2xl border-2 border-[#009924] transition-all shadow-xs flex justify-center items-center"
             >
-              Assess One Pillar – $1
+               Choose – $1
             </button>
           </motion.div>
 
@@ -256,10 +256,10 @@ export const PricingPage: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-serif text-xl font-bold text-[#004447]">
-                    Full Future Farm Assessment
+                     Full Farm Check
                   </h3>
                   <p className="text-xs text-slate-500 mt-1">
-                    Complete all 8 pillars and get your full farm transformation plan.
+                    Check all 8 areas and get your full farm plan.
                   </p>
                 </div>
               </div>
@@ -280,32 +280,32 @@ export const PricingPage: React.FC = () => {
               {/* Inclusions */}
               <div>
                 <p className="text-xs font-bold text-[#004447] mb-4 uppercase tracking-wider">
-                  Includes Everything in Individual Pillar +
+                  Includes everything in the single-area check, plus:
                 </p>
                 <ul className="space-y-3.5 pl-1">
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700 font-semibold">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>All 8 Pillars Assessment (40 Capabilities, 200 Questions)</span>
+                     <span>All 8 areas checked (40 questions)</span>
                   </li>
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>Full downloadable Farm Transformation Plan (PDF)</span>
+                     <span>Full farm plan you can download (PDF)</span>
                   </li>
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>Farm classification (Informal, Developing, Commercialized, Future-Ready)</span>
+                     <span>Your farm stage (e.g. Informal, Developing, Commercial)</span>
                   </li>
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>Priority development areas (Top 3-5 capabilities)</span>
+                     <span>Top 3–5 areas to work on first</span>
                   </li>
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>Pillar scores (for all 8 pillars)</span>
+                     <span>Scores for all 8 areas</span>
                   </li>
                   <li className="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
                     <CheckCircle2 className="w-5 h-5 text-[#009924] shrink-0 mt-0.5" />
-                    <span>Personalised recommendations</span>
+                     <span>Tips made for your farm</span>
                   </li>
                 </ul>
               </div>
@@ -315,7 +315,7 @@ export const PricingPage: React.FC = () => {
               onClick={handleGoToFullCheckout}
               className="mt-8 w-full bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs sm:text-sm py-3.5 rounded-2xl transition-all shadow-md shadow-[#009924]/20 flex justify-center items-center gap-2 hover:scale-102 cursor-pointer"
             >
-              <span>Unlock Full Assessment – $10</span>
+               <span>Choose Full Check – $10</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </motion.div>
@@ -325,7 +325,7 @@ export const PricingPage: React.FC = () => {
       {/* ─── 4. What You Get with Full Assessment Section ─────────────── */}
       <div className="pt-6">
         <h3 className="font-serif text-2xl font-bold text-[#004447] mb-8 text-center">
-          What You Get with Full Assessment
+           What You Get with the Full Check
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -411,7 +411,7 @@ export const PricingPage: React.FC = () => {
             </div>
             <div>
               <h4 className="font-serif text-sm font-bold text-[#004447] mb-1">
-                Farm Classification
+                 Your Farm Stage
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed">
                 Discover your farm's classification and transformation stage.
@@ -440,7 +440,7 @@ export const PricingPage: React.FC = () => {
       <div className="pt-6 border-t border-slate-200">
         <div className="mb-6 text-center sm:text-left">
           <h3 className="font-serif text-2xl font-bold text-[#004447] mb-1">
-            Assess Any Pillar – $1 Each
+            Check Any Area – $1 Each
           </h3>
           <p className="text-xs sm:text-sm text-slate-500">
             Choose the pillar you want to assess. You can assess others later.
@@ -459,7 +459,7 @@ export const PricingPage: React.FC = () => {
                 {pillar.icon}
               </div>
               <span className="text-xs font-extrabold text-[#004447] mb-1">
-                Pillar {pillar.number}
+                 Area {pillar.number}
               </span>
               <span className="text-xs text-slate-600 h-10 flex items-center justify-center leading-snug">
                 {pillar.name}

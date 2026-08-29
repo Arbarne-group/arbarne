@@ -42,13 +42,12 @@ def test_scoring_engine_is_independent_of_llm():
 
 
 def test_alembic_migration_present():
-    """The initial migration file must exist."""
+    """The migration files must exist."""
     from pathlib import Path
     backend_root = Path(__file__).resolve().parents[1]
     versions_dir = backend_root / "alembic" / "versions"
-    files = list(versions_dir.glob("*.py"))
-    files = [f for f in files if not f.name.startswith(".")]
+    files = [f for f in versions_dir.glob("*.py") if not f.name.startswith(".")]
     assert len(files) >= 1, "No migration files found"
-    content = files[0].read_text()
+    content = "\n".join(f.read_text() for f in files)
     assert "pillars" in content
     assert "questions" in content

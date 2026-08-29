@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../store/useStore';
+import { EAST_AFRICA_REGIONS } from '../constants/regions';
 import {
   Mail,
   Lock,
@@ -34,7 +35,7 @@ export const AuthPage: React.FC = () => {
   const [name, setName] = useState('Joseph Ochieng');
   const [phone, setPhone] = useState('+254 712 345 678');
   const [farmName, setFarmName] = useState('Kakamega Demonstration Farm');
-  const [region, setRegion] = useState('Western Kenya');
+  const [region, setRegion] = useState('');
   const [sizeAcres, setSizeAcres] = useState<number>(5.0);
   const [termsAccepted, setTermsAccepted] = useState(true);
 
@@ -48,10 +49,10 @@ export const AuthPage: React.FC = () => {
       setToken(res.access_token);
       setUser(res.user);
       showNotification(
-        `Welcome back, ${res.user.name || 'Farmer'}! Transitioning to live dashboard...`,
+        `Welcome back, ${res.user.name || 'Farmer'}! Taking you to your farm...`,
         'success',
         3000,
-        'Authentication Successful'
+        'Signed In'
       );
       setTimeout(() => {
         setScreen('screen-dashboard');
@@ -89,7 +90,7 @@ export const AuthPage: React.FC = () => {
       } else {
         setError(
           err.response?.data?.detail ||
-            'Invalid email or password. Use demo credentials or register a new farm.'
+            'Wrong email or password. Try the demo login or create an account.'
         );
       }
     } finally {
@@ -143,10 +144,10 @@ export const AuthPage: React.FC = () => {
       setToken(simulatedToken);
       setUser(newUser);
       showNotification(
-        `Farm registration initialized for ${farmName}! Let's configure your profile.`,
+        `Your farm ${farmName} is registered! Let's set it up.`,
         'success',
         3500,
-        'Welcome to FFF'
+        'Welcome to Future Farms'
       );
       setTimeout(() => {
         setScreen('screen-onboarding');
@@ -188,10 +189,10 @@ export const AuthPage: React.FC = () => {
     setEmail('farmer@example.com');
     setPassword('password123');
     showNotification(
-      'Demo credentials loaded (farmer@example.com). Click Sign In to proceed.',
-      'info',
-      3500,
-      'Demo Mode'
+      'Demo login ready (farmer@example.com). Click Sign In.',
+       'info',
+       3500,
+       'Demo Login'
     );
   };
 
@@ -214,14 +215,14 @@ export const AuthPage: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[#FFD700] text-xs font-extrabold uppercase tracking-wider mb-6 w-fit shadow-sm">
               <Shield className="w-3.5 h-3.5 text-[#009924]" />
-              <span>Future Farms Framework · FFF</span>
+               <span>Future Farms</span>
             </div>
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white leading-tight drop-shadow-md">
-              Build the future of farming.
+               Grow a better farm.
             </h2>
             <p className="text-sm sm:text-base text-white/80 mb-10 leading-relaxed max-w-lg drop-shadow">
-              Join a network of modern agribusinesses transforming the agricultural landscape through data and precision.
+               Join other farmers using simple tools to grow more food and earn more.
             </p>
 
             {/* 3 Value Propositions */}
@@ -233,7 +234,7 @@ export const AuthPage: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-serif text-base font-bold text-white mb-1">
-                    Data-Driven Insights
+                    Clear Farm Advice
                   </h3>
                   <p className="text-xs sm:text-sm text-white/75 leading-relaxed">
                     Optimize yields and reduce waste with actionable metrics.
@@ -248,7 +249,7 @@ export const AuthPage: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-serif text-base font-bold text-white mb-1">
-                    Precision Agriculture
+                    Smart Farming
                   </h3>
                   <p className="text-xs sm:text-sm text-white/75 leading-relaxed">
                     Targeted interventions for maximum crop health and sustainability.
@@ -263,7 +264,7 @@ export const AuthPage: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-serif text-base font-bold text-white mb-1">
-                    Connected Ecosystem
+                    Connected Tools
                   </h3>
                   <p className="text-xs sm:text-sm text-white/75 leading-relaxed">
                     Integrate with top agritech services and markets seamlessly.
@@ -274,8 +275,8 @@ export const AuthPage: React.FC = () => {
           </div>
 
           <div className="pt-8 border-t border-white/10 flex items-center justify-between text-xs text-white/60">
-            <span>© 2026 Future Farms Framework</span>
-            <span>Empowering East African Agribusinesses</span>
+             <span>© 2026 Future Farms</span>
+             <span>Helping East African Farmers</span>
           </div>
         </div>
       </div>
@@ -291,16 +292,16 @@ export const AuthPage: React.FC = () => {
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#009924]/30 to-[#045D61] border border-[#009924]/40 flex items-center justify-center shadow-lg p-2 flex-shrink-0 backdrop-blur-md">
               <img
                 src="/assets/arbarne-emblem-white.png"
-                alt="Future Farms Framework"
+                alt="Future Farms"
                 className="h-full w-auto object-contain drop-shadow"
               />
             </div>
             <div>
               <h2 className="text-xl font-bold tracking-tight text-[#045D61] font-serif">
-                Future Farms Framework
+                 Future Farms
               </h2>
               <p className="text-[11px] font-extrabold text-[#009924] tracking-wider uppercase">
-                FFF Enterprise Platform
+                 Farm App
               </p>
             </div>
           </div>
@@ -311,15 +312,15 @@ export const AuthPage: React.FC = () => {
               {tab === 'login'
                 ? 'Welcome back!'
                 : tab === 'register'
-                ? 'Register Your Farm'
+                 ? 'Create Account'
                 : 'Reset Password'}
             </h1>
             <p className="text-xs sm:text-sm text-slate-600">
               {tab === 'login'
-                ? 'Sign in to continue your Future Farms transformation journey.'
+                 ? 'Sign in to continue using your farm app.'
                 : tab === 'register'
-                ? 'Create an enterprise profile to begin capability benchmarks.'
-                : 'Enter your farm email address to receive password reset instructions.'}
+                 ? 'Create your account to start checking your farm.'
+                : '                   Enter your email address to receive password reset instructions.'}
             </p>
           </div>
 
@@ -352,7 +353,7 @@ export const AuthPage: React.FC = () => {
                     : 'text-slate-600 hover:text-[#045D61]'
                 }`}
               >
-                Register Farm
+                 Create Account
               </button>
             </div>
           )}
@@ -406,7 +407,7 @@ export const AuthPage: React.FC = () => {
                     onClick={handleQuickFillDemo}
                     className="text-xs font-bold text-[#045D61] hover:text-[#009924] hover:underline"
                   >
-                    Quick demo credentials?
+                     Use demo login?
                   </button>
                 </div>
                 <div className="relative">
@@ -475,7 +476,7 @@ export const AuthPage: React.FC = () => {
               {/* Full Name */}
               <div>
                 <label className="block text-xs font-bold text-slate-900 mb-1">
-                  Farmer Full Name *
+                   Your Full Name *
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -542,7 +543,7 @@ export const AuthPage: React.FC = () => {
               {/* Farm Enterprise Name */}
               <div>
                 <label className="block text-xs font-bold text-slate-900 mb-1">
-                  Farm Enterprise Name
+                   Farm Name
                 </label>
                 <input
                   type="text"
@@ -557,25 +558,27 @@ export const AuthPage: React.FC = () => {
                 {/* Region */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    Agro Region
+                     Your Region
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    list="ea-regions-auth"
                     value={region}
                     onChange={(e) => setRegion(e.target.value)}
+                    placeholder="e.g. Western Kenya, Kampala Uganda"
                     className="block w-full px-2.5 py-2 border border-slate-200 rounded-xl bg-white text-slate-900 text-xs font-medium focus:ring-2 focus:ring-[#045D61]/20 focus:border-[#045D61] outline-none"
-                  >
-                    <option value="Western Kenya">Western Kenya</option>
-                    <option value="Rift Valley">Rift Valley</option>
-                    <option value="Central Kenya">Central Kenya</option>
-                    <option value="Eastern Kenya">Eastern Kenya</option>
-                    <option value="Coast">Coast</option>
-                  </select>
+                  />
+                  <datalist id="ea-regions-auth">
+                    {EAST_AFRICA_REGIONS.map((r) => (
+                      <option key={r} value={r} />
+                    ))}
+                  </datalist>
                 </div>
 
                 {/* Farm Size */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    Size (Acres)
+                     Farm Size (Acres)
                   </label>
                   <input
                     type="number"
@@ -623,7 +626,7 @@ export const AuthPage: React.FC = () => {
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
-                    <span>Create Account &amp; Enter Dashboard</span>
+                     <span>Create Account</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -637,10 +640,10 @@ export const AuthPage: React.FC = () => {
                 <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 space-y-3">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5 text-[#009924]" />
-                    <h3 className="font-bold text-sm">Recovery Link Dispatched</h3>
+                    <h3 className="font-bold text-sm">                     Reset Link Sent</h3>
                   </div>
                   <p className="text-xs leading-relaxed text-emerald-700">
-                    We have dispatched password recovery instructions to <strong>{email}</strong>. Please check your inbox and spam folder.
+                     We have sent password reset instructions to <strong>{email}</strong>. Please check your inbox and spam folder.
                   </p>
                   <button
                     type="button"
@@ -732,7 +735,7 @@ export const AuthPage: React.FC = () => {
                   type="button"
                   onClick={() => {
                     showNotification(
-                      'Initiating Google Secure Single Sign-On...',
+                       'Signing in with Google...',
                       'info',
                       3500,
                       'Google SSO'
@@ -767,7 +770,7 @@ export const AuthPage: React.FC = () => {
                   type="button"
                   onClick={() => {
                     showNotification(
-                      'Initiating LinkedIn Professional Sign-In...',
+                       'Signing in with LinkedIn...',
                       'info',
                       3500,
                       'LinkedIn SSO'

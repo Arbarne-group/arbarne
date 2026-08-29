@@ -9,6 +9,7 @@ import {
   DashboardSummary,
   GamificationState,
   AppNotification,
+  InboxItem,
 } from '../types';
 import { portalApi } from '../services/api';
 import confetti from 'canvas-confetti';
@@ -97,6 +98,12 @@ interface AppState {
   sidebarOpen: boolean;
   sidebarCollapsed: boolean;
   toasts: AppNotification[];
+  inbox: InboxItem[];
+
+  // Share achievement overlay (set when an assessment is completed or shared manually)
+  shareResult: AssessmentResult | null;
+  openShare: (result: AssessmentResult) => void;
+  closeShare: () => void;
 
   // Active Assessment Flow
   assessment: {
@@ -154,6 +161,12 @@ interface AppState {
   ) => void;
   clearNotification: () => void;
 
+  // Inbox (persistent notification bell items)
+  addInboxItem: (item: Omit<InboxItem, 'id' | 'createdAt' | 'read'>) => void;
+  markAllInboxRead: () => void;
+  dismissInboxItem: (id: string) => void;
+  clearInbox: () => void;
+
   // Assessment Actions
   startAssessment: (
     id: number | string,
@@ -165,6 +178,9 @@ interface AppState {
   nextQuestion: () => void;
   prevQuestion: () => void;
   setAssessmentResult: (result: AssessmentResult) => void;
+  // Hydrate the latest result into state WITHOUT navigating to the result screen
+  // (used when loading existing history on app start / dashboard refresh).
+  setLatestResult: (result: AssessmentResult) => void;
 }
 
 
@@ -196,6 +212,15 @@ export const useAppStore = create<AppState>((set, get) => ({
   sidebarCollapsed: localStorage.getItem('fff_sidebar_collapsed') === 'true',
   toasts: [],
   dashboardSummary: null,
+  inbox: ((): InboxItem[] => {
+    try {
+      return JSON.parse(localStorage.getItem('fff_inbox') || '[]');
+    } catch {
+      return [];
+    }
+  })(),
+
+  shareResult: null,
 
   setDashboardSummary: (summary) => {
     set({ dashboardSummary: summary });
@@ -280,6 +305,14 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   logout: () => {
+    // Best-effort server-side revocation (blocklists the token's jti).
+    const currentToken = get().token;
+    if (currentToken) {
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${currentToken}` },
+      }).catch(() => {});
+    }
     localStorage.removeItem('fff_token');
     localStorage.removeItem('fff_user');
     localStorage.removeItem('fff_active_screen');
@@ -349,6 +382,43 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ toasts: [] });
   },
 
+  // ── Inbox actions ────────────────────────────────────────────────────────
+  addInboxItem: (item) => {
+    const newItem: InboxItem = {
+      ...item,
+      id: `inbox-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+      createdAt: Date.now(),
+      read: false,
+    };
+    set((state) => {
+      // Keep at most 50 items, newest first
+      const next = [newItem, ...state.inbox].slice(0, 50);
+      localStorage.setItem('fff_inbox', JSON.stringify(next));
+      return { inbox: next };
+    });
+  },
+
+  markAllInboxRead: () => {
+    set((state) => {
+      const next = state.inbox.map((n) => ({ ...n, read: true }));
+      localStorage.setItem('fff_inbox', JSON.stringify(next));
+      return { inbox: next };
+    });
+  },
+
+  dismissInboxItem: (id) => {
+    set((state) => {
+      const next = state.inbox.filter((n) => n.id !== id);
+      localStorage.setItem('fff_inbox', JSON.stringify(next));
+      return { inbox: next };
+    });
+  },
+
+  clearInbox: () => {
+    localStorage.removeItem('fff_inbox');
+    set({ inbox: [] });
+  },
+
   awardXp: (amount, label) => {
     const g = get().gamification;
     const newTotal = g.total_xp + amount;
@@ -404,7 +474,18 @@ export const useAppStore = create<AppState>((set, get) => ({
           `🎉 Level Up! You reached Level ${currentLvl}: ${lvlName}!`,
           'success'
         );
+        get().addInboxItem({
+          category: 'xp',
+          title: `Level Up! 🎉`,
+          body: `You reached Level ${currentLvl}: ${lvlName}!`,
+        });
       } catch {}
+    } else if (label) {
+      get().addInboxItem({
+        category: 'xp',
+        title: `+${amount} XP Earned`,
+        body: label,
+      });
     }
   },
 
@@ -420,6 +501,11 @@ export const useAppStore = create<AppState>((set, get) => ({
       try {
         confetti({ particleCount: 60, spread: 60 });
         get().showNotification(`🏆 New Trophy Unlocked!`, 'success');
+        get().addInboxItem({
+          category: 'xp',
+          title: '🏆 Badge Unlocked!',
+          body: `You earned a new badge: ${badgeKey.replace(/_/g, ' ')}.`,
+        });
       } catch {}
     }
   },
@@ -436,6 +522,11 @@ export const useAppStore = create<AppState>((set, get) => ({
     localStorage.setItem('fff_gamification', JSON.stringify(optimistic));
     set({ gamification: optimistic });
     get().showNotification(`✅ Quest Completed! +${rewardXp} XP Earned!`, 'success');
+    get().addInboxItem({
+      category: 'success',
+      title: 'Quest Completed! ✅',
+      body: `+${rewardXp} XP earned from quest: ${questId.replace(/_/g, ' ')}.`,
+    });
 
     // Persist server-side
     portalApi
@@ -456,6 +547,11 @@ export const useAppStore = create<AppState>((set, get) => ({
               `🎉 Level Up! You reached Level ${res.new_level}: ${res.new_level_name}!`,
               'success'
             );
+            get().addInboxItem({
+              category: 'xp',
+              title: 'Level Up! 🎉',
+              body: `You reached Level ${res.new_level}: ${res.new_level_name}!`,
+            });
           } catch {}
         }
       })
@@ -515,19 +611,148 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   setAssessmentResult: (result) => {
+    const prevPillars = get().assessment.latestResult?.pillar_scores ?? {};
+    const updatedPillarScores = {
+      ...prevPillars,
+      ...result.pillar_scores,
+    };
+
+    const isSinglePillar = Object.keys(result.pillar_scores ?? {}).length === 1;
+
+    let newFfmiScore = result.ffmi_score;
+    let newTier = result.tier;
+    let newTierName = result.tier_classification;
+
+    if (isSinglePillar) {
+      // For single-pillar assessments, cumulative farm FFMI is the sum of all reviewed pillars' scores * 3.0
+      const totalFfmi = Object.values(updatedPillarScores).reduce((acc, score) => {
+        const normalized = score <= 1.0 ? score : score / 3.0;
+        return acc + normalized * 3.0;
+      }, 0);
+      newFfmiScore = Math.round(totalFfmi * 100) / 100;
+
+      if (newFfmiScore >= 21) {
+        newTier = 5;
+        newTierName = 'Future Ready Farm';
+      } else if (newFfmiScore >= 16) {
+        newTier = 4;
+        newTierName = 'Investment Ready Farm';
+      } else if (newFfmiScore >= 10) {
+        newTier = 3;
+        newTierName = 'Structured Farm';
+      } else if (newFfmiScore >= 5) {
+        newTier = 2;
+        newTierName = 'Emerging Agribusiness';
+      } else {
+        newTier = 1;
+        newTierName = 'Informal Farm';
+      }
+    }
+
+    const nextUser = {
+      ...get().user,
+      ffmi_score: newFfmiScore,
+      tier: newTier,
+      tier_name: newTierName,
+    };
+    try {
+      localStorage.setItem('fff_user', JSON.stringify(nextUser));
+    } catch {}
+
     set((state) => ({
       assessment: {
         ...state.assessment,
-        latestResult: result,
+        id: null,
+        scope: 'full',
+        targetPillarId: null,
+        questions: [],
+        answers: {},
+        currentIndex: 0,
+        latestResult: {
+          ...result,
+          pillar_scores: updatedPillarScores,
+        },
       },
-      user: {
-        ...state.user,
-        ffmi_score: result.ffmi_score,
-        tier: result.tier,
-        tier_name: result.tier_classification,
-      },
+      user: nextUser,
       activeScreen: 'screen-result',
     }));
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Add inbox item for assessment completion
+    get().addInboxItem({
+      category: 'success',
+      title: 'Assessment Complete ✅',
+      body: isSinglePillar
+        ? `Pillar audit complete. Farm FFMI is now ${newFfmiScore.toFixed(1)} / 24.0 (${newTierName}).`
+        : `Assessment complete. Your FFMI score is ${newFfmiScore.toFixed(1)} / 24.0 (${newTierName}).`,
+    });
+  },
+
+  openShare: (result) => {
+    set({ shareResult: result });
+  },
+
+  closeShare: () => {
+    set({ shareResult: null });
+  },
+
+  setLatestResult: (result) => {
+    const prevPillars = get().assessment.latestResult?.pillar_scores ?? {};
+    const updatedPillarScores = {
+      ...prevPillars,
+      ...result.pillar_scores,
+    };
+
+    const isSinglePillar = Object.keys(result.pillar_scores ?? {}).length === 1;
+
+    let newFfmiScore = result.ffmi_score;
+    let newTier = result.tier;
+    let newTierName = result.tier_classification;
+
+    if (isSinglePillar) {
+      const totalFfmi = Object.values(updatedPillarScores).reduce((acc, score) => {
+        const normalized = score <= 1.0 ? score : score / 3.0;
+        return acc + normalized * 3.0;
+      }, 0);
+      newFfmiScore = Math.round(totalFfmi * 100) / 100;
+
+      if (newFfmiScore >= 21) {
+        newTier = 5;
+        newTierName = 'Future Ready Farm';
+      } else if (newFfmiScore >= 16) {
+        newTier = 4;
+        newTierName = 'Investment Ready Farm';
+      } else if (newFfmiScore >= 10) {
+        newTier = 3;
+        newTierName = 'Structured Farm';
+      } else if (newFfmiScore >= 5) {
+        newTier = 2;
+        newTierName = 'Emerging Agribusiness';
+      } else {
+        newTier = 1;
+        newTierName = 'Informal Farm';
+      }
+    }
+
+    const nextUser = {
+      ...get().user,
+      ffmi_score: newFfmiScore,
+      tier: newTier,
+      tier_name: newTierName,
+    };
+    try {
+      localStorage.setItem('fff_user', JSON.stringify(nextUser));
+    } catch {}
+
+    set((state) => ({
+      assessment: {
+        ...state.assessment,
+        latestResult: {
+          ...result,
+          pillar_scores: updatedPillarScores,
+        },
+      },
+      user: nextUser,
+    }));
   },
 }));

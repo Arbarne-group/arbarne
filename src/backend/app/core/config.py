@@ -60,9 +60,12 @@ class Settings(BaseSettings):
     )
 
     # ─── Auth ───────────────────────────────────────────────────────
-    jwt_secret: str = Field(default="change-me-in-production", alias="JWT_SECRET")
+    jwt_secret: str | None = Field(default=None, alias="JWT_SECRET")
     jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
     jwt_expire_minutes: int = Field(default=1440, alias="JWT_EXPIRE_MINUTES")
+
+    # ─── CORS ───────────────────────────────────────────────────────
+    cors_origins: str | None = Field(default=None, alias="CORS_ORIGINS")
 
     # ─── Paths ──────────────────────────────────────────────────────
     backend_dir: Path = (

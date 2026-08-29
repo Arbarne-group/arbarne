@@ -9,6 +9,7 @@ optional — the deterministic report path must work if the LLM is down.
 from __future__ import annotations
 
 import logging
+import json
 from typing import Any
 
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -86,6 +87,39 @@ class LLMClient:
         except Exception as e:
             logger.warning("LLM unavailable, using fallback narrative: %s", e)
             return _fallback_narrative(report_payload)
+
+    @retry(stop=stop_after_attempt(2), wait=wait_exponential(min=1, max=3))
+    def generate_diagnosis(self, system_prompt: str, user_prompt: str) -> dict:
+        """Generate a structured diagnosis (per-pillar + overall) as JSON.
+
+        The caller is responsible for building the prompt (see
+        :mod:`app.diagnosis.prompt`). This method only performs the model call
+        and parses the JSON response.
+
+        Raises:
+            LLMUnavailable / JSONDecodeError: on failure, so the caller can fall
+            back to the deterministic diagnosis builder.
+        """
+        client = self._get_client()
+        try:
+            msg = client.chat.completions.create(
+                model=settings.qwen_model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.4,
+            )
+            content = getattr(msg.choices[0].message, "content", "") or ""
+            parsed = json.loads(content)
+            if not isinstance(parsed, dict) or "pillars" not in parsed:
+                raise ValueError("LLM diagnosis missing required 'pillars' key")
+            parsed.setdefault("is_fallback", False)
+            return parsed
+        except Exception as e:  # noqa: BLE001 - propagated to deterministic fallback
+            logger.warning("LLM diagnosis failed, falling back: %s", e)
+            raise
 
 
 def _fallback_narrative(payload: dict) -> str:

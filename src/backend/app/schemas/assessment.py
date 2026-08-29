@@ -212,3 +212,50 @@ class AllSectionsReportResponse(BaseModel):
     sections: list[SectionReportResponse]
 
 
+class DiagnosisPillarReport(BaseModel):
+    """Structured, personalised diagnosis for a single pillar."""
+
+    pillar_id: int
+    pillar_name: str
+    status_level: str
+    pillar_score: float
+    strengths: list[str] = Field(default_factory=list)
+    key_gaps: list[str] = Field(default_factory=list)
+    root_causes: list[str] = Field(default_factory=list)
+    personalised_recommendations: list[dict] = Field(default_factory=list)
+    coaching_approach: str = ""
+    aspiration_alignment: str = ""
+
+
+class DiagnosisOverallReport(BaseModel):
+    """Holistic, cross-pillar diagnosis."""
+
+    executive_summary: str = ""
+    transformation_trajectory: str = ""
+    holistic_strengths: list[str] = Field(default_factory=list)
+    priority_roadmap: list[str] = Field(default_factory=list)
+    key_risks: list[str] = Field(default_factory=list)
+    vision_alignment: str = ""
+
+
+class DiagnosisReport(BaseModel):
+    """Combined professional diagnosis (per-pillar + overall).
+
+    Built from the assessment result AND the farmer profile. Populated by the
+    LLM when available, otherwise by a deterministic fallback (``is_fallback``).
+    """
+
+    overall: DiagnosisOverallReport
+    pillars: list[DiagnosisPillarReport] = Field(default_factory=list)
+    is_fallback: bool = False
+    generated_at: str | None = None
+
+
+class DiagnosisReportResponse(BaseModel):
+    """Response wrapper for the diagnosis endpoint."""
+
+    assessment_id: uuid.UUID
+    diagnosis: DiagnosisReport | None = None
+    is_fallback: bool = False
+
+

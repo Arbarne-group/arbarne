@@ -4,6 +4,7 @@ import {
   Question,
   AssessmentResult,
   AssessmentHistoryItem,
+  DiagnosisReport,
   AssessmentComparison,
   DashboardSummary,
   GamificationState,
@@ -86,9 +87,11 @@ export const authApi = {
       farm_region: res.region || 'Western Kenya',
       farm_size_acres: res.size_acres || 5.0,
       farm_crop_type: res.crop_type || 'Mixed Crop & Livestock',
-      tier: 3,
-      tier_name: 'Structured Farm',
-      ffmi_score: 13.8,
+      tier: 1,
+      tier_name: 'Informal Farm',
+      ffmi_score: 0,
+      farmer_profile: res.farmer_profile,
+      farm_image: res.farm_image || '',
     };
     return { access_token: res.access_token, user };
   },
@@ -103,6 +106,7 @@ export const authApi = {
       region: userData.farm_region || userData.region,
       size_acres: userData.farm_size_acres || userData.size_acres,
       crop_type: userData.farm_crop_type || userData.crop_type,
+      farmer_profile: userData.farmer_profile,
     });
     const user: User = {
       id: res.user_id,
@@ -117,7 +121,8 @@ export const authApi = {
       farm_crop_type: res.crop_type || userData.farm_crop_type || 'Mixed Crop & Livestock',
       tier: 1,
       tier_name: 'Informal Farm',
-      ffmi_score: 5.0,
+      ffmi_score: 0,
+      farmer_profile: res.farmer_profile,
     };
     return { access_token: res.access_token, user };
   },
@@ -138,6 +143,8 @@ export const authApi = {
       tier: 3,
       tier_name: 'Structured Farm',
       ffmi_score: 13.8,
+      farmer_profile: res.farmer_profile,
+      farm_image: res.farm_image || '',
     };
   },
 
@@ -150,6 +157,8 @@ export const authApi = {
       region: data.farm_region,
       crop_type: data.farm_crop_type,
       size_acres: data.farm_size_acres,
+      farmer_profile: data.farmer_profile,
+      farm_image: data.farm_image,
     });
     return {
       id: res.id,
@@ -162,9 +171,11 @@ export const authApi = {
       farm_region: res.farm_region || data.farm_region,
       farm_size_acres: res.farm_size_acres || data.farm_size_acres,
       farm_crop_type: res.farm_crop || data.farm_crop_type,
-      tier: data.tier || 3,
-      tier_name: data.tier_name || 'Structured Farm',
-      ffmi_score: data.ffmi_score || 13.8,
+      tier: data.tier || 1,
+      tier_name: data.tier_name || 'Informal Farm',
+      ffmi_score: data.ffmi_score || 0,
+      farmer_profile: res.farmer_profile,
+      farm_image: res.farm_image || '',
     };
   },
 
@@ -276,6 +287,12 @@ export const assessmentApi = {
       pillar_scores: item.pillar_scores || {},
     }));
   },
+
+  getDiagnosis: (assessmentId: number | string) =>
+    apiRequest<{ assessment_id: string; diagnosis: DiagnosisReport; is_fallback: boolean }>(
+      `/api/assessments/${assessmentId}/diagnosis`,
+      'GET',
+    ),
 };
 
 export const portalApi = {
@@ -294,19 +311,11 @@ export const portalApi = {
       category: s.category || 'Agro-Services',
       service_title: s.title || s.service_title || 'Agro-Enterprise Service',
       description: s.description || '',
-      pricing_kes: typeof s.pricing_kes === 'number' ? s.pricing_kes : undefined,
-      pricing_unit: s.pricing_unit || 'unit',
-      cost_model:
-        s.cost_model ||
-        (typeof s.pricing_kes === 'number'
-          ? `KES ${s.pricing_kes.toLocaleString()} / ${s.pricing_unit || 'unit'}`
-          : 'Contact for pricing'),
-      region_served: s.region_served || 'Western & Rift Valley',
-      verified: s.verified ?? true,
-      rating: s.rating ?? 4.8,
+      cost_model: s.cost_model || 'Contact for pricing',
       pillar_id: s.pillar_id,
       is_recommended: s.is_recommended ?? false,
       contact_phone: s.contact_phone,
+      icon: s.icon,
     }));
   },
 
@@ -351,6 +360,9 @@ export const portalApi = {
       description: m.summary || m.description || '',
       completed: m.status === 'completed' || m.completed || false,
       is_recommended: m.is_recommended ?? false,
+      format_type: m.format_type,
+      key_takeaways: m.key_takeaways,
+      icon: m.icon,
     }));
   },
 

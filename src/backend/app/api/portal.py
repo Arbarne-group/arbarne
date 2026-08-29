@@ -9,7 +9,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, selectinload
 
-from app.core.auth import get_optional_user
+from app.core.auth import get_current_user, get_optional_user
 from app.db.session import get_db
 from app.models.assessment import Assessment, Farm
 from app.models.portal import (
@@ -137,12 +137,22 @@ def request_service(
 @router.post("/services/{request_id}/deliver", response_model=ServiceRequestOut)
 def deliver_service(
     request_id: uuid.UUID,
+    current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db),
 ) -> ServiceRequestOut:
     """Mark a requested service as delivered, recording capability improvement."""
     req = db.query(ServiceRequest).options(selectinload(ServiceRequest.service)).filter(ServiceRequest.id == request_id).one_or_none()
     if not req:
         raise HTTPException(status_code=404, detail="Service request not found")
+
+    if current_user and req.user_id and req.user_id != current_user.id and getattr(current_user, "role", "") not in (
+        "verifier",
+        "admin",
+        "staff",
+    ):
+        raise HTTPException(
+            status_code=403, detail="Not authorized to update this service request"
+        )
 
     req.status = "delivered"
     req.delivered_at = datetime.now(timezone.utc)
@@ -248,7 +258,7 @@ def complete_learning_module(
         db.query(LearningProgress)
         .filter(LearningProgress.module_id == module_id, LearningProgress.user_id == user_id)
         .first()
-    )
+    ) if user_id else None
     if not progress:
         progress = LearningProgress(
             module_id=module_id,
@@ -287,16 +297,18 @@ def get_dashboard_summary(
     farm_name = farm.name if farm and farm.name else "My Demonstration Farm"
     region = farm.region if farm and farm.region else "Western Kenya"
 
-    latest_assessment_query = db.query(Assessment).filter(Assessment.status == "submitted")
+    latest_assessment = None
+    total_assessments = 0
     if farm:
-        latest_assessment_query = latest_assessment_query.filter(Assessment.farm_id == farm.id)
-    latest_assessment = latest_assessment_query.order_by(Assessment.submitted_at.desc()).first()
-
-    total_assessments = (
-        db.query(Assessment)
-        .filter(Assessment.farm_id == farm.id)
-        .count() if farm else db.query(Assessment).count()
-    )
+        latest_assessment = (
+            db.query(Assessment)
+            .filter(Assessment.farm_id == farm.id, Assessment.status == "submitted")
+            .order_by(Assessment.submitted_at.desc())
+            .first()
+        )
+        total_assessments = (
+            db.query(Assessment).filter(Assessment.farm_id == farm.id).count()
+        )
 
     ffmi_score = latest_assessment.ffmi_score if latest_assessment else None
     tier = latest_assessment.tier if latest_assessment else None

@@ -170,12 +170,9 @@ def score_assessment(
         )
         capability_count += len(cap_statuses)
 
-    # FFMI is the sum of capability status levels across all capabilities,
-    # normalized to a 0..24 scale (8 pillars × 3 points max = 24 points total).
-    if capability_count > 0:
-        ffmi_score = round(raw_ffmi * 24.0 / (5.0 * capability_count), 2)
-    else:
-        ffmi_score = 0.0
+    # In the Future Farms Framework, each pillar has a maximum contribution of 3.0 points.
+    # Total FFMI score across all pillars assessed is sum(pillar_score * 3.0) for a max of 24.0.
+    ffmi_score = round(sum(score * 3.0 for score in pillar_scores.values()), 2)
 
     tier, classification = _tier_for_score(ffmi_score, bands)
 

@@ -20,6 +20,8 @@ import { ReportsPage } from './pages/ReportsPage';
 import { PillarDetailPage } from './pages/PillarDetailPage';
 import { OnboardingPage } from './pages/OnboardingPage';
 import { AuthPage } from './pages/AuthPage';
+import { NotificationsPage } from './pages/NotificationsPage';
+import { ShareAchievementModal } from './components/common/ShareAchievementModal';
 
 export const App: React.FC = () => {
   const {
@@ -161,12 +163,19 @@ export const App: React.FC = () => {
         return <OnboardingPage />;
       case 'screen-auth':
         return <AuthPage />;
+      case 'screen-notifications':
+        return <NotificationsPage />;
       default:
         return <DashboardPage />;
     }
   };
 
-  return <AppLayout>{renderScreen()}</AppLayout>;
+  return (
+    <>
+      <AppLayout>{renderScreen()}</AppLayout>
+      <ShareAchievementModal />
+    </>
+  );
 };
 
 export default App;

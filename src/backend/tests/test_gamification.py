@@ -16,6 +16,7 @@ from app.gamification.engine import (
     get_or_create_gamification,
 )
 from app.main import app
+from app.models.assessment import Farm
 from app.models.gamification import UserGamification
 from app.models.user import User
 
@@ -31,6 +32,18 @@ def db_session():
     Base.metadata.create_all(engine)
     SessionLocal = sessionmaker(bind=engine)
     session = SessionLocal()
+
+    # Seed sample farmers for leaderboard testing
+    for i in range(1, 6):
+        u = User(name=f"Farmer {i}", email=f"farmer{i}@test.com", phone=f"+25470000000{i}")
+        session.add(u)
+        session.flush()
+        f = Farm(user_id=u.id, name=f"Farm {i}", region="Western Kenya", size_acres=5.0)
+        session.add(f)
+        g = UserGamification(user_id=u.id, total_xp=i * 200, level=i, level_name=f"Level {i}")
+        session.add(g)
+    session.commit()
+
     yield session
     session.close()
 
@@ -39,14 +52,14 @@ def test_calculate_level_thresholds():
     """Verify deterministic level calculation math across all XP milestones."""
     lvl, name, min_xp, next_xp, prog = calculate_level(0)
     assert lvl == 1
-    assert name == "Seedling Farmer"
+    assert name == "Seedling Pioneer"
     assert min_xp == 0
     assert next_xp == 200
     assert prog == 0.0
 
     lvl, name, min_xp, next_xp, prog = calculate_level(250)
     assert lvl == 2
-    assert name == "Emerging Cultivator"
+    assert name == "Green Sprout"
     assert min_xp == 200
     assert next_xp == 500
     assert 0.16 <= prog <= 0.17
@@ -60,10 +73,10 @@ def test_calculate_level_thresholds():
 
     lvl, name, min_xp, next_xp, prog = calculate_level(1400)
     assert lvl == 4
-    assert name == "Commercial Grower"
+    assert name == "Agro Vanguard"
     assert min_xp == 1000
-    assert next_xp == 1800
-    assert prog == 0.50
+    assert next_xp == 2000
+    assert prog == 0.40
 
     lvl, name, min_xp, next_xp, prog = calculate_level(4500)
     assert lvl == 7
@@ -128,7 +141,7 @@ def test_generate_quests(db_session: Session):
 
 def test_generate_leaderboard(db_session: Session):
     """Test generating the national (all-region) smallholder leaderboard with podium entries."""
-    res = generate_leaderboard(db_session, None, region="Western Kenya")
+    res = generate_leaderboard(db_session, None, region="All Regions")
     assert res.region == "All Regions"
     assert res.total_participants > 0
     assert len(res.top_entries) >= 5
@@ -167,7 +180,7 @@ def test_gamification_api_endpoints(db_session: Session):
         assert action_data["xp_earned"] == 15
 
         # 3. GET Leaderboard
-        lb_res = client.get("/api/portal/gamification/leaderboard?region=Western+Kenya")
+        lb_res = client.get("/api/portal/gamification/leaderboard?region=All+Regions")
         assert lb_res.status_code == 200
         lb_data = lb_res.json()
         assert lb_data["region"] == "All Regions"

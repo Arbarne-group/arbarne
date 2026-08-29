@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAppStore } from '../store/useStore';
 import { mlApi } from '../services/api';
-import { Sparkles, Calculator, TrendingUp, RefreshCw, ExternalLink, Loader2 } from 'lucide-react';
+import { Sparkles, Calculator, TrendingUp, RefreshCw, Loader2 } from 'lucide-react';
 
 interface SimResult {
   ffmi_score: number;
@@ -30,6 +30,8 @@ export const SimulatorPage: React.FC = () => {
 
   const [result, setResult] = useState<SimResult | null>(null);
   const [loadingSim, setLoadingSim] = useState(false);
+  const [hasRun, setHasRun] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleReset = () => {
     setSolarAdopted(false);
@@ -37,22 +39,23 @@ export const SimulatorPage: React.FC = () => {
     setDigitalRecords(false);
     setFarmAcres(user.farm_size_acres || 5.0);
     showNotification(
-      'Simulator reset to standard baseline values.',
+      'Reset to the starting values.',
       'info',
       3000,
-      'Parameters Reset'
+      'Reset'
     );
   };
 
   const runSimulation = useCallback(async () => {
     setLoadingSim(true);
+    setError(false);
     try {
-      // Map the three investment levers onto the 8 FFF pillar score fractions (0..1).
+      // Map the simple choices onto the 8 farm areas (0..1).
       const pillar_scores: Record<number, number> = {
-        1: digitalRecords ? 0.85 : 0.45, // Smart Farming & Digital Transformation
-        2: solarAdopted ? 0.85 : 0.4, // Productive Use of Renewable Energy
+        1: digitalRecords ? 0.85 : 0.45,
+        2: solarAdopted ? 0.85 : 0.4,
         3: 0.5,
-        4: soilHealthLevel / 100, // Indigenous Knowledge & Climate Resilience
+        4: soilHealthLevel / 100,
         5: 0.5,
         6: 0.5,
         7: 0.5,
@@ -66,23 +69,26 @@ export const SimulatorPage: React.FC = () => {
         pillar_scores,
       });
       setResult(res);
+      setHasRun(true);
     } catch (err) {
+      setError(true);
       showNotification(
-        'Simulation service unavailable. Showing the last known result.',
+        "We couldn't generate a projection right now. Please try again.",
         'error',
         4000,
-        'Simulation Error'
+        'Try Again'
       );
     } finally {
       setLoadingSim(false);
     }
   }, [digitalRecords, solarAdopted, soilHealthLevel, farmAcres, user, showNotification]);
 
-  // Re-run whenever a lever changes.
+  // Re-run automatically only after the first manual run.
   useEffect(() => {
+    if (!hasRun) return;
     const t = setTimeout(() => runSimulation(), 250);
     return () => clearTimeout(t);
-  }, [runSimulation]);
+  }, [runSimulation, hasRun]);
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
@@ -90,13 +96,13 @@ export const SimulatorPage: React.FC = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30 text-xs font-bold uppercase tracking-wider mb-2">
             <Sparkles className="w-4 h-4 text-[#009924]" />
-            <span>Empirical MLOps Simulation Sandbox</span>
+            <span>Plan Ahead</span>
           </div>
           <h1 className="font-serif text-3xl font-bold text-slate-900">
-            Scenario Simulator &amp; ROI Forecast
+            Plan Ahead
           </h1>
           <p className="text-xs sm:text-sm text-slate-600">
-            Model how targeted capital and capability investments across the 8 FFF pillars influence yield trajectories, financial gross margins, and tier advancement — powered by the live backend simulation engine.
+            Try a few simple changes and see how they could raise your Farm Score.
           </p>
         </div>
 
@@ -105,22 +111,22 @@ export const SimulatorPage: React.FC = () => {
           className="self-start sm:self-auto flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-xs shadow-sm transition-colors"
         >
           <RefreshCw className="w-3.5 h-3.5" />
-          <span>Reset Baseline</span>
+          <span>Start Over</span>
         </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Simulation Controls */}
+        {/* Controls */}
         <div className="p-6 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm space-y-6">
           <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
             <Calculator className="w-4 h-4 text-[#045D61]" />
-            <span>Investment Levers</span>
+            <span>Things to Try</span>
           </div>
 
           <div className="space-y-4 text-xs">
             <div>
               <label className="font-bold text-slate-800 block mb-1">
-                Farm Acreage: <span className="text-[#045D61]">{farmAcres} Acres</span>
+                Size of Your Farm: <span className="text-[#045D61]">{farmAcres} acres</span>
               </label>
               <input
                 type="range"
@@ -135,8 +141,8 @@ export const SimulatorPage: React.FC = () => {
 
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
-                <div className="font-bold text-slate-900">Solar Drip Irrigation</div>
-                <div className="text-[11px] text-slate-500">Pillar 2 Clean Energy</div>
+                <div className="font-bold text-slate-900">Use Solar Drip Irrigation</div>
+                <div className="text-[11px] text-slate-500">Water your crops with solar power</div>
               </div>
               <input
                 type="checkbox"
@@ -148,7 +154,7 @@ export const SimulatorPage: React.FC = () => {
 
             <div>
               <label className="font-bold text-slate-800 block mb-1">
-                Soil Health Index: <span className="text-[#045D61]">{soilHealthLevel}%</span>
+                Soil Health: <span className="text-[#045D61]">{soilHealthLevel}%</span>
               </label>
               <input
                 type="range"
@@ -162,8 +168,8 @@ export const SimulatorPage: React.FC = () => {
 
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
-                <div className="font-bold text-slate-900">Digital Bookkeeping &amp; Records</div>
-                <div className="text-[11px] text-slate-500">Pillar 1 Smart Farming</div>
+                <div className="font-bold text-slate-900">Keep Farm Records</div>
+                <div className="text-[11px] text-slate-500">Write down what you do on the farm</div>
               </div>
               <input
                 type="checkbox"
@@ -173,31 +179,49 @@ export const SimulatorPage: React.FC = () => {
               />
             </div>
           </div>
+
+          <button
+            onClick={() => runSimulation()}
+            disabled={loadingSim}
+            className="w-full py-2.5 rounded-xl bg-[#045D61] hover:bg-[#023c3f] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-70 cursor-pointer"
+          >
+            {loadingSim ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <TrendingUp className="w-4 h-4" />
+            )}
+            <span>{hasRun ? 'Update Projection' : 'See Your Projection'}</span>
+          </button>
         </div>
 
-        {/* Projected Financial Return Results */}
+        {/* Results */}
         <div className="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#023c3f] via-[#045D61] to-[#012527] border border-[#009924]/40 text-white shadow-2xl space-y-6 flex flex-col justify-between">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold text-[#009924] tracking-wider">
-                Simulation Outcome
+                What This Could Mean
                 {loadingSim && (
                   <Loader2 className="w-3 h-3 inline-block ml-2 animate-spin align-middle" />
                 )}
               </span>
               {result && (
                 <span className="px-3 py-1 rounded-full bg-[#FFD700] text-[#023c3f] font-extrabold text-[10px] uppercase shadow-sm">
-                  Tier {result.tier} {result.tier_classification} Projected
+                  Stage {result.tier} {result.tier_classification} Possible
                 </span>
               )}
             </div>
 
-            {result ? (
+            {loadingSim ? (
+              <div className="flex items-center justify-center py-16 text-sm font-semibold text-white/70">
+                <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                Calculating your projection…
+              </div>
+            ) : result ? (
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
                   <div className="p-4 rounded-2xl bg-white/10 border border-white/15">
                     <div className="text-[10px] text-white/70 font-bold uppercase">
-                      Projected FFMI
+                      Possible Farm Score
                     </div>
                     <div className="text-2xl font-bold text-white mt-1">
                       {result.ffmi_score.toFixed(2)}{' '}
@@ -207,7 +231,7 @@ export const SimulatorPage: React.FC = () => {
 
                   <div className="p-4 rounded-2xl bg-white/10 border border-white/15">
                     <div className="text-[10px] text-white/70 font-bold uppercase">
-                      Strongest Pillar
+                      Your Strongest Area
                     </div>
                     <div className="text-lg font-bold text-white mt-1 leading-tight">
                       {result.strongest_pillar_name}
@@ -216,7 +240,7 @@ export const SimulatorPage: React.FC = () => {
 
                   <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-[#009924]/20 border border-[#009924]/40">
                     <div className="text-[10px] text-white/80 font-bold uppercase">
-                      Priority Gap
+                      Area to Improve Most
                     </div>
                     <div className="text-lg font-extrabold text-[#FFD700] mt-1 leading-tight">
                       {result.priority_gap_pillar_name}
@@ -226,7 +250,7 @@ export const SimulatorPage: React.FC = () => {
 
                 <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
                   <div className="text-[10px] text-white/70 font-bold uppercase mb-1">
-                    Trajectory Risk
+                    Things to Watch Out For
                   </div>
                   <div className="text-sm font-semibold text-white/90">
                     {result.trajectory_risk}
@@ -237,7 +261,7 @@ export const SimulatorPage: React.FC = () => {
                   <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/80 space-y-2 max-h-56 overflow-y-auto">
                     <div className="font-bold text-white flex items-center gap-2">
                       <TrendingUp className="w-4 h-4 text-[#FFD700]" />
-                      <span>Recommended Capability Actions</span>
+                      <span>Suggested Next Steps</span>
                     </div>
                     {result.recommendations.slice(0, 5).map((r, i) => (
                       <div key={i} className="border-t border-white/10 pt-2">
@@ -250,31 +274,39 @@ export const SimulatorPage: React.FC = () => {
                   </div>
                 )}
               </>
+            ) : error ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center space-y-4">
+                <div className="w-14 h-14 rounded-3xl bg-white/10 text-white/80 flex items-center justify-center text-2xl">
+                  ⚠️
+                </div>
+                <p className="text-sm font-semibold text-white/80 max-w-sm">
+                  We couldn't generate a projection right now. Check your connection and try again.
+                </p>
+                <button
+                  onClick={() => runSimulation()}
+                  className="px-5 py-2.5 rounded-xl bg-[#FFD700] hover:bg-[#ffe033] text-[#023c3f] font-extrabold text-xs transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Try Again</span>
+                </button>
+              </div>
             ) : (
-              <div className="flex items-center justify-center py-16 text-sm font-semibold text-white/70">
-                <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                Running live simulation…
+              <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
+                <div className="w-14 h-14 rounded-3xl bg-white/10 text-white/80 flex items-center justify-center text-2xl">
+                  🌱
+                </div>
+                <p className="text-sm font-semibold text-white/80 max-w-sm">
+                  Adjust the options on the left, then see how your Farm Score could change.
+                </p>
+                <button
+                  onClick={() => runSimulation()}
+                  className="px-5 py-2.5 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                >
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span>See Your Projection</span>
+                </button>
               </div>
             )}
-          </div>
-
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/80 space-y-2">
-            <div className="font-bold text-white flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[#FFD700]" />
-              <span>Gradio ML Interactive Sandbox Link</span>
-            </div>
-            <p className="text-white/70">
-              For complete multi-variable Random Forest feature weighting and Isolation Forest anomaly boundaries, access the live Gradio application:
-            </p>
-            <a
-              href="/ml-demo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#FFD700] hover:text-white underline pt-1"
-            >
-              <span>Launch Full Gradio Simulation Studio</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
           </div>
         </div>
       </div>

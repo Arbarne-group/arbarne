@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
-from sqlalchemy import JSON, DateTime, ForeignKey, String, UniqueConstraint, Uuid as UUID
+from sqlalchemy import JSON, DateTime, ForeignKey, String, Text, UniqueConstraint, Uuid as UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
@@ -33,6 +33,7 @@ class Farm(Base):
     region: Mapped[str | None] = mapped_column(String(128), nullable=True)
     crop_type: Mapped[str | None] = mapped_column(String(128), nullable=True)
     size_acres: Mapped[float | None] = mapped_column(nullable=True, default=5.0)
+    farm_image: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
     )
@@ -85,6 +86,9 @@ class Assessment(Base):
     tier: Mapped[int | None] = mapped_column(nullable=True)
     pillar_scores: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
     capability_status: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
+    # Structured, LLM-personalised diagnosis (per-pillar + overall). Optional and
+    # never required for scoring — populated on demand via the /diagnosis endpoint.
+    diagnosis_report: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     farm: Mapped[Farm] = relationship(back_populates="assessments")
     rule_version: Mapped["RuleVersion | None"] = relationship(back_populates="assessments")

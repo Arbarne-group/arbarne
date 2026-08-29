@@ -18,6 +18,9 @@ class RegisterIn(BaseModel):
     region: Optional[str] = Field("Western Kenya", description="Farm agro-ecological region")
     crop_type: Optional[str] = Field("Mixed Crop & Livestock", description="Primary enterprise")
     size_acres: Optional[float] = Field(5.0, description="Farm acreage")
+    farmer_profile: Optional[dict] = Field(
+        None, description="Structured Farmer Profile onboarding answers"
+    )
 
 
 class LoginIn(BaseModel):
@@ -43,6 +46,7 @@ class AuthResponse(BaseModel):
     region: Optional[str] = None
     size_acres: Optional[float] = None
     crop_type: Optional[str] = None
+    farm_image: Optional[str] = None
 
 
 class UserProfileOut(BaseModel):
@@ -59,6 +63,8 @@ class UserProfileOut(BaseModel):
     farm_region: Optional[str] = None
     farm_crop: Optional[str] = None
     farm_size_acres: Optional[float] = None
+    farmer_profile: Optional[dict] = None
+    farm_image: Optional[str] = None
 
 
 class UpdateProfileIn(BaseModel):
@@ -69,3 +75,5 @@ class UpdateProfileIn(BaseModel):
     region: Optional[str] = None
     crop_type: Optional[str] = None
     size_acres: Optional[float] = None
+    farmer_profile: Optional[dict] = None
+    farm_image: Optional[str] = None

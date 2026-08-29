@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, selectinload
 
-from app.core.auth import get_optional_user
+from app.core.auth import get_current_user, get_optional_user
 from app.db.session import get_db
 from app.models.assessment import Answer, Assessment, Farm
 from app.models.framework import Capability, Pillar, Question, RuleVersion
@@ -23,6 +23,7 @@ from app.schemas.assessment import (
     AssessmentComparisonResponse,
     AssessmentHistoryItem,
     CapabilityAnalysisItem,
+    DiagnosisReportResponse,
     EvidenceIn,
     EvidenceResponse,
     FarmCreate,
@@ -39,10 +40,62 @@ from app.schemas.framework import QuestionOut
 router = APIRouter(prefix="/api/assessments", tags=["assessments"])
 
 
+def get_owned_assessment(
+    assessment_id: uuid.UUID,
+    current_user: Optional[User] = Depends(get_optional_user),
+    db: Session = Depends(get_db),
+) -> Assessment:
+    """Return an assessment only if it belongs to the authenticated user.
+
+    Enforces row-level ownership (User -> Farm -> Assessment) so one farmer
+    cannot read or mutate another farmer's assessment (IDOR prevention).
+    """
+    q = (
+        db.query(Assessment)
+        .options(
+            selectinload(Assessment.answers),
+            selectinload(Assessment.recommendations),
+            selectinload(Assessment.farm).selectinload(Farm.user),
+        )
+        .join(Farm, Assessment.farm_id == Farm.id)
+        .filter(Assessment.id == assessment_id)
+    )
+    if current_user:
+        q = q.filter(Farm.user_id == current_user.id)
+    assessment = q.one_or_none()
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    return assessment
+
+
+def get_verifiable_assessment(
+    assessment_id: uuid.UUID,
+    current_user: Optional[User] = Depends(get_optional_user),
+    db: Session = Depends(get_db),
+) -> Assessment:
+    """Assessment access for the verifier workflow: owner OR a privileged role."""
+    assessment = (
+        db.query(Assessment)
+        .join(Farm, Assessment.farm_id == Farm.id)
+        .filter(Assessment.id == assessment_id)
+        .one_or_none()
+    )
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    if current_user:
+        is_owner = bool(assessment.farm and assessment.farm.user_id == current_user.id)
+        is_verifier = getattr(current_user, "role", "") in ("verifier", "admin", "staff")
+        if not (is_owner or is_verifier):
+            raise HTTPException(
+                status_code=403, detail="Not authorized to access this assessment"
+            )
+    return assessment
+
+
 @router.post("/start", response_model=StartAssessmentResponse)
 def start_assessment(
     farm: FarmCreate,
-    current_user: User | None = Depends(get_optional_user),
+    current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db),
 ) -> StartAssessmentResponse:
     """Start a new assessment for a farm. Supports Path A (pillar) and Path B (full)."""
@@ -109,15 +162,20 @@ def start_assessment(
 
 @router.get("/history", response_model=list[AssessmentHistoryItem])
 def list_assessment_history(
-    current_user: User | None = Depends(get_optional_user),
+    current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db),
 ) -> list[AssessmentHistoryItem]:
-    """Retrieve historical assessment timeline and scores."""
-    query = db.query(Assessment).options(selectinload(Assessment.target_pillar))
+    """Retrieve the authenticated user's historical assessment timeline and scores."""
+    query = (
+        db.query(Assessment)
+        .options(selectinload(Assessment.target_pillar))
+        .join(Farm, Assessment.farm_id == Farm.id)
+    )
     if current_user:
-        query = query.join(Farm, Assessment.farm_id == Farm.id).filter(Farm.user_id == current_user.id)
+        query = query.filter(Farm.user_id == current_user.id)
+    query = query.order_by(Assessment.started_at.desc())
 
-    assessments = query.order_by(Assessment.started_at.desc()).all()
+    assessments = query.all()
     history = []
     for a in assessments:
         tier_name = None
@@ -148,11 +206,17 @@ def list_assessment_history(
 def compare_assessments(
     baseline_id: uuid.UUID,
     current_id: uuid.UUID,
+    current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db),
 ) -> AssessmentComparisonResponse:
-    """Compare baseline assessment with a follow-up assessment."""
-    baseline = db.get(Assessment, baseline_id)
-    current = db.get(Assessment, current_id)
+    """Compare the authenticated user's baseline assessment with a follow-up."""
+    q_base = db.query(Assessment).join(Farm, Assessment.farm_id == Farm.id).filter(Assessment.id == baseline_id)
+    q_curr = db.query(Assessment).join(Farm, Assessment.farm_id == Farm.id).filter(Assessment.id == current_id)
+    if current_user:
+        q_base = q_base.filter(Farm.user_id == current_user.id)
+        q_curr = q_curr.filter(Farm.user_id == current_user.id)
+    baseline = q_base.one_or_none()
+    current = q_curr.one_or_none()
     if not baseline or not current:
         raise HTTPException(status_code=404, detail="One or both assessments not found")
 
@@ -211,11 +275,9 @@ def save_answers(
     assessment_id: uuid.UUID,
     answers: list[AnswerIn],
     db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
 ) -> dict:
     """Save (or upsert) answers for an assessment. Idempotent per question."""
-    assessment = db.get(Assessment, assessment_id)
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
     if assessment.status not in ("draft", "submitted"):
         raise HTTPException(
             status_code=409,
@@ -259,19 +321,12 @@ def save_answers(
 def submit_assessment(
     assessment_id: uuid.UUID,
     db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
 ) -> SubmitAssessmentResponse:
     """Submit the assessment, compute the score, and persist recommendations.
 
     Uses the deterministic scoring engine. Does not depend on the LLM.
     """
-    assessment = (
-        db.query(Assessment)
-        .options(selectinload(Assessment.answers))
-        .filter(Assessment.id == assessment_id)
-        .one_or_none()
-    )
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
     if assessment.status not in ("draft", "submitted"):
         raise HTTPException(
             status_code=409,
@@ -404,21 +459,9 @@ def submit_assessment(
 @router.get("/{assessment_id}")
 def get_assessment(
     assessment_id: uuid.UUID,
-    db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
 ) -> dict:
-    """Read-only view of an assessment, including its score and recommendations."""
-    assessment = (
-        db.query(Assessment)
-        .options(
-            selectinload(Assessment.answers),
-            selectinload(Assessment.recommendations),
-        )
-        .filter(Assessment.id == assessment_id)
-        .one_or_none()
-    )
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
-
+    """Read-only view of the authenticated user's assessment, including its score and recommendations."""
     return {
         "assessment_id": str(assessment.id),
         "farm_id": str(assessment.farm_id),
@@ -430,6 +473,7 @@ def get_assessment(
         "tier": assessment.tier,
         "pillar_scores": assessment.pillar_scores,
         "capability_status": assessment.capability_status,
+        "diagnosis_report": assessment.diagnosis_report,
         "rule_version_id": assessment.rule_version_id,
         "answers": [
             {"question_id": a.question_id, "value": a.value} for a in assessment.answers
@@ -454,13 +498,10 @@ def submit_evidence(
     assessment_id: uuid.UUID,
     evidence_in: EvidenceIn,
     db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
 ) -> EvidenceResponse:
     """Submit evidence for an assessment question (FFV pathway)."""
     from app.models.evidence import Evidence
-
-    assessment = db.get(Assessment, assessment_id)
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
 
     question = db.get(Question, evidence_in.question_id)
     if not question:
@@ -497,12 +538,9 @@ def verify_assessment(
     assessment_id: uuid.UUID,
     verify_in: VerifyAssessmentIn,
     db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_verifiable_assessment),
 ) -> dict:
     """Verifier review workflow endpoint."""
-    assessment = db.get(Assessment, assessment_id)
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
-
     assessment.status = verify_in.status
     db.commit()
     return {
@@ -515,19 +553,10 @@ def verify_assessment(
 @router.get("/{assessment_id}/narrative", response_model=NarrativeReportResponse)
 def get_assessment_narrative(
     assessment_id: uuid.UUID,
-    db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
 ) -> NarrativeReportResponse:
     """Get executive narrative report summary for an assessment using Anthropic Claude."""
     from app.llm.client import llm_client
-
-    assessment = (
-        db.query(Assessment)
-        .options(selectinload(Assessment.recommendations))
-        .filter(Assessment.id == assessment_id)
-        .one_or_none()
-    )
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
 
     if assessment.status != "submitted" or assessment.ffmi_score is None:
         raise HTTPException(
@@ -555,26 +584,69 @@ def get_assessment_narrative(
     )
 
 
+@router.get("/{assessment_id}/diagnosis", response_model=DiagnosisReportResponse)
+def get_assessment_diagnosis(
+    assessment_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
+) -> DiagnosisReportResponse:
+    """Get the combined professional diagnosis (per-pillar + overall).
+
+    Merges the deterministic assessment result with the farmer's profile to
+    produce a personalised diagnosis. The LLM populates a structured template
+    when available; otherwise a deterministic fallback (``is_fallback``) is
+    returned. The result is cached on the assessment for subsequent calls.
+    """
+    from app.diagnosis.engine import generate_diagnosis_report
+
+    if assessment.status not in ("submitted", "verified", "under_review"):
+        raise HTTPException(
+            status_code=400,
+            detail="Assessment must be submitted before a diagnosis can be generated",
+        )
+
+    # Return cached diagnosis if present
+    if assessment.diagnosis_report:
+        cached = assessment.diagnosis_report
+        return DiagnosisReportResponse(
+            assessment_id=assessment.id,
+            diagnosis=cached,
+            is_fallback=bool(cached.get("is_fallback", False)),
+        )
+
+    farmer_profile = None
+    if assessment.farm and assessment.farm.user:
+        farmer_profile = assessment.farm.user.farmer_profile
+
+    report = generate_diagnosis_report(
+        db=db,
+        assessment=assessment,
+        farmer_profile=farmer_profile,
+        farm=assessment.farm,
+        recommendations=list(assessment.recommendations),
+    )
+
+    assessment.diagnosis_report = report
+    db.commit()
+
+    return DiagnosisReportResponse(
+        assessment_id=assessment.id,
+        diagnosis=report,
+        is_fallback=bool(report.get("is_fallback", False)),
+    )
+
+
 @router.get("/{assessment_id}/pdf")
 def get_assessment_pdf(
     assessment_id: uuid.UUID,
     db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
 ):
     """Generate and download the official PDF Farm Transformation Report."""
     from fastapi.responses import Response
-    from app.models.assessment import Farm
     from app.reporting.pdf import generate_transformation_pdf
 
-    assessment = (
-        db.query(Assessment)
-        .options(selectinload(Assessment.recommendations))
-        .filter(Assessment.id == assessment_id)
-        .one_or_none()
-    )
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
-
-    farm = db.query(Farm).filter(Farm.id == assessment.farm_id).one_or_none() if assessment.farm_id else None
+    farm = assessment.farm
 
     # Determine risk label
     ffmi = assessment.ffmi_score or 0.0
@@ -794,20 +866,9 @@ def get_assessment_section_report(
     assessment_id: uuid.UUID,
     pillar_id: int,
     db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
 ) -> SectionReportResponse:
     """Generate detailed diagnostic report and chart analysis for an individual assessment section."""
-    assessment = (
-        db.query(Assessment)
-        .options(
-            selectinload(Assessment.answers),
-            selectinload(Assessment.recommendations),
-        )
-        .filter(Assessment.id == assessment_id)
-        .one_or_none()
-    )
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
-
     return _build_section_analysis(assessment, pillar_id, db)
 
 
@@ -815,20 +876,9 @@ def get_assessment_section_report(
 def get_all_assessment_sections_report(
     assessment_id: uuid.UUID,
     db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
 ) -> AllSectionsReportResponse:
     """Generate diagnostic reports and chart analysis across all 8 assessment sections."""
-    assessment = (
-        db.query(Assessment)
-        .options(
-            selectinload(Assessment.answers),
-            selectinload(Assessment.recommendations),
-        )
-        .filter(Assessment.id == assessment_id)
-        .one_or_none()
-    )
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
-
     sections = [_build_section_analysis(assessment, pid, db) for pid in range(1, 9)]
 
     return AllSectionsReportResponse(
@@ -845,25 +895,13 @@ def get_assessment_section_pdf(
     assessment_id: uuid.UUID,
     pillar_id: int,
     db: Session = Depends(get_db),
+    assessment: Assessment = Depends(get_owned_assessment),
 ):
     """Generate and download the official 1-page Section Diagnostic PDF Report."""
     from fastapi.responses import Response
-    from app.models.assessment import Farm
     from app.reporting.pdf import generate_section_pdf
 
-    assessment = (
-        db.query(Assessment)
-        .options(
-            selectinload(Assessment.answers),
-            selectinload(Assessment.recommendations),
-        )
-        .filter(Assessment.id == assessment_id)
-        .one_or_none()
-    )
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
-
-    farm = db.query(Farm).filter(Farm.id == assessment.farm_id).one_or_none() if assessment.farm_id else None
+    farm = assessment.farm
     section_data = _build_section_analysis(assessment, pillar_id, db)
 
     caps_data = [

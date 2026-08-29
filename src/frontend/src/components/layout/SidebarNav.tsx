@@ -3,34 +3,27 @@ import { useAppStore } from '../../store/useStore';
 import { ScreenId } from '../../types';
 import {
   Home,
-  Trophy,
-  ClipboardList,
-  History,
-  Sparkles,
-  Wrench,
+  PlayCircle,
+  BarChart3,
+  TrendingUp,
   GraduationCap,
+  Wrench,
   User,
+  Settings,
   LogOut,
   LogIn,
   X,
   PanelLeftClose,
   PanelLeftOpen,
-  BarChart3,
-  Settings,
-  Compass,
-  TrendingUp,
-  CreditCard,
-  PlayCircle,
   ChevronRight,
-  BookOpen,
+  Compass,
+  CreditCard,
 } from 'lucide-react';
 
 interface NavItem {
   id: ScreenId;
   label: string;
   icon: React.ReactNode;
-  pill?: string;
-  badge?: string;
 }
 
 export const SidebarNav: React.FC = () => {
@@ -40,7 +33,6 @@ export const SidebarNav: React.FC = () => {
     user,
     token,
     logout,
-    gamification,
     sidebarOpen,
     sidebarCollapsed,
     toggleSidebar,
@@ -59,56 +51,37 @@ export const SidebarNav: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [toggleSidebarCollapsed]);
 
-  const navGroups: Array<{ title: string; icon?: React.ReactNode; items: NavItem[] }> = [
+  const navGroups: Array<{ title: string; items: NavItem[] }> = [
     {
-      title: 'HOME',
+      title: 'Main',
       items: [
-        { id: 'screen-dashboard', label: 'Dashboard', icon: <Home className="w-4 h-4" /> },
-        {
-          id: 'screen-onboarding',
-          label: 'Onboarding Flow',
-          icon: <Compass className="w-4 h-4" />,
-          badge: 'Setup',
-        },
-      ],
-    },
-    {
-      title: 'DIAGNOSTICS',
-      items: [
+        { id: 'screen-dashboard', label: 'Home', icon: <Home className="w-4 h-4" /> },
         {
           id: 'screen-assessment-choice',
-          label: 'Start Assessment',
+          label: 'Check My Farm',
           icon: <PlayCircle className="w-4 h-4" />,
-          badge: 'Go',
         },
-        { id: 'screen-reports', label: 'Reports & Insights', icon: <BarChart3 className="w-4 h-4" /> },
-        { id: 'screen-history', label: 'History & Compare', icon: <History className="w-4 h-4" /> },
-        {
-          id: 'screen-simulator',
-          label: 'Scenario Simulator',
-          icon: <Sparkles className="w-4 h-4" />,
-        },
-      ],
-    },
-    {
-      title: 'GROWTH & RESOURCES',
-      items: [
-        { id: 'screen-learning', label: 'Learning Academy', icon: <GraduationCap className="w-4 h-4" /> },
-        { id: 'screen-services', label: 'Services Portal', icon: <Wrench className="w-4 h-4" /> },
-      ],
-    },
-    {
-      title: 'MY FARM',
-      items: [
+        { id: 'screen-result', label: 'My Results', icon: <BarChart3 className="w-4 h-4" /> },
         {
           id: 'screen-journey',
-          label: 'Transformation Journey',
-          icon: <Trophy className="w-4 h-4" />,
-          pill: `🔥 ${gamification.streak_days}d`,
+          label: 'My Progress',
+          icon: <TrendingUp className="w-4 h-4" />,
         },
-        { id: 'screen-profile', label: 'Farm Profile', icon: <User className="w-4 h-4" /> },
-        { id: 'screen-pricing', label: 'Pricing & Plans', icon: <CreditCard className="w-4 h-4" /> },
-        { id: 'screen-settings', label: 'Platform Settings', icon: <Settings className="w-4 h-4" /> },
+        {
+          id: 'screen-learning',
+          label: 'Learn',
+          icon: <GraduationCap className="w-4 h-4" />,
+        },
+        { id: 'screen-services', label: 'Get Help', icon: <Wrench className="w-4 h-4" /> },
+      ],
+    },
+    {
+      title: 'More',
+      items: [
+        { id: 'screen-profile', label: 'My Farm', icon: <User className="w-4 h-4" /> },
+        { id: 'screen-onboarding', label: 'First-Time Setup', icon: <Compass className="w-4 h-4" /> },
+        { id: 'screen-pricing', label: 'Plans & Billing', icon: <CreditCard className="w-4 h-4" /> },
+        { id: 'screen-settings', label: 'Account', icon: <Settings className="w-4 h-4" /> },
       ],
     },
   ];
@@ -148,23 +121,20 @@ export const SidebarNav: React.FC = () => {
               sidebarCollapsed ? 'justify-center' : ''
             }`}
             onClick={() => setScreen('screen-dashboard')}
-            title="Future Farms Framework"
+            title="Future Farms"
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#009924]/30 to-[#045D61] border border-[#009924]/40 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform backdrop-blur-md flex-shrink-0">
               <img
                 src="/assets/arbarne-emblem-white.png"
-                alt="FFF"
+                alt="Future Farms"
                 className="h-6 w-auto object-contain drop-shadow"
               />
             </div>
 
             {!sidebarCollapsed && (
               <div className="overflow-hidden whitespace-nowrap">
-                <span className="text-[9px] font-extrabold text-[#009924] tracking-wider uppercase block">
-                  Future Farms
-                </span>
                 <h1 className="font-serif text-base font-bold text-white tracking-tight">
-                  Framework
+                  Future Farms
                 </h1>
               </div>
             )}
@@ -175,8 +145,8 @@ export const SidebarNav: React.FC = () => {
             <button
               onClick={toggleSidebarCollapsed}
               className="hidden lg:flex p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-              title="Collapse sidebar (Ctrl+B)"
-              aria-label="Collapse sidebar"
+              title="Hide menu (Ctrl+B)"
+              aria-label="Hide menu"
             >
               <PanelLeftClose className="w-4 h-4" />
             </button>
@@ -186,7 +156,7 @@ export const SidebarNav: React.FC = () => {
           <button
             className="lg:hidden p-1.5 text-white/70 hover:text-white rounded-lg hover:bg-white/10"
             onClick={() => toggleSidebar(false)}
-            aria-label="Close Sidebar"
+            aria-label="Close menu"
           >
             <X className="w-5 h-5" />
           </button>
@@ -198,8 +168,8 @@ export const SidebarNav: React.FC = () => {
             <button
               onClick={toggleSidebarCollapsed}
               className="p-1.5 rounded-lg text-[#009924] hover:text-white hover:bg-white/10 transition-colors"
-              title="Expand sidebar (Ctrl+B)"
-              aria-label="Expand sidebar"
+              title="Show menu (Ctrl+B)"
+              aria-label="Show menu"
             >
               <PanelLeftOpen className="w-4 h-4" />
             </button>
@@ -214,12 +184,12 @@ export const SidebarNav: React.FC = () => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-xs font-bold text-white truncate">
-                {user.farm_name || 'Demonstration Farm'}
+                {user.farm_name || 'My Farm'}
               </div>
               <div className="flex items-center gap-1.5 text-[10px] text-white/80">
                 <span className="truncate">{user.farm_region || 'Western Kenya'}</span>
                 <span className="px-1.5 py-0.2 rounded-full bg-[#1E88E5]/30 text-[8px] font-extrabold text-white border border-[#1E88E5]/40">
-                  Tier {user.tier || 3}
+                  Stage {user.tier || 3}
                 </span>
               </div>
             </div>
@@ -228,7 +198,7 @@ export const SidebarNav: React.FC = () => {
           <div
             className="hidden lg:flex justify-center my-2.5 cursor-pointer"
             onClick={() => setScreen('screen-profile')}
-            title={`${user.farm_name || 'Demonstration Farm'} (Tier ${user.tier || 3})`}
+            title={`${user.farm_name || 'My Farm'} (Stage ${user.tier || 3})`}
           >
             <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-sm relative">
               <span>🌾</span>
@@ -294,36 +264,11 @@ export const SidebarNav: React.FC = () => {
                         <>
                           <span className="flex-1 text-left truncate">{item.label}</span>
 
-                          {/* Streak / Pill badge */}
-                          {item.pill && (
-                            <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-[#EF6C00]/25 border border-[#FFD700]/40 text-[#FFD700]">
-                              {item.pill}
-                            </span>
-                          )}
-
-                          {/* New / Go / status badges */}
-                          {item.badge && (
-                            <span
-                              className={`text-[8px] font-extrabold px-1.5 py-0.5 rounded-full border ${
-                                item.badge === 'Go'
-                                  ? 'bg-[#009924]/25 border-[#009924]/50 text-[#7ffd7b]'
-                                  : 'bg-[#1E88E5]/20 border-[#1E88E5]/40 text-[#90CAF9]'
-                              }`}
-                            >
-                              {item.badge}
-                            </span>
-                          )}
-
-                          {/* Chevron on active item (optional affordance) */}
+                          {/* Chevron on active item */}
                           {isActive && (
                             <ChevronRight className="w-3.5 h-3.5 text-white/30 flex-shrink-0" />
                           )}
                         </>
-                      )}
-
-                      {/* Collapsed notification dot for pill/badge items */}
-                      {sidebarCollapsed && (item.pill || item.badge) && (
-                        <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#FFD700] animate-pulse" />
                       )}
                     </button>
                   );
@@ -332,20 +277,6 @@ export const SidebarNav: React.FC = () => {
             </div>
           ))}
         </nav>
-
-        {/* ─── Upgrade Pro CTA ──────────────────────────────────────── */}
-        <div className="px-3 pb-2">
-          <button
-            onClick={() => setScreen('screen-pricing')}
-            className={`w-full bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 ${
-              sidebarCollapsed ? 'p-2.5 h-10 w-10 mx-auto' : 'py-2.5 px-3'
-            }`}
-            title="Assessment Pricing & Subscriptions"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#FFD700] flex-shrink-0" />
-            {!sidebarCollapsed && <span>Upgrade Pro</span>}
-          </button>
-        </div>
 
         {/* ─── Footer Identity & Auth ────────────────────────────────── */}
         <div className="p-2.5 border-t border-white/10 bg-[#012527]/80 space-y-2">
@@ -358,7 +289,7 @@ export const SidebarNav: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-bold text-white truncate">{user.name}</div>
                 <div className="text-[9px] text-white/70 truncate">
-                  Tier {user.tier || 3} • {user.farm_region || 'Kenya'}
+                  Stage {user.tier || 3} • {user.farm_region || 'Kenya'}
                 </div>
               </div>
             </div>
@@ -366,7 +297,7 @@ export const SidebarNav: React.FC = () => {
             <div
               className="hidden lg:flex justify-center py-1 cursor-pointer"
               onClick={() => setScreen('screen-profile')}
-              title={`${user.name} - Profile Settings`}
+              title={`${user.name} - My Farm`}
             >
               <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-sm hover:bg-white/20 transition-colors">
                 🧑‍🌾

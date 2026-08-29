@@ -57,12 +57,20 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — open in dev for the offline-first frontend on a different port
+# CORS — never use a wildcard with allow_credentials (browsers reject it).
+# In dev, allow the Vite frontend origins explicitly; in prod, require CORS_ORIGINS.
+if settings.app_debug:
+    allow_origins = ["http://127.0.0.1:5173", "http://localhost:5173"]
+elif settings.cors_origins:
+    allow_origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+else:
+    allow_origins = []
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if settings.app_debug else [],
+    allow_origins=allow_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 

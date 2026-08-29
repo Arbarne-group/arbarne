@@ -29,39 +29,7 @@ export const HistoryPage: React.FC = () => {
       const res = await assessmentApi.getHistory();
       setHistoryList(res);
     } catch {
-      // Fallback demo data
-      setHistoryList([
-        {
-          id: 'demo-101',
-          completed_at: '2026-08-20T14:30:00Z',
-          submitted_at: '2026-08-20T14:30:00Z',
-          score: 13.80,
-          ffmi_score: 13.80,
-          tier: 3,
-          tier_classification: 'Structured Farm',
-          scope: 'full',
-        },
-        {
-          id: 'demo-098',
-          completed_at: '2026-06-15T09:15:00Z',
-          submitted_at: '2026-06-15T09:15:00Z',
-          score: 11.20,
-          ffmi_score: 11.20,
-          tier: 2,
-          tier_classification: 'Emerging Agribusiness',
-          scope: 'full',
-        },
-        {
-          id: 'demo-082',
-          completed_at: '2026-03-10T11:00:00Z',
-          submitted_at: '2026-03-10T11:00:00Z',
-          score: 8.50,
-          ffmi_score: 8.50,
-          tier: 1,
-          tier_classification: 'Informal Farm',
-          scope: 'full',
-        },
-      ]);
+      // Leave historyList empty so the "No Farm Checks Yet" state is shown.
     } finally {
       setLoading(false);
     }
@@ -76,7 +44,7 @@ export const HistoryPage: React.FC = () => {
         setScreen('screen-result');
       }
     } catch (err: any) {
-      showNotification(err.message || 'Could not load scorecard details', 'error');
+      showNotification(err.message || 'Could not load the results', 'error');
     } finally {
       setLoadingId(null);
     }
@@ -87,26 +55,26 @@ export const HistoryPage: React.FC = () => {
       <div>
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30 text-xs font-bold uppercase tracking-wider mb-2">
           <History className="w-4 h-4 text-[#009924]" />
-          <span>Historical Audits &amp; Progress</span>
+          <span>Past Farm Checks</span>
         </div>
         <h1 className="font-serif text-3xl font-bold text-slate-900">
-          Assessment History &amp; Benchmarks
+          Past Farm Checks
         </h1>
         <p className="text-xs sm:text-sm text-slate-600">
-          Review previous capability audits, track FFMI trajectory across seasons, and download past scorecard certificates.
+          Look back at your previous Farm Checks, see how your Farm Score has changed, and download a copy.
         </p>
       </div>
 
       <div className="p-6 sm:p-8 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="font-serif text-xl font-bold text-slate-900">
-            Completed Farm Audits ({historyList.length})
+            Your Past Farm Checks ({historyList.length})
           </h3>
           <button
             onClick={() => setScreen('screen-assessment-choice')}
             className="px-4 py-2 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
           >
-            <span>New Assessment</span>
+            <span>New Farm Check</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -114,7 +82,7 @@ export const HistoryPage: React.FC = () => {
         {loading ? (
           <div className="flex items-center justify-center py-16 text-xs font-semibold text-slate-500">
             <Loader2 className="w-5 h-5 animate-spin mr-2 text-[#045D61]" />
-            <span>Loading assessment records...</span>
+            <span>Loading your Farm Checks...</span>
           </div>
         ) : historyList.length === 0 ? (
           <div className="text-center py-16 space-y-4">
@@ -122,16 +90,16 @@ export const HistoryPage: React.FC = () => {
               📋
             </div>
             <div className="space-y-1">
-              <h4 className="font-serif text-lg font-bold text-slate-900">No Assessment History Found</h4>
+              <h4 className="font-serif text-lg font-bold text-slate-900">No Farm Checks Yet</h4>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                You haven't completed any capability audits yet. Start your first self-assessment to establish your farm's baseline.
+                You haven't done a Farm Check yet. Start one to see how developed your farm is.
               </p>
             </div>
             <button
               onClick={() => setScreen('screen-assessment-choice')}
               className="px-5 py-2.5 rounded-xl bg-[#045D61] hover:bg-[#023c3f] text-white font-bold text-xs transition-colors shadow-md"
             >
-              Start Baseline Assessment
+              Start a Farm Check
             </button>
           </div>
         ) : (
@@ -178,13 +146,13 @@ export const HistoryPage: React.FC = () => {
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-bold text-sm text-slate-900">
-                          {scoreVal !== null ? `FFMI: ${scoreVal.toFixed(2)} pts` : 'In Progress'}
+                          {scoreVal !== null ? `Farm Score: ${scoreVal.toFixed(2)}` : 'In Progress'}
                         </span>
                         <span
                           className="px-2.5 py-0.5 rounded-full text-white font-extrabold text-[10px] shadow-xs"
                           style={{ backgroundColor: tierMeta.hex }}
                         >
-                          Tier {tierVal}
+                          Stage {tierVal}
                         </span>
                         {isPillarScope && (
                           <span className="px-2 py-0.5 rounded-full bg-[#1E88E5]/10 text-[#1E88E5] text-[10px] font-bold">
@@ -200,7 +168,7 @@ export const HistoryPage: React.FC = () => {
                         <span>•</span>
                         <span className="text-slate-600 font-medium">
                           {item.status === 'submitted' || item.status === 'completed'
-                            ? 'Completed Audit'
+                            ? 'Completed'
                             : 'In Progress'}
                         </span>
                       </div>
@@ -218,7 +186,7 @@ export const HistoryPage: React.FC = () => {
                       ) : (
                         <CheckCircle2 className="w-3.5 h-3.5" />
                       )}
-                      <span>View Scorecard</span>
+                      <span>View Result</span>
                     </button>
 
                     <a
@@ -228,7 +196,7 @@ export const HistoryPage: React.FC = () => {
                       className="px-3.5 py-2 rounded-xl bg-[#045D61]/10 hover:bg-[#045D61]/20 text-[#045D61] border border-[#045D61]/30 font-bold text-xs flex items-center gap-1.5 transition-colors"
                     >
                       <Download className="w-3.5 h-3.5" />
-                      <span>PDF</span>
+                      <span>Download</span>
                     </a>
                   </div>
                 </div>
@@ -240,4 +208,3 @@ export const HistoryPage: React.FC = () => {
     </div>
   );
 };
-

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../store/useStore';
+import { authApi } from '../services/api';
+import { EAST_AFRICA_REGIONS, MAJOR_KENYA_REGIONS, EAST_AFRICA_COUNTRY_CENTERS } from '../constants/regions';
 import {
   Tractor,
   Factory,
@@ -49,7 +51,10 @@ import {
   Radio,
   Sliders,
   Settings2,
+  UserCircle2,
 } from 'lucide-react';
+import { FARMER_PROFILE_SECTIONS } from '../data/farmerProfile';
+import type { FarmerProfile } from '../types';
 
 interface OnboardingFormState {
   // Step 1: Profile
@@ -80,6 +85,9 @@ interface OnboardingFormState {
   recording_method: string;
   goals: string[];
   selected_package: 'pillar' | 'full';
+
+  // Step 4: Farmer Profile
+  farmer_profile: FarmerProfile;
 }
 
 const REGION_PRESETS: Record<
@@ -173,17 +181,18 @@ const AVAILABLE_CROPS = [
 ];
 
 const AVAILABLE_GOALS = [
-  'GlobalG.A.P. & Export Readiness',
-  '100% Transition to Renewable Energy',
-  'Secure Agri-Financing & Commercial Loans',
-  'Regenerative Soil Health & Biochar',
-  'Direct B2B Market Contracts & Offtake',
-  'Digital Telemetry & IoT Sensor Automation',
+  'Sell to big buyers or export',
+  'Use more solar and clean energy',
+  'Get a farm loan',
+  'Build healthier soil',
+  'Sell directly to businesses',
+  'Use smart sensors and apps',
 ];
 
 export const OnboardingPage: React.FC = () => {
   const {
     user,
+    token,
     setUser,
     setScreen,
     showNotification,
@@ -194,7 +203,7 @@ export const OnboardingPage: React.FC = () => {
   const [step, setStep] = useState<number>(1);
   const [formData, setFormData] = useState<OnboardingFormState>({
     farm_type: 'commercial',
-    farm_name: user.farm_name || 'My Agro-Enterprise',
+    farm_name: user.farm_name || 'My Farm',
     farm_region: user.farm_region || 'Nakuru County, Kenya',
     farm_size: user.farm_size_acres || 150,
     farm_size_unit: 'acres',
@@ -223,6 +232,7 @@ export const OnboardingPage: React.FC = () => {
       'GlobalG.A.P. & Export Readiness',
     ],
     selected_package: 'full',
+    farmer_profile: { ...(user.farmer_profile || {}) } as FarmerProfile,
   });
 
   const [locating, setLocating] = useState(false);
@@ -274,6 +284,24 @@ export const OnboardingPage: React.FC = () => {
     );
   };
 
+  // One-tap selection of a wider East African country/region (no fabricated
+  // climate data — just centres the map and records the farmer's location).
+  const handleSelectCountry = (c: { name: string; lat: number; lng: number }) => {
+    setFormData((prev) => ({
+      ...prev,
+      location_search: c.name,
+      farm_region: c.name,
+      latitude: c.lat,
+      longitude: c.lng,
+      climate_zone: '',
+      avg_rainfall: '',
+      avg_temp: '',
+      soil_type: '',
+      solar_irradiance: '',
+    }));
+    showNotification(`Location set to ${c.name}`, 'info', 2500, 'Region Selected');
+  };
+
   const toggleCrop = (crop: string) => {
     setFormData((prev) => {
       const exists = prev.crops.includes(crop);
@@ -323,23 +351,36 @@ export const OnboardingPage: React.FC = () => {
   };
 
   const handleSaveAndExit = () => {
+    const sizeAcres =
+      formData.farm_size_unit === 'hectares'
+        ? Number(formData.farm_size) * 2.471
+        : Number(formData.farm_size);
+    const farmerProfile = {
+      ...formData.farmer_profile,
+      completed: true,
+      updated_at: new Date().toISOString(),
+    };
     setUser({
       ...user,
       farm_name: formData.farm_name,
       farm_region: formData.farm_region,
       farm_crop_type: formData.crops.join(', '),
-      farm_size_acres:
-        formData.farm_size_unit === 'hectares'
-          ? Number(formData.farm_size) * 2.471
-          : Number(formData.farm_size),
+      farm_size_acres: sizeAcres,
       energy_source: formData.energy_source,
+      farmer_profile: farmerProfile,
     });
-    showNotification('Onboarding progress saved to your farm profile.', 'info', 3000, 'Saved Progress');
+    if (token) {
+      authApi
+        .updateProfile({ farmer_profile: farmerProfile })
+        .then((updated) => setUser({ ...user, farmer_profile: updated.farmer_profile }))
+        .catch(() => undefined);
+    }
+    showNotification('Your progress was saved.', 'info', 3000, 'Saved Progress');
     setScreen('screen-dashboard');
   };
 
   const handleNext = () => {
-    if (step < 3) {
+    if (step < 4) {
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -349,6 +390,12 @@ export const OnboardingPage: React.FC = () => {
           ? Number(formData.farm_size) * 2.471
           : Number(formData.farm_size);
 
+      const farmerProfile = {
+        ...formData.farmer_profile,
+        completed: true,
+        updated_at: new Date().toISOString(),
+      };
+
       setUser({
         ...user,
         farm_name: formData.farm_name,
@@ -356,22 +403,30 @@ export const OnboardingPage: React.FC = () => {
         farm_crop_type: formData.crops.join(', '),
         farm_size_acres: sizeAcres,
         energy_source: formData.energy_source,
+        farmer_profile: farmerProfile,
       });
+
+      if (token) {
+        authApi
+          .updateProfile({ farmer_profile: farmerProfile })
+          .then((updated) => setUser({ ...user, farmer_profile: updated.farmer_profile }))
+          .catch(() => undefined);
+      }
 
       awardXp(50, 'Completed Farm Onboarding Profile');
       showNotification(
-        'Farm profile completed! Welcome to Future Farms Framework.',
+        'Your farm is set up! Welcome to Future Farms.',
         'success',
         4000,
-        'Profile Verified'
+        'All Done'
       );
 
       if (formData.selected_package === 'pillar') {
         setCheckoutItem({
           scope: 'pillar',
           pillarId: 2,
-          title: 'Single Pillar Assessment — Renewable Energy',
-          description: 'Deep-dive diagnostic for Productive Use of Renewable Energy with instant gap analysis.',
+          title: 'Quick Check – One Area',
+          description: 'A quick check of one area with instant tips.',
           priceUsd: 1,
           priceKes: 130,
         });
@@ -391,6 +446,35 @@ export const OnboardingPage: React.FC = () => {
 
   const mapEmbedUrl = `https://maps.google.com/maps?q=${formData.latitude},${formData.longitude}&t=${formData.map_type}&z=${formData.zoom}&ie=UTF8&iwloc=&output=embed`;
 
+  // ─── Farmer Profile (Step 4) state helpers ────────────────────────────
+  const setFp = (id: string, value: string | string[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      farmer_profile: { ...prev.farmer_profile, [id]: value },
+    }));
+  };
+
+  const toggleFpMulti = (id: string, value: string, max?: number) => {
+    setFormData((prev) => {
+      const current = prev.farmer_profile[id];
+      const arr: string[] = Array.isArray(current) ? [...current] : [];
+      let nextArr: string[];
+      if (arr.includes(value)) {
+        nextArr = arr.filter((v) => v !== value);
+      } else {
+        if (max && arr.length >= max) {
+          showNotification(`You can select up to ${max} options.`, 'warning', 2500);
+          return prev;
+        }
+        nextArr = [...arr, value];
+      }
+      return {
+        ...prev,
+        farmer_profile: { ...prev.farmer_profile, [id]: nextArr },
+      };
+    });
+  };
+
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-12">
       {/* ─── 1. Hero / Progress Header Banner ─────────────────────────── */}
@@ -403,14 +487,14 @@ export const OnboardingPage: React.FC = () => {
             <div className="space-y-1">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#FFD700] text-[11px] font-extrabold uppercase tracking-wider border border-white/15">
                 <Compass className="w-3.5 h-3.5 text-[#7ffd7b]" />
-                <span>Farm Enterprise Setup Wizard</span>
+                <span>First-Time Setup</span>
               </div>
               <h1 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                AgriTransform Setup
+                Set Up Your Farm
               </h1>
-              <p className="text-xs sm:text-sm text-white/80 max-w-xl">
-                Configure your operational profile, location coordinates, and technology infrastructure.
-              </p>
+                <p className="text-xs sm:text-sm text-white/80 max-w-xl">
+                 A few quick steps to set up your farm. It takes about 5 minutes.
+               </p>
             </div>
 
             <button
@@ -418,7 +502,7 @@ export const OnboardingPage: React.FC = () => {
               className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/15 transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Bookmark className="w-3.5 h-3.5" />
-              <span>Save &amp; Exit to Dashboard</span>
+               <span>Save &amp; Finish</span>
             </button>
           </div>
 
@@ -427,18 +511,20 @@ export const OnboardingPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs font-semibold">
               <div className="flex items-center gap-2">
                 <span className="text-[#FFD700] font-bold uppercase tracking-wider text-[11px]">
-                  Step {step} of 3:
+                  Step {step} of 4:
                 </span>
                 <span className="text-white font-bold">
                   {step === 1
-                    ? 'Farm Profile & Operational Scale'
+                    ? 'Your Farm'
                     : step === 2
-                    ? 'Location, Satellite Mapping & Climate'
-                    : 'Technology & Infrastructure Baseline'}
+                    ? 'Farm Location'
+                    : step === 3
+                    ? 'Your Equipment'
+                    : 'Your Profile'}
                 </span>
               </div>
               <span className="text-white/70 text-[11px]">
-                {step === 1 ? '33%' : step === 2 ? '66%' : '100%'} Complete
+                {step === 1 ? '25%' : step === 2 ? '50%' : step === 3 ? '75%' : '100%'} Complete
               </span>
             </div>
 
@@ -446,17 +532,18 @@ export const OnboardingPage: React.FC = () => {
             <div className="w-full h-2.5 bg-white/15 rounded-full overflow-hidden flex p-0.5">
               <motion.div
                 className="h-full bg-gradient-to-r from-[#009924] via-[#7ffd7b] to-[#FFD700] rounded-full transition-all duration-300"
-                style={{ width: `${(step / 3) * 100}%` }}
+                style={{ width: `${(step / 4) * 100}%` }}
               />
             </div>
 
             {/* Quick Step Navigation Buttons */}
-            <div className="grid grid-cols-3 gap-2 pt-1">
+            <div className="grid grid-cols-4 gap-2 pt-1">
               {[
-                { num: 1, title: '1. Profile' },
-                { num: 2, title: '2. Location & Map' },
-                { num: 3, title: '3. Technology & Infra' },
-              ].map((s) => (
+                 { num: 1, title: '1. Your Farm' },
+                 { num: 2, title: '2. Location' },
+                 { num: 3, title: '3. Equipment' },
+                 { num: 4, title: '4. Profile' },
+               ].map((s) => (
                 <button
                   key={s.num}
                   onClick={() => setStep(s.num)}
@@ -491,14 +578,14 @@ export const OnboardingPage: React.FC = () => {
             >
               <div>
                 <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-                  Step 1 • Operational Scale
+                  Step 1 • Your Farm
                 </span>
                 <h2 className="font-serif text-2xl font-bold text-[#004447] mt-0.5">
                   Tell us about your farm
                 </h2>
-                <p className="text-xs text-slate-600 mt-1">
-                  Select your operating scale and enterprise structure so we can tailor the diagnostic questions and peer benchmarks.
-                </p>
+                 <p className="text-xs text-slate-600 mt-1">
+                   Tell us a bit about your farm so we can give you the right check.
+                 </p>
               </div>
 
               {/* Farm Type */}
@@ -568,7 +655,7 @@ export const OnboardingPage: React.FC = () => {
                       <MoreHorizontal className="w-6 h-6 text-[#004447]" />
                     </div>
                     <span className="text-xs font-bold text-slate-900">Cooperative / Other</span>
-                    <span className="text-[10px] text-slate-500 mt-0.5">Aggregators &amp; DFI</span>
+                    <span className="text-[10px] text-slate-500 mt-0.5">Groups &amp; Aggregators</span>
                   </div>
                 </div>
               </div>
@@ -577,7 +664,7 @@ export const OnboardingPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="block text-xs font-bold text-slate-700">
-                    Enterprise / Farm Name
+                    Farm Name
                   </label>
                   <input
                     type="text"
@@ -590,15 +677,21 @@ export const OnboardingPage: React.FC = () => {
 
                 <div className="space-y-1.5">
                   <label className="block text-xs font-bold text-slate-700">
-                    County / Farm Region
+                     Your County / Region
                   </label>
                   <input
                     type="text"
+                    list="ea-regions-onboard"
                     value={formData.farm_region}
                     onChange={(e) => setFormData({ ...formData, farm_region: e.target.value })}
-                    placeholder="e.g. Nakuru / Western Kenya"
+                    placeholder="e.g. Rift Valley, Western Kenya / Kampala Uganda"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-medium text-slate-900 focus:border-[#004447] focus:ring-2 focus:ring-[#004447]/20 outline-none transition-all"
                   />
+                  <datalist id="ea-regions-onboard">
+                    {EAST_AFRICA_REGIONS.map((r) => (
+                      <option key={r} value={r} />
+                    ))}
+                  </datalist>
                 </div>
               </div>
 
@@ -607,7 +700,7 @@ export const OnboardingPage: React.FC = () => {
               {/* Farm Size */}
               <div className="space-y-3">
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Total Farm Size
+                   Farm Size
                 </label>
                 <div className="flex flex-col sm:flex-row gap-3 max-w-md">
                   <div className="flex-grow">
@@ -645,7 +738,7 @@ export const OnboardingPage: React.FC = () => {
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Primary Crops &amp; Livestock
+                     What do you grow or raise?
                   </label>
                   <p className="text-xs text-slate-500 mt-0.5">
                     Select all that apply to your primary agricultural operations.
@@ -687,13 +780,13 @@ export const OnboardingPage: React.FC = () => {
             >
               <div>
                 <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-                  Step 2 of 3 • Location &amp; Mapping
+                  Step 2 of 3 • Your Location
                 </span>
                 <h2 className="font-serif text-2xl font-bold text-[#004447] mt-0.5">
-                  Farm Location &amp; Precision Coordinates
+                  Where is your farm?
                 </h2>
                 <p className="text-xs text-slate-600 mt-1">
-                  Specify the precise geographic location of your farm to access satellite agro-meteorology and tailored soil &amp; solar recommendations.
+                  Find your farm on the map so we can give weather and soil tips for your area.
                 </p>
               </div>
 
@@ -704,12 +797,13 @@ export const OnboardingPage: React.FC = () => {
                   {/* Search Location Card */}
                   <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-800">
-                      Search Location (Region / County / Town)
+                       Find your area
                     </label>
                     <div className="relative">
                       <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
+                        list="ea-regions-onboard"
                         value={formData.location_search}
                         onChange={(e) =>
                           setFormData({
@@ -723,24 +817,43 @@ export const OnboardingPage: React.FC = () => {
                       />
                     </div>
 
-                    {/* Quick Regional Presets */}
+                    {/* Major Kenyan regions */}
                     <div className="pt-1">
                       <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">
-                        Quick Pick Region:
+                         Major Kenyan regions:
                       </span>
                       <div className="flex flex-wrap gap-1.5">
-                        {Object.entries(REGION_PRESETS).map(([key, item]) => (
+                        {MAJOR_KENYA_REGIONS.map((c) => (
                           <button
-                            key={key}
+                            key={c.name}
                             type="button"
-                            onClick={() => handleSelectPreset(key)}
+                            onClick={() => handleSelectCountry(c)}
                             className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all border cursor-pointer ${
-                              formData.location_search === item.name
-                                ? 'bg-[#004447] text-white border-[#004447] shadow-2xs'
+                              formData.farm_region === c.name
+                                ? 'bg-[#0E7C4F] text-white border-[#0E7C4F] shadow-2xs'
                                 : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
                             }`}
                           >
-                            {item.name.split('/')[0].split(',')[0]}
+                            {c.name}
+                          </button>
+                        ))}
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mt-2.5 mb-1.5">
+                         Wider East Africa:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {EAST_AFRICA_COUNTRY_CENTERS.map((c) => (
+                          <button
+                            key={c.name}
+                            type="button"
+                            onClick={() => handleSelectCountry(c)}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all border cursor-pointer ${
+                              formData.farm_region === c.name
+                                ? 'bg-[#0E7C4F] text-white border-[#0E7C4F] shadow-2xs'
+                                : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
+                            }`}
+                          >
+                            {c.name}
                           </button>
                         ))}
                       </div>
@@ -751,7 +864,7 @@ export const OnboardingPage: React.FC = () => {
                   <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                        Precision Coordinates
+                         Map Pin
                       </span>
                       <button
                         type="button"
@@ -804,7 +917,7 @@ export const OnboardingPage: React.FC = () => {
                       </div>
                       <div>
                         <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#007519] block">
-                          Agro-Ecological Benchmark
+                           Your Area's Climate
                         </span>
                         <h4 className="text-xs font-bold text-[#004447]">
                           {formData.climate_zone}
@@ -863,7 +976,7 @@ export const OnboardingPage: React.FC = () => {
                         <MapPin className="w-4 h-4 text-[#7ffd7b]" />
                       </div>
                       <div className="bg-[#004447] text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-md mt-1 whitespace-nowrap">
-                        Farm Center Point
+                         Your Farm
                       </div>
                     </div>
 
@@ -940,7 +1053,7 @@ export const OnboardingPage: React.FC = () => {
                         <span>Lat: {formData.latitude.toFixed(4)}, Lng: {formData.longitude.toFixed(4)}</span>
                       </span>
                       <span className="text-[10px] text-slate-500 font-medium">
-                        Google Maps Live Telemetry
+                         Live Map
                       </span>
                     </div>
                   </div>
@@ -961,13 +1074,13 @@ export const OnboardingPage: React.FC = () => {
             >
               <div>
                 <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-                  Step 3 of 3 • Technology &amp; Infrastructure
+                  Step 3 of 3 • Your Equipment
                 </span>
                 <h2 className="font-serif text-2xl font-bold text-[#004447] mt-0.5">
-                  Farm Infrastructure &amp; Digital Readiness
+                  Your Tools &amp; Equipment
                 </h2>
                 <p className="text-xs text-slate-600 mt-1">
-                  Select your physical equipment, digital tools, and connectivity to calibrate the 40-capability assessment baseline.
+                  Choose the tools and equipment you already have.
                 </p>
               </div>
 
@@ -976,7 +1089,7 @@ export const OnboardingPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Settings2 className="w-4 h-4 text-[#1E88E5]" />
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                    Current Physical Infrastructure (Select All That Apply)
+                    What equipment do you have? (Pick all that apply)
                   </label>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -1029,7 +1142,7 @@ export const OnboardingPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Cpu className="w-4 h-4 text-[#1E88E5]" />
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                    Digital Tools &amp; Telemetry Used
+                     Do you use any of these?
                   </label>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
@@ -1077,7 +1190,7 @@ export const OnboardingPage: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Wifi className="w-4 h-4 text-[#3949AB]" />
                     <label className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                      Connectivity Status
+                      Phone &amp; Internet
                     </label>
                   </div>
                   <div className="space-y-2.5">
@@ -1116,7 +1229,7 @@ export const OnboardingPage: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 text-[#FDD835]" />
                     <label className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                      Primary Energy Source
+                      Main Power Source
                     </label>
                   </div>
                   <div className="space-y-2.5">
@@ -1160,7 +1273,7 @@ export const OnboardingPage: React.FC = () => {
               {/* Section 5: Strategic Transformation Goals */}
               <div className="space-y-3">
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-800">
-                  Strategic Goals (Select All That Apply)
+                   What are your goals? (Pick all that apply)
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {AVAILABLE_GOALS.map((goal) => {
@@ -1196,7 +1309,7 @@ export const OnboardingPage: React.FC = () => {
               {/* Section 6: Starting Diagnostic Package Picker */}
               <div className="space-y-3">
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-800">
-                  Select Starting Diagnostic Scope
+                   Which check do you want first?
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Option A: $1 Single Pillar */}
@@ -1216,14 +1329,14 @@ export const OnboardingPage: React.FC = () => {
                         <span className="text-base font-bold text-slate-900">$1.00</span>
                       </div>
                       <h4 className="text-sm font-bold text-slate-900 mb-1">
-                        Single-Pillar Capability Deep Dive
+                         Quick Check – One Area
                       </h4>
                       <p className="text-[11px] text-slate-600 leading-relaxed">
-                        Audit a single priority area (e.g. Renewable Energy) in under 4 minutes with 25 targeted questions.
+                         Check one area in a few minutes.
                       </p>
                     </div>
                     <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-[#004447]">
-                      <span>Instant Priority Action Plan</span>
+                       <span>Quick tips to start</span>
                       <span>➔</span>
                     </div>
                   </div>
@@ -1249,19 +1362,131 @@ export const OnboardingPage: React.FC = () => {
                         <span className="text-base font-bold text-slate-900">$10.00</span>
                       </div>
                       <h4 className="text-sm font-bold text-slate-900 mb-1">
-                        Comprehensive 8-Pillar FFV Audit
+                         Full Farm Check – All Areas
                       </h4>
                       <p className="text-[11px] text-slate-600 leading-relaxed">
-                        Full 40-capability diagnostic across all 8 pillars. Calculates your definitive FFMI maturity score &amp; official certificate.
+                         Check all 8 areas and get your full farm plan.
                       </p>
                     </div>
                     <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-[#009924]">
-                      <span>Full Verified PDF Certificate</span>
+                       <span>Full plan you can download</span>
                       <span>➔</span>
                     </div>
                   </div>
                 </div>
               </div>
+            </motion.div>
+          )}
+
+          {/* ──── STEP 4: FARMER PROFILE ─────────────────────────────────── */}
+          {step === 4 && (
+            <motion.div
+              key="step4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="space-y-8"
+            >
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
+                  Step 4 of 4 • Your Profile
+                </span>
+                <h2 className="font-serif text-2xl font-bold text-[#004447] mt-0.5">
+                  Farmer Profile
+                </h2>
+                <p className="text-xs text-slate-600 mt-1">
+                  A few questions about you and how you work, so we can tailor your farm plan and guidance.
+                </p>
+              </div>
+
+              {FARMER_PROFILE_SECTIONS.map((section) => (
+                <div
+                  key={section.id}
+                  className="p-5 sm:p-6 rounded-2xl bg-slate-50/60 border border-slate-200 space-y-5"
+                >
+                  <div>
+                    <h3 className="text-sm font-bold text-[#004447]">{section.title}</h3>
+                    <p className="text-[11px] text-slate-500 mt-0.5">{section.subtitle}</p>
+                  </div>
+
+                  <div className="space-y-6">
+                    {section.questions.map((q) => {
+                      const value = formData.farmer_profile[q.id];
+                      return (
+                        <div key={q.id} className="space-y-2.5">
+                          <label className="block text-xs font-semibold text-slate-800">
+                            <span className="text-[#009924] font-bold mr-1">{q.no}.</span>
+                            {q.text}
+                          </label>
+
+                          {q.type === 'single' && q.options && (
+                            <div className="space-y-2">
+                              {q.options.map((opt) => {
+                                const selected = value === opt.value;
+                                return (
+                                  <button
+                                    key={opt.value}
+                                    type="button"
+                                    onClick={() => setFp(q.id, opt.value)}
+                                    className={`w-full text-left px-4 py-3 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${
+                                      selected
+                                        ? 'border-[#004447] bg-[#004447]/5 ring-1 ring-[#004447]'
+                                        : 'border-slate-200 bg-white hover:bg-slate-100'
+                                    }`}
+                                  >
+                                    <span className="text-xs font-medium text-slate-800">{opt.label}</span>
+                                    <div
+                                      className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                                        selected ? 'border-[#004447] bg-[#004447]' : 'border-slate-300'
+                                      }`}
+                                    >
+                                      {selected && <Check className="w-2.5 h-2.5 text-white" />}
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+
+                          {q.type === 'multi' && q.options && (
+                            <div className="flex flex-wrap gap-2">
+                              {q.options.map((opt) => {
+                                const arr = Array.isArray(value) ? value : [];
+                                const selected = arr.includes(opt.value);
+                                return (
+                                  <button
+                                    key={opt.value}
+                                    type="button"
+                                    onClick={() => toggleFpMulti(q.id, opt.value, q.max)}
+                                    className={`px-3.5 py-2 rounded-full text-xs font-semibold transition-all border cursor-pointer ${
+                                      selected
+                                        ? 'bg-[#004447] text-white border-[#004447] shadow-xs'
+                                        : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200'
+                                    }`}
+                                  >
+                                    {opt.label}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+
+                          {q.type === 'text' && (
+                            <textarea
+                              value={typeof value === 'string' ? value : ''}
+                              onChange={(e) => setFp(q.id, e.target.value)}
+                              placeholder={q.placeholder}
+                              rows={3}
+                              className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-xs font-medium text-slate-900 focus:border-[#004447] focus:ring-2 focus:ring-[#004447]/20 outline-none transition-all resize-y"
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </motion.div>
           )}
         </AnimatePresence>
@@ -1286,14 +1511,14 @@ export const OnboardingPage: React.FC = () => {
               onClick={handleSaveAndExit}
               className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
             >
-              Save Progress
+               Save for Later
             </button>
 
             <button
               onClick={handleNext}
               className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-[#004447] hover:bg-[#023c3f] transition-all shadow-md cursor-pointer"
             >
-              <span>{step === 3 ? 'Complete Setup & Launch Diagnostic' : 'Next Step'}</span>
+               <span>{step === 4 ? 'Finish & Start Check' : 'Next'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

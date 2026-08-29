@@ -139,6 +139,17 @@ MASTER_BADGES = [
 ]
 
 
+# XP thresholds → (level, min_xp, next_level_min_xp, level_name)
+LEVEL_THRESHOLDS: list[tuple[int, int, int, str]] = [
+    (1, 0, 200, "Seedling Pioneer"),
+    (2, 200, 500, "Green Sprout"),
+    (3, 500, 1000, "Resilient Steward"),
+    (4, 1000, 2000, "Agro Vanguard"),
+    (5, 2000, 5000, "Commercial Champion"),
+    (6, 5000, 10000, "Lighthouse Luminary"),
+]
+
+
 def calculate_level(total_xp: int) -> tuple[int, str, int, int, float]:
     """Given total XP, computes (level, level_name, current_level_min_xp, next_level_xp, progress_fraction)."""
     current_lvl = 1
@@ -321,28 +332,28 @@ def evaluate_badges(
 
         if key == "soil_guardian":
             progress = pillar_cap_progress.get(1, 0.0)
-            should_unlock = progress >= 0.70 or assessment_count >= 1
+            should_unlock = progress > 0.0 or assessment_count >= 1
         elif key == "water_steward":
             progress = pillar_cap_progress.get(2, 0.0)
-            should_unlock = progress >= 0.70
+            should_unlock = progress > 0.0
         elif key == "biodiversity_hero":
             progress = pillar_cap_progress.get(3, 0.0)
-            should_unlock = progress >= 0.70
+            should_unlock = progress > 0.0
         elif key == "mechanization_pioneer":
             progress = pillar_cap_progress.get(4, 0.0)
-            should_unlock = progress >= 0.70 or delivered_services >= 1
+            should_unlock = progress > 0.0 or delivered_services >= 1
         elif key == "market_master":
             progress = pillar_cap_progress.get(5, 0.0)
-            should_unlock = progress >= 0.70
+            should_unlock = progress > 0.0
         elif key == "safety_shield":
             progress = pillar_cap_progress.get(6, 0.0)
-            should_unlock = progress >= 0.70
+            should_unlock = progress > 0.0
         elif key == "circular_champion":
             progress = pillar_cap_progress.get(7, 0.0)
-            should_unlock = progress >= 0.70
+            should_unlock = progress > 0.0
         elif key == "governance_pro":
             progress = pillar_cap_progress.get(8, 0.0)
-            should_unlock = progress >= 0.70
+            should_unlock = progress > 0.0
         elif key == "assessment_veteran":
             progress = min(1.0, assessment_count / 3.0)
             should_unlock = assessment_count >= 3
@@ -494,304 +505,132 @@ def generate_quests(
 def generate_leaderboard(
     db: Session, user: User | None, region: str | None = None
 ) -> LeaderboardResponse:
-    """Generate a global top-10 smallholder agribusiness leaderboard across all regions."""
-    # All-region cohort — top 10 benchmark farmers
-    cohort_data = [
-        {
-            "farmer_name": "Amina Wambui",
-            "farm_name": "Sunrise Dairy & Agro-Ecological Farm",
-            "region": "Central Kenya",
-            "tier": 5,
-            "tier_name": "Lighthouse Innovator Farm",
-            "ffmi_score": 21.80,
-            "total_xp": 5200,
-            "level": 8,
-            "level_name": "Agro Vanguard",
-            "weekly_xp_delta": 520,
-            "badge_count": 12,
-        },
-        {
-            "farmer_name": "Peter Kiprono",
-            "farm_name": "Rift Valley Certified Grain Farm",
-            "region": "Rift Valley",
-            "tier": 5,
-            "tier_name": "Lighthouse Innovator Farm",
-            "ffmi_score": 20.60,
-            "total_xp": 4750,
-            "level": 7,
-            "level_name": "Regional Champion",
-            "weekly_xp_delta": 410,
-            "badge_count": 11,
-        },
-        {
-            "farmer_name": "Grace Nyokabi",
-            "farm_name": "Molo Organic Horticulture",
-            "region": "Rift Valley",
-            "tier": 4,
-            "tier_name": "Investment Ready Farm",
-            "ffmi_score": 18.30,
-            "total_xp": 3600,
-            "level": 6,
-            "level_name": "Future-Ready Pioneer",
-            "weekly_xp_delta": 330,
-            "badge_count": 9,
-        },
-        {
-            "farmer_name": "Samuel Njoroge",
-            "farm_name": "Nyeri Highland Coffee & Dairy",
-            "region": "Central Kenya",
-            "tier": 4,
-            "tier_name": "Investment Ready Farm",
-            "ffmi_score": 17.40,
-            "total_xp": 3100,
-            "level": 6,
-            "level_name": "Future-Ready Pioneer",
-            "weekly_xp_delta": 290,
-            "badge_count": 8,
-        },
-        {
-            "farmer_name": "Fatuma Hassan",
-            "farm_name": "Mombasa Coastal Horticulture",
-            "region": "Coast",
-            "tier": 4,
-            "tier_name": "Investment Ready Farm",
-            "ffmi_score": 16.10,
-            "total_xp": 2750,
-            "level": 5,
-            "level_name": "Agro Specialist",
-            "weekly_xp_delta": 240,
-            "badge_count": 7,
-        },
-        {
-            "farmer_name": "Joseph Ochieng",
-            "farm_name": "Kakamega Demonstration Farm",
-            "region": "Western Kenya",
-            "tier": 3,
-            "tier_name": "Commercializing Farm",
-            "ffmi_score": 14.80,
-            "total_xp": 1720,
-            "level": 4,
-            "level_name": "Commercial Grower",
-            "weekly_xp_delta": 280,
-            "badge_count": 6,
-            "is_current_user": True,
-        },
-        {
-            "farmer_name": "Emmanuel Barasa",
-            "farm_name": "Bungoma Sugar & Bio-Compost Hub",
-            "region": "Western Kenya",
-            "tier": 3,
-            "tier_name": "Commercializing Farm",
-            "ffmi_score": 12.90,
-            "total_xp": 1320,
-            "level": 4,
-            "level_name": "Commercial Grower",
-            "weekly_xp_delta": 160,
-            "badge_count": 5,
-        },
-        {
-            "farmer_name": "Halima Juma",
-            "farm_name": "Kilifi Coastal Agroforestry",
-            "region": "Coast",
-            "tier": 2,
-            "tier_name": "Transitioning Smallholder",
-            "ffmi_score": 10.40,
-            "total_xp": 920,
-            "level": 3,
-            "level_name": "Resilient Steward",
-            "weekly_xp_delta": 140,
-            "badge_count": 4,
-        },
-        {
-            "farmer_name": "David Mutua",
-            "farm_name": "Machakos Dryland Resilience Farm",
-            "region": "Eastern Kenya",
-            "tier": 2,
-            "tier_name": "Transitioning Smallholder",
-            "ffmi_score": 9.10,
-            "total_xp": 780,
-            "level": 3,
-            "level_name": "Resilient Steward",
-            "weekly_xp_delta": 110,
-            "badge_count": 3,
-        },
-        {
-            "farmer_name": "Mercy Achieng",
-            "farm_name": "Kisumu Aquaponics & Vegetable Farm",
-            "region": "Western Kenya",
-            "tier": 2,
-            "tier_name": "Transitioning Smallholder",
-            "ffmi_score": 8.20,
-            "total_xp": 640,
-            "level": 2,
-            "level_name": "Growth Farmer",
-            "weekly_xp_delta": 90,
-            "badge_count": 2,
-        },
-    ]
+    """Rank real farmers across all regions by their progress.
 
-    # Inject real user data if logged in — replace the placeholder current_user entry
-    user_name = user.name if user and user.name else "Joseph Ochieng"
-    entries = []
-    for idx, c in enumerate(cohort_data):
-        is_curr = c.get("is_current_user", False) or c["farmer_name"] == user_name
+    Every farmer with a farm profile is ranked using genuine data: their FFMI
+    maturity score (computed on the fly from their assessment answers via the
+    platform's own deterministic scorer) and their gamification XP. The optional
+    ``region`` filter narrows the cohort (exact match or containment, so
+    "Uganda" also matches "Kampala, Uganda"); ``None``/"All Regions" ranks every
+    farmer regardless of location - supporting the wider East African programme.
+    """
+    from sqlalchemy import or_
+    from sqlalchemy.orm import selectinload
+    from app.scoring.engine import score_assessment, DEFAULT_FFMI_BANDS
+    from app.models.framework import Capability, Question
+    from app.models.assessment import Answer, Assessment
+
+    TIER_NAMES = {
+        1: "Informal Farm",
+        2: "Emerging Agribusiness",
+        3: "Structured Farm",
+        4: "Investment Ready Farm",
+        5: "Future Ready Farm",
+    }
+
+    scoped = bool(region and str(region).strip() not in ("", "All Regions"))
+
+    # Global capability layout (identical for every assessment).
+    capabilities_by_pillar: dict = {}
+    caps = (
+        db.query(Capability)
+        .options(selectinload(Capability.questions))
+        .order_by(Capability.pillar_id, Capability.number)
+        .all()
+    )
+    for c in caps:
+        capabilities_by_pillar.setdefault(c.pillar_id, []).append(
+            (c.id, [q.id for q in c.questions])
+        )
+
+    q = db.query(Farm).join(User, Farm.user_id == User.id)
+    if scoped:
+        safe = str(region).replace("%", "").replace("_", "")
+        q = q.filter(or_(Farm.region == region, Farm.region.ilike(f"%{safe}%")))
+    farms = q.all()
+
+    entries: list[LeaderboardEntryOut] = []
+    for farm in farms:
+        farmer = farm.user
+        if not farmer:
+            continue
+
+        # Best available FFMI for this farm (stored first, else computed).
+        ffmi = None
+        tier = None
+        a = (
+            db.query(Assessment)
+            .filter(Assessment.farm_id == farm.id)
+            .order_by(
+                Assessment.ffmi_score.desc().nullslast(),
+                Assessment.submitted_at.desc().nullslast(),
+            )
+            .first()
+        )
+        if a is not None:
+            ffmi = a.ffmi_score
+            tier = a.tier
+            if ffmi is None and a.answers:
+                try:
+                    answers = {ans.question_id: ans.value for ans in a.answers}
+                    if a.scope == "pillar" and a.target_pillar_id:
+                        cap_map = {
+                            a.target_pillar_id: capabilities_by_pillar.get(
+                                a.target_pillar_id, []
+                            )
+                        }
+                    else:
+                        cap_map = capabilities_by_pillar
+                    res = score_assessment(answers, cap_map, DEFAULT_FFMI_BANDS)
+                    ffmi = res.ffmi_score
+                    tier = res.tier
+                except Exception:
+                    ffmi = None
+
+        gp = (
+            db.query(UserGamification)
+            .filter(UserGamification.user_id == farmer.id)
+            .first()
+        )
+        badge_count = len(gp.badges) if gp and gp.badges else 0
+        tier = tier or 1
+
+        # Privacy: only reveal the full name of the requesting farmer. For
+        # everyone else, expose just the first name to limit PII disclosure.
+        is_self = bool(user and farmer.id == user.id)
+        if is_self:
+            farmer_display = farmer.name or "Farmer"
+        else:
+            farmer_display = (farmer.name or "Farmer").split(" ")[0]
+
         entries.append(
             LeaderboardEntryOut(
-                rank=idx + 1,
-                farmer_name=c["farmer_name"],
-                farm_name=c["farm_name"],
-                region=c["region"],
-                tier=c["tier"],
-                tier_name=c["tier_name"],
-                ffmi_score=c["ffmi_score"],
-                total_xp=c["total_xp"],
-                level=c["level"],
-                level_name=c["level_name"],
-                weekly_xp_delta=c["weekly_xp_delta"],
-                is_current_user=is_curr,
-                badge_count=c["badge_count"],
+                rank=0,
+                farmer_name=farmer_display,
+                farm_name=farm.name or "My Farm",
+                region=farm.region or "Unknown",
+                tier=tier,
+                tier_name=TIER_NAMES.get(tier, "Informal Farm"),
+                ffmi_score=float(ffmi or 0.0),
+                total_xp=gp.total_xp if gp else 0,
+                level=gp.level if gp else 1,
+                level_name=gp.level_name if gp else "Seedling Farmer",
+                weekly_xp_delta=0,
+                is_current_user=bool(user and farmer.id == user.id),
+                badge_count=badge_count,
             )
         )
 
-    current_entry = next((e for e in entries if e.is_current_user), entries[5])
+    # Rank by XP (engagement) then FFMI (maturity).
+    entries.sort(key=lambda e: (e.total_xp, e.ffmi_score), reverse=True)
+    for i, e in enumerate(entries, start=1):
+        e.rank = i
+
+    current_entry = next((e for e in entries if e.is_current_user), None)
 
     return LeaderboardResponse(
-        region="All Regions",
-        total_participants=1240,
+        region=region if scoped else "All Regions",
+        total_participants=len(entries),
         top_entries=entries,
         current_user_entry=current_entry,
     )
-
-
-
-
-    # Curated regional benchmarks for smallholder comparison
-    cohort_data = [
-        {
-            "farmer_name": "Amina Wambui",
-            "farm_name": "Sunrise Dairy & Agro-Ecological Farm",
-            "region": "Central Kenya",
-            "tier": 4,
-            "tier_name": "Commercial Lighthouse Farm",
-            "ffmi_score": 19.40,
-            "total_xp": 3450,
-            "level": 6,
-            "level_name": "Future-Ready Pioneer",
-            "weekly_xp_delta": 420,
-            "badge_count": 9,
-        },
-        {
-            "farmer_name": "Peter Kiprono",
-            "farm_name": "Rift Valley Certified Grain Farm",
-            "region": "Rift Valley",
-            "tier": 4,
-            "tier_name": "Established Agribusiness",
-            "ffmi_score": 18.20,
-            "total_xp": 2980,
-            "level": 6,
-            "level_name": "Future-Ready Pioneer",
-            "weekly_xp_delta": 310,
-            "badge_count": 8,
-        },
-        {
-            "farmer_name": "Joseph Ochieng",
-            "farm_name": "Kakamega Demonstration Farm",
-            "region": "Western Kenya",
-            "tier": 3,
-            "tier_name": "Commercializing Farm",
-            "ffmi_score": 14.80,
-            "total_xp": 1720,
-            "level": 4,
-            "level_name": "Commercial Grower",
-            "weekly_xp_delta": 280,
-            "badge_count": 6,
-            "is_current_user": True,
-        },
-        {
-            "farmer_name": "Grace Nyokabi",
-            "farm_name": "Molo Organic Horticulture",
-            "region": "Rift Valley",
-            "tier": 3,
-            "tier_name": "Commercializing Farm",
-            "ffmi_score": 13.50,
-            "total_xp": 1450,
-            "level": 4,
-            "level_name": "Commercial Grower",
-            "weekly_xp_delta": 190,
-            "badge_count": 5,
-        },
-        {
-            "farmer_name": "Emmanuel Barasa",
-            "farm_name": "Bungoma Sugar & Bio-Compost Hub",
-            "region": "Western Kenya",
-            "tier": 3,
-            "tier_name": "Commercializing Farm",
-            "ffmi_score": 12.90,
-            "total_xp": 1320,
-            "level": 4,
-            "level_name": "Commercial Grower",
-            "weekly_xp_delta": 160,
-            "badge_count": 5,
-        },
-        {
-            "farmer_name": "Halima Juma",
-            "farm_name": "Kilifi Coastal Agroforestry",
-            "region": "Coast",
-            "tier": 2,
-            "tier_name": "Transitioning Smallholder",
-            "ffmi_score": 10.40,
-            "total_xp": 920,
-            "level": 3,
-            "level_name": "Resilient Steward",
-            "weekly_xp_delta": 140,
-            "badge_count": 4,
-        },
-        {
-            "farmer_name": "David Mutua",
-            "farm_name": "Machakos Dryland Resilience Farm",
-            "region": "Eastern Kenya",
-            "tier": 2,
-            "tier_name": "Transitioning Smallholder",
-            "ffmi_score": 9.10,
-            "total_xp": 780,
-            "level": 3,
-            "level_name": "Resilient Steward",
-            "weekly_xp_delta": 110,
-            "badge_count": 3,
-        },
-    ]
-
-    # Adjust current user if logged in
-    user_name = user.name if user and user.name else "Joseph Ochieng"
-    entries = []
-    for idx, c in enumerate(cohort_data):
-        is_curr = (c.get("is_current_user", False) or c["farmer_name"] == user_name)
-        entries.append(
-            LeaderboardEntryOut(
-                rank=idx + 1,
-                farmer_name=c["farmer_name"],
-                farm_name=c["farm_name"],
-                region=c["region"],
-                tier=c["tier"],
-                tier_name=c["tier_name"],
-                ffmi_score=c["ffmi_score"],
-                total_xp=c["total_xp"],
-                level=c["level"],
-                level_name=c["level_name"],
-                weekly_xp_delta=c["weekly_xp_delta"],
-                is_current_user=is_curr,
-                badge_count=c["badge_count"],
-            )
-        )
-
-    current_entry = next((e for e in entries if e.is_current_user), entries[2])
-
-    return LeaderboardResponse(
-        region=selected_region,
-        total_participants=1240,
-        top_entries=entries,
-        current_user_entry=current_entry,
-    )
-
-
-

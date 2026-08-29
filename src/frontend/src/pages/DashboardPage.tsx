@@ -2,29 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../store/useStore';
 import { portalApi, assessmentApi, adaptGamification } from '../services/api';
+import { FARMER_PROFILE_BY_ID, formatFpAnswer } from '../data/farmerProfile';
 import { AssessmentHistoryItem } from '../types';
 import { RadarChart } from '../components/charts/RadarChart';
 import {
   ArrowRight,
-  Award,
-  AlertTriangle,
   ClipboardCheck,
   Layers,
   GraduationCap,
   Lightbulb,
   TrendingUp,
   ChevronRight,
-  Sparkles,
-  Zap,
-  CheckCircle2,
-  Clock,
   ArrowUpRight,
-  CreditCard,
-  Users,
-  Settings,
-  Shield,
-  ShieldCheck,
-  RefreshCw,
+  UserCircle2,
 } from 'lucide-react';
 
 interface PillarVisualMeta {
@@ -35,9 +25,6 @@ interface PillarVisualMeta {
   borderColor: string;
   accentBg: string;
   accentText: string;
-  status: string;
-  statusClass: string;
-  defaultScore: number;
 }
 
 const PILLARS_META: PillarVisualMeta[] = [
@@ -49,9 +36,6 @@ const PILLARS_META: PillarVisualMeta[] = [
     borderColor: 'border-l-[#1E88E5]',
     accentBg: 'bg-[#1E88E5]/10',
     accentText: 'text-[#1E88E5]',
-    status: 'Developing',
-    statusClass: 'bg-[#7CB342]/15 text-[#558B2F]',
-    defaultScore: 58,
   },
   {
     id: 2,
@@ -61,9 +45,6 @@ const PILLARS_META: PillarVisualMeta[] = [
     borderColor: 'border-l-[#FDD835]',
     accentBg: 'bg-[#FDD835]/15',
     accentText: 'text-[#C79100]',
-    status: 'Priority Gap',
-    statusClass: 'bg-[#D32F2F]/10 text-[#D32F2F]',
-    defaultScore: 42,
   },
   {
     id: 3,
@@ -73,9 +54,6 @@ const PILLARS_META: PillarVisualMeta[] = [
     borderColor: 'border-l-[#43A047]',
     accentBg: 'bg-[#43A047]/10',
     accentText: 'text-[#2E7D32]',
-    status: 'Established',
-    statusClass: 'bg-[#388E3C]/15 text-[#1B5E20]',
-    defaultScore: 74,
   },
   {
     id: 4,
@@ -85,9 +63,6 @@ const PILLARS_META: PillarVisualMeta[] = [
     borderColor: 'border-l-[#2E7D32]',
     accentBg: 'bg-[#2E7D32]/10',
     accentText: 'text-[#1B5E20]',
-    status: 'Developing',
-    statusClass: 'bg-[#7CB342]/15 text-[#558B2F]',
-    defaultScore: 61,
   },
   {
     id: 5,
@@ -97,9 +72,6 @@ const PILLARS_META: PillarVisualMeta[] = [
     borderColor: 'border-l-[#8E24AA]',
     accentBg: 'bg-[#8E24AA]/10',
     accentText: 'text-[#6A1B9A]',
-    status: 'Basic',
-    statusClass: 'bg-[#FBC02D]/20 text-[#B78103]',
-    defaultScore: 49,
   },
   {
     id: 6,
@@ -109,9 +81,6 @@ const PILLARS_META: PillarVisualMeta[] = [
     borderColor: 'border-l-[#3949AB]',
     accentBg: 'bg-[#3949AB]/10',
     accentText: 'text-[#283593]',
-    status: 'Established',
-    statusClass: 'bg-[#388E3C]/15 text-[#1B5E20]',
-    defaultScore: 68,
   },
   {
     id: 7,
@@ -121,9 +90,6 @@ const PILLARS_META: PillarVisualMeta[] = [
     borderColor: 'border-l-[#FB8C00]',
     accentBg: 'bg-[#FB8C00]/10',
     accentText: 'text-[#E65100]',
-    status: 'Advanced',
-    statusClass: 'bg-[#009924]/15 text-[#007a1c]',
-    defaultScore: 82,
   },
   {
     id: 8,
@@ -133,9 +99,6 @@ const PILLARS_META: PillarVisualMeta[] = [
     borderColor: 'border-l-[#683C21]',
     accentBg: 'bg-[#683C21]/10',
     accentText: 'text-[#683C21]',
-    status: 'Developing',
-    statusClass: 'bg-[#7CB342]/15 text-[#558B2F]',
-    defaultScore: 54,
   },
 ];
 
@@ -143,11 +106,10 @@ export const DashboardPage: React.FC = () => {
   const {
     user,
     setUser,
-    gamification,
     setGamification,
     setScreen,
     assessment,
-    setAssessmentResult,
+    setLatestResult,
     dashboardSummary,
     setDashboardSummary,
   } = useAppStore();
@@ -180,12 +142,15 @@ export const DashboardPage: React.FC = () => {
 
         if (histRes.status === 'fulfilled' && histRes.value && histRes.value.length > 0) {
           setHistoryList(histRes.value);
-          // If latestResult in store is null, fetch the full assessment details for the latest
-          if (!assessment.latestResult && histRes.value[0]?.id) {
+          // If latestResult in store is null, fetch the full assessment details for the
+          // latest SUBMITTED assessment only (a draft is not a completed farm check).
+          const completed = histRes.value.find((h) => h.status === 'submitted');
+          if (!assessment.latestResult && completed?.id) {
             try {
-              const fullDetails = await assessmentApi.getAssessment(histRes.value[0].id);
+              const fullDetails = await assessmentApi.getAssessment(completed.id);
               if (fullDetails && isMounted) {
-                setAssessmentResult(fullDetails);
+                // Pre-load result data WITHOUT navigating to the result screen.
+                setLatestResult(fullDetails);
               }
             } catch {
               // Graceful fallback
@@ -210,7 +175,8 @@ export const DashboardPage: React.FC = () => {
   }, []);
 
   const latest = assessment.latestResult;
-  const latestHistory = historyList.length > 0 ? historyList[0] : null;
+  const submittedHistory = historyList.filter((h) => h.status === 'submitted');
+  const latestHistory = submittedHistory.length > 0 ? submittedHistory[0] : null;
 
   const ffmiScore =
     dashboardSummary?.ffmi_score ??
@@ -235,13 +201,29 @@ export const DashboardPage: React.FC = () => {
 
   const dividendKes = latest?.economic_dividend?.dividend_gain_kes ?? (ffmiScore > 0 ? Math.round(ffmiScore * 18000) : 0);
 
+  // ── Economic Dividend: derive from real assessment data only
+  const economicDividend = latest?.economic_dividend;
+  const projectedYieldBags = economicDividend?.projected_yield_bags;
+  const currentYieldBags = economicDividend?.current_yield_bags;
+  const yieldPctGain =
+    projectedYieldBags !== undefined && currentYieldBags !== undefined && currentYieldBags > 0
+      ? Math.round(((projectedYieldBags - currentYieldBags) / currentYieldBags) * 100)
+      : null;
+
+  const currentRevenueKes = economicDividend?.current_revenue_kes;
+  const projectedRevenueKes = economicDividend?.projected_revenue_kes;
+  const revenuePctGain =
+    currentRevenueKes !== undefined && projectedRevenueKes !== undefined && currentRevenueKes > 0
+      ? Math.round(((projectedRevenueKes - currentRevenueKes) / currentRevenueKes) * 100)
+      : null;
+
   // Active in-progress draft (user is currently taking a questionnaire)
   const isDraftInProgress =
     assessment.id !== null &&
     assessment.questions.length > 0 &&
     Object.keys(assessment.answers).length < assessment.questions.length;
 
-  const hasCompletedAssessment = !!latest || !!dashboardSummary?.latest_assessment_id || historyList.length > 0;
+  const hasCompletedAssessment = !!latest || !!dashboardSummary?.latest_assessment_id || submittedHistory.length > 0;
 
   // Active pillar scores from live backend data
   const activePillarScores: Record<string | number, number> = (latest?.pillar_scores || latestHistory?.pillar_scores || {}) as Record<string | number, number>;
@@ -250,6 +232,12 @@ export const DashboardPage: React.FC = () => {
     (v) => typeof v === 'number' && v > 0
   ).length;
 
+  // Count how many of the 8 pillars have verified assessment scores
+  const assessedPillarsCount = PILLARS_META.filter((p) => {
+    const raw = activePillarScores[p.id] ?? activePillarScores[String(p.id)];
+    return typeof raw === 'number' && raw > 0;
+  }).length;
+
   // ── Compute Exact Live Metrics for Metric Cards 1 & 2
   let auditBadgeText = 'Not Started';
   let auditBadgeClass = 'bg-slate-100 text-slate-600';
@@ -257,55 +245,36 @@ export const DashboardPage: React.FC = () => {
   let answeredCount = 0;
   let progressPercent = 0;
 
-  let coverageBadgeText = '0 / 8 Pillars';
+  let coverageBadgeText = `${assessedPillarsCount} / 8 Pillars`;
   let coverageBadgeClass = 'bg-slate-100 text-slate-600';
-  let assessedPillarsCount = 0;
-  let totalPillarsInScope = 8;
+  const totalPillarsInScope = 8;
 
   if (isDraftInProgress) {
     totalQuestions = assessment.questions.length || (assessment.scope === 'pillar' ? 25 : 200);
     answeredCount = Object.keys(assessment.answers).length;
     progressPercent = totalQuestions > 0 ? Math.min(100, Math.round((answeredCount / totalQuestions) * 100)) : 0;
-    auditBadgeText = assessment.scope === 'pillar' ? 'Pillar Draft' : 'Active Draft';
+    auditBadgeText = assessment.scope === 'pillar' ? `Pillar ${assessment.targetPillarId || '1'} Draft` : 'Active Draft';
     auditBadgeClass = 'bg-[#FB8C00]/15 text-[#E65100] font-bold';
 
-    if (assessment.scope === 'pillar') {
-      totalPillarsInScope = 1;
-      assessedPillarsCount = answeredCount > 0 ? 1 : 0;
-      coverageBadgeText = `Pillar ${assessment.targetPillarId || '1'} Scope`;
-      coverageBadgeClass = 'bg-[#1565C0]/10 text-[#1565C0] font-bold';
-    } else {
-      totalPillarsInScope = 8;
-      assessedPillarsCount = Math.min(8, Math.ceil((answeredCount / 200) * 8));
-      coverageBadgeText = `${assessedPillarsCount} of 8 In Progress`;
-      coverageBadgeClass = 'bg-[#1565C0]/10 text-[#1565C0] font-bold';
-    }
-  } else if (hasCompletedAssessment) {
-    const isPillarScope =
-      latestHistory?.scope === 'pillar' ||
-      (latestHistory?.target_pillar_id !== undefined && latestHistory?.target_pillar_id !== null && !latest?.pillar_scores);
+    coverageBadgeText =
+      assessment.scope === 'pillar'
+        ? `Pillar ${assessment.targetPillarId || '1'} (${answeredCount}/${totalQuestions} Qs)`
+        : `${Math.min(8, Math.ceil((answeredCount / 200) * 8))} / 8 In Progress`;
+    coverageBadgeClass = 'bg-[#1565C0]/10 text-[#1565C0] font-bold';
+  } else if (hasCompletedAssessment || assessedPillarsCount > 0) {
+    totalQuestions = 200;
+    answeredCount = assessedPillarsCount * 25;
+    progressPercent = Math.min(100, Math.round((assessedPillarsCount / 8) * 100));
 
-    if (isPillarScope) {
-      totalQuestions = 25;
-      answeredCount = 25;
-      progressPercent = 100;
-      auditBadgeText = `Pillar ${latestHistory?.target_pillar_id || ''} Verified`;
+    if (assessedPillarsCount >= 8) {
+      auditBadgeText = 'Full Coverage (8/8)';
       auditBadgeClass = 'bg-[#009924]/10 text-[#009924] font-bold';
-
-      totalPillarsInScope = 8;
-      assessedPillarsCount = 1;
-      coverageBadgeText = 'Single Pillar';
-      coverageBadgeClass = 'bg-[#1565C0]/10 text-[#1565C0] font-bold';
+      coverageBadgeText = '8 / 8 Verified';
+      coverageBadgeClass = 'bg-[#009924]/10 text-[#009924] font-bold';
     } else {
-      totalQuestions = 200;
-      answeredCount = 200;
-      progressPercent = 100;
-      auditBadgeText = 'Verified';
-      auditBadgeClass = 'bg-[#009924]/10 text-[#009924] font-bold';
-
-      totalPillarsInScope = 8;
-      assessedPillarsCount = nonZeroPillars > 0 ? nonZeroPillars : 8;
-      coverageBadgeText = 'Full Coverage';
+      auditBadgeText = `${assessedPillarsCount} of 8 Pillars`;
+      auditBadgeClass = 'bg-[#1565C0]/10 text-[#1565C0] font-bold';
+      coverageBadgeText = `${assessedPillarsCount} / 8 Verified`;
       coverageBadgeClass = 'bg-[#1565C0]/10 text-[#1565C0] font-bold';
     }
   } else {
@@ -315,10 +284,7 @@ export const DashboardPage: React.FC = () => {
     progressPercent = 0;
     auditBadgeText = 'Not Started';
     auditBadgeClass = 'bg-slate-100 text-slate-600 font-bold';
-
-    totalPillarsInScope = 8;
-    assessedPillarsCount = 0;
-    coverageBadgeText = '0% Covered';
+    coverageBadgeText = '0 / 8 Covered';
     coverageBadgeClass = 'bg-slate-100 text-slate-600 font-bold';
   }
 
@@ -368,36 +334,37 @@ export const DashboardPage: React.FC = () => {
               transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
               whileHover={{ scale: 1.08, rotate: 2 }}
               className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-[#009924]/30 to-[#045D61] border border-[#009924]/40 p-3 shadow-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-md glow-cyan relative cursor-pointer group/badge"
-              title="Future Farms Framework Emblem"
+              title="Future Farms"
             >
               <img
                 src="/assets/arbarne-emblem-white.png"
-                alt="FFF"
+                alt="Future Farms"
                 className="h-full w-auto object-contain drop-shadow"
               />
               <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#009924] animate-ping opacity-75" />
             </motion.div>
 
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2">
-                <span className="h-0.5 w-5 bg-[#009924] rounded-full" />
-                <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#009924]">
-                  Future Farms Framework • Live Farm Intelligence
-                </span>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="h-0.5 w-5 bg-[#009924] rounded-full" />
+                  <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#009924]">
+                    Future Farms
+                  </span>
+                </div>
+                <h1 className="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight">
+                  Welcome, {user.name ? user.name.split(' ')[0] : 'Farmer'}.
+                </h1>
+                <p className="text-xs sm:text-sm text-white/80">
+                  Track your progress, take your next check-up, and keep growing.
+                </p>
+                <p className="text-xs sm:text-sm text-white/80 flex flex-wrap items-center gap-2 pt-0.5">
+                  <span>📍 {user.farm_name || 'My Farm'}</span>
+                  <span>•</span>
+                  <span>{user.farm_region || 'Western Kenya'}</span>
+                  <span>•</span>
+                  <span>{user.farm_size_acres || 5} Acres</span>
+                </p>
               </div>
-              <h1 className="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight">
-                Karibu, {user.name ? user.name.split(' ')[0] : 'Farmer'}.
-                <br />
-                <span className="text-[#FFD700] italic">The Great Transition.</span>
-              </h1>
-              <p className="text-xs sm:text-sm text-white/80 flex flex-wrap items-center gap-2 pt-0.5">
-                <span>📍 {user.farm_name || 'My Farm'}</span>
-                <span>•</span>
-                <span>{user.farm_region || 'Western Kenya'}</span>
-                <span>•</span>
-                <span>{user.farm_size_acres || 5} Acres</span>
-              </p>
-            </div>
           </div>
 
           {/* KPI Snapshot Pills */}
@@ -408,10 +375,10 @@ export const DashboardPage: React.FC = () => {
               transition={{ type: 'spring', stiffness: 200 }}
             >
               <div className="text-[10px] font-bold uppercase tracking-wider text-[#90CAF9]">
-                Maturity Status
+                Your Stage
               </div>
               <div className="text-base font-bold text-white">
-                Tier {tier} {tierName.split(' ')[0]}
+                Stage {tier} · {tierName}
               </div>
             </motion.div>
 
@@ -421,11 +388,11 @@ export const DashboardPage: React.FC = () => {
               transition={{ type: 'spring', stiffness: 200 }}
             >
               <div className="text-[10px] font-bold uppercase tracking-wider text-[#FFD700]">
-                FFMI Maturity Index
+                Your Farm Score
               </div>
               <div className="text-xl font-extrabold text-white">
-                {ffmiScore.toFixed(2)}{' '}
-                <span className="text-xs font-normal text-white/70">/ 24.00</span>
+                {ffmiScore.toFixed(1)}{' '}
+                <span className="text-xs font-normal text-white/70">/ 24</span>
               </div>
             </motion.div>
           </div>
@@ -437,15 +404,8 @@ export const DashboardPage: React.FC = () => {
             onClick={() => setScreen('screen-assessment-choice')}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs shadow-lg shadow-[#009924]/30 transition-all hover:scale-105"
           >
-            <span>Start Capability Assessment</span>
+            <span>Start Farm Check</span>
             <ArrowRight className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => setScreen('screen-journey')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/15 transition-all"
-          >
-            <Award className="w-4 h-4 text-[#FFD700]" />
-            <span>Transformation Roadmap &amp; Quests</span>
           </button>
         </div>
       </div>
@@ -467,7 +427,7 @@ export const DashboardPage: React.FC = () => {
             </span>
           </div>
           <div>
-            <p className="text-xs font-semibold text-slate-500 mb-1">Assessment Progress</p>
+            <p className="text-xs font-semibold text-slate-500 mb-1">Farm Check Progress</p>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl sm:text-3xl font-bold text-slate-900">{progressPercent}%</span>
               <span className="text-xs font-medium text-slate-500">
@@ -498,7 +458,7 @@ export const DashboardPage: React.FC = () => {
             </span>
           </div>
           <div>
-            <p className="text-xs font-semibold text-slate-500 mb-1">Pillars Assessed</p>
+            <p className="text-xs font-semibold text-slate-500 mb-1">Areas Checked</p>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl sm:text-3xl font-bold text-slate-900">{assessedPillarsCount}</span>
               <span className="text-xs font-medium text-slate-500">/ {totalPillarsInScope} Pillars</span>
@@ -523,11 +483,11 @@ export const DashboardPage: React.FC = () => {
               <GraduationCap className="w-5 h-5" />
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1E88E5]/10 text-[#1E88E5]">
-              Academy
+              Training
             </span>
           </div>
           <div>
-            <p className="text-xs font-semibold text-slate-500 mb-1">Learning Progress</p>
+            <p className="text-xs font-semibold text-slate-500 mb-1">Training Done</p>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl sm:text-3xl font-bold text-slate-900">
                 {Math.round((completedCoursesCount / 8) * 100)}%
@@ -556,16 +516,16 @@ export const DashboardPage: React.FC = () => {
               <Lightbulb className="w-5 h-5" />
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EF6C00]/10 text-[#EF6C00]">
-              Action Plan
+              Steps
             </span>
           </div>
           <div>
-            <p className="text-xs font-semibold text-slate-500 mb-1">Recommendations</p>
+            <p className="text-xs font-semibold text-slate-500 mb-1">Suggested Steps</p>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl sm:text-3xl font-bold text-slate-900">
                 {totalRecommendationsCount}
               </span>
-              <span className="text-xs font-medium text-slate-500">Action Items</span>
+              <span className="text-xs font-medium text-slate-500">Steps</span>
             </div>
             <div className="w-full h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
               <div
@@ -582,26 +542,26 @@ export const DashboardPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-              Five-Tier Maturity Continuum
+              How Developed Your Farm Is
             </span>
             <h3 className="text-base font-serif font-bold text-slate-900">
-              Farm Systems Transformation Stage
+              Your Farm Stage
             </h3>
           </div>
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 bg-[#009924]/10 text-[#009924] rounded-full text-xs font-bold flex items-center gap-1">
-              <TrendingUp className="w-3.5 h-3.5" />
-              Tier {tier}: {tierName}
-            </span>
+              <span className="px-3 py-1 bg-[#009924]/10 text-[#009924] rounded-full text-xs font-bold flex items-center gap-1">
+                <TrendingUp className="w-3.5 h-3.5" />
+                Stage {tier}: {tierName}
+              </span>
           </div>
         </div>
 
         {/* Multi-tier horizontal milestone spectrum */}
         <div className="space-y-2 pt-2">
           <div className="flex justify-between text-[11px] font-semibold text-slate-500">
-            <span className={tier === 1 ? 'font-bold text-[#8E99A2] flex items-center gap-1' : ''}>
-              1. Informal {tier === 1 && '📍'}
-            </span>
+              <span className={tier === 1 ? 'font-bold text-[#8E99A2] flex items-center gap-1' : ''}>
+                1. Just Starting {tier === 1 && '📍'}
+              </span>
             <span className={tier === 2 ? 'font-bold text-[#FB8C00] flex items-center gap-1' : ''}>
               2. Emerging {tier === 2 && '📍'}
             </span>
@@ -617,62 +577,81 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex relative">
-            <div className={`h-full border-r border-white/60 ${tier >= 1 ? 'bg-[#8E99A2]' : 'bg-slate-200'} w-1/5 relative`} title="Tier 1: Informal Farm">
+            <div className={`h-full border-r border-white/60 ${tier >= 1 ? 'bg-[#8E99A2]' : 'bg-slate-200'} w-1/5 relative`} title="Stage 1: Just Starting">
               {tier === 1 && <div className="absolute right-1 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full shadow-md animate-pulse" />}
             </div>
-            <div className={`h-full border-r border-white/60 ${tier >= 2 ? 'bg-[#FB8C00]' : 'bg-slate-200'} w-1/5 relative`} title="Tier 2: Emerging Agribusiness">
+            <div className={`h-full border-r border-white/60 ${tier >= 2 ? 'bg-[#FB8C00]' : 'bg-slate-200'} w-1/5 relative`} title="Stage 2: Emerging">
               {tier === 2 && <div className="absolute right-1 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full shadow-md animate-pulse" />}
             </div>
-            <div className={`h-full border-r border-white/60 ${tier >= 3 ? 'bg-[#009924]' : 'bg-slate-200'} w-1/5 relative`} title="Tier 3: Structured Farm">
+            <div className={`h-full border-r border-white/60 ${tier >= 3 ? 'bg-[#009924]' : 'bg-slate-200'} w-1/5 relative`} title="Stage 3: Structured">
               {tier === 3 && <div className="absolute right-1 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full shadow-md animate-pulse" />}
             </div>
-            <div className={`h-full border-r border-white/60 ${tier >= 4 ? 'bg-[#045D61]' : 'bg-slate-200'} w-1/5 relative`} title="Tier 4: Investment Ready">
+            <div className={`h-full border-r border-white/60 ${tier >= 4 ? 'bg-[#045D61]' : 'bg-slate-200'} w-1/5 relative`} title="Stage 4: Investment Ready">
               {tier === 4 && <div className="absolute right-1 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full shadow-md animate-pulse" />}
             </div>
-            <div className={`h-full ${tier >= 5 ? 'bg-[#FFD700]' : 'bg-slate-200'} w-1/5 relative`} title="Tier 5: Future Ready Farm">
+            <div className={`h-full ${tier >= 5 ? 'bg-[#FFD700]' : 'bg-slate-200'} w-1/5 relative`} title="Stage 5: Future Ready">
               {tier === 5 && <div className="absolute right-1 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full shadow-md animate-pulse" />}
             </div>
           </div>
 
           <p className="text-xs text-slate-500 flex items-center justify-between pt-1">
-            <span>Score: <strong className="text-slate-800">{ffmiScore.toFixed(2)} / 24.00 pts</strong></span>
+            <span>Score: <strong className="text-slate-800">{ffmiScore.toFixed(1)} / 24 pts</strong></span>
             {tier < 5 ? (
-              <span>Next threshold: <strong className="text-[#045D61]">Tier {nextTier} ({targetScore.toFixed(2)} pts)</strong> • <span className="text-[#009924] font-semibold">+{scoreGap} pts to go</span></span>
+              <span>Next: <strong className="text-[#045D61]">Stage {nextTier} ({targetScore.toFixed(1)} pts)</strong> • <span className="text-[#009924] font-semibold">+{scoreGap} pts to go</span></span>
             ) : (
-              <span className="text-[#B88917] font-bold">✨ Top FFF Enterprise Maturity Achieved</span>
+              <span className="text-[#B88917] font-bold">✨ You have reached the top stage!</span>
             )}
           </p>
         </div>
       </div>
 
-      {/* ─── 4. Active Quest & Gamification Banner ──────────────────────── */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#045D61] to-[#023c3f] border border-[#009924]/30 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-[#FFD700]/20 border border-[#FFD700]/30 flex items-center justify-center text-xl text-[#FFD700]">
-            🏆
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-extrabold text-[#FFD700] uppercase tracking-wider">
-                Level {gamification.level}: {gamification.level_name}
-              </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#EF6C00]/20 border border-[#FFD700]/30 text-[#FFD700] font-bold">
-                {gamification.streak_days}-Day Streak 🔥
-              </span>
+      {/* ─── 4. Gamification banner intentionally removed for farmer simplicity ─── */}
+
+      {/* ─── 4b. Farmer Profile snapshot ──────────────────────────────────── */}
+      {user.farmer_profile && (() => {
+        const fp = user.farmer_profile;
+        const highlights: { label: string; id: string }[] = [
+          { label: 'Role', id: 'job_title' },
+          { label: 'Experience', id: 'experience_years' },
+          { label: 'Management', id: 'management_ability' },
+          { label: 'Decision style', id: 'decision_style' },
+          { label: 'Top obstacles', id: 'obstacles' },
+          { label: 'Updates', id: 'update_preference' },
+        ];
+        const items = highlights
+          .map((h) => ({ ...h, value: formatFpAnswer(FARMER_PROFILE_BY_ID[h.id], fp) }))
+          .filter((h) => h.value);
+        if (items.length === 0) return null;
+        return (
+          <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#045D61]/15 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <UserCircle2 className="w-5 h-5 text-[#009924]" />
+                <h3 className="text-sm font-bold text-[#045D61]">About You</h3>
+              </div>
+              <button
+                onClick={() => setScreen('screen-profile')}
+                className="text-xs font-bold text-[#045D61] hover:text-[#009924] flex items-center gap-1 transition-colors cursor-pointer"
+              >
+                <span>View profile</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
-            <p className="text-xs text-white/90 mt-0.5">
-              Complete the <span className="font-semibold text-[#FFD700]">Smart Farming Baseline Quest</span> to unlock 150 XP and the Digital Pioneer Badge.
-            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              {items.map((it) => (
+                <div key={it.id} className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                  <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    {it.label}
+                  </span>
+                  <p className="text-xs font-semibold text-slate-900 mt-0.5 leading-snug line-clamp-2">
+                    {it.value}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <button
-          onClick={() => setScreen('screen-journey')}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#EF6C00] hover:bg-[#d85f00] text-white text-xs font-bold shadow-md transition-all whitespace-nowrap"
-        >
-          <span>Open Quests &amp; Badges</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
+        );
+      })()}
 
       {/* ─── 5. Main Dashboard Split: 8 Pillars Grid + Recommended Steps ──── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -681,22 +660,22 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-                Domain Model
+                What We Check
               </span>
               <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-900">
-                Your Farm's 8 Pillars
+                Your Farm Areas
               </h3>
               <p className="text-xs text-slate-500">
-                Core dimensions of capability, maturity, and systematic transformation.
+                These are the 8 areas we check on every farm.
               </p>
             </div>
-            <button
-              onClick={() => setScreen('screen-assessment-choice')}
-              className="text-xs font-bold text-[#045D61] hover:text-[#009924] flex items-center gap-1 transition-colors"
-            >
-              <span>View All</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
+              <button
+                onClick={() => setScreen('screen-assessment-choice')}
+                className="text-xs font-bold text-[#045D61] hover:text-[#009924] flex items-center gap-1 transition-colors"
+              >
+                <span>Check Your Farm</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -707,24 +686,21 @@ export const DashboardPage: React.FC = () => {
                 ? Math.round(rawScore <= 1.0 ? rawScore * 100 : (rawScore / 3) * 100)
                 : 0;
 
-              let dynamicStatus = hasCompletedAssessment ? 'Not in Scope' : 'Not Assessed';
+              let dynamicStatus = 'Not Checked';
               let dynamicStatusClass = 'bg-slate-100 text-slate-500';
 
               if (hasScore) {
                 if (displayScore >= 80) {
-                  dynamicStatus = 'Strategic Advantage';
+                  dynamicStatus = 'Strong';
                   dynamicStatusClass = 'bg-[#009924]/15 text-[#007a1c]';
-                } else if (displayScore >= 60) {
-                  dynamicStatus = 'Core Strength';
+                } else if (displayScore >= 55) {
+                  dynamicStatus = 'Good';
                   dynamicStatusClass = 'bg-[#388E3C]/15 text-[#1B5E20]';
-                } else if (displayScore >= 40) {
-                  dynamicStatus = 'Progressing';
+                } else if (displayScore >= 30) {
+                  dynamicStatus = 'Getting There';
                   dynamicStatusClass = 'bg-[#7CB342]/15 text-[#558B2F]';
-                } else if (displayScore >= 20) {
-                  dynamicStatus = 'Developing Area';
-                  dynamicStatusClass = 'bg-[#FBC02D]/20 text-[#B78103]';
                 } else {
-                  dynamicStatus = 'Critical Weakness';
+                  dynamicStatus = 'Needs Work';
                   dynamicStatusClass = 'bg-[#D32F2F]/10 text-[#D32F2F]';
                 }
               }
@@ -774,12 +750,12 @@ export const DashboardPage: React.FC = () => {
           <div className="p-6 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#EF6C00]">
-                  Actionable Next Steps
-                </span>
-                <h3 className="font-serif text-base font-bold text-slate-900">
-                  Recommended Steps
-                </h3>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#EF6C00]">
+                Next Steps
+              </span>
+              <h3 className="font-serif text-base font-bold text-slate-900">
+                Suggested Next Steps
+              </h3>
               </div>
               <span className="w-2.5 h-2.5 rounded-full bg-[#EF6C00] animate-ping" />
             </div>
@@ -818,12 +794,12 @@ export const DashboardPage: React.FC = () => {
                             : 'text-[#1E88E5]'
                         }`}
                       >
-                        {rec.priority === 'quick_win'
-                          ? 'Quick Win'
-                          : rec.priority === 'medium_term'
-                          ? 'Medium Term'
-                          : 'Strategic'}{' '}
-                        • {rec.pillar_name || 'Agro-Enterprise'}
+                         {rec.priority === 'quick_win'
+                           ? 'Easy Win'
+                           : rec.priority === 'medium_term'
+                           ? 'Medium Term'
+                           : 'Long Term'}{' '}
+                         • {rec.pillar_name || 'Your Farm'}
                       </p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition-colors flex-shrink-0 mt-0.5" />
@@ -842,7 +818,7 @@ export const DashboardPage: React.FC = () => {
                         Complete Renewable Energy Assessment
                       </p>
                       <p className="text-[11px] font-semibold text-[#D32F2F] mt-0.5">
-                        High Priority • Pillar 2
+                        Important • Pillar 2
                       </p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition-colors flex-shrink-0 mt-0.5" />
@@ -859,7 +835,7 @@ export const DashboardPage: React.FC = () => {
                         Deploy Drip Irrigation &amp; Soil Moisture Telemetry
                       </p>
                       <p className="text-[11px] font-semibold text-[#009924] mt-0.5">
-                        Quick Win • Agro-Services
+                        Easy Win • Get Help
                       </p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition-colors flex-shrink-0 mt-0.5" />
@@ -876,7 +852,7 @@ export const DashboardPage: React.FC = () => {
                         Adopt Gross-Margin Farm Ledger System
                       </p>
                       <p className="text-[11px] font-semibold text-[#FB8C00] mt-0.5">
-                        Learning Academy • Pillar 5
+                        Training • Pillar 5
                       </p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition-colors flex-shrink-0 mt-0.5" />
@@ -890,10 +866,10 @@ export const DashboardPage: React.FC = () => {
                     <div className="mt-1 w-2.5 h-2.5 rounded-full bg-[#1E88E5] flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-bold text-slate-900 group-hover:text-[#045D61] transition-colors leading-snug">
-                        Prepare Records for FFF Verified Audit
+                        Get Your Farm Checked and Verified
                       </p>
                       <p className="text-[11px] font-semibold text-[#1E88E5] mt-0.5">
-                        Strategic Roadmap • FFV
+                        Long Term • Farm Check
                       </p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-600 transition-colors flex-shrink-0 mt-0.5" />
@@ -902,13 +878,13 @@ export const DashboardPage: React.FC = () => {
               )}
             </ul>
 
-            <button
-              onClick={() => setScreen('screen-journey')}
-              className="w-full py-2.5 rounded-xl bg-[#045D61] hover:bg-[#023c3f] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2"
-            >
-              <span>Explore Complete Action Roadmap</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+              <button
+                onClick={() => setScreen('screen-journey')}
+                className="w-full py-2.5 rounded-xl bg-[#045D61] hover:bg-[#023c3f] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2"
+              >
+                <span>See All Steps</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
           </div>
         </div>
       </div>
@@ -919,19 +895,19 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="text-2xl">📝</span>
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#1E88E5]/15 text-[#1E88E5] border border-[#1E88E5]/30">
-              Diagnostic Engine
+              Check
             </span>
           </div>
-          <h3 className="font-serif text-lg font-bold text-slate-900">Assessment Hub</h3>
+          <h3 className="font-serif text-lg font-bold text-slate-900">Check Your Farm</h3>
           <p className="text-xs text-slate-600 leading-relaxed">
-            Evaluate your farm readiness across the 8 FFF pillars. Choose a quick Single-Pillar deep dive or a comprehensive baseline.
+            Check how your farm is doing across 8 simple areas. Pick one area or do the full check.
           </p>
           <div className="pt-2">
             <button
               onClick={() => setScreen('screen-assessment-choice')}
               className="w-full py-2 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white text-xs font-bold transition-colors shadow-sm"
             >
-              Start Audit
+              Start Check
             </button>
           </div>
         </div>
@@ -940,19 +916,19 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="text-2xl">🛠️</span>
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30">
-              Inputs &amp; Tech
+              Help
             </span>
           </div>
-          <h3 className="font-serif text-lg font-bold text-slate-900">Services Portal</h3>
+          <h3 className="font-serif text-lg font-bold text-slate-900">Get Help</h3>
           <p className="text-xs text-slate-600 leading-relaxed">
-            Connect with vetted mechanization providers, solar drip irrigation, agroforestry nurseries, and soil test labs matching your capability gaps.
+            Find trusted helpers near you — for tools, solar water pumps, seedlings, and soil testing.
           </p>
           <div className="pt-2">
             <button
               onClick={() => setScreen('screen-services')}
               className="w-full py-2 rounded-xl bg-[#045D61] hover:bg-[#023c3f] text-white text-xs font-bold transition-colors shadow-sm"
             >
-              Explore Agro-Services
+              Find Services
             </button>
           </div>
         </div>
@@ -961,141 +937,38 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="text-2xl">📚</span>
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#FB8C00]/15 text-[#FB8C00] border border-[#FB8C00]/30">
-              Agronomic Skills
+              Training
             </span>
           </div>
-          <h3 className="font-serif text-lg font-bold text-slate-900">Learning Academy</h3>
+          <h3 className="font-serif text-lg font-bold text-slate-900">Learn</h3>
           <p className="text-xs text-slate-600 leading-relaxed">
-            Practical, audio-assisted training modules on regenerative IPM, farm gross-margin ledgers, and organic biochar composting.
+            Short, easy lessons you can listen to — on pests, keeping farm records, and making compost.
           </p>
           <div className="pt-2">
             <button
               onClick={() => setScreen('screen-learning')}
               className="w-full py-2 rounded-xl bg-[#FB8C00] hover:bg-[#e07d00] text-white text-xs font-bold transition-colors shadow-sm"
             >
-              Open Learning Modules
+              Start Learning
             </button>
           </div>
         </div>
       </div>
 
-      {/* ─── 7. Enterprise Subscription & Account Governance (From Settings Design) ─ */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Pro Subscription Banner (Spans 8 cols) */}
-        <motion.div
-          whileHover={{ y: -2 }}
-          className="lg:col-span-8 bg-gradient-to-br from-[#003b3d] via-[#045D61] to-[#012527] text-white rounded-3xl p-6 lg:p-7 relative overflow-hidden shadow-lg border border-[#045D61]/50 flex flex-col justify-between"
+      {/* ─── 7. Your Plan ─────────────────────────────────────────────── */}
+      <div className="p-6 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 className="font-serif text-lg font-bold text-slate-900">Your Plan</h3>
+          <p className="text-xs text-slate-600 mt-1 max-w-xl">
+            You are using the free Farm Check. It includes checking your farm, seeing your results, and simple next steps to improve.
+          </p>
+        </div>
+        <button
+          onClick={() => setScreen('screen-profile')}
+          className="px-5 py-2.5 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white text-xs font-bold shadow-sm transition-colors flex-shrink-0"
         >
-          {/* Abstract subtle grid pattern */}
-          <div
-            className="absolute inset-0 opacity-10 pointer-events-none"
-            style={{
-              backgroundImage:
-                'repeating-linear-gradient(45deg, transparent, transparent 10px, #ffffff 10px, #ffffff 20px)',
-            }}
-          />
-
-          <div className="relative z-10 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="px-3 py-1 bg-white/15 border border-white/20 text-[#FFD700] rounded-full text-xs font-extrabold inline-flex items-center gap-1.5 shadow-xs">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Active Enterprise Plan</span>
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#009924]/30 text-emerald-300 text-[10px] font-bold border border-emerald-400/30">
-                Tier {tier}: {tierName}
-              </span>
-            </div>
-
-            <div>
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                FFF Pro Enterprise Membership
-              </h3>
-              <p className="text-xs sm:text-sm text-white/80 max-w-xl mt-1 leading-relaxed">
-                You are currently on the professional enterprise tier with verified agronomic benchmarking, continuous satellite monitoring, unlimited 8-pillar capability diagnostics, and priority commercial offtake matching.
-              </p>
-            </div>
-          </div>
-
-          <div className="relative z-10 flex flex-wrap items-center gap-3 pt-6 mt-4 border-t border-white/15">
-            <button
-              onClick={() => setScreen('screen-profile')}
-              className="px-5 py-2.5 bg-white hover:bg-slate-100 text-[#045D61] font-bold text-xs rounded-xl shadow-md transition-all hover:scale-102 flex items-center gap-2"
-            >
-              <CreditCard className="w-4 h-4 text-[#009924]" />
-              <span>Manage Plan &amp; Billing</span>
-            </button>
-            <button
-              onClick={() => setScreen('screen-simulator')}
-              className="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-xl border border-white/20 transition-all flex items-center gap-2"
-            >
-              <span>Simulate Tier 4 Expansion</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#FFD700]" />
-            </button>
-          </div>
-        </motion.div>
-
-        {/* Security & Team Access Snippet (Spans 4 cols) */}
-        <motion.div
-          whileHover={{ y: -2 }}
-          className="lg:col-span-4 p-6 rounded-3xl glass-panel border border-[#045D61]/15 shadow-sm flex flex-col justify-between space-y-4"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#045D61]">
-                Farm Governance
-              </span>
-              <span className="w-2.5 h-2.5 rounded-full bg-[#009924] animate-pulse" />
-            </div>
-            <h3 className="font-serif text-lg font-bold text-slate-900">
-              Account Security &amp; Team
-            </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Enterprise access control and operational staff.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            {/* 2FA Status */}
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#009924]/10 text-[#009924] flex items-center justify-center">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-900">Two-Factor (2FA)</h4>
-                  <p className="text-[10px] text-slate-500">Protected &amp; Active</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#009924]/10 text-[#009924]">
-                Enabled
-              </span>
-            </div>
-
-            {/* Team Access */}
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#1E88E5]/10 text-[#1E88E5] flex items-center justify-center">
-                  <Users className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-900">Team Access</h4>
-                  <p className="text-[10px] text-slate-500">3 Operators Connected</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1E88E5]/10 text-[#1E88E5]">
-                3 Active
-              </span>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setScreen('screen-profile')}
-            className="w-full py-2.5 rounded-xl bg-[#045D61]/10 hover:bg-[#045D61]/20 text-[#045D61] text-xs font-bold transition-all flex items-center justify-center gap-2"
-          >
-            <Settings className="w-3.5 h-3.5" />
-            <span>Manage Enterprise Settings</span>
-          </button>
-        </motion.div>
+          My Farm Details
+        </button>
       </div>
 
       {/* ─── 8. Capability Analytics & Economic Dividend ─────────────────── */}
@@ -1105,10 +978,10 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-                Cross-Pillar Benchmark
+                Your Farm vs Nearby Farms
               </span>
               <h3 className="font-serif text-lg font-bold text-slate-900">
-                8-Pillar Maturity Spider
+                Your Farm Areas
               </h3>
             </div>
             <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#045D61]/15 text-[#045D61] border border-[#045D61]/30">
@@ -1121,11 +994,11 @@ export const DashboardPage: React.FC = () => {
           <div className="flex items-center justify-center gap-6 text-xs text-slate-600 pt-2 border-t border-slate-100">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-[#009924]" />
-              <span>Your Farm Enterprise</span>
+              <span>Your Farm</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-[#1E88E5]" />
-              <span>Regional Peer Average</span>
+              <span>Other Farms Nearby</span>
             </div>
           </div>
         </div>
@@ -1134,55 +1007,74 @@ export const DashboardPage: React.FC = () => {
         <div className="p-6 rounded-3xl glass-panel shadow-sm border border-[#045D61]/15 space-y-5">
           <div>
             <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-              Empirical ROI Projection
+              Extra Income
             </span>
             <h3 className="font-serif text-lg font-bold text-slate-900">
-              Projected Economic Dividend
+              Extra Income You Could Earn
             </h3>
             <p className="text-xs text-slate-600">
-              Financial and agronomic returns from resolving priority capability gaps.
+              Extra money you could earn by improving the weak areas of your farm.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 rounded-2xl bg-[#009924]/10 border border-[#009924]/20 space-y-1">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[#009924]">
-                Projected Yield
+                Expected Harvest
               </span>
               <div className="text-2xl font-bold text-slate-900">
-                19.2 <span className="text-xs font-normal text-slate-600">bags/ac</span>
+                {projectedYieldBags !== undefined ? (
+                  <>
+                    {projectedYieldBags.toLocaleString()}{' '}
+                    <span className="text-xs font-normal text-slate-600">bags/ac</span>
+                  </>
+                ) : (
+                  <span className="text-base font-normal text-slate-500">—</span>
+                )}
               </div>
-              <span className="text-[10px] text-[#009924] font-semibold">
-                +45% vs baseline
-              </span>
+              {yieldPctGain !== null ? (
+                <span className="text-[10px] text-[#009924] font-semibold">
+                  +{yieldPctGain}% vs baseline
+                </span>
+              ) : (
+                <span className="text-[10px] text-slate-400 font-medium">
+                  Complete a Farm Check to see projections
+                </span>
+              )}
             </div>
 
             <div className="p-4 rounded-2xl bg-[#FB8C00]/10 border border-[#FB8C00]/20 space-y-1">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[#FB8C00]">
-                Net Annual Gain
+                Extra Income
               </span>
               <div className="text-2xl font-bold text-slate-900">
                 KES {(dividendKes || 0).toLocaleString()}
               </div>
-              <span className="text-[10px] text-[#FB8C00] font-semibold">
-                +58% profitability dividend
-              </span>
+              {revenuePctGain !== null ? (
+                <span className="text-[10px] text-[#FB8C00] font-semibold">
+                  +{revenuePctGain}% profitability dividend
+                </span>
+              ) : (
+                <span className="text-[10px] text-slate-400 font-medium">
+                  Complete a Farm Check to see projections
+                </span>
+              )}
             </div>
           </div>
 
           <div className="p-4 rounded-2xl bg-[#045D61] text-white space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-[#FFD700]">Next Target: Tier 4</span>
+              <span className="font-bold text-[#FFD700]">Next Target: Stage {nextTier}</span>
               <span className="text-white/80">Investment Ready Farm</span>
             </div>
             <div className="text-xs text-white/90 leading-relaxed">
-              Target Score: <span className="font-bold text-white">15.00 pts</span> • Gap to close: <span className="font-bold text-[#FFD700]">+1.20 pts</span>.
+              Target Score: <span className="font-bold text-white">{targetScore.toFixed(1)} pts</span> • Gap to close: <span className="font-bold text-[#FFD700]">+{scoreGap} pts</span>.
             </div>
             <button
-              onClick={() => setScreen('screen-simulator')}
+              onClick={() => setScreen('screen-journey')}
               className="w-full mt-2 py-2 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs transition-colors shadow-md"
             >
-              Simulate Tier 4 ROI in Scenario Simulator ➔
+              See Your Progress
             </button>
           </div>
         </div>

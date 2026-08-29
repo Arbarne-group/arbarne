@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 import uuid
 
-from sqlalchemy import DateTime, String, Uuid as UUID
+from sqlalchemy import DateTime, JSON, String, Uuid as UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
@@ -31,5 +31,9 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc)
     )
+    # Structured "Farmer Profile" onboarding answers (job title, experience,
+    # operating style, aspirations, digital-platform readiness, etc.).
+    # Stored as a flexible JSON document keyed by question id.
+    farmer_profile: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     farms: Mapped[list["Farm"]] = relationship(back_populates="user")

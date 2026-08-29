@@ -548,14 +548,14 @@ const PILLAR_CAPABILITIES_MAP: Record<
 };
 
 const PILLAR_SUMMARY_ITEMS = [
-  { id: 1, number: '01', code: 'P1', name: 'Smart Farming', score: 85, status: 'completed' },
-  { id: 2, number: '02', code: 'P2', name: 'Renewable Energy', score: 45, status: 'in_progress' },
-  { id: 3, number: '03', code: 'P3', name: 'Food Safety', score: 65, status: 'completed' },
-  { id: 4, number: '04', code: 'P4', name: 'Climate Resilience', score: 58, status: 'completed' },
-  { id: 5, number: '05', code: 'P5', name: 'Market Access', score: 68, status: 'in_progress' },
-  { id: 6, number: '06', code: 'P6', name: 'Human Capital', score: 88, status: 'completed' },
-  { id: 7, number: '07', code: 'P7', name: 'Business Mgmt', score: 75, status: 'in_progress' },
-  { id: 8, number: '08', code: 'P8', name: 'Investment Readiness', score: 71, status: 'in_progress' },
+  { id: 1, number: '01', code: 'P1', name: 'Smart Farming' },
+  { id: 2, number: '02', code: 'P2', name: 'Renewable Energy' },
+  { id: 3, number: '03', code: 'P3', name: 'Food Safety' },
+  { id: 4, number: '04', code: 'P4', name: 'Climate Resilience' },
+  { id: 5, number: '05', code: 'P5', name: 'Market Access' },
+  { id: 6, number: '06', code: 'P6', name: 'Human Capital' },
+  { id: 7, number: '07', code: 'P7', name: 'Business Mgmt' },
+  { id: 8, number: '08', code: 'P8', name: 'Investment Readiness' },
 ];
 
 export const AssessmentHubPage: React.FC = () => {
@@ -570,21 +570,63 @@ export const AssessmentHubPage: React.FC = () => {
   const [selectedPillarId, setSelectedPillarId] = useState<number>(2); // Default to Pillar 2 (P.U.R.E)
   const [loading, setLoading] = useState(false);
 
+  const latest = assessment.latestResult;
+
   const selectedPillarMeta =
     PILLAR_CAPABILITIES_MAP[selectedPillarId] || PILLAR_CAPABILITIES_MAP[2];
 
+  // Real pillar score (0–100) using the same conversion as the Dashboard.
+  const realPillarScore = (id: number): number => {
+    const raw = latest?.pillar_scores?.[id];
+    if (typeof raw !== 'number') return 0;
+    return Math.round(raw <= 1.0 ? raw * 100 : (raw / 3) * 100);
+  };
+
+  const selScore = realPillarScore(selectedPillarId);
+  const selMaturity =
+    selScore >= 80
+      ? 'Advanced'
+      : selScore >= 60
+      ? 'Developing'
+      : selScore >= 40
+      ? 'Basic'
+      : selScore > 0
+      ? 'Emerging'
+      : 'Not Assessed';
+
+  // Real capability status label (no invented numeric score).
+  const capStatusLabel = (capId: string): string => {
+    const st = latest?.capability_status?.[capId];
+    if (!st) return 'Not Assessed';
+    const map: Record<string, string> = {
+      non_existent: 'Not Assessed',
+      emerging: 'Emerging',
+      basic: 'Basic',
+      developing: 'Developing',
+      established: 'Established',
+      advanced: 'Advanced',
+    };
+    return map[st] ?? 'Not Assessed';
+  };
+
   // Dynamic Assessment Progress Calculations
+  const completedPillarsCount = pillars.filter((p) => {
+    const s = latest?.pillar_scores?.[p.id];
+    return typeof s === 'number' && s > 0;
+  }).length;
+  const inProgressPillarsCount = 8 - completedPillarsCount;
+  const totalCapabilitiesCount = 40;
+  const completedCapabilitiesCount = latest?.capability_status
+    ? Object.values(latest.capability_status).filter((s) => s && s !== 'non_existent').length
+    : completedPillarsCount * 5;
+
   const hasActiveSession = assessment.questions.length > 0;
   const activeQuestionsAnswered = Object.keys(assessment.answers).length;
   const activeTotalQuestions = assessment.questions.length;
-  const activeProgressPct = hasActiveSession && activeTotalQuestions > 0
-    ? Math.round((activeQuestionsAnswered / activeTotalQuestions) * 100)
-    : 68; // Baseline enterprise benchmark
-
-  const completedPillarsCount = 4;
-  const inProgressPillarsCount = 4;
-  const completedCapabilitiesCount = 28;
-  const totalCapabilitiesCount = 40;
+  const activeProgressPct =
+    hasActiveSession && activeTotalQuestions > 0
+      ? Math.round((activeQuestionsAnswered / activeTotalQuestions) * 100)
+      : Math.round((completedPillarsCount / 8) * 100);
 
   const handleStart = async (scope: 'full' | 'pillar') => {
     setLoading(true);
@@ -687,7 +729,8 @@ export const AssessmentHubPage: React.FC = () => {
               <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
                 {PILLAR_SUMMARY_ITEMS.map((item) => {
                   const isSelected = selectedPillarId === item.id;
-                  const isDone = item.status === 'completed';
+                  const realScore = realPillarScore(item.id);
+                  const isAssessed = realScore > 0;
 
                   return (
                     <button
@@ -696,22 +739,22 @@ export const AssessmentHubPage: React.FC = () => {
                       className={`p-2 rounded-xl text-left transition-all border cursor-pointer flex flex-col justify-between ${
                         isSelected
                           ? 'bg-white text-[#004447] border-[#FFD700] shadow-md scale-102 font-bold'
-                          : isDone
+                          : isAssessed
                           ? 'bg-white/10 hover:bg-white/20 border-white/15 text-white'
                           : 'bg-black/30 hover:bg-black/40 border-white/10 text-white/80'
                       }`}
                     >
                       <div className="flex items-center justify-between text-[10px] mb-1">
                         <span className="font-extrabold">{item.code}</span>
-                        {isDone ? (
+                        {isAssessed ? (
                           <CheckCircle2 className={`w-3.5 h-3.5 ${isSelected ? 'text-[#009924]' : 'text-[#7ffd7b]'}`} />
                         ) : (
-                          <span className="w-2 h-2 rounded-full bg-[#EF6C00] animate-pulse" />
+                          <span className="w-2 h-2 rounded-full bg-slate-400" />
                         )}
                       </div>
                       <span className="text-[11px] font-bold line-clamp-1 leading-tight">{item.name}</span>
                       <span className={`text-[10px] mt-1 font-semibold ${isSelected ? 'text-[#004447]' : 'text-white/70'}`}>
-                        {item.score}/100
+                        {isAssessed ? `${realScore}/100` : 'Not assessed'}
                       </span>
                     </button>
                   );
@@ -758,7 +801,7 @@ export const AssessmentHubPage: React.FC = () => {
               </div>
               <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1 rounded-full font-semibold">
                 <BarChart3 className="w-3.5 h-3.5 text-[#045D61]" />
-                <span>Maturity: {selectedPillarMeta.maturityLabel}</span>
+                <span>Maturity: {selMaturity}</span>
               </div>
               <div className="flex items-center gap-1.5 text-slate-500 font-medium">
                 <ListChecks className="w-3.5 h-3.5 text-slate-400" />
@@ -775,7 +818,7 @@ export const AssessmentHubPage: React.FC = () => {
           <div className="flex flex-col items-center lg:items-end gap-3 w-full lg:w-auto border-t lg:border-t-0 lg:border-l border-slate-200/80 pt-6 lg:pt-0 lg:pl-8">
             <div className="text-center lg:text-right">
               <div className="font-serif text-4xl sm:text-5xl font-extrabold text-[#045D61] leading-none">
-                {selectedPillarMeta.defaultScore}
+                {selScore}
                 <span className="text-lg font-normal text-slate-400">/100</span>
               </div>
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-1.5">
@@ -1177,7 +1220,7 @@ export const AssessmentHubPage: React.FC = () => {
                 <div className="flex items-center justify-between border-t border-slate-100 pt-3 mt-4 text-xs">
                   <span className="text-slate-500 flex items-center gap-1 font-medium">
                     <ListChecks className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{cap.questions}</span>
+                    <span>5 Qs</span>
                   </span>
                   <span
                     className={`font-bold ${
@@ -1188,7 +1231,7 @@ export const AssessmentHubPage: React.FC = () => {
                         : 'text-slate-400'
                     }`}
                   >
-                    {cap.score}
+                    {capStatusLabel(cap.id)}
                   </span>
                 </div>
               </motion.div>

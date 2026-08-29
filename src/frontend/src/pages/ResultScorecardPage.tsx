@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppStore } from '../store/useStore';
 import { RadarChart } from '../components/charts/RadarChart';
+import { assessmentApi } from '../services/api';
+import { DiagnosisReportSection } from '../components/DiagnosisReportSection';
 import { motion } from 'framer-motion';
 import {
   Download,
@@ -26,8 +28,9 @@ import {
   Lightbulb,
   LayoutDashboard,
   ArrowLeft,
+  Share2,
 } from 'lucide-react';
-import { PILLAR_BRAND_COLORS, TIER_CLASSIFICATION_COLORS, MATURITY_STATUS_COLORS } from '../types';
+import { PILLAR_BRAND_COLORS, TIER_CLASSIFICATION_COLORS, MATURITY_STATUS_COLORS, AssessmentHistoryItem } from '../types';
 
 const STATUS_KEY: Record<string, keyof typeof MATURITY_STATUS_COLORS> = {
   non_existent: 'nonExistent',
@@ -59,6 +62,12 @@ const PRIORITY_META: Record<string, { label: string; cls: string }> = {
     label: 'STRATEGIC',
     cls: 'bg-[#FB8C00]/15 text-[#FB8C00] border border-[#FB8C00]/30',
   },
+};
+
+// Convert a raw pillar score (0–1 or 0–3 scale) to a 0–100 percentage.
+const toPct = (raw?: number): number => {
+  if (typeof raw !== 'number') return 0;
+  return Math.round(raw <= 1.0 ? raw * 100 : (raw / 3) * 100);
 };
 
 interface PillarCardMeta {
@@ -167,35 +176,141 @@ export const ResultScorecardPage: React.FC = () => {
     setScreen,
     showNotification,
     setSelectedPillarDetailId,
+    setAssessmentResult,
+    openShare,
   } = useAppStore();
   const result = assessment.latestResult;
 
+  const [historyList, setHistoryList] = useState<AssessmentHistoryItem[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
+  // When arriving at "My Results" with no loaded assessment, surface the user's
+  // previous assessments: auto-open the most recent submitted one and list the
+  // rest so any of them can be selected.
+  useEffect(() => {
+    if (result) return;
+    let cancelled = false;
+    setLoadingHistory(true);
+    assessmentApi
+      .getHistory()
+      .then((res) => {
+        if (cancelled) return;
+        setHistoryList(res);
+        const latest = res.find(
+          (h) =>
+            h.status === 'submitted' ||
+            h.status === 'verified' ||
+            h.status === 'completed',
+        );
+        if (latest && !cancelled) {
+          return assessmentApi.getAssessment(latest.id).then((full) => {
+            if (!cancelled && full) setAssessmentResult(full);
+          });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setHistoryList([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingHistory(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [result, setAssessmentResult]);
+
+  const openAssessment = (id: string | number) => {
+    assessmentApi
+      .getAssessment(id)
+      .then((full) => {
+        if (full) setAssessmentResult(full);
+      })
+      .catch(() => showNotification('Could not load that assessment', 'error'));
+  };
+
+
   if (!result) {
     return (
-      <div className="text-center py-20 space-y-5 max-w-md mx-auto">
-        <div className="w-16 h-16 rounded-2xl bg-[#045D61]/10 text-[#045D61] mx-auto flex items-center justify-center">
-          <Award className="w-8 h-8" />
-        </div>
-        <div>
-          <h2 className="text-xl font-bold text-slate-900">No Assessment Loaded</h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Complete an assessment or select one from your audit history to view the full scorecard.
+      <div className="max-w-3xl mx-auto space-y-6 py-12">
+        <div className="text-center space-y-3">
+          <div className="w-16 h-16 rounded-2xl bg-[#045D61]/10 text-[#045D61] mx-auto flex items-center justify-center">
+            <Award className="w-8 h-8" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-900">Your Past Farm Checks</h2>
+          <p className="text-xs text-slate-500">
+            Select one of your previous assessments to view its full scorecard and professional diagnosis.
           </p>
         </div>
-        <div className="flex items-center justify-center gap-3">
-          <button
-            onClick={() => setScreen('screen-dashboard')}
-            className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs shadow-xs cursor-pointer"
-          >
-            Go to Dashboard
-          </button>
-          <button
-            onClick={() => setScreen('screen-assessment-choice')}
-            className="px-5 py-2.5 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs shadow-md cursor-pointer"
-          >
-            Start Assessment
-          </button>
-        </div>
+
+        {loadingHistory ? (
+          <p className="text-center text-xs text-slate-500">Loading your assessments…</p>
+        ) : historyList.length === 0 ? (
+          <div className="text-center space-y-4">
+            <p className="text-xs text-slate-500">You haven't completed a Farm Check yet.</p>
+            <button
+              onClick={() => setScreen('screen-assessment-choice')}
+              className="px-5 py-2.5 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs shadow-md cursor-pointer"
+            >
+              Start Assessment
+            </button>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100 border border-slate-200/80 rounded-3xl overflow-hidden">
+            {historyList.map((item, idx) => {
+              const tierVal = item.tier ?? 3;
+              const tierMeta = TIER_CLASSIFICATION_COLORS[tierVal] || { hex: '#045D61' };
+              const scoreVal =
+                typeof item.ffmi_score === 'number'
+                  ? item.ffmi_score
+                  : typeof item.score === 'number'
+                  ? item.score
+                  : null;
+              const dateStr = item.completed_at || item.submitted_at || item.started_at;
+              const date = dateStr
+                ? new Date(dateStr).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })
+                : 'Recent';
+              const isDone =
+                item.status === 'submitted' ||
+                item.status === 'verified' ||
+                item.status === 'completed';
+              return (
+                <button
+                  key={item.id || idx}
+                  onClick={() => openAssessment(item.id)}
+                  disabled={!isDone}
+                  className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-bold text-sm text-slate-900">
+                        {scoreVal !== null ? `Farm Score: ${scoreVal.toFixed(2)}` : 'In Progress'}
+                      </span>
+                      <span
+                        className="px-2.5 py-0.5 rounded-full text-white font-extrabold text-[10px]"
+                        style={{ backgroundColor: tierMeta.hex }}
+                      >
+                        Stage {tierVal}
+                      </span>
+                      {item.scope === 'pillar' && (
+                        <span className="px-2 py-0.5 rounded-full bg-[#1E88E5]/10 text-[#1E88E5] text-[10px] font-bold">
+                          {item.target_pillar_name || 'Single Pillar'}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {date} · {isDone ? 'Completed' : 'In Progress'}
+                    </p>
+                  </div>
+                  <span className="text-[#009924] font-bold text-xs">{isDone ? 'View →' : 'Locked'}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
     );
   }
@@ -215,12 +330,12 @@ export const ResultScorecardPage: React.FC = () => {
   const strongestId = result.strongest_pillar_id;
   const gapId = result.priority_gap_pillar_id;
   const strongestName = pillarName('Smart Farming & Digital Transformation', strongestId);
-  const strongestScore = strongestId != null ? result.pillar_scores[strongestId] ?? 0.72 : 0.72;
+  const strongestScorePct = toPct(strongestId != null ? result.pillar_scores[strongestId] : undefined);
   const gapName = pillarName('Productive Use of Renewable Energy', gapId);
-  const gapScore = gapId != null ? result.pillar_scores[gapId] ?? 0.45 : 0.45;
+  const gapScorePct = toPct(gapId != null ? result.pillar_scores[gapId] : undefined);
 
-  const rawScore100 = Math.round(((result?.ffmi_score ?? 17.28) / 24) * 100);
-  const overallScore = rawScore100 || 72;
+  const rawScore100 = Math.round((result.ffmi_score / 24) * 100);
+  const overallScore = rawScore100;
 
   const pillars = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -244,6 +359,13 @@ export const ResultScorecardPage: React.FC = () => {
 
         <div className="flex flex-wrap items-center gap-3">
           <button
+            onClick={() => openShare(result)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#0E7C4F] hover:bg-[#0a6a43] text-white rounded-xl font-bold text-xs transition-all shadow-md cursor-pointer"
+          >
+            <Share2 className="w-4 h-4 text-white" />
+            <span>Share achievement</span>
+          </button>
+          <button
             onClick={() => setScreen('screen-dashboard')}
             className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition-all shadow-xs cursor-pointer"
           >
@@ -263,6 +385,9 @@ export const ResultScorecardPage: React.FC = () => {
         </div>
       </div>
 
+      {/* ─── 1b. Professional Diagnosis (combined assessment + farmer profile) ── */}
+      <DiagnosisReportSection assessmentId={result.assessment_id} />
+
       {/* ─── 2. Top Row: Overall Score & Priority Improvements ────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Overall Farm Score Card (1 col) */}
@@ -274,11 +399,15 @@ export const ResultScorecardPage: React.FC = () => {
         >
           <div>
             <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 mb-4 block">
-              Overall Farm Score
+              {Object.keys(result.pillar_scores ?? {}).length === 1
+                ? `${pillarName('Pillar', Number(Object.keys(result.pillar_scores)[0]))} Score`
+                : 'Overall Farm Score'}
             </span>
             <div className="flex items-end gap-2 mb-4">
               <span className="font-serif text-5xl sm:text-6xl font-bold text-[#004447] leading-none">
-                {overallScore}
+                {Object.keys(result.pillar_scores ?? {}).length === 1
+                  ? toPct(result.pillar_scores[Number(Object.keys(result.pillar_scores)[0])])
+                  : overallScore}
               </span>
               <span className="text-base text-slate-400 font-medium mb-1">/100</span>
             </div>
@@ -286,25 +415,43 @@ export const ResultScorecardPage: React.FC = () => {
 
           <div className="space-y-3 pt-2">
             <div className="flex justify-between items-center text-xs">
-              <span className="text-slate-600 font-medium">
-                Maturity: <strong className="text-[#004447]">{result.tier_classification || 'Developing'}</strong>
+              <span className="text-slate-600 font-medium truncate max-w-[170px]">
+                Maturity:{' '}
+                <strong className="text-[#004447]">
+                  {Object.keys(result.pillar_scores ?? {}).length === 1
+                    ? result.pillar_status?.[Number(Object.keys(result.pillar_scores)[0])] ||
+                      result.tier_classification ||
+                      'Verified'
+                    : result.tier_classification || 'Developing'}
+                </strong>
               </span>
-              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 text-[#007519] border border-emerald-200">
-                Tier {result.tier} Verified
+              <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-50 text-[#007519] border border-emerald-200 shrink-0">
+                {Object.keys(result.pillar_scores ?? {}).length === 1
+                  ? `Pillar ${Object.keys(result.pillar_scores)[0]} Verified`
+                  : `Tier ${result.tier} Verified`}
               </span>
             </div>
 
-            {/* 3-Phase Multi-Segment Progress Track */}
-            <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex">
-              <div className="h-full bg-[#ba1a1a]" style={{ width: '25%' }} title="Basic Threshold (0-25%)" />
-              <div className="h-full bg-[#009924]" style={{ width: `${Math.min(50, Math.max(10, overallScore - 25))}%` }} title="Developing (25-75%)" />
-              <div className="h-full bg-[#dfe3e8]" style={{ width: '25%' }} title="Future-Ready (75-100%)" />
-            </div>
+            {/* Multi-Segment Progress Track */}
+            {(() => {
+              const displayVal =
+                Object.keys(result.pillar_scores ?? {}).length === 1
+                  ? toPct(result.pillar_scores[Number(Object.keys(result.pillar_scores)[0])])
+                  : overallScore;
+              return (
+                <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex relative">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#ba1a1a] via-[#FB8C00] to-[#009924] rounded-full transition-all duration-700"
+                    style={{ width: `${displayVal}%` }}
+                  />
+                </div>
+              );
+            })()}
 
             <div className="flex justify-between font-bold text-[10px] text-slate-400 uppercase tracking-wider">
               <span>Basic</span>
               <span className="text-[#009924]">Developing</span>
-              <span>Future-Ready</span>
+              <span>Advanced</span>
             </div>
           </div>
         </motion.div>
@@ -326,70 +473,70 @@ export const ResultScorecardPage: React.FC = () => {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Gap 1: Energy Access */}
-              <div
-                onClick={() => handleOpenPillar(2)}
-                className="p-4 bg-[#ffdad6]/30 border border-[#ffdad6] rounded-2xl flex flex-col justify-between hover:shadow-sm transition-all cursor-pointer group"
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Zap className="w-5 h-5 text-[#ba1a1a]" />
-                    <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#ba1a1a] transition-colors">
-                      Energy Access
-                    </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Gap 1: Energy Access */}
+                  <div
+                    onClick={() => handleOpenPillar(2)}
+                    className="p-4 bg-[#ffdad6]/30 border border-[#ffdad6] rounded-2xl flex flex-col justify-between hover:shadow-sm transition-all cursor-pointer group"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Zap className="w-5 h-5 text-[#ba1a1a]" />
+                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#ba1a1a] transition-colors">
+                          Energy Access
+                        </h4>
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-relaxed mb-3">
+                        Significant gaps in renewable energy &amp; solar pump utilization.
+                      </p>
+                    </div>
+                    <span className="inline-block px-2 py-1 bg-[#ffdad6] text-[#93000a] text-[10px] font-bold rounded-lg self-start">
+                      Needs Attention • Score: {toPct(result.pillar_scores?.[2])}
+                    </span>
                   </div>
-                  <p className="text-[11px] text-slate-600 leading-relaxed mb-3">
-                    Significant gaps in renewable energy &amp; solar pump utilization.
-                  </p>
-                </div>
-                <span className="inline-block px-2 py-1 bg-[#ffdad6] text-[#93000a] text-[10px] font-bold rounded-lg self-start">
-                  Needs Attention • Score: 45
-                </span>
-              </div>
 
-              {/* Gap 2: Water Mgmt & Climate Swales */}
-              <div
-                onClick={() => handleOpenPillar(4)}
-                className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col justify-between hover:shadow-sm transition-all cursor-pointer group"
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Droplets className="w-5 h-5 text-[#004447]" />
-                    <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#004447] transition-colors">
-                      Water &amp; Swales
-                    </h4>
+                  {/* Gap 2: Water Mgmt & Climate Swales */}
+                  <div
+                    onClick={() => handleOpenPillar(4)}
+                    className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col justify-between hover:shadow-sm transition-all cursor-pointer group"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Droplets className="w-5 h-5 text-[#004447]" />
+                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#004447] transition-colors">
+                          Water &amp; Swales
+                        </h4>
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-relaxed mb-3">
+                        Irrigation efficiency &amp; rainwater catchment below optimal levels.
+                      </p>
+                    </div>
+                    <span className="inline-block px-2 py-1 bg-slate-200/70 text-slate-700 text-[10px] font-bold rounded-lg self-start">
+                      Basic • Score: {toPct(result.pillar_scores?.[4])}
+                    </span>
                   </div>
-                  <p className="text-[11px] text-slate-600 leading-relaxed mb-3">
-                    Irrigation efficiency &amp; rainwater catchment below optimal levels.
-                  </p>
-                </div>
-                <span className="inline-block px-2 py-1 bg-slate-200/70 text-slate-700 text-[10px] font-bold rounded-lg self-start">
-                  Basic • Score: 58
-                </span>
-              </div>
 
-              {/* Gap 3: Market Access & Forward Contracts */}
-              <div
-                onClick={() => handleOpenPillar(5)}
-                className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col justify-between hover:shadow-sm transition-all cursor-pointer group"
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Store className="w-5 h-5 text-[#004447]" />
-                    <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#004447] transition-colors">
-                      Market Access
-                    </h4>
+                  {/* Gap 3: Market Access & Forward Contracts */}
+                  <div
+                    onClick={() => handleOpenPillar(5)}
+                    className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col justify-between hover:shadow-sm transition-all cursor-pointer group"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Store className="w-5 h-5 text-[#004447]" />
+                        <h4 className="text-xs font-bold text-slate-900 group-hover:text-[#004447] transition-colors">
+                          Market Access
+                        </h4>
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-relaxed mb-3">
+                        Limited direct-to-market and export off-take channels established.
+                      </p>
+                    </div>
+                    <span className="inline-block px-2 py-1 bg-slate-200/70 text-slate-700 text-[10px] font-bold rounded-lg self-start">
+                      Basic • Score: {toPct(result.pillar_scores?.[5])}
+                    </span>
                   </div>
-                  <p className="text-[11px] text-slate-600 leading-relaxed mb-3">
-                    Limited direct-to-market and export off-take channels established.
-                  </p>
                 </div>
-                <span className="inline-block px-2 py-1 bg-slate-200/70 text-slate-700 text-[10px] font-bold rounded-lg self-start">
-                  Basic • Score: 60
-                </span>
-              </div>
-            </div>
           </div>
         </motion.div>
       </div>
@@ -409,7 +556,7 @@ export const ResultScorecardPage: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
           {CANONICAL_PILLAR_CARDS.map((p) => {
-            const dynamicScore = Math.round((result.pillar_scores?.[p.id] ?? (p.defaultScore / 100)) * 100);
+            const dynamicScore = toPct(result.pillar_scores?.[p.id]);
             const isAttention = dynamicScore < 50;
             const isAdvanced = dynamicScore >= 80;
             const isDeveloping = dynamicScore >= 60 && dynamicScore < 80;
@@ -525,9 +672,9 @@ export const ResultScorecardPage: React.FC = () => {
                   <span className="text-xs font-bold text-slate-900">
                     Strongest Capability Pillar
                   </span>
-                  <p className="text-xs text-slate-700 mt-0.5">
-                    {strongestName} (Score: {((strongestScore || 0) * 100).toFixed(0)}%)
-                  </p>
+                   <p className="text-xs text-slate-700 mt-0.5">
+                     {strongestName} (Score: {strongestScorePct}%)
+                   </p>
                 </div>
               </div>
 
@@ -540,8 +687,8 @@ export const ResultScorecardPage: React.FC = () => {
                       Priority Improvement Area
                     </span>
                     <p className="text-xs text-slate-700 mt-0.5">
-                      {gapName} (Score: {((gapScore || 0) * 100).toFixed(0)}%)
-                    </p>
+                       {gapName} (Score: {gapScorePct}%)
+                     </p>
                   </div>
                 </div>
                 <button

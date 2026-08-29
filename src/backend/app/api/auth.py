@@ -4,15 +4,20 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timezone
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from app.core.auth import (
     create_access_token,
+    decode_access_token,
     generate_verification_code,
     get_current_user,
     hash_password,
+    security,
+    token_blocklist,
     verify_password,
 )
 from app.db.session import get_db
@@ -28,6 +33,24 @@ from app.schemas.auth import (
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+@router.post("/logout")
+def logout(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+) -> dict:
+    """Invalidate the caller's current token (server-side revocation).
+
+    Stateless JWTs cannot be destroyed by the client alone, so we record the
+    token's jti in a server-side blocklist. ``decode_access_token`` rejects any
+    blocklisted jti on subsequent requests.
+    """
+    if credentials:
+        payload = decode_access_token(credentials.credentials)
+        jti = payload.get("jti") if payload else None
+        if jti:
+            token_blocklist.add(jti)
+    return {"message": "Logged out successfully"}
 
 
 @router.post("/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
@@ -55,6 +78,7 @@ def register(payload: RegisterIn, db: Session = Depends(get_db)) -> AuthResponse
         role="farmer",
         password_hash=hash_password(payload.password),
         is_verified=True,
+        farmer_profile=payload.farmer_profile,
     )
     db.add(user)
     db.flush()
@@ -89,6 +113,7 @@ def register(payload: RegisterIn, db: Session = Depends(get_db)) -> AuthResponse
         region=farm.region,
         size_acres=farm.size_acres,
         crop_type=farm.crop_type,
+        farm_image=farm.farm_image,
     )
 
 
@@ -139,6 +164,7 @@ def login(payload: LoginIn, db: Session = Depends(get_db)) -> AuthResponse:
         region=farm.region,
         size_acres=farm.size_acres,
         crop_type=farm.crop_type,
+        farm_image=farm.farm_image,
     )
 
 
@@ -184,6 +210,8 @@ def get_profile(
         farm_region=farm.region if farm else None,
         farm_crop=farm.crop_type if farm else None,
         farm_size_acres=farm.size_acres if farm else 5.0,
+        farmer_profile=current_user.farmer_profile,
+        farm_image=farm.farm_image if farm else None,
     )
 
 
@@ -214,6 +242,10 @@ def update_profile(
         farm.crop_type = payload.crop_type
     if payload.size_acres is not None:
         farm.size_acres = payload.size_acres
+    if payload.farmer_profile is not None:
+        current_user.farmer_profile = payload.farmer_profile
+    if payload.farm_image is not None:
+        farm.farm_image = payload.farm_image
 
     db.commit()
     db.refresh(current_user)
@@ -233,4 +265,6 @@ def update_profile(
         farm_region=farm.region,
         farm_crop=farm.crop_type,
         farm_size_acres=farm.size_acres,
+        farmer_profile=current_user.farmer_profile,
+        farm_image=farm.farm_image,
     )

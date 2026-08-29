@@ -15,7 +15,8 @@ export type ScreenId =
   | 'screen-pricing'
   | 'screen-checkout'
   | 'screen-onboarding'
-  | 'screen-auth';
+  | 'screen-auth'
+  | 'screen-notifications';
 
 export interface AppNotification {
   id: string;
@@ -23,6 +24,16 @@ export interface AppNotification {
   message: string;
   type: 'success' | 'error' | 'info' | 'warning';
   durationMs?: number;
+}
+
+/** Persistent inbox item — lives in the store and is shown in the bell dropdown & full notifications page. */
+export interface InboxItem {
+  id: string;
+  category: 'success' | 'warning' | 'info' | 'xp' | 'alert';
+  title: string;
+  body: string;
+  createdAt: number; // epoch ms
+  read: boolean;
 }
 
 export interface User {
@@ -47,6 +58,47 @@ export interface User {
   workforce_count?: string | number;
   energy_source?: string;
   is_verified?: boolean;
+  farmer_profile?: FarmerProfile;
+  farm_image?: string;
+}
+
+/**
+ * Structured answers from the "Farmer Profile" onboarding section.
+ * Free-text and single-choice answers are strings; multi-choice answers
+ * (e.g. obstacles, support reasons) are string arrays. Question ids below
+ * match the keys used in `data/farmerProfile.ts`.
+ */
+export interface FarmerProfile {
+  completed?: boolean;
+  updated_at?: string;
+  job_title?: string;
+  value_chains?: string;
+  experience_years?: string;
+  business_history?: string;
+  education?: string;
+  management_ability?: string;
+  ops_responsibility?: string;
+  involvement_level?: string;
+  decision_style?: string;
+  plan_response?: string;
+  obstacles?: string[];
+  guidance_style?: string;
+  review_frequency?: string;
+  update_preference?: string;
+  success_12m?: string;
+  support_impact?: string;
+  market_insight?: string;
+  role_3_5y?: string;
+  fm_responsibility?: string;
+  approve_decisions?: string;
+  vision_25y?: string;
+  fm_support_reasons?: string[];
+  confidence_remote?: string;
+  record_keeping?: string;
+  record_keeping_consent?: string;
+  physical_audits?: string;
+  other_notes?: string;
+  [key: string]: string | string[] | boolean | undefined;
 }
 
 export interface Pillar {
@@ -106,6 +158,7 @@ export interface AssessmentResult {
   strongest_pillar_id?: number | null;
   priority_gap_pillar_id?: number | null;
   recommendations: Recommendation[];
+  diagnosis_report?: DiagnosisReport;
   completed_at?: string;
   economic_dividend?: {
     current_yield_bags: number;
@@ -114,6 +167,42 @@ export interface AssessmentResult {
     projected_revenue_kes: number;
     dividend_gain_kes: number;
   };
+}
+
+export interface DiagnosisRecommendation {
+  action: string;
+  priority: 'quick_win' | 'medium_term' | 'strategic';
+  rationale: string;
+  linked_to_profile: string;
+}
+
+export interface DiagnosisPillarReport {
+  pillar_id: number;
+  pillar_name: string;
+  status_level: string;
+  pillar_score: number;
+  strengths: string[];
+  key_gaps: string[];
+  root_causes: string[];
+  personalised_recommendations: DiagnosisRecommendation[];
+  coaching_approach: string;
+  aspiration_alignment: string;
+}
+
+export interface DiagnosisOverallReport {
+  executive_summary: string;
+  transformation_trajectory: string;
+  holistic_strengths: string[];
+  priority_roadmap: string[];
+  key_risks: string[];
+  vision_alignment: string;
+}
+
+export interface DiagnosisReport {
+  overall: DiagnosisOverallReport;
+  pillars: DiagnosisPillarReport[];
+  is_fallback?: boolean;
+  generated_at?: string | null;
 }
 
 export interface AssessmentHistoryItem {
@@ -186,15 +275,11 @@ export interface ServiceProvider {
   category: string;
   service_title: string;
   description: string;
-  pricing_kes?: number;
-  pricing_unit?: string;
   cost_model?: string;
-  region_served?: string;
-  verified?: boolean;
-  rating?: number;
   pillar_id?: number;
   is_recommended?: boolean;
   contact_phone?: string;
+  icon?: string;
 }
 
 export interface Course {
@@ -207,6 +292,9 @@ export interface Course {
   description: string;
   completed?: boolean;
   is_recommended?: boolean;
+  format_type?: string;
+  key_takeaways?: string;
+  icon?: string;
 }
 
 // ─── FFF Official Branding Guidelines Constants ─────────────────────────

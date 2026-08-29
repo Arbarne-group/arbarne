@@ -157,3 +157,31 @@ def test_default_bands_cover_full_range():
     high = max(b["high"] for b in DEFAULT_FFMI_BANDS)
     assert low == 0
     assert high == 24
+
+
+def test_score_single_pillar_assessment():
+    """A single pillar assessment (e.g. Pillar 1 with all yes) scores 3.0 points out of 24 (Tier 1)."""
+    p1_caps = {
+        1: [(f"P1.{j}", [f"P1.{j}.{k}" for k in range(1, 6)]) for j in range(1, 6)]
+    }
+    answers = {f"P1.{j}.{k}": "yes" for j in range(1, 6) for k in range(1, 6)}
+    result = score_assessment(answers, p1_caps)
+    assert result.pillar_scores[1] == 1.0
+    assert result.ffmi_score == 3.0
+    assert result.tier == 1  # 3.0 points is Tier 1 (Informal Farm)
+
+
+def test_score_two_pillar_assessment():
+    """Two completed pillars (P1 and P2 with all yes) score 6.0 points out of 24 (Tier 2)."""
+    p1_p2_caps = {
+        1: [(f"P1.{j}", [f"P1.{j}.{k}" for k in range(1, 6)]) for j in range(1, 6)],
+        2: [(f"P2.{j}", [f"P2.{j}.{k}" for k in range(1, 6)]) for j in range(1, 6)],
+    }
+    answers = {f"P1.{j}.{k}": "yes" for j in range(1, 6) for k in range(1, 6)}
+    answers.update({f"P2.{j}.{k}": "yes" for j in range(1, 6) for k in range(1, 6)})
+    result = score_assessment(answers, p1_p2_caps)
+    assert result.pillar_scores[1] == 1.0
+    assert result.pillar_scores[2] == 1.0
+    assert result.ffmi_score == 6.0
+    assert result.tier == 2  # 6.0 points is Tier 2 (Emerging Agribusiness)
+

@@ -21,6 +21,7 @@ export const QuestionnairePage: React.FC = () => {
     awardXp,
     setScreen,
     showNotification,
+    openShare,
   } = useAppStore();
 
   const [submitting, setSubmitting] = useState(false);
@@ -82,6 +83,34 @@ export const QuestionnairePage: React.FC = () => {
       const result = await assessmentApi.calculateScore(assessmentId);
 
       awardXp(150, 'Completed Assessment');
+
+      // Auto-unlock achievements for every pillar completed in this assessment
+      const { unlockBadge } = useAppStore.getState();
+      const pKeys = Object.keys(result.pillar_scores ?? {}).map(Number);
+
+      const PILLAR_BADGE_MAP: Record<number, string> = {
+        1: 'soil_guardian',
+        2: 'water_steward',
+        3: 'biodiversity_hero',
+        4: 'mechanization_pioneer',
+        5: 'market_master',
+        6: 'safety_shield',
+        7: 'circular_champion',
+        8: 'governance_pro',
+      };
+
+      pKeys.forEach((pId) => {
+        const badgeKey = PILLAR_BADGE_MAP[pId];
+        if (badgeKey) {
+          unlockBadge(badgeKey);
+        }
+      });
+
+      // If full assessment completed with tier >= 3, also unlock Future Ready 100k hero badge
+      if (pKeys.length > 1 && result.tier >= 3) {
+        unlockBadge('future_ready_100k');
+      }
+
       showNotification(
         `FFMI Scorecard calculated: Tier ${result.tier} (${result.tier_classification})!`,
         'success',
@@ -89,6 +118,7 @@ export const QuestionnairePage: React.FC = () => {
         'Assessment Finished'
       );
       setAssessmentResult(result);
+      openShare(result);
     } catch (e: any) {
       showNotification(
         `Error computing assessment: ${e.message || e}`,

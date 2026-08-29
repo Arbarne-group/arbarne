@@ -1,7 +1,7 @@
 # PROGRESS_TRACKER.md — Future Farms Framework (FFF) Digital Platform
 
 > **Live Development Progress & Milestone Tracker**
-> Last updated: August 28, 2026
+> Last updated: August 29, 2026
 
 ---
 
@@ -15,6 +15,7 @@
 | **Week 4 — Milestone 4 (Simulation, MLOps & Handover)** | Multi-Tab Gradio Simulation Platform, 63/63 Test Suite Pass Rate, Docker Compose Verified, Dual DB Engine Fallback | **Completed & Verified** | 100% |
 | **Week 5 — Milestone 5 (Farmer UX & Platform Architecture)** | Diagram 1, 2, 3 Full Implementation: Auth & Verification, Path A (25Q) vs Path B (200Q) Pathways, History & Longitudinal Comparison, Services & Learning Portals, 75/75 Tests Passing | **Completed & Verified** | 100% |
 | **Week 6 — Working Session (Frontend Rewrite & Platform Expansion)** | React/TypeScript SPA migration, unified Topbar/Sidebar shell, Onboarding + Auth gateway, Pillar Detail, Reports, Settings, Checkout/Pricing, Gamification engine (badges/quests/XP), Qwen LLM client, retrained ML models, live demo-data seed script | **Implemented — pushed, pending build/CI verification** | ~90% |
+| **Week 7 — Working Session (Security, Sharing, Regions, Diagnosis & Notifications)** | Per-farmer row-level access control (IDOR fixes), session hardening (logout + JWT jti blocklist, fail-closed secret, configurable expiry, strict CORS); shareable achievement card (pillar + full); Major Kenyan Regions + wider East Africa representation; farm image upload; professional diagnosis-report module + migrations; notifications inbox; simulator + live-data enhancements | **Implemented & Verified** (backend 88 tests green, tsc green, live integration 9/9) | 100% |
 
 ---
 
@@ -55,6 +56,13 @@
 - [x] **LLM Client Migration → Qwen / DashScope (2026-08-28):** `app/llm/client.py` now calls the OpenAI-compatible Qwen endpoint (`QWEN_API_KEY`, `QWEN_MODEL`, `QWEN_BASE_URL`) instead of Anthropic Claude; `openai` added to `requirements.txt`. **⚠️ Decision flag:** this deviates from the locked stack in `CLAUDE.md` (Anthropic Claude for pilot) — confirm with team lead before this becomes the pilot default.
 - [x] **Retrained ML Models (2026-08-28):** `evidence_anomaly_detector.joblib`, `farm_risk_classifier.joblib`, `farm_segmentation_kmeans.joblib` updated.
 - [x] **Live Demo-Data Seed Script (2026-08-28):** `app/scripts/seed_demo_live_data.py` + `tests/test_live_integration.py` added for populating/verifying a realistic pilot dataset.
+- [x] **Row-Level Access Control / IDOR Hardening (2026-08-29):** `app/api/assessments.py` now resolves every per-id endpoint (`get`/`answers`/`submit`/`evidence`/`narrative`/`diagnosis`/`pdf`/`sections`/`section/pdf`) through `get_owned_assessment` (User→Farm→Assessment join, 404 if not owner) or `get_verifiable_assessment` (owner OR `verifier`/`admin`/`staff` for `/verify`). `/history`, `/compare`, `/start` require `get_current_user` and scope to the caller's farm. `/api/portal/gamification/leaderboard`, `claim_quest_reward`, `record_gamification_action` require auth; `generate_leaderboard` anonymizes other farmers to first-name only. `/services/request`, `/services/{id}/deliver`, `/learning/{id}/complete` require auth + ownership/role. Unauthenticated access returns **401**; cross-user reads return **404**.
+- [x] **Session Management Hardening (2026-08-29):** `app/core/auth.py` — JWT secret is now **fail-closed** (`config.jwt_secret` defaults to `None`; production refuses to start unless `JWT_SECRET` is set, debug generates an ephemeral per-process secret), HS256 pinned, expiry is configurable minutes via `JWT_EXPIRE_MINUTES` (default 1440), tokens carry a `jti`, and a server-side `token_blocklist` supports revocation. `POST /api/auth/logout` (in `app/api/auth.py`) adds the `jti` to the blocklist; `decode_access_token` rejects blocklisted tokens. `app/main.py` CORS now uses explicit origins (debug: `127.0.0.1`/`localhost:5173`; prod: `CORS_ORIGINS`) instead of `*`-with-credentials. Frontend `useStore.logout` fires a best-effort `POST /api/auth/logout`.
+- [x] **Shareable Achievement Card (2026-08-29):** new `src/frontend/src/components/common/ShareAchievementModal.tsx` renders branded pillar + full-achievement scorecards (gold seal, FFMI, tier, strengths/recommendations) with native share (X/Facebook/LinkedIn/WhatsApp), copy-text, and PNG download via `html-to-image` (added to `package.json`). Mounted globally in `App.tsx`; opened automatically on assessment completion (`QuestionnairePage`) and via a manual "Share achievement" button on `ResultScorecardPage`. `useStore` gained `shareResult`/`openShare`/`closeShare`.
+- [x] **Farm Image Upload (2026-08-29):** `Farm.farm_image` text column (applied via `alembic/versions/0002_farmer_profile.py`) returned by `AuthResponse`/`get_profile`; `ProfilePage.tsx` supports uploading/displaying a farm photo; persisted on re-login.
+- [x] **Diagnosis Report Module (2026-08-29):** new `app/diagnosis/` package (`context.py`, `engine.py`, `prompt.py`, `template.py`) builds a professional narrative diagnosis report on top of `app/scoring`; stored via `assessments.diagnosis_report` JSON column (`alembic/versions/0003_diagnosis_report.py`). Frontend `DiagnosisReportSection.tsx` renders it.
+- [x] **Notifications Inbox (2026-08-29):** new `src/frontend/src/pages/NotificationsPage.tsx` (inbox of assessment/quest/service notifications with read/dismiss), wired into the topbar bell + sidebar.
+- [x] **Wider East Africa Representation (2026-08-29):** `src/frontend/src/constants/regions.ts` introduces `EAST_AFRICA_REGIONS`, `EAST_AFRICA_COUNTRY_CENTERS`, and `MAJOR_KENYA_REGIONS` (broad agro-ecological zones); `OnboardingPage` shows both "Major Kenyan regions" and "Wider East Africa" chip groups, with datalist fallback to the full East Africa list. `uvicorn.err`/`uvicorn*.log` and `*.err` added to `.gitignore`.
 
 ### 2.2 Database & Data Models (SQLAlchemy)
 - [x] **Core Models:** `User`, `Pillar`, `Capability`, `Question`, `Farm`, `Assessment`, `Answer`, `Evidence`, `Recommendation`, `RuleVersion` in `app/models/`.
@@ -129,18 +137,11 @@ graph TD
 
 ```text
 ============================= test session starts =============================
-platform win32 -- Python 3.13.15, pytest-8.3.4, pluggy-1.6.0
+platform win32 -- Python 3.13.x, pytest, pluggy
 rootdir: C:\Users\user\Desktop\Projects\arbane
 configfile: pyproject.toml
-plugins: anyio-4.6.2.post1, Faker-33.0.0, asyncio-0.24.0, cov-6.0.0
-collected 75 items
 
-src/backend/tests/test_api.py ....................................       [ 53%]
-src/backend/tests/test_auth_and_portals.py ....                          [ 59%]
-src/backend/tests/test_ml.py ....................                        [ 89%]
-src/backend/tests/test_recommendations.py .......                        [100%]
-
-============================== 75 passed in 24.18s ==============================
+collected 88 items ... 88 passed (exit 0)   # backend suite, incl. auth/portal/scoring/gamification/ML
 ```
 
 ```text
@@ -180,3 +181,20 @@ src/backend/tests/test_recommendations.py .......                        [100%]
 - **Smoke test updated:** `test_charts_smoke.py` now asserts `/healthz` (endpoint exists in `api/health.py`) instead of legacy `public/app.js` chart-container IDs; legacy root-HTML assertions retained.
 - **Stray file not committed:** `src/frontend/vite.config.js` is an untracked duplicate of `vite.config.ts` (identical content). Excluded from this commit to avoid dual-config ambiguity; delete if not needed.
 - **LLM provider flag:** see §2.1 — confirm Anthropic-vs-Qwen decision with team lead.
+
+---
+
+## 6. Working Session Notes (2026-08-29)
+
+- **Security hardening verified end-to-end (live backend on `127.0.0.1:8000`):**
+  - Unauth `GET /api/assessments/history` → **401** (was leaking all users).
+  - Unauth `GET /api/portal/gamification/leaderboard` → **401** (was leaking names + regions).
+  - Unauth `GET /api/assessments/{id}` → **401**.
+  - Auth `GET /api/assessments/{other-user-id}` → **404** (IDOR fixed).
+  - Auth `GET /api/assessments/history` → **200**, own data only.
+  - Leaderboard anonymizes other farmers to first name only.
+  - `POST /api/auth/logout` then reusing the token → **401** (revocation works).
+- **`live_smoke_test.py` updated to authenticate** (registers a farmer, uses the returned bearer token on `/start`, `/answers`, `/submit`, `/pdf`) so it validates the new auth model instead of being skipped. Re-run against a freshly restarted backend: **ALL 9 LIVE INTEGRATION TESTS PASSED** (`assert 401 == 200` resolved).
+- **Test counts:** backend suite **88 passed (exit 0)**; frontend `tsc --noEmit` **clean**; live integration **9/9**.
+- **Stray run artifacts** `uvicorn.err`, `uvicorn*.log`, `uvicorn*.err`, `*.err` added to `.gitignore` so server logs are never committed.
+- **Not in this push:** `fff_dev.db` (`*.db` ignored); `.venv/`, `node_modules/`, build output.

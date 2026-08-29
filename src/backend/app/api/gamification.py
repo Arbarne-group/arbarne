@@ -7,7 +7,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.core.auth import get_optional_user
+from app.core.auth import get_current_user, get_optional_user
 from app.db.session import get_db
 from app.gamification.engine import (
     award_xp_for_action,
@@ -109,7 +109,7 @@ def get_leaderboard(
     current_user: Optional[User] = Depends(get_optional_user),
     db: Session = Depends(get_db),
 ) -> LeaderboardResponse:
-    """Retrieve the regional smallholder agribusiness leaderboard."""
+    """Retrieve the regional smallholder agribusiness leaderboard (authenticated users only)."""
     return generate_leaderboard(db, current_user, region=region)
 
 

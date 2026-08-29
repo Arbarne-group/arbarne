@@ -52,17 +52,17 @@ export const CheckoutPage: React.FC = () => {
       awardXp(xpReward, 'Diagnostic Assessment Unlocked');
 
       showNotification(
-        `Payment successful! Your ${checkoutItem.title} is ready.`,
+        'Payment successful! Your farm check is ready.',
         'success',
         4500,
-        'Assessment Unlocked'
+        'Payment Done'
       );
 
       // Transition to questionnaire
       setScreen('screen-question');
     } catch (err: any) {
       showNotification(
-        `Checkout authorization error: ${err.message || err}`,
+        `Payment could not be completed: ${err.message || err}`,
         'error',
         4000,
         'Payment Failed'
@@ -82,12 +82,12 @@ export const CheckoutPage: React.FC = () => {
           className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-[#004447] transition-colors py-1 px-3 rounded-lg hover:bg-slate-100"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Pricing Options</span>
+          <span>Back to Plans</span>
         </button>
 
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#009924] border border-emerald-200 text-xs font-bold">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Instant Activation</span>
+          <span>Ready in Seconds</span>
         </div>
       </div>
 
@@ -95,10 +95,10 @@ export const CheckoutPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
-            Secure Checkout
+            Confirm Payment
           </h1>
           <p className="text-sm text-slate-600 mt-1">
-            Complete your payment to unlock the Future Farms Assessment.
+            Pay to start your farm check.
           </p>
         </div>
 
@@ -106,7 +106,7 @@ export const CheckoutPage: React.FC = () => {
         <div className="inline-flex items-center gap-2 bg-white border border-slate-200 px-4 py-2 rounded-full shadow-xs self-start md:self-auto">
           <Lock className="w-4 h-4 text-[#009924]" />
           <span className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">
-            Secure &amp; Encrypted
+            Safe &amp; Private
           </span>
         </div>
       </div>
@@ -138,7 +138,7 @@ export const CheckoutPage: React.FC = () => {
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-4">
                     <span className="font-serif text-lg font-bold text-slate-900">
-                      Credit / Debit Card
+                      Card
                     </span>
                     <div className="flex items-center gap-2 text-slate-400">
                       <CreditCard className="w-5 h-5" />
@@ -285,7 +285,7 @@ export const CheckoutPage: React.FC = () => {
           <div className="flex items-center gap-2 text-slate-500 text-xs">
             <Info className="w-4 h-4 shrink-0" />
             <p>
-              Payments are processed securely by Stripe &amp; Safaricom M-Pesa. We do not store your full card details.
+              Payments are handled safely by M-Pesa and card partners. We never store your full card number.
             </p>
           </div>
         </div>
@@ -294,7 +294,7 @@ export const CheckoutPage: React.FC = () => {
         <div className="lg:col-span-5">
           <div className="sticky top-24 bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-sm space-y-6">
             <h3 className="font-serif text-lg font-bold text-slate-900 border-b border-slate-100 pb-4">
-              Order Summary
+              Payment Summary
             </h3>
 
             {/* Item List */}
@@ -322,11 +322,11 @@ export const CheckoutPage: React.FC = () => {
             {/* Totals */}
             <div className="border-t border-slate-100 pt-4 space-y-2.5">
               <div className="flex justify-between text-xs text-slate-600">
-                <span>Subtotal</span>
+                 <span>Amount</span>
                 <span className="font-medium text-slate-900">{priceFormatted}</span>
               </div>
               <div className="flex justify-between text-xs text-slate-600">
-                <span>Taxes &amp; Levies</span>
+                 <span>Taxes</span>
                 <span className="font-medium text-slate-900">$0.00</span>
               </div>
 
@@ -359,7 +359,7 @@ export const CheckoutPage: React.FC = () => {
               ) : (
                 <>
                   <CheckCircle className="w-4 h-4 group-hover:scale-110 transition-transform text-[#7ffd7b]" />
-                  <span>Pay {priceFormatted} Now</span>
+                  <span>Confirm Payment – {priceFormatted}</span>
                 </>
               )}
             </button>

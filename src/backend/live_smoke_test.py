@@ -9,7 +9,35 @@ if hasattr(sys.stdout, "reconfigure"):
 
 BASE_URL = "http://127.0.0.1:8000"
 
+
+def _auth_token():
+    """Register a fresh farmer account and return a Bearer token for the live test."""
+    import time
+
+    email = f"live_smoke_{int(time.time() * 1000)}@example.com"
+    r = httpx.post(
+        f"{BASE_URL}/api/auth/register",
+        json={
+            "email": email,
+            "password": "livetestpassword123",
+            "name": "Live Smoke Farmer",
+            "farm_name": "Live Smoke Farm",
+            "region": "Western Kenya",
+            "crop_type": "Mixed Crop & Livestock",
+            "size_acres": 7.5,
+        },
+        timeout=10.0,
+    )
+    assert r.status_code == 201, f"register failed: {r.status_code} {r.text}"
+    return r.json()["access_token"]
+
+
 def test_live_server():
+    print(f"--- 0. Registering live test farmer & obtaining auth token ---")
+    token = _auth_token()
+    headers = {"Authorization": f"Bearer {token}"}
+    print("[OK] Authenticated live test farmer registered!\n")
+
     print(f"--- 1. Testing Health Endpoint: {BASE_URL}/health ---")
     try:
         r = httpx.get(f"{BASE_URL}/health", timeout=5.0)
@@ -30,7 +58,7 @@ def test_live_server():
     print("[OK] Seeded 8 Pillars verified!\n")
 
     print(f"--- 3. Testing Start Assessment: {BASE_URL}/api/assessments/start ---")
-    r = httpx.post(f"{BASE_URL}/api/assessments/start", json={"name": "Live Test Farm", "region": "Western Kenya"})
+    r = httpx.post(f"{BASE_URL}/api/assessments/start", json={"name": "Live Test Farm", "region": "Western Kenya"}, headers=headers)
     assert r.status_code == 200
     data = r.json()
     assessment_id = data["assessment_id"]
@@ -43,7 +71,7 @@ def test_live_server():
         {"question_id": "P1.1.2", "value": "no"},
         {"question_id": "P1.1.3", "value": "yes"},
     ]
-    r = httpx.post(f"{BASE_URL}/api/assessments/{assessment_id}/answers", json=valid_answers)
+    r = httpx.post(f"{BASE_URL}/api/assessments/{assessment_id}/answers", json=valid_answers, headers=headers)
     print(f"Status: {r.status_code}, Response: {r.json()}")
     assert r.status_code == 200
     print("[OK] Valid answers saved successfully!\n")
@@ -52,7 +80,7 @@ def test_live_server():
     invalid_answers = [
         {"question_id": "P1.1.1", "value": "invalid_val"}
     ]
-    r = httpx.post(f"{BASE_URL}/api/assessments/{assessment_id}/answers", json=invalid_answers)
+    r = httpx.post(f"{BASE_URL}/api/assessments/{assessment_id}/answers", json=invalid_answers, headers=headers)
     print(f"Status: {r.status_code}, Response: {r.text}")
     assert r.status_code == 422
     
@@ -81,9 +109,9 @@ def test_live_server():
     print("[OK] Batch ML jobs executed and tracked with MLflow!\n")
 
     print(f"--- 8. Testing Submit Assessment & Official PDF Download: {BASE_URL}/api/assessments/{assessment_id}/pdf ---")
-    sub_res = httpx.post(f"{BASE_URL}/api/assessments/{assessment_id}/submit", timeout=5.0)
+    sub_res = httpx.post(f"{BASE_URL}/api/assessments/{assessment_id}/submit", timeout=5.0, headers=headers)
     assert sub_res.status_code == 200
-    pdf_res = httpx.get(f"{BASE_URL}/api/assessments/{assessment_id}/pdf", timeout=10.0)
+    pdf_res = httpx.get(f"{BASE_URL}/api/assessments/{assessment_id}/pdf", timeout=10.0, headers=headers)
     print(f"Status: {pdf_res.status_code}, Content-Type: {pdf_res.headers.get('content-type')}, Size: {len(pdf_res.content)} bytes")
     assert pdf_res.status_code == 200
     assert pdf_res.headers.get("content-type") == "application/pdf"

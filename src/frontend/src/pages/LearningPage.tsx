@@ -11,135 +11,18 @@ import {
   Loader2,
   Headphones,
   Sparkles,
-  BookOpen,
   Check,
-  Search,
   ArrowRight,
   Brain,
-  Layers,
-  Lightbulb,
   Rocket,
   Volume2,
   X,
-  Award,
-  Filter,
   CheckCircle2,
-  Flame,
-  Sun,
-  Droplets,
-  DollarSign,
-  TrendingUp,
-  ShieldCheck,
-  Cpu,
-  Users,
-  Leaf,
 } from 'lucide-react';
 
-const DEFAULT_COURSES: Course[] = [
-  {
-    id: 1,
-    title: 'Solar Drip Scheduling & PV Array Maintenance',
-    pillar_id: 2,
-    pillar_name: 'Productive Renewable Energy',
-    duration_mins: 12,
-    level: 'Beginner',
-    description: 'Step-by-step cleaning of solar photovoltaic panels, pressure valve regulation, and automated fertigation scheduling to maximize crop yield per kilowatt.',
-    completed: true,
-    is_recommended: true,
-  },
-  {
-    id: 2,
-    title: 'Regenerative Soil Conditioning & Biochar Pyrolysis',
-    pillar_id: 5,
-    pillar_name: 'Environmental Sustainability',
-    duration_mins: 15,
-    level: 'Beginner',
-    description: 'Practical on-farm pyrolytic biomass kiln construction, inoculation with worm tea, and soil biological carbon enhancement for dryland water retention.',
-    completed: true,
-    is_recommended: true,
-  },
-  {
-    id: 3,
-    title: 'Farm Gross Margin Ledger & Unit Cost Bookkeeping',
-    pillar_id: 8,
-    pillar_name: 'Investment Readiness',
-    duration_mins: 20,
-    level: 'Intermediate',
-    description: 'Practical financial recording to calculate unit production costs per kilogram, operational margins, and achieve bankable enterprise credibility.',
-    completed: false,
-    is_recommended: true,
-  },
-  {
-    id: 4,
-    title: 'Pre-Harvest Chemical Intervals & GlobalGAP Traceability',
-    pillar_id: 3,
-    pillar_name: 'Food Safety & Quality',
-    duration_mins: 18,
-    level: 'Intermediate',
-    description: 'Understanding maximum residue limits (MRLs), spray withholding periods, harvest sanitation, and digital lot-tracking to access export markets.',
-    completed: false,
-    is_recommended: false,
-  },
-  {
-    id: 5,
-    title: 'Indigenous Weather Indicators & Contour Swale Catchments',
-    pillar_id: 4,
-    pillar_name: 'Indigenous Knowledge',
-    duration_mins: 14,
-    level: 'Beginner',
-    description: 'Harmonizing elder bio-indicator observations with modern weather forecasts, building zai pits, and constructing contour swales for zero runoff.',
-    completed: false,
-    is_recommended: false,
-  },
-  {
-    id: 6,
-    title: 'Smartphone Sensor Moisture Probes & Precision Irrigation',
-    pillar_id: 1,
-    pillar_name: 'Smart Farming',
-    duration_mins: 16,
-    level: 'Advanced',
-    description: 'Deploying low-cost IoT soil moisture probes, interpreting smartphone telemetry, and reducing irrigation water waste by 35%.',
-    completed: false,
-    is_recommended: false,
-  },
-  {
-    id: 7,
-    title: 'Agricultural Worker Safety & Illustrated Field SOPs',
-    pillar_id: 6,
-    pillar_name: 'Human Capital',
-    duration_mins: 15,
-    level: 'Beginner',
-    description: 'Designing visual pictorial workflows for field crews, chemical PPE handling, heat stress hydration protocols, and team performance incentives.',
-    completed: false,
-    is_recommended: false,
-  },
-  {
-    id: 8,
-    title: 'Supermarket Grade Specifications & Offtake Negotiation',
-    pillar_id: 7,
-    pillar_name: 'Market Access',
-    duration_mins: 22,
-    level: 'Intermediate',
-    description: 'Sorting and grading produce to premium buyer standards, packaging for minimum transit loss, and locking in annual forward purchase contracts.',
-    completed: false,
-    is_recommended: true,
-  },
-  {
-    id: 9,
-    title: 'Biogas Digestate Bio-Fertilizer Optimization',
-    pillar_id: 2,
-    pillar_name: 'Productive Renewable Energy',
-    duration_mins: 14,
-    level: 'Intermediate',
-    description: 'Utilizing nitrogen-rich anaerobic digestate effluent as a foliar liquid bio-fertilizer for greenhouse tomato and horticulture production.',
-    completed: false,
-    is_recommended: false,
-  },
-];
-
 export const LearningPage: React.FC = () => {
-  const { awardXp, showNotification, setScreen } = useAppStore();
-  const [courses, setCourses] = useState<Course[]>(DEFAULT_COURSES);
+  const { awardXp, showNotification } = useAppStore();
+  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedPillarFilter, setSelectedPillarFilter] = useState<number | 'all'>('all');
   const [activeCourseModal, setActiveCourseModal] = useState<Course | null>(null);
@@ -154,16 +37,9 @@ export const LearningPage: React.FC = () => {
     setLoading(true);
     try {
       const data = await portalApi.getLearning();
-      if (data && data.length > 0) {
-        // Merge with default courses to ensure rich coverage
-        const existingIds = new Set(data.map((d) => d.id));
-        const merged = [...data, ...DEFAULT_COURSES.filter((d) => !existingIds.has(d.id))];
-        setCourses(merged);
-      } else {
-        setCourses(DEFAULT_COURSES);
-      }
+      setCourses(data && data.length > 0 ? data : []);
     } catch {
-      setCourses(DEFAULT_COURSES);
+      setCourses([]);
     } finally {
       setLoading(false);
     }
@@ -178,15 +54,15 @@ export const LearningPage: React.FC = () => {
       // Graceful offline fallback
     }
 
-    awardXp(50, `Completed Course: ${course.title}`);
+    awardXp(50, `Finished lesson: ${course.title}`);
     setCourses((prev) =>
       prev.map((c) => (c.id === course.id ? { ...c, completed: true } : c))
     );
     showNotification(
-      `Module "${course.title}" completed! +50 XP awarded.`,
+      `Lesson "${course.title}" done! You earned 50 points.`,
       'success',
       4500,
-      'Academy Milestone'
+      'Lesson Done'
     );
     setActiveCourseModal(null);
     setIsPlayingAudio(false);
@@ -202,7 +78,7 @@ export const LearningPage: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
-      {/* ─── 1. Featured Learning Academy Header ────────────────────────── */}
+      {/* ─── 1. Featured Learning Header ────────────────────────────────── */}
       <section className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
         {/* Ambient background glow */}
         <div className="absolute top-0 right-0 w-72 h-72 bg-[#045D61] opacity-10 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16" />
@@ -215,18 +91,18 @@ export const LearningPage: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-[#045D61] tracking-widest uppercase bg-[#045D61]/10 px-2.5 py-0.5 rounded-full">
-                  FFF Practical Curriculum
+                  Future Farms Lessons
                 </span>
-                <span className="text-xs text-slate-400 font-medium hidden sm:inline">• 8-Pillar Alignment</span>
+                <span className="text-xs text-slate-400 font-medium hidden sm:inline">• For every farm</span>
               </div>
             </div>
 
             <div>
               <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">
-                Learning Academy &amp; Skills Studio
+                Learn on Your Farm
               </h1>
               <p className="text-xs sm:text-sm text-slate-600 max-w-2xl mt-1 leading-relaxed">
-                Practical, audio-assisted micro-modules and step-by-step Standard Operating Procedures (SOPs) designed to close farm capability gaps and maximize gross margins.
+                Short, simple lessons you can listen to. Each one shows you easy steps to improve your farm.
               </p>
             </div>
 
@@ -234,15 +110,15 @@ export const LearningPage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-3 pt-1 text-xs">
               <div className="flex items-center gap-1.5 bg-[#009924]/10 text-[#009924] px-3 py-1 rounded-full border border-[#009924]/25 font-bold">
                 <Headphones className="w-3.5 h-3.5" />
-                <span>Audio-Assisted Micro-Lessons</span>
+                <span>Listen Anywhere</span>
               </div>
               <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1 rounded-full font-bold">
                 <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                <span>Earn 50 XP per Module</span>
+                <span>Earn 50 points per lesson</span>
               </div>
               <div className="flex items-center gap-1.5 text-slate-500 font-medium">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#009924]" />
-                <span>{completedCount} / {courses.length} Completed</span>
+                <span>{completedCount} / {courses.length} Done</span>
               </div>
               <div className="flex items-center gap-1.5 text-slate-500 font-medium">
                 <Clock className="w-3.5 h-3.5 text-slate-400" />
@@ -251,7 +127,7 @@ export const LearningPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Callout: Academy Progress & Next Lesson CTA */}
+          {/* Right Callout: Learning Progress & Next Lesson CTA */}
           <div className="flex flex-col items-center lg:items-end gap-5 w-full lg:w-auto border-t lg:border-t-0 lg:border-l border-slate-200/80 pt-6 lg:pt-0 lg:pl-8">
             <div className="text-center lg:text-right">
               <div className="font-serif text-4xl sm:text-5xl font-extrabold text-[#045D61] leading-none">
@@ -259,7 +135,7 @@ export const LearningPage: React.FC = () => {
                 <span className="text-lg font-normal text-slate-400"> done</span>
               </div>
               <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mt-1.5">
-                Academy Mastery Progress
+                Your Progress
               </div>
             </div>
 
@@ -274,24 +150,24 @@ export const LearningPage: React.FC = () => {
               className="w-full lg:w-auto bg-[#009924] hover:bg-[#007a1c] text-white rounded-xl py-3 px-6 text-xs font-bold transition-all shadow-md shadow-[#009924]/20 flex items-center justify-center gap-2 hover:scale-102"
             >
               <PlayCircle className="w-4 h-4 text-[#FFD700]" />
-              <span>Resume Next Lesson</span>
+              <span>Start Next Lesson</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       </section>
 
-      {/* ─── 2. Assessment & Learning Journey Map + Value Prop ───────────── */}
+      {/* ─── 2. Learning Journey Map + Value Prop ───────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Journey Map (Spans 2 cols) */}
         <div className="lg:col-span-2 bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-7 shadow-sm space-y-6">
           <div className="flex items-center justify-between">
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-                Competency Progression
+                Your Progress
               </span>
               <h3 className="font-serif text-xl font-bold text-slate-900 mt-0.5">
-                5-Step Agronomic Mastery Journey
+                Your Learning Steps
               </h3>
             </div>
             <span className="text-xs font-bold text-[#045D61] bg-[#045D61]/10 px-2.5 py-1 rounded-full">
@@ -308,7 +184,7 @@ export const LearningPage: React.FC = () => {
                 <Check className="w-4 h-4" />
               </div>
               <span className="text-[11px] font-bold text-slate-700 hidden sm:block uppercase tracking-wider">
-                1. Assess
+                1. Check
               </span>
             </div>
 
@@ -317,7 +193,7 @@ export const LearningPage: React.FC = () => {
                 <Check className="w-4 h-4" />
               </div>
               <span className="text-[11px] font-bold text-slate-700 hidden sm:block uppercase tracking-wider">
-                2. Scorecard
+                2. Score
               </span>
             </div>
 
@@ -344,7 +220,7 @@ export const LearningPage: React.FC = () => {
                 <Rocket className="w-3.5 h-3.5" />
               </div>
               <span className="text-[11px] font-medium text-slate-400 hidden sm:block uppercase tracking-wider">
-                5. Take Action
+                5. Act
               </span>
             </div>
           </div>
@@ -358,18 +234,18 @@ export const LearningPage: React.FC = () => {
                 <Brain className="w-4 h-4" />
               </div>
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#FFD700]">
-                Why Complete This?
+                Why Learn?
               </span>
             </div>
 
             <p className="text-xs text-white/90 leading-relaxed">
-              Completing these modules unlocks tailored agronomic insights, actionable cost-reduction methods, and verified digital capability credentials recognized by offtakers and agri-finance partners.
+              Finish lessons to learn easy ways to save money and grow more food on your farm.
             </p>
           </div>
 
           <div className="pt-4 mt-4 border-t border-white/15 flex items-center justify-between text-xs text-white/80">
-            <span>Certification Ready</span>
-            <span className="text-[#FFD700] font-bold">50 XP per lesson</span>
+            <span>Learn at Your Pace</span>
+            <span className="text-[#FFD700] font-bold">50 points per lesson</span>
           </div>
         </div>
       </div>
@@ -384,7 +260,7 @@ export const LearningPage: React.FC = () => {
               : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90'
           }`}
         >
-          All Modules ({courses.length})
+          All Lessons ({courses.length})
         </button>
         <button
           onClick={() => setSelectedPillarFilter(1)}
@@ -394,7 +270,7 @@ export const LearningPage: React.FC = () => {
               : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90'
           }`}
         >
-          Smart Farming (P1)
+          Smart Farming
         </button>
         <button
           onClick={() => setSelectedPillarFilter(2)}
@@ -404,7 +280,7 @@ export const LearningPage: React.FC = () => {
               : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90'
           }`}
         >
-          Renewable Energy (P2)
+          Solar &amp; Energy
         </button>
         <button
           onClick={() => setSelectedPillarFilter(3)}
@@ -414,7 +290,7 @@ export const LearningPage: React.FC = () => {
               : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90'
           }`}
         >
-          Food Safety (P3)
+          Safe Food
         </button>
         <button
           onClick={() => setSelectedPillarFilter(4)}
@@ -424,7 +300,7 @@ export const LearningPage: React.FC = () => {
               : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90'
           }`}
         >
-          Indigenous Knowledge (P4)
+          Local Knowledge
         </button>
         <button
           onClick={() => setSelectedPillarFilter(5)}
@@ -434,7 +310,7 @@ export const LearningPage: React.FC = () => {
               : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90'
           }`}
         >
-          Regenerative Ag (P5)
+          Healthy Soil
         </button>
         <button
           onClick={() => setSelectedPillarFilter(8)}
@@ -444,15 +320,25 @@ export const LearningPage: React.FC = () => {
               : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200/90'
           }`}
         >
-          Investment Readiness (P8)
+          Loans &amp; Money
         </button>
       </div>
 
-      {/* ─── 4. Curriculum Modules Bento Grid ───────────────────────────── */}
+      {/* ─── 4. Lessons Bento Grid ─────────────────────────────────────── */}
       {loading ? (
         <div className="flex items-center justify-center py-16 text-slate-500 text-xs font-semibold">
           <Loader2 className="w-5 h-5 animate-spin mr-2 text-[#045D61]" />
-          <span>Loading curriculum modules...</span>
+          <span>Loading lessons...</span>
+        </div>
+      ) : filteredCourses.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
+          <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center">
+            <GraduationCap className="w-7 h-7" />
+          </div>
+          <p className="text-sm font-semibold text-slate-600">No lessons available yet</p>
+          <p className="text-xs text-slate-400 max-w-sm">
+            New learning modules will appear here as they are published. Check back soon.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -486,6 +372,12 @@ export const LearningPage: React.FC = () => {
                   <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#045D61] transition-colors leading-snug">
                     {course.title}
                   </h3>
+                  {course.format_type && (
+                    <p className="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
+                      <PlayCircle className="w-3 h-3 flex-shrink-0" />
+                      <span>{course.format_type}</span>
+                    </p>
+                  )}
                   <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">
                     {course.description}
                   </p>
@@ -498,14 +390,14 @@ export const LearningPage: React.FC = () => {
                     </span>
                     <span className="text-[11px] font-bold text-[#009924] flex items-center gap-1">
                       <Sparkles className="w-3 h-3 text-amber-500" />
-                      <span>+50 XP</span>
+                      <span>+50 points</span>
                     </span>
                   </div>
 
                   {course.completed ? (
                     <div className="py-2.5 rounded-xl bg-[#009924]/10 text-[#009924] font-bold text-xs flex items-center justify-center gap-1.5 border border-[#009924]/30">
                       <CheckCircle className="w-4 h-4" />
-                      <span>Module Completed</span>
+                      <span>Lesson Done</span>
                     </div>
                   ) : (
                     <button
@@ -516,7 +408,7 @@ export const LearningPage: React.FC = () => {
                       className="w-full py-2.5 rounded-xl bg-[#045D61] hover:bg-[#023c3f] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-[#045D61]/20 transition-all hover:scale-102"
                     >
                       <PlayCircle className="w-4 h-4 text-[#FFD700]" />
-                      <span>Start Audio Module</span>
+                      <span>Start Lesson</span>
                     </button>
                   )}
                 </div>
@@ -539,7 +431,7 @@ export const LearningPage: React.FC = () => {
               <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
                 <div>
                   <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#009924]">
-                    Interactive Audio Lesson
+                    Listen to This Lesson
                   </span>
                   <h3 className="font-serif text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">
                     {activeCourseModal.title}
@@ -575,14 +467,14 @@ export const LearningPage: React.FC = () => {
                     </button>
                     <div>
                       <p className="text-xs font-bold text-white">
-                        {isPlayingAudio ? 'Playing Lesson Audio...' : 'Audio Paused'}
+                        {isPlayingAudio ? 'Playing...' : 'Audio Paused'}
                       </p>
-                      <p className="text-[10px] text-white/70">Narrated by Senior Agronomist</p>
+                      <p className="text-[10px] text-white/70">Explained by a farm expert</p>
                     </div>
                   </div>
                   <span className="text-xs font-mono font-bold text-[#FFD700]">
-                    04:15 / {activeCourseModal.duration_mins}:00
-                  </span>
+                     00:00 / {activeCourseModal.duration_mins}:00
+                   </span>
                 </div>
 
                 {/* Progress Bar */}
@@ -597,27 +489,30 @@ export const LearningPage: React.FC = () => {
               </div>
 
               {/* Key Practical Takeaways */}
-              <div className="space-y-3">
-                <h4 className="font-serif text-sm font-bold text-slate-900">
-                  Key Practical Field Takeaways:
-                </h4>
-                <ul className="space-y-2 text-xs text-slate-600">
-                  <li className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-[#009924] flex-shrink-0 mt-0.5" />
-                    <span>Always monitor pressure gauges before opening automated sub-block drip valves.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-[#009924] flex-shrink-0 mt-0.5" />
-                    <span>Maintain weekly logbooks for all fertilizer and organic amendment applications.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-[#009924] flex-shrink-0 mt-0.5" />
-                    <span>Calculate cost-per-kg to compare solar irrigation against diesel generators.</span>
-                  </li>
-                </ul>
-              </div>
+              {(() => {
+                const takeaways = (activeCourseModal.key_takeaways || '')
+                  .split(/\n|•|;/)
+                  .map((t) => t.trim())
+                  .filter((t) => t.length > 0);
+                if (takeaways.length === 0) return null;
+                return (
+                  <div className="space-y-3">
+                    <h4 className="font-serif text-sm font-bold text-slate-900">
+                      What You Will Learn:
+                    </h4>
+                    <ul className="space-y-2 text-xs text-slate-600">
+                      {takeaways.map((t, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <Check className="w-4 h-4 text-[#009924] flex-shrink-0 mt-0.5" />
+                          <span>{t}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })()}
 
-              {/* Complete & Claim XP CTA */}
+              {/* Complete & Claim Points CTA */}
               <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                 <button
                   onClick={() => {
@@ -626,14 +521,14 @@ export const LearningPage: React.FC = () => {
                   }}
                   className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-colors"
                 >
-                  Close Player
+                  Close
                 </button>
                 <button
                   onClick={() => handleCompleteCourse(activeCourseModal)}
                   className="px-6 py-2.5 rounded-xl bg-[#009924] hover:bg-[#007a1c] text-white font-bold text-xs shadow-md shadow-[#009924]/20 transition-all flex items-center gap-2 hover:scale-105"
                 >
                   <CheckCircle className="w-4 h-4" />
-                  <span>Mark Complete &amp; Claim +50 XP</span>
+                  <span>Mark as Done (+50 points)</span>
                 </button>
               </div>
             </motion.div>

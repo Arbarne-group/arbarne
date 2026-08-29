@@ -21,9 +21,40 @@ from app.models.user import User
 security = HTTPBearer(auto_error=False)
 
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_DAYS = 30
+
+# Server-side blocklist of revoked token IDs (jti). In-memory for the pilot;
+# swap for a shared store (Redis/DB) if running multiple workers.
+token_blocklist: set[str] = set()
 
 PBKDF2_ITERATIONS = 120_000
+
+
+def _resolve_jwt_secret() -> str:
+    """Resolve the HMAC secret used to sign/verify JWTs.
+
+    Refuses to run with the old guessable placeholder and, in production
+    (APP_DEBUG=false), requires an explicit JWT_SECRET. In debug mode a random
+    ephemeral secret is generated (and warned about) so local dev works, but a
+    stolen/forged token cannot be reused across restarts.
+    """
+    secret = settings.jwt_secret
+    if secret and secret != "change-me-in-production":
+        return secret
+    if settings.app_debug:
+        import warnings
+
+        warnings.warn(
+            "JWT_SECRET is not set — using an ephemeral dev-only secret. "
+            "Tokens are invalid after a server restart and this is NOT safe for production.",
+            stacklevel=2,
+        )
+        return secrets.token_hex(32)
+    raise RuntimeError(
+        "JWT_SECRET environment variable must be set when APP_DEBUG is false."
+    )
+
+
+JWT_SECRET = _resolve_jwt_secret()
 
 
 def hash_password(password: str) -> str:
@@ -53,7 +84,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
             return False
         return hmac.compare_digest(digest.hex(), hash_hex)
     # Legacy pilot format: unsalted-lookup HMAC-SHA256 with static secret prefix
-    legacy_salt = settings.jwt_secret[:16]
+    legacy_salt = JWT_SECRET[:16]
     expected = hmac.new(
         legacy_salt.encode(), plain_password.encode(), hashlib.sha256
     ).hexdigest()
@@ -61,22 +92,24 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-    """Create a signed JWT access token."""
+    """Create a signed JWT access token with a unique jti (for revocation)."""
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (
-        expires_delta or timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
+        expires_delta or timedelta(minutes=settings.jwt_expire_minutes)
     )
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, settings.jwt_secret, algorithm=ALGORITHM)
+    to_encode.update({"exp": expire, "jti": secrets.token_hex(16)})
+    return jwt.encode(to_encode, JWT_SECRET, algorithm=ALGORITHM)
 
 
 def decode_access_token(token: str) -> Optional[dict]:
-    """Decode and validate a JWT access token."""
+    """Decode and validate a JWT access token. Revoked tokens (logout) return None."""
     try:
-        payload = jwt.decode(token, settings.jwt_secret, algorithms=[ALGORITHM])
-        return payload
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM])
     except JWTError:
         return None
+    if payload.get("jti") in token_blocklist:
+        return None
+    return payload
 
 
 def generate_verification_code() -> str:

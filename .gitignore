@@ -49,6 +49,9 @@ Thumbs.db
 
 # ─── Build artefacts ──────────────────────────────────────────────────
 *.log
+*.err
+uvicorn*.log
+uvicorn*.err
 logs/
 *.sqlite
 *.sqlite3
