@@ -34,7 +34,8 @@ $$\text{Assess} \longrightarrow \text{Diagnose} \longrightarrow \text{Prioritise
 |---|---|
 | **Backend API** | FastAPI (Python 3.11+) |
 | **Database** | PostgreSQL + `pgvector` (SQLite fallback for local quick-start) |
-| **Frontend SPA** | Vanilla HTML5 / CSS3 / JavaScript (Zero-build PWA) |
+| **Frontend UI** | React 19 + TypeScript + Vite + Tailwind CSS + Lucide Icons |
+| **ML Simulation** | Gradio Interactive Simulation Studio (`/ml-demo`) |
 | **Containerization** | Docker & Docker Compose (`deploy/docker-compose.yml`) |
 | **Task Queue & ML** | Celery + Redis (scikit-learn, XGBoost/LightGBM, pandas) |
 | **LLM Integration** | Hosted Anthropic Claude API (`claude-sonnet-4-5`) |
@@ -43,69 +44,94 @@ $$\text{Assess} \longrightarrow \text{Diagnose} \longrightarrow \text{Prioritise
 
 ## 💻 Quickstart & Local Setup
 
-### Option A: Local Python Virtual Environment (Quickest)
+### Option A: Local Fast-Dev Mode (Recommended for Development)
 
-#### 1. Clone & Navigate
-```bash
-git clone https://github.com/Arbarne-group/arbarne.git arbarne
-cd arbarne/src/backend
-```
-
-#### 2. Create & Activate Virtual Environment
-```powershell
-# Windows (PowerShell)
-python -m venv .venv
-& .venv\Scripts\Activate.ps1
-
-# Linux / macOS
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-#### 3. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-#### 4. Seed Framework Data (8 Pillars, 40 Capabilities, 200 Questions)
-```powershell
-# Uses SQLite (fff_dev.db) out of the box when no Postgres URL is provided
-$env:DATABASE_URL="sqlite:///fff_dev.db"
-python -m app.scripts.seed_framework
-```
-
-#### 5. Launch Application Server
-```powershell
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-#### 6. Access in Browser
-Open **[http://localhost:8000/](http://localhost:8000/)** in your web browser.
-
----
-
-### Option B: Docker Compose (Full Stack)
+Run the backend and frontend in separate terminals for instant hot-reloading.
 
 #### 1. Configure Environment
 ```bash
-cp .env.example .env
+# Clone the repository
+git clone https://github.com/Arbarne-group/arbarne.git
+cd arbarne
+
+# Copy the environment file
+cp .env.example .env     # Linux / macOS
+copy .env.example .env   # Windows
 ```
 
-#### 2. Start Containers (Postgres, Redis, FastAPI, Worker, Frontend)
+---
+
+#### 2. Start the Backend (FastAPI on Port 8000)
+Open your **first terminal**:
+```powershell
+cd src/backend
+
+# Create & activate virtual environment
+python -m venv .venv
+
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+
+# Linux / macOS
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run migrations & seed framework data (8 Pillars, 40 Capabilities, 200 Questions)
+alembic upgrade head
+python -m app.scripts.seed_framework
+
+# Launch the FastAPI backend
+uvicorn app.main:app --reload --port 8000
+```
+- 🟢 **Backend API:** [http://localhost:8000](http://localhost:8000)
+- 📖 **Interactive Swagger Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- 🔬 **ML Simulation Studio:** [http://localhost:8000/ml-demo](http://localhost:8000/ml-demo)
+
+---
+
+#### 3. Start the Frontend (Vite + React on Port 5173)
+Open a **second terminal**:
+```powershell
+cd src/frontend
+
+# Install dependencies
+npm install
+
+# Start Vite dev server
+npm run dev
+```
+- 🟢 **Frontend UI:** [http://localhost:5173](http://localhost:5173) *(Vite automatically proxies API requests to `http://localhost:8000`)*
+
+---
+
+#### 4. Verify Everything Is Running
+From the root directory, run the built-in system verification check:
+```powershell
+python src/backend/verify_running_servers.py
+```
+
+---
+
+### Option B: Docker Compose (Full Stack with Postgres & Redis)
+
+#### 1. Start Stack Containers
 ```bash
 docker compose -f deploy/docker-compose.yml up --build -d
 ```
 
-#### 3. Run Migrations & Seeding
+#### 2. Run Migrations & Seeding
 ```bash
 docker compose -f deploy/docker-compose.yml exec backend alembic upgrade head
 docker compose -f deploy/docker-compose.yml exec backend python -m app.scripts.seed_framework
 ```
 
-#### 4. Access Services
+#### 3. Access Services
 - **Frontend SPA:** [http://localhost:8080/](http://localhost:8080/)
 - **Backend API:** [http://localhost:8000/](http://localhost:8000/)
-- **API Interactive Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Swagger API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **ML Simulator:** [http://localhost:8000/ml-demo](http://localhost:8000/ml-demo)
 
 ---
 
@@ -115,17 +141,17 @@ The test suite validates the API, deterministic scoring engine, recommendation l
 
 ### Run via Local Virtual Environment
 ```powershell
-cd src\backend
-$env:DATABASE_URL="sqlite:///fff_dev.db"
-& .venv\Scripts\pytest.exe -v
+cd src/backend
+pytest -v
+
+# Scoring engine specific tests
+pytest tests/test_scoring.py -v
 ```
 
 ### Run via Docker
 ```bash
 docker compose -f deploy/docker-compose.yml exec backend pytest -v
 ```
-
-**Status:** 36 / 36 unit and integration tests passing (100% pass rate).
 
 ---
 
@@ -149,8 +175,8 @@ arbarne/
 │   ├── GLOSSARY.md      ← FFF domain vocabulary
 │   └── SOURCE_INDEX.md  ← source material inventory
 ├── src/
-│   ├── backend/         ← FastAPI application, models, scoring, API routers
-│   ├── frontend/        ← static SPA (index.html, app.js, styles.css, PWA worker)
+│   ├── backend/         ← FastAPI application, models, scoring, API routers, ML studio
+│   ├── frontend/        ← React 19 + TypeScript + Vite + Tailwind UI
 │   └── worker/          ← Celery worker & ML batch job entries
 └── deploy/
     └── docker-compose.yml ← Docker multi-container stack definition
