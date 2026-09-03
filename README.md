@@ -1,202 +1,196 @@
-# Future Farms Framework (FFF) Digital Platform
+# Future Farms 🌾
 
-> **A farm transformation architecture and digital capability platform designed for East African farm systems.**
-> Target Ambition: Supporting **100,000 future-ready farm systems across East Africa by 2035**.
-
----
-
-## 🌾 Overview
-
-The **Future Farms Framework (FFF) Digital Platform** operationalizes the FFF maturity architecture into accessible, offline-first web software. Rather than acting as a simple pass/fail questionnaire, the platform provides a continuous transformation loop for farmers, agribusinesses, advisors, and verifiers:
-
-$$\text{Assess} \longrightarrow \text{Diagnose} \longrightarrow \text{Prioritise} \longrightarrow \text{Learn} \longrightarrow \text{Implement} \longrightarrow \text{Verify} \longrightarrow \text{Measure} \longrightarrow \text{Advance}$$
-
-### Key Deliverables
-- **FFF Lite:** An affordable, offline-first self-assessment tool for farmers to evaluate maturity across 8 pillars and receive instant recommendations.
-- **FFF Verified:** An evidence-backed assessment pathway (Photos, GPS, Timestamps) for accredited verifiers and agricultural organizations.
-- **FFF Insights & ML:** Batch farm segmentation, trajectory risk prediction, and evidence anomaly scanning powered by background Celery workers.
+> **Cultivating the Future of African Agriculture**  
+> An intelligent digital platform empowering commercial and expanding farms across Africa with diagnostic maturity assessments, benchmark analytics, tailored recommendations, and access to capital and technical services.
 
 ---
 
-## 🚀 Key Features
+## 🌟 Key Features
 
-- **200-Question Domain Framework:** 8 Pillars, 40 Capabilities (5 per pillar), and 200 Questions seeded verbatim from the canonical source specification.
-- **Deterministic Scoring Engine:** 100% pure Python scoring engine with zero LLM dependency. Calculates 6-level capability statuses (`non_existent` to `advanced`), composite FFMI/24 index scores, and maps farms to 5 maturity tiers (`Informal Farm` to `Future Ready Farm`).
-- **Data-Driven Recommendations:** Automatically surfaces per-gap action plans prioritized with **Quick Wins** first, mapped to FFF Services and FAAB Learning Resources.
-- **Offline-First PWA:** Built with a cache-first Service Worker (`service-worker.js`) and IndexedDB local storage. Automatically computes results locally if offline and syncs when reconnected.
-- **LLM Narrative & Fallback:** Executive summary generation powered by Anthropic Claude API with architectural isolation fallback to ensure 100% uptime during network outages.
+### 1. Diagnostic Assessment Framework (Pillar 1)
+- **5 Core Digital Capabilities (25 Self-Assessment Questions)**:
+  - `1.1`: Technology Readiness
+  - `1.2`: Digital Capability
+  - `1.3`: Farm Information & Data Management
+  - `1.4`: Data-Driven Decision Making
+  - `1.5`: Continuous Improvement & Innovation
+- **Real-Time Scoring Engine**: Calculates live capability percentages and overall pillar maturity (0–100%).
+- **Maturity Tiers**:
+  - `0% – 39%`: **Emerging Stage**
+  - `40% – 59%`: **Developing Stage**
+  - `60% – 79%`: **Advancing Stage**
+  - `80% – 100%`: **Leading Stage**
+- **Strict Conditional Recommendations**:
+  - Selecting **"No"** reveals the specific intervention recommendation, why it matters, an immediate quick win, support channel, priority badge (`🟢 Quick Win`, `🟡 Medium Term`, `🔵 Strategic`), and audit evidence required.
+  - Selecting **"Yes"** hides recommendations throughout the assessment to keep focus sharp on capabilities in place.
+- **Action Plan Roadmap**: Prioritized gap analysis modal grouping all "No" items by urgency for farm implementation.
+
+### 2. My Farm Radar Dashboard
+- **8-Pillar Farm Maturity Spider Diagram**: Interactive Chart.js radar canvas comparing farm scores with regional commercial benchmarks:
+  1. Soil & Crops
+  2. Water & Irrigation
+  3. Technology & Mechanization
+  4. Business & Financials
+  5. Labor & Team Management
+  6. Climate Resilience
+  7. Market Access & Contracts
+  8. Post-Harvest Quality & Cold Chain
+- **Priority Opportunities**: Highlighting high-impact projects such as automated drip irrigation scheduling and solar cold chain storage.
+- **PDF Export**: One-click farm transformation plan generation.
+
+### 3. Commercial Hub & Payments
+- **Assessment Pricing**: Transparent side-by-side comparison between Individual Pillar Assessment ($1) and the Full Future Farm Assessment ($10 "BEST VALUE").
+- **Kenyan M-Pesa & Card Checkout**:
+  - Interactive **Safaricom M-Pesa STK Push** simulation with Kenyan country code `+254`.
+  - Secure Credit/Debit Card payments tab.
+  - Automatic order creation and instant dashboard unlock.
+
+### 4. Onboarding Questionnaire Wizard
+- 5-step guided profile:
+  - `Step 1`: Farmer Profile (Job title radio cards, value chain)
+  - `Step 2`: Management Experience (Management abilities, operators checklist, desired involvement)
+  - `Step 3`: Operating Style (Decision bento, failure response, top 3 obstacles, update channels)
+  - `Step 4`: Digital Platforms (Support reasons, remote management confidence, segmented toggles)
+  - `Step 5`: Aspirations (12-month goals, delegation checklist, 25-year vision for African farming)
+
+### 5. Specialized Farm Services
+- **Digital Learning Hub (`/learning`)**: Filterable agricultural masterclasses and video lessons (Irrigation Telemetry, GlobalGAP Standards, Solar Cold Storage).
+- **Opportunity Desk (`/opportunities`)**: Matched agri-grants ($25,000 clean energy), supermarket buyer contracts, and carbon credit programs.
+- **Service Desk (`/service-desk`)**: On-demand dispatch of licensed agronomists, soil/water laboratory testing, cold transport vans, and manager recruitment.
+- **Help Center (`/help`)**: Searchable FAQs regarding assessment scoring methodology, M-Pesa billing, and data confidentiality.
+- **Contact Us (`/contact`)**: WhatsApp farmer hotline, toll-free call center, and regional innovation hubs in Nairobi and Eldoret.
 
 ---
 
 ## 🛠️ Technology Stack
 
 | Layer | Technology |
-|---|---|
-| **Backend API** | FastAPI (Python 3.11+) |
-| **Database** | PostgreSQL + `pgvector` (SQLite fallback for local quick-start) |
-| **Frontend UI** | React 19 + TypeScript + Vite + Tailwind CSS + Lucide Icons |
-| **ML Simulation** | Gradio Interactive Simulation Studio (`/ml-demo`) |
-| **Containerization** | Docker & Docker Compose (`deploy/docker-compose.yml`) |
-| **Task Queue & ML** | Celery + Redis (scikit-learn, XGBoost/LightGBM, pandas) |
-| **LLM Integration** | Hosted Anthropic Claude API (`claude-sonnet-4-5`) |
+| :--- | :--- |
+| **Framework** | [Next.js 15](https://nextjs.org/) (App Router, Turbopack, React 19) |
+| **Language** | TypeScript |
+| **Database & ORM** | SQLite (`prisma/dev.db`) + [Prisma ORM 6](https://www.prisma.io/) |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) + Custom Design Tokens |
+| **Data Visualization** | [Chart.js](https://www.chartjs.org/) + `react-chartjs-2` |
+| **Typography & Icons** | Google Fonts ([Outfit](https://fonts.google.com/specimen/Outfit)) + Google Material Symbols Outlined |
+| **Authentication** | Custom credentials authentication with bcrypt password hashing |
 
 ---
 
-## 💻 Quickstart & Local Setup
+## 🚀 Getting Started
 
-### Option A: Local Fast-Dev Mode (Recommended for Development)
+### Prerequisites
+- Node.js 18.18+ or later
+- npm (or yarn / pnpm)
 
-Run the backend and frontend in separate terminals for instant hot-reloading.
-
-#### 1. Configure Environment
+### 1. Clone the Repository
 ```bash
-# Clone the repository
 git clone https://github.com/Arbarne-group/arbarne.git
 cd arbarne
-
-# Copy the environment file
-cp .env.example .env     # Linux / macOS
-copy .env.example .env   # Windows
 ```
 
----
-
-#### 2. Start the Backend (FastAPI on Port 8000)
-Open your **first terminal**:
-```powershell
-cd src/backend
-
-# Create & activate virtual environment
-python -m venv .venv
-
-# Windows (PowerShell)
-.venv\Scripts\Activate.ps1
-
-# Linux / macOS
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run migrations & seed framework data (8 Pillars, 40 Capabilities, 200 Questions)
-alembic upgrade head
-python -m app.scripts.seed_framework
-
-# Launch the FastAPI backend
-uvicorn app.main:app --reload --port 8000
-```
-- 🟢 **Backend API:** [http://localhost:8000](http://localhost:8000)
-- 📖 **Interactive Swagger Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
-- 🔬 **ML Simulation Studio:** [http://localhost:8000/ml-demo](http://localhost:8000/ml-demo)
-
----
-
-#### 3. Start the Frontend (Vite + React on Port 5173)
-Open a **second terminal**:
-```powershell
-cd src/frontend
-
-# Install dependencies
+### 2. Install Dependencies
+```bash
 npm install
+```
 
-# Start Vite dev server
+### 3. Setup Environment Variables
+Copy the example environment file:
+```bash
+cp .env.example .env
+```
+Inside `.env`:
+```env
+DATABASE_URL="file:./dev.db"
+```
+
+### 4. Initialize and Seed the Database
+Push the Prisma schema to create the local SQLite database and populate it with initial benchmark data:
+```bash
+npx prisma db push
+npx prisma db seed
+```
+
+### 5. Run the Development Server
+```bash
 npm run dev
 ```
-- 🟢 **Frontend UI:** [http://localhost:5173](http://localhost:5173) *(Vite automatically proxies API requests to `http://localhost:8000`)*
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-#### 4. Verify Everything Is Running
-From the root directory, run the built-in system verification check:
-```powershell
-python src/backend/verify_running_servers.py
+## 🔑 Demo Account Credentials
+
+A fully-seeded farm account is available for immediate testing:
+
+| Field | Demo Credential |
+| :--- | :--- |
+| **Email** | `keziah@futurefarms.africa` |
+| **Password** | `Password123!` |
+| **Farm Name** | Highland Greens Organic Farm |
+| **Location** | Kiambu / Central Highlands, Kenya |
+| **Assessment Score** | 82 / 100 (Advancing Stage) |
+
+> 💡 **Quick Login**: You can also click the **"Quick Demo Login"** button on [`/login`](http://localhost:3000/login) to log in with one click.
+
+---
+
+## 🧭 Application Directory & Routes
+
+```
+src/
+├── app/
+│   ├── page.tsx                    # Landing / Navigation Directory
+│   ├── signup/                     # Sign Up with Password Strength Meter
+│   ├── login/                      # Sign In with Quick Demo Login
+│   ├── onboarding/                 # Onboarding Hub (8-Section Progress Tracker)
+│   │   ├── step-1/                 # Farmer Profile
+│   │   ├── step-2/                 # Farm Management Experience
+│   │   ├── step-3/                 # Operating Style
+│   │   ├── step-4/                 # Digital Platforms
+│   │   └── step-5/                 # Aspirations
+│   ├── assessment/                 # 25-Question Pillar 1 Assessment & Scoring Engine
+│   ├── pricing/                    # Assessment Pricing ($1 vs $10)
+│   ├── checkout/                   # M-Pesa STK Push & Card Checkout
+│   ├── dashboard/                  # My Farm Dashboard (Chart.js Radar Diagram)
+│   ├── learning/                   # Digital Learning & Masterclasses
+│   ├── opportunities/              # Opportunity Desk (Grants & Off-Take)
+│   ├── service-desk/               # Field Service Booking (Agronomists, Soil Labs)
+│   ├── help/                       # Help Center & Searchable FAQs
+│   ├── contact/                    # Contact Us & WhatsApp Desk
+│   └── api/                        # Backend REST Endpoints
+│       ├── auth/login/             # Session Authentication
+│       ├── auth/signup/            # User Registration
+│       ├── onboarding/step/        # Step Persistence (GET / POST)
+│       └── checkout/               # Order & Payment Verification
+├── components/
+│   ├── dashboard/RadarChart.tsx    # Interactive Chart.js Spider Diagram
+│   └── layout/
+│       ├── AppShell.tsx            # Application Layout Wrapper
+│       ├── Header.tsx              # Notifications & Profile Dropdown
+│       ├── Sidebar.tsx             # Desktop Navigation
+│       └── MobileNav.tsx           # Sticky Bottom Mobile Navigation
+└── data/
+    └── pillar1Questions.ts         # Pillar 1 Capabilities, Questions & Evidence
 ```
 
 ---
 
-### Option B: Docker Compose (Full Stack with Postgres & Redis)
+## 🧪 Build & Verification
 
-#### 1. Start Stack Containers
+Verify the entire application build and static generation:
 ```bash
-docker compose -f deploy/docker-compose.yml up --build -d
+npm run build
 ```
-
-#### 2. Run Migrations & Seeding
-```bash
-docker compose -f deploy/docker-compose.yml exec backend alembic upgrade head
-docker compose -f deploy/docker-compose.yml exec backend python -m app.scripts.seed_framework
+Expected output:
 ```
-
-#### 3. Access Services
-- **Frontend SPA:** [http://localhost:8080/](http://localhost:8080/)
-- **Backend API:** [http://localhost:8000/](http://localhost:8000/)
-- **Swagger API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
-- **ML Simulator:** [http://localhost:8000/ml-demo](http://localhost:8000/ml-demo)
-
----
-
-## 🧪 Running the Test Suite
-
-The test suite validates the API, deterministic scoring engine, recommendation logic, narrative fallbacks, and ML jobs.
-
-### Run via Local Virtual Environment
-```powershell
-cd src/backend
-pytest -v
-
-# Scoring engine specific tests
-pytest tests/test_scoring.py -v
-```
-
-### Run via Docker
-```bash
-docker compose -f deploy/docker-compose.yml exec backend pytest -v
+▲ Next.js 16.3.4 (Turbopack)
+✓ Compiled successfully
+✓ Running TypeScript ...
+✓ Generating static pages (25/25)
+All routes compiled with 0 errors.
 ```
 
 ---
 
-## 📁 Repository Structure
-
-```
-arbarne/
-├── README.md            ← this file (getting started & overview)
-├── CLAUDE.md            ← developer reference & architectural guidelines
-├── PLANNING.md          ← master plan, milestones, & service topology
-├── TASKS.md             ← granular task tracker & sprint alignment
-├── PROGRESS_TRACKER.md  ← live milestone status & component matrix
-├── requirements.txt     ← backend Python dependencies
-├── pyproject.toml       ← hatchling project config & ruff/pytest settings
-├── docs/
-│   ├── prd/             ← Product Requirements Documents (prd-refined.md & prd-4.md)
-│   ├── HANDOVER.md      ← platform operations & handover guide
-│   ├── SETUP.md         ← detailed local environment setup
-│   ├── DATA_MODEL.md    ← database schema & ER diagram
-│   ├── DECISIONS.md     ← decision log & signed-off FFMI bands
-│   ├── GLOSSARY.md      ← FFF domain vocabulary
-│   └── SOURCE_INDEX.md  ← source material inventory
-├── src/
-│   ├── backend/         ← FastAPI application, models, scoring, API routers, ML studio
-│   ├── frontend/        ← React 19 + TypeScript + Vite + Tailwind UI
-│   └── worker/          ← Celery worker & ML batch job entries
-└── deploy/
-    └── docker-compose.yml ← Docker multi-container stack definition
-```
-
----
-
-## 📖 Key Documentation Links
-
-- 📊 [**docs/TECHNICAL_DIAGRAMS_AND_FLOWS.md**](docs/TECHNICAL_DIAGRAMS_AND_FLOWS.md) — Comprehensive technical diagrams & architecture flows
-- 🎨 [**docs/diagrams/index.html**](docs/diagrams/index.html) — Interactive HTML diagram portfolio & showcase
-- 📋 [**PROGRESS_TRACKER.md**](PROGRESS_TRACKER.md) — Current implementation completion status
-- 📦 [**docs/HANDOVER.md**](docs/HANDOVER.md) — Operational runbook & handover documentation
-- 🛠️ [**docs/SETUP.md**](docs/SETUP.md) — In-depth setup & environment guide
-- 📐 [**docs/DATA_MODEL.md**](docs/DATA_MODEL.md) — Database schema breakdown
-- 📝 [**docs/DECISIONS.md**](docs/DECISIONS.md) — Architecture & domain decision log
-
----
-
-## ⚖️ License & Credits
-
-Built by the Future Farms Framework Engineering Team.
-Designed for farm transformation and capability development across East Africa.
+## 📄 License
+This project is proprietary and confidential to Future Farms Ltd. All rights reserved.
