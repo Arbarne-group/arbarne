@@ -8,11 +8,14 @@ async function main() {
 
   const passwordHash = await bcrypt.hash("Password123!", 10);
 
-  // Demo user: Keziah
-  const user = await prisma.user.upsert({
+  // Delete existing demo user if exists to ensure clean re-seed
+  await prisma.user.deleteMany({
     where: { email: "keziah@futurefarms.africa" },
-    update: {},
-    create: {
+  });
+
+  // Demo user: Keziah
+  const user = await prisma.user.create({
+    data: {
       email: "keziah@futurefarms.africa",
       name: "Keziah Wanjiku",
       passwordHash,
@@ -20,47 +23,56 @@ async function main() {
       farmName: "Highland Greens Organic Farm",
       farmerProfile: {
         create: {
-          jobTitle: "owner",
-          valueChain: "Horticulture & Specialty Vegetables",
+          jobTitle: "Farm Owner",
+          valueChain: "",
+          experienceYears: "4–6 years",
+          businessHistory: "Yes, I currently run a business",
+          education: "Undergraduate degree",
         },
       },
       farmManagement: {
         create: {
-          mgmtAbility: "Experienced",
-          operators: JSON.stringify(["Myself (Owner/Operator)", "Hired Farm Manager"]),
+          mgmtAbility: "I direct farm operations confidently and delegate execution to my team.",
+          opsResponsibility: "I am",
+          operators: JSON.stringify(["I am"]),
           otherOperator: "",
-          desiredInvolvement: "Moderately involved",
+          desiredInvolvement: "Moderately involved — I want regular updates and to approve major decisions.",
         },
       },
       operatingStyle: {
         create: {
-          decisionStyle: "data",
-          failureResponse: "adjust",
-          obstacles: JSON.stringify(["Access to Finance & Capital", "Time Management & Labor", "Market Access & Pricing"]),
-          guidancePreference: "structured",
-          trackingFrequency: "weekly",
+          decisionStyle: "Gather data and analyse the situation before acting.",
+          failureResponse: "I first investigate the problem before changing course.",
+          obstacles: JSON.stringify(["Finance", "Time", "Access to markets"]),
+          guidancePreference: "Structured — give me clear plans, actions, and deadlines.",
+          trackingFrequency: "Weekly",
+          updatePreference: "A combination of digital reports and manager discussions",
           communicationChannels: JSON.stringify(["whatsapp", "sms"]),
         },
       },
       digitalPlatform: {
         create: {
-          supportReasons: JSON.stringify(["Time Constraints", "Scaling Operations"]),
-          remoteConfidence: "Weekly video updates, real-time sensor data, and clear inventory reports.",
+          supportReasons: JSON.stringify([
+            "I do not have enough time to manage the farm myself.",
+            "I want to professionalize the farm as a business.",
+          ]),
+          remoteConfidence: "",
           remoteComfort: "Yes",
           recordKeeping: "Yes",
-          physicalAudits: "Yes",
-          additionalNotes: "Looking to expand cold-chain storage and export organic produce.",
+          physicalAudits: "Yes, with prior scheduling",
+          additionalNotes: "",
         },
       },
       aspiration: {
         create: {
-          twelveMonthSuccess: "Achieve 30% yield increase and certify for global export.",
-          greatestImpactSupport: "Precision irrigation tech and capital financing.",
-          marketInsight: "Direct-to-supermarket contracts pay 40% higher margins than open market brokers.",
-          threeToFiveYearRole: "Strategic direction and regional partnerships.",
-          handoverResponsibilities: JSON.stringify(["Daily Operations Management", "Staff Hiring & Management"]),
-          personallyApprovedDecisions: "Capital expenditures above $5,000 and new enterprise partnerships.",
-          twentyFiveYearVision: "Fully tech-enabled, climate-resilient African agriculture feeding global cities sustainably.",
+          twelveMonthSuccess: "",
+          greatestImpactSupport: "",
+          marketInsight: "",
+          threeToFiveYearRole: "",
+          fmResponsibility: "All of the above",
+          handoverResponsibilities: JSON.stringify(["All of the above"]),
+          personallyApprovedDecisions: "",
+          twentyFiveYearVision: "",
         },
       },
       orders: {
@@ -106,17 +118,20 @@ async function main() {
               {
                 pillar: "Technology & Mechanization",
                 title: "Automated Drip Irrigation Scheduling",
-                description: "Install soil moisture telemetry to reduce water usage by 28% and eliminate manual valve monitoring.",
+                description:
+                  "Install soil moisture telemetry to reduce water usage by 28% and eliminate manual valve monitoring.",
               },
               {
                 pillar: "Climate Resilience",
                 title: "Solar-Powered Cold Storage",
-                description: "Mitigate post-harvest heat degradation by introducing decentralized on-farm cooling lockers.",
+                description:
+                  "Mitigate post-harvest heat degradation by introducing decentralized on-farm cooling lockers.",
               },
               {
                 pillar: "Labor & People",
                 title: "Standard Operating Procedures (SOPs)",
-                description: "Codify harvesting and sorting guidelines to prepare farm managers for delegation.",
+                description:
+                  "Codify harvesting and sorting guidelines to prepare farm managers for delegation.",
               },
             ]),
           },

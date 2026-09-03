@@ -27,12 +27,15 @@ model User {
 }
 
 model FarmerProfile {
-  id         String   @id @default(cuid())
-  userId     String   @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  jobTitle   String?
-  valueChain String?
-  updatedAt  DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobTitle        String?
+  valueChain      String?
+  experienceYears String?
+  businessHistory String?
+  education       String?
+  updatedAt       DateTime @updatedAt
 }
 
 model FarmManagement {
@@ -40,6 +43,7 @@ model FarmManagement {
   userId             String   @unique
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   mgmtAbility        String?
+  opsResponsibility  String?
   operators          String?
   otherOperator      String?
   desiredInvolvement String?
@@ -55,6 +59,7 @@ model OperatingStyle {
   obstacles             String?
   guidancePreference    String?
   trackingFrequency     String?
+  updatePreference      String?
   communicationChannels String?
   updatedAt             DateTime @updatedAt
 }
@@ -80,6 +85,7 @@ model Aspiration {
   greatestImpactSupport       String?
   marketInsight               String?
   threeToFiveYearRole         String?
+  fmResponsibility            String?
   handoverResponsibilities    String?
   personallyApprovedDecisions String?
   twentyFiveYearVision        String?

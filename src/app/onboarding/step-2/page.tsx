@@ -7,41 +7,65 @@ import AppShell from "@/components/layout/AppShell";
 
 export default function FarmManagementPage() {
   const router = useRouter();
-  const [mgmtAbility, setMgmtAbility] = useState("Experienced");
-  const [operators, setOperators] = useState<string[]>([
-    "Myself (Owner/Operator)",
-    "Hired Farm Manager",
-  ]);
-  const [otherOperator, setOtherOperator] = useState("");
-  const [desiredInvolvement, setDesiredInvolvement] = useState("Moderately involved");
+  const [mgmtAbility, setMgmtAbility] = useState(
+    "I direct farm operations confidently and delegate execution to my team."
+  );
+  const [opsResponsibility, setOpsResponsibility] = useState("I am");
+  const [desiredInvolvement, setDesiredInvolvement] = useState(
+    "Moderately involved — I want regular updates and to approve major decisions."
+  );
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    let email = "keziah@futurefarms.africa";
+    const cached = localStorage.getItem("future_farms_user");
+    if (cached) {
+      try {
+        const u = JSON.parse(cached);
+        if (u.email) email = u.email;
+      } catch (e) {}
+    }
+
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user?.farmManagement) {
           const fm = data.user.farmManagement;
-          if (fm.mgmtAbility) setMgmtAbility(fm.mgmtAbility);
-          if (fm.operators) {
+          if (fm.mgmtAbility) {
+            // Support legacy mapping if any
+            if (fm.mgmtAbility === "Experienced") {
+              setMgmtAbility("I direct farm operations confidently and delegate execution to my team.");
+            } else if (fm.mgmtAbility === "Beginner") {
+              setMgmtAbility("I am new to farm management and would like structured professional support.");
+            } else {
+              setMgmtAbility(fm.mgmtAbility);
+            }
+          }
+          if (fm.opsResponsibility) {
+            setOpsResponsibility(fm.opsResponsibility);
+          } else if (fm.operators) {
             try {
-              setOperators(JSON.parse(fm.operators));
+              const parsed = JSON.parse(fm.operators);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                if (parsed[0].includes("Myself")) setOpsResponsibility("I am");
+                else if (parsed[0].includes("Manager")) setOpsResponsibility("A Farm Manager");
+                else setOpsResponsibility(parsed[0]);
+              }
             } catch (e) {}
           }
-          if (fm.otherOperator) setOtherOperator(fm.otherOperator);
-          if (fm.desiredInvolvement) setDesiredInvolvement(fm.desiredInvolvement);
+          if (fm.desiredInvolvement) {
+            if (fm.desiredInvolvement === "Moderately involved") {
+              setDesiredInvolvement("Moderately involved — I want regular updates and to approve major decisions.");
+            } else if (fm.desiredInvolvement === "Very involved") {
+              setDesiredInvolvement("Very involved — I want to participate in most operational decisions.");
+            } else {
+              setDesiredInvolvement(fm.desiredInvolvement);
+            }
+          }
         }
       })
       .catch(console.error);
   }, []);
-
-  const toggleOperator = (item: string) => {
-    if (operators.includes(item)) {
-      setOperators(operators.filter((o) => o !== item));
-    } else {
-      setOperators([...operators, item]);
-    }
-  };
 
   const handleNext = async () => {
     setSaving(true);
@@ -54,8 +78,7 @@ export default function FarmManagementPage() {
           email: "keziah@futurefarms.africa",
           data: {
             mgmtAbility,
-            operators,
-            otherOperator,
+            opsResponsibility,
             desiredInvolvement,
           },
         }),
@@ -69,238 +92,203 @@ export default function FarmManagementPage() {
     }
   };
 
-  const abilities = [
-    {
-      id: "Beginner",
-      desc: "I am new to farming and rely heavily on advisors or external help to make operational decisions.",
-    },
-    {
-      id: "Intermediate",
-      desc: "I have some experience and can manage basic operations, but still seek guidance for complex issues.",
-    },
-    {
-      id: "Experienced",
-      desc: "I confidently manage most day-to-day operations and strategic planning independently.",
-    },
-    {
-      id: "Expert",
-      desc: "I have extensive experience, optimize complex systems, and often advise other farmers.",
-    },
+  const abilityOptions = [
+    "I manage most farm operations myself.",
+    "I direct farm operations confidently and delegate execution to my team.",
+    "I understand farm management, but I rely on a Farm Manager or technical professional for significant support.",
+    "I have limited farm management experience and rely heavily on a Farm Manager or other professionals.",
+    "I am new to farm management and would like structured professional support.",
   ];
 
-  const operatorOptions = [
-    "Myself (Owner/Operator)",
-    "Family Members",
-    "Hired Farm Manager",
-    "Contracted Workers / Agency",
+  const responsibilityOptions = [
+    "I am",
+    "A Farm Manager",
+    "A Farm Supervisor",
+    "A family member",
+    "Farm workers",
+    "Operations are shared between several people",
+    "No one has a clearly defined responsibility",
   ];
 
   const involvementOptions = [
-    {
-      id: "Very involved",
-      desc: "I want to make all day-to-day decisions and oversee all operations directly.",
-      icon: "front_hand",
-    },
-    {
-      id: "Moderately involved",
-      desc: "I want to handle key decisions but delegate routine tasks to trusted staff.",
-      icon: "handshake",
-    },
-    {
-      id: "Strategically involved",
-      desc: "I focus on high-level strategy and planning, leaving execution entirely to management.",
-      icon: "monitoring",
-    },
-    {
-      id: "Minimally involved",
-      desc: "I view this primarily as an investment and want minimal operational involvement.",
-      icon: "visibility_off",
-    },
+    "Very involved — I want to participate in most operational decisions.",
+    "Moderately involved — I want regular updates and to approve major decisions.",
+    "Strategically involved — I want to focus on business direction while the Farm Manager handles operations.",
+    "Minimally involved — I prefer the Farm Manager to handle most operations and report performance to me.",
   ];
 
   return (
     <AppShell>
-      <div className="px-4 md:px-10 py-8 max-w-4xl mx-auto w-full pb-28">
+      <div className="px-4 md:px-10 py-8 max-w-4xl mx-auto w-full">
         {/* Header */}
         <div className="mb-8">
           <Link
-            href="/onboarding/step-1"
+            href="/onboarding"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors mb-4"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-            Back to Step 1
+            Back to Overview
           </Link>
-          <h2 className="text-2xl md:text-3xl font-bold text-on-surface mb-2">
+          <div className="flex items-center gap-2 mb-1 text-xs font-semibold text-primary uppercase tracking-wider">
+            <span>Section 2 of 5</span>
+            <span>•</span>
+            <span>Questions 6–8</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-on-surface mb-2">
             Farm Management Experience
-          </h2>
+          </h1>
           <p className="text-sm md:text-base text-on-surface-variant">
             Help us understand how you currently manage your farm.
           </p>
         </div>
 
-        <div className="space-y-10">
-          {/* Question 6: Ability Level */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-5">
-              6. Which statement best describes your current farm management ability?
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {abilities.map((item) => {
-                const isSelected = mgmtAbility === item.id;
-                return (
-                  <label
-                    key={item.id}
-                    onClick={() => setMgmtAbility(item.id)}
-                    className={`cursor-pointer rounded-2xl border p-5 flex items-start gap-4 transition-all hover:bg-surface-container-low ${
-                      isSelected
-                        ? "border-primary bg-primary-container/5 ring-1 ring-primary shadow-sm"
-                        : "border-outline-variant"
-                    }`}
-                  >
-                    <div
-                      className={`w-5 h-5 rounded-full border-2 mt-0.5 shrink-0 flex items-center justify-center ${
+        {/* Form Card */}
+        <div className="bg-surface-container-lowest rounded-3xl shadow-[0_4px_16px_rgba(0,0,0,0.04)] p-6 md:p-10 border border-surface-variant/40">
+          <form className="space-y-10">
+            {/* Question 6 */}
+            <div className="space-y-4">
+              <label className="block text-base font-semibold text-on-surface">
+                6. Which statement best describes your current farm management ability?
+              </label>
+
+              <div className="space-y-3">
+                {abilityOptions.map((opt) => {
+                  const isSelected = mgmtAbility === opt;
+                  return (
+                    <label
+                      key={opt}
+                      onClick={() => setMgmtAbility(opt)}
+                      className={`cursor-pointer rounded-2xl border p-4 sm:p-5 transition-all duration-200 flex items-start gap-4 ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
-                          : "border-outline-variant"
+                          ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                          : "border-outline-variant hover:bg-surface-container-low"
                       }`}
                     >
-                      {isSelected && (
-                        <div className="w-2 h-2 rounded-full bg-white" />
-                      )}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-sm text-on-surface mb-1">
-                        {item.id}
-                      </h4>
-                      <p className="text-xs text-on-surface-variant leading-relaxed">
-                        {item.desc}
-                      </p>
-                    </div>
-                  </label>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* Question 7: Operators */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-1">
-              7. Who is currently responsible for day-to-day farm operations?
-            </h3>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Select all that apply.
-            </p>
-
-            <div className="space-y-3">
-              {operatorOptions.map((opt) => {
-                const isChecked = operators.includes(opt);
-                return (
-                  <label
-                    key={opt}
-                    onClick={() => toggleOperator(opt)}
-                    className={`flex items-center gap-3 p-3.5 rounded-xl border cursor-pointer transition-colors ${
-                      isChecked
-                        ? "border-primary/50 bg-primary-container/5"
-                        : "border-outline-variant/60 hover:bg-surface-container-low"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={() => {}}
-                      className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary cursor-pointer"
-                    />
-                    <span className="text-sm font-medium text-on-surface">
-                      {opt}
-                    </span>
-                  </label>
-                );
-              })}
-
-              {/* Other option */}
-              <div className="pt-2">
-                <input
-                  type="text"
-                  placeholder="Other (Please specify)"
-                  value={otherOperator}
-                  onChange={(e) => setOtherOperator(e.target.value)}
-                  className="w-full max-w-md rounded-xl border border-outline-variant px-4 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface-bright"
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Question 8: Desired Involvement */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-5">
-              8. How involved would you like to be in the day-to-day management of your farm?
-            </h3>
-            <div className="flex flex-col gap-3">
-              {involvementOptions.map((opt) => {
-                const isSelected = desiredInvolvement === opt.id;
-                return (
-                  <label
-                    key={opt.id}
-                    onClick={() => setDesiredInvolvement(opt.id)}
-                    className={`cursor-pointer rounded-2xl border p-4 sm:p-5 flex items-center justify-between gap-4 transition-all hover:bg-surface-container-low ${
-                      isSelected
-                        ? "border-primary bg-primary-container/5 ring-1 ring-primary shadow-sm"
-                        : "border-outline-variant"
-                    }`}
-                  >
-                    <div className="flex items-start gap-4">
                       <div
-                        className={`w-5 h-5 rounded-full border-2 mt-0.5 shrink-0 flex items-center justify-center ${
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 shrink-0 ${
                           isSelected
                             ? "border-primary bg-primary text-white"
                             : "border-outline-variant"
                         }`}
                       >
-                        {isSelected && (
-                          <div className="w-2 h-2 rounded-full bg-white" />
-                        )}
+                        {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-sm text-on-surface mb-0.5">
-                          {opt.id}
-                        </h4>
-                        <p className="text-xs text-on-surface-variant">
-                          {opt.desc}
-                        </p>
-                      </div>
-                    </div>
-                    <span className="material-symbols-outlined text-primary text-2xl shrink-0 hidden sm:block">
-                      {opt.icon}
-                    </span>
-                  </label>
-                );
-              })}
+                      <span
+                        className={`text-sm leading-relaxed ${
+                          isSelected ? "text-primary font-semibold" : "text-on-surface"
+                        }`}
+                      >
+                        {opt}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
             </div>
-          </section>
-        </div>
 
-        {/* Floating Bottom Nav for Step Navigation */}
-        <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface/95 backdrop-blur-md border-t border-surface-variant px-6 py-4 flex justify-between items-center z-30 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]">
-          <Link
-            href="/onboarding/step-1"
-            className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors"
-          >
-            &larr; Back
-          </Link>
-          <div className="text-xs text-on-surface-variant font-medium">
-            Step 2 of 5
-          </div>
-          <button
-            type="button"
-            onClick={handleNext}
-            disabled={saving}
-            className="px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm btn-shadow hover-lift transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
-          >
-            <span>{saving ? "Saving..." : "Next"}</span>
-            <span className="material-symbols-outlined text-[18px]">
-              arrow_forward
-            </span>
-          </button>
+            {/* Question 7 */}
+            <div className="space-y-4">
+              <label className="block text-base font-semibold text-on-surface">
+                7. Who is currently responsible for day-to-day farm operations?
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {responsibilityOptions.map((opt) => {
+                  const isSelected = opsResponsibility === opt;
+                  return (
+                    <label
+                      key={opt}
+                      onClick={() => setOpsResponsibility(opt)}
+                      className={`cursor-pointer rounded-xl border p-4 transition-all duration-200 flex items-center justify-between ${
+                        isSelected
+                          ? "border-primary bg-primary-container/10 ring-1 ring-primary text-primary font-semibold"
+                          : "border-outline-variant hover:bg-surface-container-low text-on-surface"
+                      }`}
+                    >
+                      <span className="text-sm">{opt}</span>
+                      <div
+                        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          isSelected
+                            ? "border-primary bg-primary text-white"
+                            : "border-outline-variant"
+                        }`}
+                      >
+                        {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Question 8 */}
+            <div className="space-y-4">
+              <label className="block text-base font-semibold text-on-surface">
+                8. How involved would you like to be in the day-to-day management of your farm?
+              </label>
+
+              <div className="space-y-3">
+                {involvementOptions.map((opt) => {
+                  const isSelected = desiredInvolvement === opt;
+                  return (
+                    <label
+                      key={opt}
+                      onClick={() => setDesiredInvolvement(opt)}
+                      className={`cursor-pointer rounded-2xl border p-4 sm:p-5 transition-all duration-200 flex items-start gap-4 ${
+                        isSelected
+                          ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                          : "border-outline-variant hover:bg-surface-container-low"
+                      }`}
+                    >
+                      <div
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 shrink-0 ${
+                          isSelected
+                            ? "border-primary bg-primary text-white"
+                            : "border-outline-variant"
+                        }`}
+                      >
+                        {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                      </div>
+                      <span
+                        className={`text-sm leading-relaxed ${
+                          isSelected ? "text-primary font-semibold" : "text-on-surface"
+                        }`}
+                      >
+                        {opt}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Footer Navigation */}
+            <div className="pt-8 border-t border-surface-variant/50 flex items-center justify-between">
+              <Link
+                href="/onboarding/step-1"
+                className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-sm">arrow_back</span>
+                Previous Section
+              </Link>
+              <div className="flex items-center gap-4">
+                <span className="text-xs text-on-surface-variant font-medium">
+                  Section 2 of 5
+                </span>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={saving}
+                  className="bg-primary hover:bg-primary/90 text-on-primary text-sm font-semibold px-8 py-3.5 rounded-xl shadow-md btn-shadow hover-lift transition-all flex items-center gap-2 cursor-pointer disabled:opacity-70"
+                >
+                  <span>{saving ? "Saving..." : "Save & Continue"}</span>
+                  <span className="material-symbols-outlined text-sm">
+                    arrow_forward
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </AppShell>

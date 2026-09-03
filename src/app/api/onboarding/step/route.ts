@@ -43,35 +43,43 @@ export async function POST(request: Request) {
 
     switch (step) {
       case 1:
-        // Farmer Profile
+        // Farmer Profile (Q1 - Q5)
         await prisma.farmerProfile.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
             jobTitle: data.jobTitle,
             valueChain: data.valueChain,
+            experienceYears: data.experienceYears,
+            businessHistory: data.businessHistory,
+            education: data.education,
           },
           update: {
             jobTitle: data.jobTitle,
             valueChain: data.valueChain,
+            experienceYears: data.experienceYears,
+            businessHistory: data.businessHistory,
+            education: data.education,
           },
         });
         break;
 
       case 2:
-        // Farm Management Experience
+        // Farm Management Experience (Q6 - Q8)
         await prisma.farmManagement.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
             mgmtAbility: data.mgmtAbility,
-            operators: JSON.stringify(data.operators || []),
+            opsResponsibility: data.opsResponsibility,
+            operators: typeof data.operators === "string" ? data.operators : JSON.stringify(data.operators || [data.opsResponsibility].filter(Boolean)),
             otherOperator: data.otherOperator || "",
             desiredInvolvement: data.desiredInvolvement,
           },
           update: {
             mgmtAbility: data.mgmtAbility,
-            operators: JSON.stringify(data.operators || []),
+            opsResponsibility: data.opsResponsibility,
+            operators: typeof data.operators === "string" ? data.operators : JSON.stringify(data.operators || [data.opsResponsibility].filter(Boolean)),
             otherOperator: data.otherOperator || "",
             desiredInvolvement: data.desiredInvolvement,
           },
@@ -79,55 +87,33 @@ export async function POST(request: Request) {
         break;
 
       case 3:
-        // Operating Style
+        // Operating Style (Q9 - Q14)
         await prisma.operatingStyle.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
             decisionStyle: data.decisionStyle,
             failureResponse: data.failureResponse,
-            obstacles: JSON.stringify(data.obstacles || []),
+            obstacles: typeof data.obstacles === "string" ? data.obstacles : JSON.stringify(data.obstacles || []),
             guidancePreference: data.guidancePreference,
             trackingFrequency: data.trackingFrequency,
-            communicationChannels: JSON.stringify(data.communicationChannels || []),
+            updatePreference: data.updatePreference,
+            communicationChannels: typeof data.communicationChannels === "string" ? data.communicationChannels : JSON.stringify(data.communicationChannels || [data.updatePreference].filter(Boolean)),
           },
           update: {
             decisionStyle: data.decisionStyle,
             failureResponse: data.failureResponse,
-            obstacles: JSON.stringify(data.obstacles || []),
+            obstacles: typeof data.obstacles === "string" ? data.obstacles : JSON.stringify(data.obstacles || []),
             guidancePreference: data.guidancePreference,
             trackingFrequency: data.trackingFrequency,
-            communicationChannels: JSON.stringify(data.communicationChannels || []),
+            updatePreference: data.updatePreference,
+            communicationChannels: typeof data.communicationChannels === "string" ? data.communicationChannels : JSON.stringify(data.communicationChannels || [data.updatePreference].filter(Boolean)),
           },
         });
         break;
 
       case 4:
-        // Digital Platforms
-        await prisma.digitalPlatform.upsert({
-          where: { userId: user.id },
-          create: {
-            userId: user.id,
-            supportReasons: JSON.stringify(data.supportReasons || []),
-            remoteConfidence: data.remoteConfidence,
-            remoteComfort: data.remoteComfort,
-            recordKeeping: data.recordKeeping,
-            physicalAudits: data.physicalAudits,
-            additionalNotes: data.additionalNotes,
-          },
-          update: {
-            supportReasons: JSON.stringify(data.supportReasons || []),
-            remoteConfidence: data.remoteConfidence,
-            remoteComfort: data.remoteComfort,
-            recordKeeping: data.recordKeeping,
-            physicalAudits: data.physicalAudits,
-            additionalNotes: data.additionalNotes,
-          },
-        });
-        break;
-
-      case 5:
-        // Aspirations
+        // Aspirations (Q15 - Q21)
         await prisma.aspiration.upsert({
           where: { userId: user.id },
           create: {
@@ -136,7 +122,8 @@ export async function POST(request: Request) {
             greatestImpactSupport: data.greatestImpactSupport,
             marketInsight: data.marketInsight,
             threeToFiveYearRole: data.threeToFiveYearRole,
-            handoverResponsibilities: JSON.stringify(data.handoverResponsibilities || []),
+            fmResponsibility: data.fmResponsibility,
+            handoverResponsibilities: typeof data.handoverResponsibilities === "string" ? data.handoverResponsibilities : JSON.stringify(data.handoverResponsibilities || [data.fmResponsibility].filter(Boolean)),
             personallyApprovedDecisions: data.personallyApprovedDecisions,
             twentyFiveYearVision: data.twentyFiveYearVision,
           },
@@ -145,9 +132,34 @@ export async function POST(request: Request) {
             greatestImpactSupport: data.greatestImpactSupport,
             marketInsight: data.marketInsight,
             threeToFiveYearRole: data.threeToFiveYearRole,
-            handoverResponsibilities: JSON.stringify(data.handoverResponsibilities || []),
+            fmResponsibility: data.fmResponsibility,
+            handoverResponsibilities: typeof data.handoverResponsibilities === "string" ? data.handoverResponsibilities : JSON.stringify(data.handoverResponsibilities || [data.fmResponsibility].filter(Boolean)),
             personallyApprovedDecisions: data.personallyApprovedDecisions,
             twentyFiveYearVision: data.twentyFiveYearVision,
+          },
+        });
+        break;
+
+      case 5:
+        // Working With Digital Farm Management Platforms (Q22 - Q27)
+        await prisma.digitalPlatform.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            supportReasons: typeof data.supportReasons === "string" ? data.supportReasons : JSON.stringify(data.supportReasons || []),
+            remoteConfidence: data.remoteConfidence,
+            remoteComfort: data.remoteComfort,
+            recordKeeping: data.recordKeeping,
+            physicalAudits: data.physicalAudits,
+            additionalNotes: data.additionalNotes,
+          },
+          update: {
+            supportReasons: typeof data.supportReasons === "string" ? data.supportReasons : JSON.stringify(data.supportReasons || []),
+            remoteConfidence: data.remoteConfidence,
+            remoteComfort: data.remoteComfort,
+            recordKeeping: data.recordKeeping,
+            physicalAudits: data.physicalAudits,
+            additionalNotes: data.additionalNotes,
           },
         });
         break;
