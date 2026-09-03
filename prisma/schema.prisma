@@ -1,0 +1,112 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  phone        String?
+  farmName     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  farmerProfile   FarmerProfile?
+  farmManagement  FarmManagement?
+  operatingStyle  OperatingStyle?
+  digitalPlatform DigitalPlatform?
+  aspiration      Aspiration?
+  orders          Order[]
+  assessments     Assessment[]
+}
+
+model FarmerProfile {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobTitle   String?
+  valueChain String?
+  updatedAt  DateTime @updatedAt
+}
+
+model FarmManagement {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mgmtAbility        String?
+  operators          String?
+  otherOperator      String?
+  desiredInvolvement String?
+  updatedAt          DateTime @updatedAt
+}
+
+model OperatingStyle {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  decisionStyle         String?
+  failureResponse       String?
+  obstacles             String?
+  guidancePreference    String?
+  trackingFrequency     String?
+  communicationChannels String?
+  updatedAt             DateTime @updatedAt
+}
+
+model DigitalPlatform {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  supportReasons   String?
+  remoteConfidence String?
+  remoteComfort    String?
+  recordKeeping    String?
+  physicalAudits   String?
+  additionalNotes  String?
+  updatedAt        DateTime @updatedAt
+}
+
+model Aspiration {
+  id                          String   @id @default(cuid())
+  userId                      String   @unique
+  user                        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  twelveMonthSuccess          String?
+  greatestImpactSupport       String?
+  marketInsight               String?
+  threeToFiveYearRole         String?
+  handoverResponsibilities    String?
+  personallyApprovedDecisions String?
+  twentyFiveYearVision        String?
+  updatedAt                   DateTime @updatedAt
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planType      String
+  amount        Float
+  currency      String   @default("USD")
+  paymentMethod String
+  phoneNumber   String?
+  status        String   @default("COMPLETED")
+  createdAt     DateTime @default(now())
+}
+
+model Assessment {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  overallScore  Int      @default(74)
+  maturityLevel String   @default("Advancing")
+  pillarScores  String
+  radarData     String
+  priorityAreas String
+  createdAt     DateTime @default(now())
+}
