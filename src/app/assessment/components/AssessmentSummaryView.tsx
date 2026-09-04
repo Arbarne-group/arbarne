@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   getPillarById,
   ALL_PILLARS,
@@ -26,26 +26,31 @@ export default function AssessmentSummaryView({
   onContinueToNextPillar,
 }: AssessmentSummaryViewProps) {
   const pillar = getPillarById(pillarId);
+  const [mounted, setMounted] = useState(false);
+  const [answers, setAnswers] = useState<Record<string, "yes" | "no">>({});
   const [expandedCapIds, setExpandedCapIds] = useState<Record<string, boolean>>({});
 
-  // Load answers from prop or localStorage or fallback to mock defaults
-  const answers = useMemo(() => {
+  // Safely load answers after client-side mount to prevent SSR hydration mismatch
+  useEffect(() => {
+    setMounted(true);
     if (propAnswers && Object.keys(propAnswers).length > 0) {
-      return propAnswers;
+      setAnswers(propAnswers);
+      return;
     }
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("future_farms_assessment_answers");
-        if (saved) {
-          return JSON.parse(saved);
-        }
-      } catch (e) {
-        console.error(e);
+    try {
+      const saved = localStorage.getItem("future_farms_assessment_answers");
+      if (saved) {
+        setAnswers(JSON.parse(saved));
+        return;
       }
+    } catch (e) {
+      console.error(e);
     }
-    // Default baseline for Pillar 2 is 14/25
-    return DEFAULT_PILLAR_2_ANSWERS;
-  }, [propAnswers]);
+    // Default baseline for Pillar 2 if no saved answers
+    if (pillarId === 2) {
+      setAnswers(DEFAULT_PILLAR_2_ANSWERS);
+    }
+  }, [propAnswers, pillarId]);
 
   // Compute capability scores with status tiers & feedback
   const capabilityScores = useMemo(() => {
@@ -107,6 +112,21 @@ export default function AssessmentSummaryView({
   const collapseAll = () => {
     setExpandedCapIds({});
   };
+
+  if (!mounted) {
+    return (
+      <main className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop flex items-center justify-center min-h-[60vh]">
+        <div className="flex flex-col items-center gap-3">
+          <span className="material-symbols-outlined text-primary text-4xl animate-spin">
+            progress_activity
+          </span>
+          <span className="font-label-sm text-sm text-on-surface-variant font-medium">
+            Loading assessment summary...
+          </span>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop">
