@@ -191,14 +191,10 @@ export default function AssessmentSummaryView({
           </span>
         </div>
 
-        {/* Automatic Feedback Card */}
+        {/* Feedback Card */}
         <div className="w-full bg-surface border border-surface-container-high rounded-2xl p-6 sm:p-7 shadow-sm mb-xl text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[11px] font-bold uppercase tracking-wider mb-2.5">
-            <span className="material-symbols-outlined text-[15px] text-primary">auto_awesome</span>
-            Automatic Feedback
-          </div>
           <h2 className="font-title-md text-lg font-bold text-on-surface mb-2">
-            {pillarFeedback.label} ({pillarFeedback.rangeLabel})
+            {pillarFeedback.label}
           </h2>
           <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed max-w-2xl mx-auto m-0">
             {pillarFeedback.feedback}
@@ -316,7 +312,7 @@ export default function AssessmentSummaryView({
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: cap.tier.hex }}
                           />
-                          {cap.tier.status} ({cap.yesCount}/{cap.total})
+                          {cap.tier.status}
                         </span>
                       </div>
                       <p className="text-sm text-on-surface leading-relaxed m-0">
