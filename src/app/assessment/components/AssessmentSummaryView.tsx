@@ -264,11 +264,14 @@ export default function AssessmentSummaryView({
                   {/* Right: Score Progress Bar & Chevron */}
                   <div className="flex items-center gap-3.5 justify-between sm:justify-end shrink-0">
                     <div className="flex items-center gap-3">
-                      <div className="w-24 md:w-32 h-2.5 bg-surface-container rounded-full overflow-hidden">
+                      <div
+                        className="w-24 md:w-32 h-2.5 rounded-full overflow-hidden"
+                        style={{ backgroundColor: `${cap.tier.hex}25` }}
+                      >
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{
-                            width: `${cap.percent}%`,
+                            width: cap.yesCount === 0 ? "8px" : `${cap.percent}%`,
                             backgroundColor: cap.tier.hex,
                           }}
                         />

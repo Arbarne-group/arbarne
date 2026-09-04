@@ -69,6 +69,10 @@ export function getCapabilityTier(yesCount: number, total: number = 5): Capabili
   return CAPABILITY_STATUS_TIERS[level] || CAPABILITY_STATUS_TIERS[0];
 }
 
+export function getCapabilityColor(yesCount: number, total: number = 5): string {
+  return getCapabilityTier(yesCount, total).hex;
+}
+
 // Pillar Automatic Feedback (5 Tiers based on 0-25 score scale)
 export interface PillarAutomaticFeedbackTier {
   minScore: number;
