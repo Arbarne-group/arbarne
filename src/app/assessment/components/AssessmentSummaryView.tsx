@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   getPillarById,
   ALL_PILLARS,
   DEFAULT_PILLAR_2_ANSWERS,
 } from "@/data/assessmentData";
+import {
+  getCapabilityTier,
+  getCapabilityFeedbackText,
+  getPillarAutomaticFeedback,
+} from "@/data/capabilityFeedback";
 
 interface AssessmentSummaryViewProps {
   pillarId: number;
@@ -21,6 +26,7 @@ export default function AssessmentSummaryView({
   onContinueToNextPillar,
 }: AssessmentSummaryViewProps) {
   const pillar = getPillarById(pillarId);
+  const [expandedCapIds, setExpandedCapIds] = useState<Record<string, boolean>>({});
 
   // Load answers from prop or localStorage or fallback to mock defaults
   const answers = useMemo(() => {
@@ -41,20 +47,15 @@ export default function AssessmentSummaryView({
     return DEFAULT_PILLAR_2_ANSWERS;
   }, [propAnswers]);
 
-  // Compute capability scores
+  // Compute capability scores with status tiers & feedback
   const capabilityScores = useMemo(() => {
     return pillar.capabilities.map((cap) => {
       const yesCount = cap.questions.filter((q) => answers[q.id] === "yes").length;
       const total = cap.questions.length || 5;
       const percent = Math.round((yesCount / total) * 100);
 
-      // Color coding per mockup: #4CAF50 (green), #FDD835 (yellow), #EF5350 (red)
-      let color = "#EF5350";
-      if (percent >= 70) {
-        color = "#4CAF50";
-      } else if (percent >= 50) {
-        color = "#FDD835";
-      }
+      const tier = getCapabilityTier(yesCount, total);
+      const statusFeedback = getCapabilityFeedbackText(cap.id, yesCount, cap.name);
 
       return {
         id: cap.id,
@@ -63,64 +64,22 @@ export default function AssessmentSummaryView({
         yesCount,
         total,
         percent,
-        color,
+        color: tier.hex,
+        tier,
+        statusFeedback,
       };
     });
   }, [pillar, answers]);
 
   const totalQuestions = pillar.capabilities.flatMap((c) => c.questions).length || 25;
   const totalYes = capabilityScores.reduce((acc, c) => acc + c.yesCount, 0);
-  const scorePercent = Math.round((totalYes / totalQuestions) * 100);
 
   // Gauge calculation: circumference = 125.6, offset = 125.6 * (1 - ratio)
   const clampedRatio = Math.max(0, Math.min(1, totalYes / totalQuestions));
   const dashOffset = (125.6 * (1 - clampedRatio)).toFixed(1);
 
-  // Status tier configuration
-  const getTier = (scorePct: number) => {
-    if (scorePct >= 80) {
-      return {
-        label: "Leading",
-        badgeBg: "bg-emerald-50",
-        badgeBorder: "border-emerald-200",
-        badgeText: "text-emerald-700",
-        strokeColor: "#4CAF50",
-      };
-    }
-    if (scorePct >= 60) {
-      return {
-        label: "Advancing",
-        badgeBg: "bg-green-50",
-        badgeBorder: "border-green-200",
-        badgeText: "text-green-700",
-        strokeColor: "#63e062",
-      };
-    }
-    if (scorePct >= 40) {
-      return {
-        label: "Progressing",
-        badgeBg: "bg-amber-50",
-        badgeBorder: "border-amber-200",
-        badgeText: "text-amber-700",
-        strokeColor: "#FDD835",
-      };
-    }
-    return {
-      label: "Emerging",
-      badgeBg: "bg-rose-50",
-      badgeBorder: "border-rose-200",
-      badgeText: "text-rose-700",
-      strokeColor: "#EF5350",
-    };
-  };
-
-  const tier = getTier(scorePercent);
-  const feedbackText =
-    scorePercent >= 70
-      ? pillar.feedback.advanced
-      : scorePercent >= 40
-      ? pillar.feedback.progressing
-      : pillar.feedback.emerging;
+  // Automatic feedback for pillar based on total score (0-25 scale)
+  const pillarFeedback = getPillarAutomaticFeedback(totalYes, totalQuestions);
 
   const nextPillarId = pillar.id < ALL_PILLARS.length ? pillar.id + 1 : 1;
 
@@ -130,9 +89,28 @@ export default function AssessmentSummaryView({
     }
   };
 
+  const toggleCapability = (capId: string) => {
+    setExpandedCapIds((prev) => ({
+      ...prev,
+      [capId]: !prev[capId],
+    }));
+  };
+
+  const expandAll = () => {
+    const allOpen: Record<string, boolean> = {};
+    pillar.capabilities.forEach((c) => {
+      allOpen[c.id] = true;
+    });
+    setExpandedCapIds(allOpen);
+  };
+
+  const collapseAll = () => {
+    setExpandedCapIds({});
+  };
+
   return (
     <main className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop">
-      <div className="max-w-[800px] mx-auto w-full flex flex-col items-center">
+      <div className="max-w-[840px] mx-auto w-full flex flex-col items-center">
         {/* Download Report Top Action */}
         <div className="w-full flex justify-end mb-md">
           <button
@@ -168,7 +146,7 @@ export default function AssessmentSummaryView({
             <path
               d="M 10 50 A 40 40 0 0 1 90 50"
               fill="transparent"
-              stroke={tier.strokeColor}
+              stroke={pillarFeedback.strokeColor}
               strokeDasharray="125.6"
               strokeDashoffset={dashOffset}
               strokeLinecap="round"
@@ -178,7 +156,7 @@ export default function AssessmentSummaryView({
             <path
               d="M 10 50 A 40 40 0 0 1 90 50"
               fill="transparent"
-              stroke={tier.strokeColor}
+              stroke={pillarFeedback.strokeColor}
               strokeDasharray="125.6"
               strokeDashoffset={dashOffset}
               strokeLinecap="round"
@@ -204,50 +182,152 @@ export default function AssessmentSummaryView({
 
         {/* Status Label */}
         <div
-          className={`inline-flex items-center justify-center px-3 py-1 rounded-full ${tier.badgeBg} border ${tier.badgeBorder} mb-xl`}
+          className={`inline-flex items-center justify-center px-4 py-1.5 rounded-full ${pillarFeedback.badgeBg} border ${pillarFeedback.badgeBorder} mb-6`}
         >
           <span
-            className={`font-label-sm text-[12px] font-bold uppercase tracking-widest ${tier.badgeText}`}
+            className={`font-label-sm text-[12px] font-bold uppercase tracking-widest ${pillarFeedback.badgeText}`}
           >
-            {tier.label}
+            {pillarFeedback.label}
           </span>
         </div>
 
-        {/* Feedback Card */}
-        <div className="w-full bg-surface border border-surface-container-high rounded-2xl p-lg shadow-sm mb-xl">
-          <p className="font-body-md text-body-md text-on-surface-variant text-center leading-relaxed m-0">
-            {feedbackText}
+        {/* Automatic Feedback Card */}
+        <div className="w-full bg-surface border border-surface-container-high rounded-2xl p-6 sm:p-7 shadow-sm mb-xl text-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[11px] font-bold uppercase tracking-wider mb-2.5">
+            <span className="material-symbols-outlined text-[15px] text-primary">auto_awesome</span>
+            Automatic Feedback
+          </div>
+          <h2 className="font-title-md text-lg font-bold text-on-surface mb-2">
+            {pillarFeedback.label} ({pillarFeedback.rangeLabel})
+          </h2>
+          <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed max-w-2xl mx-auto m-0">
+            {pillarFeedback.feedback}
           </p>
         </div>
 
-        {/* Capability List */}
-        <div className="w-full flex flex-col gap-5 mb-xl">
-          {capabilityScores.map((cap) => (
-            <div
-              key={cap.id}
-              className="flex flex-col md:flex-row md:items-center justify-between gap-2 p-4 bg-surface rounded-xl border border-surface-container-high shadow-sm hover:shadow-md transition-shadow"
+        {/* Capability Section Header with Expand/Collapse All */}
+        <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 className="font-title-md text-lg font-semibold text-on-surface">
+              Capability Status Feedback
+            </h2>
+            <p className="text-xs text-on-surface-variant">
+              Click any capability to view its maturity status and feedback.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            <button
+              type="button"
+              onClick={expandAll}
+              className="text-xs font-semibold text-primary hover:underline px-2.5 py-1 rounded-lg hover:bg-primary-container/10 transition-colors cursor-pointer"
             >
-              <div className="flex flex-col">
-                <span className="font-title-md text-[16px] font-semibold text-on-surface">
-                  Capability {cap.code}: {cap.name}
-                </span>
-              </div>
-              <div className="flex items-center gap-4 w-full md:w-auto">
-                <div className="flex-1 md:w-32 h-2 bg-surface-container rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${cap.percent}%`,
-                      backgroundColor: cap.color,
-                    }}
-                  />
+              Expand All
+            </button>
+            <span className="text-outline-variant">•</span>
+            <button
+              type="button"
+              onClick={collapseAll}
+              className="text-xs font-semibold text-on-surface-variant hover:underline px-2.5 py-1 rounded-lg hover:bg-surface-container transition-colors cursor-pointer"
+            >
+              Collapse All
+            </button>
+          </div>
+        </div>
+
+        {/* Capability List with Interactive Status Feedback */}
+        <div className="w-full flex flex-col gap-3.5 mb-xl">
+          {capabilityScores.map((cap) => {
+            const isExpanded = !!expandedCapIds[cap.id];
+
+            return (
+              <div
+                key={cap.id}
+                className={`group rounded-2xl border transition-all duration-200 overflow-hidden cursor-pointer ${
+                  isExpanded
+                    ? "bg-surface shadow-level-2 border-outline-variant"
+                    : "bg-surface rounded-xl border-surface-container-high shadow-sm hover:shadow-md hover:border-outline-variant/60"
+                }`}
+                onClick={() => toggleCapability(cap.id)}
+              >
+                {/* Header Row: Title, Status Badge, Score Progress, Chevron */}
+                <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 select-none">
+                  {/* Left: Capability Code, Name & Status Badge */}
+                  <div className="flex flex-wrap items-center gap-2 flex-1">
+                    <span className="font-title-md text-[15px] sm:text-[16px] font-semibold text-on-surface">
+                      Capability {cap.code}: {cap.name}
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${cap.tier.badgeBg} ${cap.tier.badgeBorder} ${cap.tier.badgeText}`}
+                    >
+                      <span
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: cap.tier.hex }}
+                      />
+                      {cap.tier.status}
+                    </span>
+                  </div>
+
+                  {/* Right: Score Progress Bar & Chevron */}
+                  <div className="flex items-center gap-3.5 justify-between sm:justify-end shrink-0">
+                    <div className="flex items-center gap-3">
+                      <div className="w-24 md:w-32 h-2.5 bg-surface-container rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${cap.percent}%`,
+                            backgroundColor: cap.tier.hex,
+                          }}
+                        />
+                      </div>
+                      <span className="font-title-md text-sm font-bold text-on-surface min-w-[34px] text-right">
+                        {cap.yesCount}/{cap.total}
+                      </span>
+                    </div>
+
+                    {/* Expand/Collapse Chevron Indicator */}
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center bg-surface-container/60 group-hover:bg-surface-container transition-colors shrink-0 ${
+                        isExpanded ? "bg-surface-container-high" : ""
+                      }`}
+                    >
+                      <span
+                        className={`material-symbols-outlined text-[20px] text-on-surface-variant transition-transform duration-200 ${
+                          isExpanded ? "rotate-180 text-primary" : ""
+                        }`}
+                      >
+                        expand_more
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <span className="font-title-md text-title-md font-bold text-on-surface min-w-[36px] text-right">
-                  {cap.yesCount}/{cap.total}
-                </span>
+
+                {/* Expanded Capability Status Feedback Panel */}
+                {isExpanded && (
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-1 border-t border-outline-variant/30 flex flex-col bg-surface-container-lowest/50 animate-in fade-in duration-150">
+                    <div
+                      className={`p-4 rounded-xl border ${cap.tier.badgeBg} ${cap.tier.badgeBorder} flex flex-col gap-2`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`text-xs font-bold uppercase tracking-wider ${cap.tier.badgeText} flex items-center gap-1.5`}
+                        >
+                          <span
+                            className="w-2 h-2 rounded-full"
+                            style={{ backgroundColor: cap.tier.hex }}
+                          />
+                          {cap.tier.status} ({cap.yesCount}/{cap.total})
+                        </span>
+                      </div>
+                      <p className="text-sm text-on-surface leading-relaxed m-0">
+                        {cap.statusFeedback}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Actions */}
