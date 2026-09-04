@@ -193,9 +193,6 @@ export default function AssessmentSummaryView({
 
         {/* Feedback Card */}
         <div className="w-full bg-surface border border-surface-container-high rounded-2xl p-6 sm:p-7 shadow-sm mb-xl text-center">
-          <h2 className="font-title-md text-lg font-bold text-on-surface mb-2">
-            {pillarFeedback.label}
-          </h2>
           <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed max-w-2xl mx-auto m-0">
             {pillarFeedback.feedback}
           </p>
