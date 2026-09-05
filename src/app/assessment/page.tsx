@@ -236,13 +236,6 @@ export default function AssessmentPage() {
               {/* Bento Grid for Pillars */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {pillarBentoMeta.map((pillar) => {
-                  const pResult = scoringResults.pillarScores.find(
-                    (r) => r.pillarId === pillar.id
-                  );
-                  const pScore = pResult?.score ?? 0;
-                  const yesCount = pResult?.yesCount ?? 0;
-                  const noCount = pResult?.noCount ?? 0;
-
                   return (
                     <div
                       key={pillar.id}
@@ -279,18 +272,12 @@ export default function AssessmentPage() {
                           {pillar.name}
                         </h3>
 
-                        {/* Progress bar and details */}
-                        <div className="pt-2 border-t border-surface-variant/50 space-y-1.5">
-                          <div className="flex justify-between items-center text-[11px] text-on-surface-variant font-medium">
-                            <span>{yesCount}/25 Verified</span>
-                            <span className="text-amber-800 font-semibold">{noCount} Gaps</span>
-                          </div>
-                          <div className="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
-                            <div
-                              className="bg-primary h-full rounded-full transition-all duration-300"
-                              style={{ width: `${pScore}%` }}
-                            />
-                          </div>
+                        {/* Pillar Details */}
+                        <div className="pt-3 border-t border-surface-variant/50 flex justify-between items-center text-xs text-on-surface-variant font-medium">
+                          <span>5 Capabilities • 25 Questions</span>
+                          <span className="font-semibold text-primary group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                            Assess <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                          </span>
                         </div>
                       </div>
                     </div>
