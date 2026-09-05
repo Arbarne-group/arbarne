@@ -6,8 +6,8 @@ import AppShell from "@/components/layout/AppShell";
 
 export default function OnboardingOverviewPage() {
   const [user, setUser] = useState<any>(null);
-  const [completedSections, setCompletedSections] = useState(6);
-  const totalSections = 8;
+  const [completedSections, setCompletedSections] = useState(5);
+  const totalSections = 5;
   const progressPercent = Math.round((completedSections / totalSections) * 100);
 
   useEffect(() => {
@@ -28,87 +28,67 @@ export default function OnboardingOverviewPage() {
       .then((data) => {
         if (data.user) {
           setUser(data.user);
-          // Calculate dynamically completed sections
+          // Calculate dynamically completed sections out of 5
           let count = 0;
-          if (data.user.name) count += 1; // 1. Personal Info
-          if (data.user.phone) count += 1; // 2. Farm Location / Contact
-          if (data.user.farmerProfile?.valueChain) count += 1; // 3. Characteristics
-          if (data.user.farmManagement?.mgmtAbility) count += 1; // 4. Farming System
-          if (data.user.operatingStyle?.decisionStyle) count += 1; // 5. Business & Experience
-          if (data.user.aspiration?.twelveMonthSuccess) count += 1; // 6. Goals
-          setCompletedSections(Math.max(count, 6)); // Default realistic 6 of 8
+          if (data.user.farmerProfile?.jobTitle) count += 1; // 1. Farmer Profile
+          if (data.user.farmManagement?.mgmtAbility) count += 1; // 2. Management Experience
+          if (data.user.operatingStyle?.decisionStyle) count += 1; // 3. Operating Style
+          if (data.user.aspiration?.twelveMonthSuccess) count += 1; // 4. Aspirations
+          if (data.user.digitalPlatform?.supportReasons) count += 1; // 5. Digital Platforms
+          setCompletedSections(count > 0 ? count : 5);
         }
       })
       .catch((err) => console.error(err));
   }, []);
 
   const userName = user?.name || "Keziah Wanjiku";
-  const userRole = user?.farmerProfile?.jobTitle === "owner" ? "Farm Owner" : "Farm Operator";
+  const userRole = user?.farmerProfile?.jobTitle || "Farm Owner";
 
   const cards = [
     {
       step: 1,
       href: "/onboarding/step-1",
-      title: "Personal Information",
-      desc: "Name, gender, contact details, age",
+      title: "Farmer Profile",
+      desc: "Job title, value chains, experience, business background & education (Q1–Q5)",
       icon: "person",
-      status: "completed",
-    },
-    {
-      step: 1,
-      href: "/onboarding/step-1",
-      title: "Farm Location",
-      desc: "Country, region, district, GPS (optional)",
-      icon: "location_on",
-      status: "completed",
+      questions: "Q1 – Q5",
+      isDone: !!user?.farmerProfile?.jobTitle,
     },
     {
       step: 2,
       href: "/onboarding/step-2",
-      title: "Farm Characteristics",
-      desc: "Farm size, land tenure, enterprises",
-      icon: "landscape",
-      status: "completed",
-    },
-    {
-      step: 2,
-      href: "/onboarding/step-2",
-      title: "Farming System",
-      desc: "Production system, livestock, cropping, etc.",
-      icon: "eco",
-      status: "completed",
+      title: "Farm Management Experience",
+      desc: "Management ability, day-to-day operations & desired involvement (Q6–Q8)",
+      icon: "manage_accounts",
+      questions: "Q6 – Q8",
+      isDone: !!user?.farmManagement?.mgmtAbility,
     },
     {
       step: 3,
       href: "/onboarding/step-3",
-      title: "Business & Experience",
-      desc: "Years in farming, education, training, experience",
-      icon: "work",
-      status: "completed",
+      title: "Your Operating Style",
+      desc: "Decision making, setbacks response, growth obstacles, guidance & reports (Q9–Q14)",
+      icon: "psychology",
+      questions: "Q9 – Q14",
+      isDone: !!user?.operatingStyle?.decisionStyle,
     },
     {
       step: 4,
       href: "/onboarding/step-4",
-      title: "Goals & Priorities",
-      desc: "What do you want to achieve?",
+      title: "Future Farms Aspirations",
+      desc: "12-month success, support impact, market insight, manager role & 25-yr vision (Q15–Q21)",
       icon: "flag",
-      status: "in_progress",
+      questions: "Q15 – Q21",
+      isDone: !!user?.aspiration?.twelveMonthSuccess,
     },
     {
       step: 5,
       href: "/onboarding/step-5",
-      title: "Household & Labour",
-      desc: "Household size, availability",
-      icon: "family_restroom",
-      status: "pending",
-    },
-    {
-      step: 6,
-      href: "/pricing",
-      title: "Review & Submit",
-      desc: "Review your information and finish",
-      icon: "assignment_turned_in",
-      status: "pending",
+      title: "Digital Management Platforms",
+      desc: "Platform readiness, remote confidence, audits & record-keeping (Q22–Q27)",
+      icon: "devices",
+      questions: "Q22 – Q27",
+      isDone: !!user?.digitalPlatform?.supportReasons,
     },
   ];
 
@@ -181,57 +161,47 @@ export default function OnboardingOverviewPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-10">
             {cards.map((card, idx) => {
-              const isCompleted = card.status === "completed";
-              const isInProgress = card.status === "in_progress";
+              const isCompleted = card.isDone;
 
               return (
                 <Link
                   key={idx}
                   href={card.href}
-                  className={`bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.03)] border transition-all hover:shadow-md group flex flex-col h-full ${
-                    isInProgress
-                      ? "ring-2 ring-primary ring-offset-2 ring-offset-surface border-primary"
-                      : "border-surface-container-high hover:border-primary/40"
-                  }`}
+                  className="bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.03)] border transition-all hover:shadow-md group flex flex-col h-full border-surface-container-high hover:border-primary/40"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                        isInProgress
-                          ? "bg-primary text-white shadow-sm"
-                          : "bg-primary-container/15 text-primary group-hover:bg-primary group-hover:text-white"
-                      }`}
-                    >
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                       <span className="material-symbols-outlined text-[20px]">
                         {card.icon}
                       </span>
                     </div>
 
-                    {isCompleted && (
-                      <span className="material-symbols-outlined text-primary text-xl fill">
-                        check_circle
-                      </span>
-                    )}
-                    {isInProgress && (
-                      <span className="text-xs text-primary font-semibold border border-primary px-2.5 py-0.5 rounded-full">
-                        In Progress
-                      </span>
-                    )}
-                    {!isCompleted && !isInProgress && (
-                      <span className="material-symbols-outlined text-outline text-xl">
-                        radio_button_unchecked
-                      </span>
-                    )}
+                    <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-surface-container-high text-on-surface-variant group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                      {card.questions}
+                    </span>
                   </div>
 
-                  <h3 className="font-semibold text-base text-on-surface mb-1 group-hover:text-primary transition-colors">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-primary">
+                      Step {card.step}
+                    </span>
+                  </div>
+
+                  <h3 className="font-semibold text-sm md:text-base text-on-surface mb-2 group-hover:text-primary transition-colors">
                     {card.title}
                   </h3>
-                  <p className="text-xs text-on-surface-variant line-clamp-2 mt-auto">
+                  <p className="text-xs text-on-surface-variant line-clamp-3 mb-4">
                     {card.desc}
                   </p>
+
+                  <div className="mt-auto pt-3 border-t border-surface-variant/40 flex items-center justify-between text-xs font-semibold text-primary">
+                    <span>{isCompleted ? "Completed" : "Start Section"}</span>
+                    <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                      arrow_forward
+                    </span>
+                  </div>
                 </Link>
               );
             })}

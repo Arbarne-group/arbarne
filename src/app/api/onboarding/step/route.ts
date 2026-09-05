@@ -43,35 +43,45 @@ export async function POST(request: Request) {
 
     switch (step) {
       case 1:
-        // Farmer Profile
+        // Section 1: Farmer Profile (Q1-Q5)
         await prisma.farmerProfile.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
             jobTitle: data.jobTitle,
             valueChain: data.valueChain,
+            experienceYears: data.experienceYears,
+            businessHistory: data.businessHistory,
+            educationLevel: data.educationLevel,
+            otherEducation: data.otherEducation || "",
           },
           update: {
             jobTitle: data.jobTitle,
             valueChain: data.valueChain,
+            experienceYears: data.experienceYears,
+            businessHistory: data.businessHistory,
+            educationLevel: data.educationLevel,
+            otherEducation: data.otherEducation || "",
           },
         });
         break;
 
       case 2:
-        // Farm Management Experience
+        // Section 2: Farm Management Experience (Q6-Q8)
         await prisma.farmManagement.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
             mgmtAbility: data.mgmtAbility,
-            operators: JSON.stringify(data.operators || []),
+            operationsResponsible: data.operationsResponsible || "",
+            operators: JSON.stringify(data.operators || [data.operationsResponsible]),
             otherOperator: data.otherOperator || "",
             desiredInvolvement: data.desiredInvolvement,
           },
           update: {
             mgmtAbility: data.mgmtAbility,
-            operators: JSON.stringify(data.operators || []),
+            operationsResponsible: data.operationsResponsible || "",
+            operators: JSON.stringify(data.operators || [data.operationsResponsible]),
             otherOperator: data.otherOperator || "",
             desiredInvolvement: data.desiredInvolvement,
           },
@@ -79,55 +89,35 @@ export async function POST(request: Request) {
         break;
 
       case 3:
-        // Operating Style
+        // Section 3: Operating Style (Q9-Q14)
         await prisma.operatingStyle.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
             decisionStyle: data.decisionStyle,
             failureResponse: data.failureResponse,
-            obstacles: JSON.stringify(data.obstacles || []),
+            obstacles: Array.isArray(data.obstacles) ? JSON.stringify(data.obstacles) : data.obstacles,
+            otherObstacle: data.otherObstacle || "",
             guidancePreference: data.guidancePreference,
             trackingFrequency: data.trackingFrequency,
-            communicationChannels: JSON.stringify(data.communicationChannels || []),
+            updatePreferences: data.updatePreferences || "",
+            communicationChannels: JSON.stringify(data.communicationChannels || [data.updatePreferences]),
           },
           update: {
             decisionStyle: data.decisionStyle,
             failureResponse: data.failureResponse,
-            obstacles: JSON.stringify(data.obstacles || []),
+            obstacles: Array.isArray(data.obstacles) ? JSON.stringify(data.obstacles) : data.obstacles,
+            otherObstacle: data.otherObstacle || "",
             guidancePreference: data.guidancePreference,
             trackingFrequency: data.trackingFrequency,
-            communicationChannels: JSON.stringify(data.communicationChannels || []),
+            updatePreferences: data.updatePreferences || "",
+            communicationChannels: JSON.stringify(data.communicationChannels || [data.updatePreferences]),
           },
         });
         break;
 
       case 4:
-        // Digital Platforms
-        await prisma.digitalPlatform.upsert({
-          where: { userId: user.id },
-          create: {
-            userId: user.id,
-            supportReasons: JSON.stringify(data.supportReasons || []),
-            remoteConfidence: data.remoteConfidence,
-            remoteComfort: data.remoteComfort,
-            recordKeeping: data.recordKeeping,
-            physicalAudits: data.physicalAudits,
-            additionalNotes: data.additionalNotes,
-          },
-          update: {
-            supportReasons: JSON.stringify(data.supportReasons || []),
-            remoteConfidence: data.remoteConfidence,
-            remoteComfort: data.remoteComfort,
-            recordKeeping: data.recordKeeping,
-            physicalAudits: data.physicalAudits,
-            additionalNotes: data.additionalNotes,
-          },
-        });
-        break;
-
-      case 5:
-        // Aspirations
+        // Section 4: Your Future Farms Aspirations (Q15-Q21)
         await prisma.aspiration.upsert({
           where: { userId: user.id },
           create: {
@@ -136,7 +126,12 @@ export async function POST(request: Request) {
             greatestImpactSupport: data.greatestImpactSupport,
             marketInsight: data.marketInsight,
             threeToFiveYearRole: data.threeToFiveYearRole,
-            handoverResponsibilities: JSON.stringify(data.handoverResponsibilities || []),
+            managerResponsibilities: Array.isArray(data.managerResponsibilities)
+              ? JSON.stringify(data.managerResponsibilities)
+              : data.managerResponsibilities || "",
+            handoverResponsibilities: Array.isArray(data.managerResponsibilities)
+              ? JSON.stringify(data.managerResponsibilities)
+              : data.managerResponsibilities || "",
             personallyApprovedDecisions: data.personallyApprovedDecisions,
             twentyFiveYearVision: data.twentyFiveYearVision,
           },
@@ -145,9 +140,40 @@ export async function POST(request: Request) {
             greatestImpactSupport: data.greatestImpactSupport,
             marketInsight: data.marketInsight,
             threeToFiveYearRole: data.threeToFiveYearRole,
-            handoverResponsibilities: JSON.stringify(data.handoverResponsibilities || []),
+            managerResponsibilities: Array.isArray(data.managerResponsibilities)
+              ? JSON.stringify(data.managerResponsibilities)
+              : data.managerResponsibilities || "",
+            handoverResponsibilities: Array.isArray(data.managerResponsibilities)
+              ? JSON.stringify(data.managerResponsibilities)
+              : data.managerResponsibilities || "",
             personallyApprovedDecisions: data.personallyApprovedDecisions,
             twentyFiveYearVision: data.twentyFiveYearVision,
+          },
+        });
+        break;
+
+      case 5:
+        // Section 5: Working With Digital Farm Management Platforms (Q22-Q27)
+        await prisma.digitalPlatform.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            supportReasons: data.supportReasons,
+            otherSupportReason: data.otherSupportReason || "",
+            remoteConfidence: data.remoteConfidence,
+            remoteComfort: data.remoteComfort,
+            recordKeeping: data.recordKeeping,
+            physicalAudits: data.physicalAudits,
+            additionalNotes: data.additionalNotes || "",
+          },
+          update: {
+            supportReasons: data.supportReasons,
+            otherSupportReason: data.otherSupportReason || "",
+            remoteConfidence: data.remoteConfidence,
+            remoteComfort: data.remoteComfort,
+            recordKeeping: data.recordKeeping,
+            physicalAudits: data.physicalAudits,
+            additionalNotes: data.additionalNotes || "",
           },
         });
         break;

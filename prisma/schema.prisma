@@ -27,23 +27,28 @@ model User {
 }
 
 model FarmerProfile {
-  id         String   @id @default(cuid())
-  userId     String   @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  jobTitle   String?
-  valueChain String?
-  updatedAt  DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobTitle        String?
+  valueChain      String?
+  experienceYears String?
+  businessHistory String?
+  educationLevel  String?
+  otherEducation  String?
+  updatedAt       DateTime @updatedAt
 }
 
 model FarmManagement {
-  id                 String   @id @default(cuid())
-  userId             String   @unique
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  mgmtAbility        String?
-  operators          String?
-  otherOperator      String?
-  desiredInvolvement String?
-  updatedAt          DateTime @updatedAt
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mgmtAbility           String?
+  operationsResponsible String?
+  operators             String?
+  otherOperator         String?
+  desiredInvolvement    String?
+  updatedAt             DateTime @updatedAt
 }
 
 model OperatingStyle {
@@ -53,23 +58,26 @@ model OperatingStyle {
   decisionStyle         String?
   failureResponse       String?
   obstacles             String?
+  otherObstacle         String?
   guidancePreference    String?
   trackingFrequency     String?
+  updatePreferences     String?
   communicationChannels String?
   updatedAt             DateTime @updatedAt
 }
 
 model DigitalPlatform {
-  id               String   @id @default(cuid())
-  userId           String   @unique
-  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  supportReasons   String?
-  remoteConfidence String?
-  remoteComfort    String?
-  recordKeeping    String?
-  physicalAudits   String?
-  additionalNotes  String?
-  updatedAt        DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  supportReasons     String?
+  otherSupportReason String?
+  remoteConfidence   String?
+  remoteComfort      String?
+  recordKeeping      String?
+  physicalAudits     String?
+  additionalNotes    String?
+  updatedAt          DateTime @updatedAt
 }
 
 model Aspiration {
@@ -80,6 +88,7 @@ model Aspiration {
   greatestImpactSupport       String?
   marketInsight               String?
   threeToFiveYearRole         String?
+  managerResponsibilities     String?
   handoverResponsibilities    String?
   personallyApprovedDecisions String?
   twentyFiveYearVision        String?

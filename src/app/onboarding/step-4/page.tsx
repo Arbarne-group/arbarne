@@ -5,47 +5,98 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
 
-export default function DigitalPlatformsPage() {
+export default function AspirationsPage() {
   const router = useRouter();
-  const [supportReasons, setSupportReasons] = useState<string[]>([
-    "Time Constraints",
-    "Scaling Operations",
-  ]);
-  const [remoteConfidence, setRemoteConfidence] = useState(
-    "Weekly video updates, real-time sensor data, direct messaging with farm manager..."
+  const [twelveMonthSuccess, setTwelveMonthSuccess] = useState(
+    "Achieve 30% yield increase and certify for regional export markets."
   );
-  const [remoteComfort, setRemoteComfort] = useState("Yes");
-  const [recordKeeping, setRecordKeeping] = useState("Yes");
-  const [physicalAudits, setPhysicalAudits] = useState("Yes");
-  const [additionalNotes, setAdditionalNotes] = useState("");
+  const [greatestImpactSupport, setGreatestImpactSupport] = useState(
+    "Precision irrigation automation and cold storage financing."
+  );
+  const [marketInsight, setMarketInsight] = useState(
+    "Contracted supermarket supply chains yield 40% higher margins than open brokers."
+  );
+  const [threeToFiveYearRole, setThreeToFiveYearRole] = useState(
+    "Strategic planning, investor relations, and regional farm network expansion."
+  );
+  const [managerResponsibilities, setManagerResponsibilities] = useState<string[]>([
+    "Production planning",
+    "Day-to-day operations",
+    "Worker supervision",
+    "Cost control",
+    "Farm records",
+    "Reporting",
+  ]);
+  const [personallyApprovedDecisions, setPersonallyApprovedDecisions] = useState(
+    "Capital expenditures over $5,000 and major customer contract agreements."
+  );
+  const [twentyFiveYearVision, setTwentyFiveYearVision] = useState(
+    "Thriving, climate-resilient African farms powered by automated telemetry, solar cold-chains, and equitable farmer cooperatives."
+  );
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
       .then((res) => res.json())
       .then((data) => {
-        if (data.user?.digitalPlatform) {
-          const dp = data.user.digitalPlatform;
-          if (dp.supportReasons) {
+        if (data.user?.aspiration) {
+          const asp = data.user.aspiration;
+          if (asp.twelveMonthSuccess) setTwelveMonthSuccess(asp.twelveMonthSuccess);
+          if (asp.greatestImpactSupport) setGreatestImpactSupport(asp.greatestImpactSupport);
+          if (asp.marketInsight) setMarketInsight(asp.marketInsight);
+          if (asp.threeToFiveYearRole) setThreeToFiveYearRole(asp.threeToFiveYearRole);
+          if (asp.managerResponsibilities) {
             try {
-              setSupportReasons(JSON.parse(dp.supportReasons));
+              const parsed = JSON.parse(asp.managerResponsibilities);
+              if (Array.isArray(parsed)) setManagerResponsibilities(parsed);
+            } catch (e) {
+              if (typeof asp.managerResponsibilities === "string") {
+                setManagerResponsibilities([asp.managerResponsibilities]);
+              }
+            }
+          } else if (asp.handoverResponsibilities) {
+            try {
+              const parsed = JSON.parse(asp.handoverResponsibilities);
+              if (Array.isArray(parsed)) setManagerResponsibilities(parsed);
             } catch (e) {}
           }
-          if (dp.remoteConfidence) setRemoteConfidence(dp.remoteConfidence);
-          if (dp.remoteComfort) setRemoteComfort(dp.remoteComfort);
-          if (dp.recordKeeping) setRecordKeeping(dp.recordKeeping);
-          if (dp.physicalAudits) setPhysicalAudits(dp.physicalAudits);
-          if (dp.additionalNotes) setAdditionalNotes(dp.additionalNotes);
+          if (asp.personallyApprovedDecisions)
+            setPersonallyApprovedDecisions(asp.personallyApprovedDecisions);
+          if (asp.twentyFiveYearVision) setTwentyFiveYearVision(asp.twentyFiveYearVision);
         }
       })
       .catch(console.error);
   }, []);
 
-  const toggleReason = (reason: string) => {
-    if (supportReasons.includes(reason)) {
-      setSupportReasons(supportReasons.filter((r) => r !== reason));
+  const managerResponsibilityItems = [
+    "Production planning",
+    "Day-to-day operations",
+    "Worker supervision",
+    "Input management",
+    "Cost control",
+    "Farm records",
+    "Production monitoring",
+    "Risk management",
+    "Reporting",
+    "Market preparation",
+  ];
+
+  const isAllSelected =
+    managerResponsibilityItems.every((item) => managerResponsibilities.includes(item));
+
+  const toggleResponsibility = (item: string) => {
+    if (managerResponsibilities.includes(item)) {
+      setManagerResponsibilities(managerResponsibilities.filter((r) => r !== item));
     } else {
-      setSupportReasons([...supportReasons, reason]);
+      setManagerResponsibilities([...managerResponsibilities, item]);
+    }
+  };
+
+  const toggleAll = () => {
+    if (isAllSelected) {
+      setManagerResponsibilities([]);
+    } else {
+      setManagerResponsibilities([...managerResponsibilityItems]);
     }
   };
 
@@ -59,12 +110,14 @@ export default function DigitalPlatformsPage() {
           step: 4,
           email: "keziah@futurefarms.africa",
           data: {
-            supportReasons,
-            remoteConfidence,
-            remoteComfort,
-            recordKeeping,
-            physicalAudits,
-            additionalNotes,
+            twelveMonthSuccess,
+            greatestImpactSupport,
+            marketInsight,
+            threeToFiveYearRole,
+            managerResponsibilities,
+            handoverResponsibilities: managerResponsibilities,
+            personallyApprovedDecisions,
+            twentyFiveYearVision,
           },
         }),
       });
@@ -76,25 +129,6 @@ export default function DigitalPlatformsPage() {
       setSaving(false);
     }
   };
-
-  const reasons = [
-    {
-      title: "Time Constraints",
-      desc: "Unable to dedicate sufficient time to daily operations.",
-    },
-    {
-      title: "Lack of Expertise",
-      desc: "Need specialized knowledge in specific agricultural practices.",
-    },
-    {
-      title: "Geographic Distance",
-      desc: "Living far from the physical location of the farm.",
-    },
-    {
-      title: "Scaling Operations",
-      desc: "Looking to expand and need professional systems in place.",
-    },
-  ];
 
   return (
     <AppShell>
@@ -108,179 +142,204 @@ export default function DigitalPlatformsPage() {
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
             Back to Step 3
           </Link>
-          <h1 className="text-2xl md:text-3xl font-bold text-on-surface mb-2">
-            Working With Digital Platforms
+          <div className="flex items-center gap-3 mb-2">
+            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">
+              Section 4 of 5
+            </span>
+            <span className="text-xs text-on-surface-variant font-medium">Questions 15 – 21</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-on-surface mb-2 tracking-tight">
+            Your Future Farms Aspirations
           </h1>
-          <p className="text-sm md:text-base text-on-surface-variant max-w-2xl">
-            Understanding your comfort and requirements for remote farm management tools and digital integration.
+          <p className="text-sm md:text-base text-on-surface-variant">
+            Tell us where you want your farm to go.
           </p>
         </div>
 
-        <div className="space-y-8">
-          {/* Question 22: Support Reasons */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h2 className="text-base font-semibold text-on-surface mb-6 flex items-center gap-3">
-              <span className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">
-                22
-              </span>
-              Main reason for considering professional farm management support?
-            </h2>
+        <form className="space-y-8">
+          {/* Question 15 */}
+          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+            <label className="block text-base font-semibold text-on-surface mb-1">
+              15. What would success look like for your farm over the next 12 months?
+            </label>
+            <p className="text-xs text-on-surface-variant mb-4">
+              Consider areas such as production, profitability, markets, systems, workforce, technology, or expansion.
+            </p>
+            <textarea
+              rows={3}
+              value={twelveMonthSuccess}
+              onChange={(e) => setTwelveMonthSuccess(e.target.value)}
+              placeholder="Describe your 12-month goals and operational milestones..."
+              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none"
+            />
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {reasons.map((r) => {
-                const isChecked = supportReasons.includes(r.title);
+          {/* Question 16 */}
+          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+            <label className="block text-base font-semibold text-on-surface mb-1">
+              16. What kind of support would have the greatest impact on your farm business right now?
+            </label>
+            <p className="text-xs text-on-surface-variant mb-4">
+              Pinpoint the single most valuable technical, managerial, or financial resource needed.
+            </p>
+            <textarea
+              rows={3}
+              value={greatestImpactSupport}
+              onChange={(e) => setGreatestImpactSupport(e.target.value)}
+              placeholder="E.g., Automated irrigation scheduling, expert agronomist advisory, working capital financing..."
+              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none"
+            />
+          </div>
+
+          {/* Question 17 */}
+          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+            <label className="block text-base font-semibold text-on-surface mb-1">
+              17. What is one thing you understand about your market or customers that you believe many other farmers may not yet have recognized?
+            </label>
+            <p className="text-xs text-on-surface-variant mb-4">
+              Share your distinctive market edge or consumer demand insight.
+            </p>
+            <textarea
+              rows={3}
+              value={marketInsight}
+              onChange={(e) => setMarketInsight(e.target.value)}
+              placeholder="Share your unique market understanding or customer preference observation..."
+              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none"
+            />
+          </div>
+
+          {/* Question 18 */}
+          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+            <label className="block text-base font-semibold text-on-surface mb-1">
+              18. What do you want your role in the farm business to look like over the next three to five years?
+            </label>
+            <p className="text-xs text-on-surface-variant mb-4">
+              Envision your executive, strategic, or hands-on involvement as the farm scales.
+            </p>
+            <textarea
+              rows={3}
+              value={threeToFiveYearRole}
+              onChange={(e) => setThreeToFiveYearRole(e.target.value)}
+              placeholder="E.g., Strategic oversight, investor relations, multi-site expansion..."
+              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none"
+            />
+          </div>
+
+          {/* Question 19: Manager Responsibilities */}
+          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1">
+              <label className="block text-base font-semibold text-on-surface">
+                19. What would you like a professional Farm Manager to take responsibility for on your behalf?
+              </label>
+              <button
+                type="button"
+                onClick={toggleAll}
+                className="text-xs font-bold px-3 py-1.5 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer self-start sm:self-auto shrink-0"
+              >
+                {isAllSelected ? "Deselect All" : "All of the above"}
+              </button>
+            </div>
+            <p className="text-xs text-on-surface-variant mb-5">
+              Select all functional domains you want delegated to professional management.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {managerResponsibilityItems.map((item) => {
+                const isChecked = managerResponsibilities.includes(item);
                 return (
-                  <label
-                    key={r.title}
-                    onClick={() => toggleReason(r.title)}
-                    className={`p-5 rounded-2xl border cursor-pointer transition-all hover:border-primary/50 flex items-start gap-4 ${
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => toggleResponsibility(item)}
+                    className={`flex items-center justify-between p-4 border rounded-2xl cursor-pointer text-left transition-all ${
                       isChecked
-                        ? "border-primary bg-primary-container/5 ring-1 ring-primary"
-                        : "border-outline-variant"
+                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
+                    <span
+                      className={`text-xs sm:text-sm font-medium ${
+                        isChecked ? "text-primary font-semibold" : "text-on-surface"
+                      }`}
+                    >
+                      {item}
+                    </span>
                     <div
-                      className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                      className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 ml-2 transition-colors ${
                         isChecked
-                          ? "border-primary bg-primary text-white"
+                          ? "bg-primary border-primary text-white"
                           : "border-outline-variant"
                       }`}
                     >
                       {isChecked && (
-                        <span className="material-symbols-outlined text-white text-[14px]">
-                          check
-                        </span>
+                        <span className="material-symbols-outlined text-[15px]">check</span>
                       )}
                     </div>
-                    <div>
-                      <span className="font-semibold text-sm text-on-surface block mb-1">
-                        {r.title}
-                      </span>
-                      <span className="text-xs text-on-surface-variant leading-relaxed">
-                        {r.desc}
-                      </span>
-                    </div>
-                  </label>
+                  </button>
                 );
               })}
+
+              {/* All of the above button card */}
+              <button
+                type="button"
+                onClick={toggleAll}
+                className={`flex items-center justify-between p-4 border rounded-2xl cursor-pointer text-left transition-all ${
+                  isAllSelected
+                    ? "border-primary bg-primary text-white shadow-sm"
+                    : "border-dashed border-primary/60 bg-primary/5 hover:bg-primary/10 text-primary"
+                }`}
+              >
+                <span className="text-xs sm:text-sm font-bold">
+                  All of the above
+                </span>
+                <div
+                  className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 ml-2 ${
+                    isAllSelected ? "bg-white text-primary border-white" : "border-primary"
+                  }`}
+                >
+                  {isAllSelected && (
+                    <span className="material-symbols-outlined text-[15px]">check</span>
+                  )}
+                </div>
+              </button>
             </div>
-          </section>
-
-          {/* Question 23: Remote Confidence */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h2 className="text-base font-semibold text-on-surface mb-4 flex items-center gap-3">
-              <span className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">
-                23
-              </span>
-              What would make you feel confident when managing remotely?
-            </h2>
-            <textarea
-              rows={4}
-              value={remoteConfidence}
-              onChange={(e) => setRemoteConfidence(e.target.value)}
-              placeholder="E.g., Weekly video updates, real-time sensor data, direct messaging with farm manager..."
-              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none text-sm text-on-surface placeholder:text-on-surface-variant/40"
-            />
-          </section>
-
-          {/* Questions 24, 25, 26: Segmented Controls */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {/* Q24 */}
-            <section className="bg-surface-container-lowest rounded-3xl p-5 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40 flex flex-col justify-between">
-              <h3 className="text-sm font-semibold text-on-surface mb-4 flex items-start gap-2.5">
-                <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                  24
-                </span>
-                <span>Comfortable with remote solutions?</span>
-              </h3>
-              <div className="bg-surface-container-high p-1 rounded-xl flex gap-1 mt-auto">
-                {["Yes", "No", "Unsure"].map((v) => (
-                  <button
-                    key={v}
-                    type="button"
-                    onClick={() => setRemoteComfort(v)}
-                    className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                      remoteComfort === v
-                        ? "bg-white text-primary shadow-sm"
-                        : "text-on-surface-variant hover:text-on-surface"
-                    }`}
-                  >
-                    {v}
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            {/* Q25 */}
-            <section className="bg-surface-container-lowest rounded-3xl p-5 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40 flex flex-col justify-between">
-              <h3 className="text-sm font-semibold text-on-surface mb-4 flex items-start gap-2.5">
-                <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                  25
-                </span>
-                <span>Willing to maintain accurate records?</span>
-              </h3>
-              <div className="bg-surface-container-high p-1 rounded-xl flex gap-1 mt-auto">
-                {["Yes", "No", "Unsure"].map((v) => (
-                  <button
-                    key={v}
-                    type="button"
-                    onClick={() => setRecordKeeping(v)}
-                    className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                      recordKeeping === v
-                        ? "bg-white text-primary shadow-sm"
-                        : "text-on-surface-variant hover:text-on-surface"
-                    }`}
-                  >
-                    {v}
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            {/* Q26 */}
-            <section className="bg-surface-container-lowest rounded-3xl p-5 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40 flex flex-col justify-between">
-              <h3 className="text-sm font-semibold text-on-surface mb-4 flex items-start gap-2.5">
-                <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                  26
-                </span>
-                <span>Comfortable with physical audits?</span>
-              </h3>
-              <div className="bg-surface-container-high p-1 rounded-xl flex gap-1 mt-auto">
-                {["Yes", "No", "Unsure"].map((v) => (
-                  <button
-                    key={v}
-                    type="button"
-                    onClick={() => setPhysicalAudits(v)}
-                    className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
-                      physicalAudits === v
-                        ? "bg-white text-primary shadow-sm"
-                        : "text-on-surface-variant hover:text-on-surface"
-                    }`}
-                  >
-                    {v}
-                  </button>
-                ))}
-              </div>
-            </section>
           </div>
 
-          {/* Question 27: Additional Notes */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h2 className="text-base font-semibold text-on-surface mb-4 flex items-center gap-3">
-              <span className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0">
-                27
-              </span>
-              Anything else we should know?
-            </h2>
+          {/* Question 20 */}
+          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+            <label className="block text-base font-semibold text-on-surface mb-1">
+              20. What decisions would you always want to personally approve before they are made?
+            </label>
+            <p className="text-xs text-on-surface-variant mb-4">
+              Define your non-negotiable approval thresholds (e.g. capital purchases, vendor contracts, hiring).
+            </p>
             <textarea
               rows={3}
-              value={additionalNotes}
-              onChange={(e) => setAdditionalNotes(e.target.value)}
-              placeholder="Please share any additional details, concerns, or specific goals you have for your farm..."
-              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none text-sm text-on-surface placeholder:text-on-surface-variant/40"
+              value={personallyApprovedDecisions}
+              onChange={(e) => setPersonallyApprovedDecisions(e.target.value)}
+              placeholder="E.g., Equipment purchases exceeding $2,000, land leasing, annual budget sign-off..."
+              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none"
             />
-          </section>
-        </div>
+          </div>
+
+          {/* Question 21: 25-Year Vision */}
+          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.04)] relative overflow-hidden">
+            <div className="absolute left-0 top-0 bottom-0 w-2 bg-primary" />
+            <label className="block text-base font-semibold text-on-surface mb-1 ml-2">
+              21. Describe your vision for African farms 25 years from now. How do you want your farm or agricultural business to contribute to that future?
+            </label>
+            <p className="text-xs text-on-surface-variant mb-4 ml-2">
+              Share your transformative perspective on continental food security, sustainability, and technological leapfrogging.
+            </p>
+            <textarea
+              rows={4}
+              value={twentyFiveYearVision}
+              onChange={(e) => setTwentyFiveYearVision(e.target.value)}
+              placeholder="Paint a vivid picture of the long-term future and your farm's lasting legacy..."
+              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none"
+            />
+          </div>
+        </form>
 
         {/* Floating Bottom Nav */}
         <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface/95 backdrop-blur-md border-t border-surface-variant px-6 py-4 flex justify-between items-center z-30 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]">
@@ -288,10 +347,10 @@ export default function DigitalPlatformsPage() {
             href="/onboarding/step-3"
             className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors"
           >
-            &larr; Back
+            &larr; Back to Step 3
           </Link>
           <div className="text-xs text-on-surface-variant font-medium">
-            Step 4 of 5
+            Section 4 of 5
           </div>
           <button
             type="button"
@@ -299,13 +358,12 @@ export default function DigitalPlatformsPage() {
             disabled={saving}
             className="px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm btn-shadow hover-lift transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
           >
-            <span>{saving ? "Saving..." : "Continue"}</span>
-            <span className="material-symbols-outlined text-[18px]">
-              arrow_forward
-            </span>
+            <span>{saving ? "Saving..." : "Save & Continue"}</span>
+            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
           </button>
         </div>
       </div>
     </AppShell>
   );
 }
+
