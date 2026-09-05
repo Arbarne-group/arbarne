@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # CLAUDE.md — Future Farms Framework (FFF) Digital Platform
 
 > **Read this first.** This is the project-level context for any Claude session working on this codebase. The detailed PRD is `docs/prd/prd-refined.md`; this file is the fast-orientation index that points to it.

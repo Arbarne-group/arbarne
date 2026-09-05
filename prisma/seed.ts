@@ -8,11 +8,14 @@ async function main() {
 
   const passwordHash = await bcrypt.hash("Password123!", 10);
 
-  // Demo user: Keziah
-  const user = await prisma.user.upsert({
+  // Delete existing demo user if exists to ensure clean re-seed
+  await prisma.user.deleteMany({
     where: { email: "keziah@futurefarms.africa" },
-    update: {},
-    create: {
+  });
+
+  // Demo user: Keziah
+  const user = await prisma.user.create({
+    data: {
       email: "keziah@futurefarms.africa",
       name: "Keziah Wanjiku",
       passwordHash,
@@ -25,6 +28,7 @@ async function main() {
           experienceYears: "4–6 years",
           businessHistory: "Yes, I currently run a business",
           educationLevel: "Undergraduate degree",
+          education: "Undergraduate degree",
           otherEducation: "",
         },
       },
@@ -32,6 +36,7 @@ async function main() {
         create: {
           mgmtAbility: "I direct farm operations confidently and delegate execution to my team.",
           operationsResponsible: "A Farm Manager",
+          opsResponsibility: "A Farm Manager",
           operators: JSON.stringify(["I am", "A Farm Manager"]),
           otherOperator: "",
           desiredInvolvement: "Strategically involved — I want to focus on business direction while the Farm Manager handles operations.",
@@ -46,6 +51,7 @@ async function main() {
           guidancePreference: "Structured — give me clear plans, actions, and deadlines.",
           trackingFrequency: "Weekly",
           updatePreferences: "Weekly operational updates",
+          updatePreference: "Weekly operational updates",
           communicationChannels: JSON.stringify(["Weekly operational updates", "Monthly performance reports"]),
         },
       },
@@ -67,6 +73,7 @@ async function main() {
           marketInsight: "Direct-to-supermarket contracts pay 40% higher margins than open market brokers.",
           threeToFiveYearRole: "Strategic direction, investor relations, and regional farm network expansion.",
           managerResponsibilities: JSON.stringify(["Production planning", "Day-to-day operations", "Worker supervision", "Cost control", "Reporting"]),
+          fmResponsibility: "Production planning, Day-to-day operations, Worker supervision, Cost control, Reporting",
           handoverResponsibilities: JSON.stringify(["Production planning", "Day-to-day operations", "Worker supervision", "Cost control", "Reporting"]),
           personallyApprovedDecisions: "Capital expenditures above $5,000 and major commercial contract agreements.",
           twentyFiveYearVision: "Fully tech-enabled, climate-resilient African agriculture feeding global cities sustainably.",
@@ -115,17 +122,20 @@ async function main() {
               {
                 pillar: "Technology & Mechanization",
                 title: "Automated Drip Irrigation Scheduling",
-                description: "Install soil moisture telemetry to reduce water usage by 28% and eliminate manual valve monitoring.",
+                description:
+                  "Install soil moisture telemetry to reduce water usage by 28% and eliminate manual valve monitoring.",
               },
               {
                 pillar: "Climate Resilience",
                 title: "Solar-Powered Cold Storage",
-                description: "Mitigate post-harvest heat degradation by introducing decentralized on-farm cooling lockers.",
+                description:
+                  "Mitigate post-harvest heat degradation by introducing decentralized on-farm cooling lockers.",
               },
               {
                 pillar: "Labor & People",
                 title: "Standard Operating Procedures (SOPs)",
-                description: "Codify harvesting and sorting guidelines to prepare farm managers for delegation.",
+                description:
+                  "Codify harvesting and sorting guidelines to prepare farm managers for delegation.",
               },
             ]),
           },

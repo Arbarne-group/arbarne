@@ -6,9 +6,16 @@ import AppShell from "@/components/layout/AppShell";
 
 export default function OnboardingOverviewPage() {
   const [user, setUser] = useState<any>(null);
-  const [completedSections, setCompletedSections] = useState(5);
+
+  const isStep1Done = Boolean(user?.farmerProfile?.jobTitle);
+  const isStep2Done = Boolean(user?.farmManagement?.mgmtAbility);
+  const isStep3Done = Boolean(user?.operatingStyle?.decisionStyle);
+  const isStep4Done = Boolean(user?.aspiration?.fmResponsibility || user?.aspiration?.twelveMonthSuccess);
+  const isStep5Done = Boolean(user?.digitalPlatform?.remoteComfort || user?.digitalPlatform?.supportReasons);
+
+  const completedCount = [isStep1Done, isStep2Done, isStep3Done, isStep4Done, isStep5Done].filter(Boolean).length;
   const totalSections = 5;
-  const progressPercent = Math.round((completedSections / totalSections) * 100);
+  const progressPercent = Math.round((completedCount / totalSections) * 100);
 
   useEffect(() => {
     // Attempt to load from localStorage or fetch user from DB
@@ -28,14 +35,6 @@ export default function OnboardingOverviewPage() {
       .then((data) => {
         if (data.user) {
           setUser(data.user);
-          // Calculate dynamically completed sections out of 5
-          let count = 0;
-          if (data.user.farmerProfile?.jobTitle) count += 1; // 1. Farmer Profile
-          if (data.user.farmManagement?.mgmtAbility) count += 1; // 2. Management Experience
-          if (data.user.operatingStyle?.decisionStyle) count += 1; // 3. Operating Style
-          if (data.user.aspiration?.twelveMonthSuccess) count += 1; // 4. Aspirations
-          if (data.user.digitalPlatform?.supportReasons) count += 1; // 5. Digital Platforms
-          setCompletedSections(count > 0 ? count : 5);
         }
       })
       .catch((err) => console.error(err));
@@ -49,10 +48,10 @@ export default function OnboardingOverviewPage() {
       step: 1,
       href: "/onboarding/step-1",
       title: "Farmer Profile",
-      desc: "Job title, value chains, experience, business background & education (Q1–Q5)",
+      desc: "Job title, value chains, experience, business background & education level (Q1–Q5)",
       icon: "person",
       questions: "Q1 – Q5",
-      isDone: !!user?.farmerProfile?.jobTitle,
+      isDone: isStep1Done,
     },
     {
       step: 2,
@@ -61,7 +60,7 @@ export default function OnboardingOverviewPage() {
       desc: "Management ability, day-to-day operations & desired involvement (Q6–Q8)",
       icon: "manage_accounts",
       questions: "Q6 – Q8",
-      isDone: !!user?.farmManagement?.mgmtAbility,
+      isDone: isStep2Done,
     },
     {
       step: 3,
@@ -70,16 +69,16 @@ export default function OnboardingOverviewPage() {
       desc: "Decision making, setbacks response, growth obstacles, guidance & reports (Q9–Q14)",
       icon: "psychology",
       questions: "Q9 – Q14",
-      isDone: !!user?.operatingStyle?.decisionStyle,
+      isDone: isStep3Done,
     },
     {
       step: 4,
       href: "/onboarding/step-4",
       title: "Future Farms Aspirations",
       desc: "12-month success, support impact, market insight, manager role & 25-yr vision (Q15–Q21)",
-      icon: "flag",
+      icon: "rocket_launch",
       questions: "Q15 – Q21",
-      isDone: !!user?.aspiration?.twelveMonthSuccess,
+      isDone: isStep4Done,
     },
     {
       step: 5,
@@ -88,16 +87,23 @@ export default function OnboardingOverviewPage() {
       desc: "Platform readiness, remote confidence, audits & record-keeping (Q22–Q27)",
       icon: "devices",
       questions: "Q22 – Q27",
-      isDone: !!user?.digitalPlatform?.supportReasons,
+      isDone: isStep5Done,
     },
   ];
+
+  // First unfinished step
+  const nextStepHref = !isStep1Done ? "/onboarding/step-1"
+    : !isStep2Done ? "/onboarding/step-2"
+    : !isStep3Done ? "/onboarding/step-3"
+    : !isStep4Done ? "/onboarding/step-4"
+    : !isStep5Done ? "/onboarding/step-5"
+    : "/pricing";
 
   return (
     <AppShell userName={userName} userRole={userRole}>
       <div className="px-4 md:px-10 py-6 max-w-[1280px] mx-auto w-full">
         {/* Hero Section */}
         <section className="bg-surface-container-lowest rounded-3xl shadow-[0_4px_16px_rgba(0,0,0,0.04)] p-6 md:p-10 mb-10 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden border border-surface-variant/30">
-          {/* Background Decorative Blob */}
           <div className="absolute top-0 right-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
           <div className="flex-1 z-10">
@@ -105,7 +111,7 @@ export default function OnboardingOverviewPage() {
               Welcome to Future Farms!
             </h1>
             <p className="text-base md:text-lg text-on-surface-variant mb-8 max-w-lg leading-relaxed">
-              Let&apos;s get to know you and your farm so we can personalize your Future Farms journey.
+              Let&apos;s get to know you and your farm across 5 core sections so we can personalize your transformation journey.
             </p>
 
             {/* Progress Card */}
@@ -114,17 +120,17 @@ export default function OnboardingOverviewPage() {
                 <div>
                   <h3 className="font-semibold text-base mb-1">
                     <Link
-                      href="/onboarding/step-4"
+                      href={nextStepHref}
                       className="text-primary hover:underline inline-flex items-center gap-1 cursor-pointer font-semibold"
                     >
-                      Complete Onboarding Process{" "}
+                      {completedCount === totalSections ? "Review Completed Onboarding" : "Continue Onboarding"}
                       <span className="material-symbols-outlined text-sm">
                         arrow_forward
                       </span>
                     </Link>
                   </h3>
                   <p className="text-xs text-on-surface-variant">
-                    {completedSections} of {totalSections} sections completed
+                    {completedCount} of {totalSections} sections completed (27 questions total)
                   </p>
                 </div>
                 <span className="text-2xl text-primary font-bold">
@@ -153,9 +159,14 @@ export default function OnboardingOverviewPage() {
         {/* Questionnaire Grid */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl md:text-2xl font-bold text-on-surface">
-              Tell us about yourself &amp; your farm
-            </h2>
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-on-surface">
+                Farmer &amp; Farm Onboarding Sections
+              </h2>
+              <p className="text-xs md:text-sm text-on-surface-variant mt-0.5">
+                Answer all 27 questions across 5 sections to establish your farm maturity baseline
+              </p>
+            </div>
             <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full">
               Phase 1: Initial Profiling
             </span>
@@ -185,7 +196,7 @@ export default function OnboardingOverviewPage() {
 
                   <div className="flex items-center gap-1.5 mb-1">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-primary">
-                      Step {card.step}
+                      Section {card.step} of 5
                     </span>
                   </div>
 
@@ -210,10 +221,10 @@ export default function OnboardingOverviewPage() {
           {/* Action Button */}
           <div className="flex justify-start">
             <Link
-              href="/pricing"
+              href={nextStepHref}
               className="bg-primary hover:bg-primary/90 text-white text-sm font-semibold px-8 py-3.5 rounded-xl shadow-sm hover:shadow-md btn-shadow hover-lift transition-all flex items-center gap-2"
             >
-              <span>Continue to My Assessment</span>
+              <span>{completedCount === totalSections ? "Proceed to Assessment Pricing" : "Continue Onboarding"}</span>
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
           </div>

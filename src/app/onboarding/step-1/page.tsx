@@ -16,7 +16,16 @@ export default function FarmerProfilePage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    let email = "keziah@futurefarms.africa";
+    const cached = localStorage.getItem("future_farms_user");
+    if (cached) {
+      try {
+        const u = JSON.parse(cached);
+        if (u.email) email = u.email;
+      } catch (e) {}
+    }
+
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user?.farmerProfile) {
@@ -25,7 +34,7 @@ export default function FarmerProfilePage() {
           if (fp.valueChain) setValueChain(fp.valueChain);
           if (fp.experienceYears) setExperienceYears(fp.experienceYears);
           if (fp.businessHistory) setBusinessHistory(fp.businessHistory);
-          if (fp.educationLevel) setEducationLevel(fp.educationLevel);
+          if (fp.educationLevel || fp.education) setEducationLevel(fp.educationLevel || fp.education);
           if (fp.otherEducation) setOtherEducation(fp.otherEducation);
         }
       })
@@ -409,4 +418,3 @@ export default function FarmerProfilePage() {
     </AppShell>
   );
 }
-

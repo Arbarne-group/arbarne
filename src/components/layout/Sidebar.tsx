@@ -41,7 +41,8 @@ export default function Sidebar({ userName = "Keziah" }: SidebarProps) {
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
-            (item.href === "/onboarding" && pathname.startsWith("/onboarding"));
+            (item.href === "/onboarding" && pathname.startsWith("/onboarding")) ||
+            (item.href === "/assessment" && pathname.startsWith("/assessment"));
 
           return (
             <Link

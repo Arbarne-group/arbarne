@@ -18,14 +18,23 @@ export default function FarmManagementPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    let email = "keziah@futurefarms.africa";
+    const cached = localStorage.getItem("future_farms_user");
+    if (cached) {
+      try {
+        const u = JSON.parse(cached);
+        if (u.email) email = u.email;
+      } catch (e) {}
+    }
+
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user?.farmManagement) {
           const fm = data.user.farmManagement;
           if (fm.mgmtAbility) setMgmtAbility(fm.mgmtAbility);
-          if (fm.operationsResponsible) {
-            setOperationsResponsible(fm.operationsResponsible);
+          if (fm.operationsResponsible || fm.opsResponsibility) {
+            setOperationsResponsible(fm.operationsResponsible || fm.opsResponsibility);
           } else if (fm.operators) {
             try {
               const parsed = JSON.parse(fm.operators);
@@ -35,7 +44,9 @@ export default function FarmManagementPage() {
             } catch (e) {}
           }
           if (fm.otherOperator) setOtherOperator(fm.otherOperator);
-          if (fm.desiredInvolvement) setDesiredInvolvement(fm.desiredInvolvement);
+          if (fm.desiredInvolvement) {
+            setDesiredInvolvement(fm.desiredInvolvement);
+          }
         }
       })
       .catch(console.error);
@@ -53,6 +64,7 @@ export default function FarmManagementPage() {
           data: {
             mgmtAbility,
             operationsResponsible,
+            opsResponsibility: operationsResponsible,
             operators: [operationsResponsible],
             otherOperator,
             desiredInvolvement,
@@ -135,11 +147,11 @@ export default function FarmManagementPage() {
         {/* Header */}
         <div className="mb-8">
           <Link
-            href="/onboarding/step-1"
+            href="/onboarding"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors mb-4"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-            Back to Step 1
+            Back to Overview
           </Link>
           <div className="flex items-center gap-3 mb-2">
             <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">
@@ -147,9 +159,9 @@ export default function FarmManagementPage() {
             </span>
             <span className="text-xs text-on-surface-variant font-medium">Questions 6 – 8</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-on-surface mb-2 tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-bold text-on-surface mb-2 tracking-tight">
             Farm Management Experience
-          </h2>
+          </h1>
           <p className="text-sm md:text-base text-on-surface-variant">
             Help us understand how you currently manage your farm.
           </p>
@@ -181,7 +193,7 @@ export default function FarmManagementPage() {
                   >
                     <div className="flex items-start gap-4">
                       <div
-                        className={`w-5 h-5 rounded-full border-2 mt-0.5 shrink-0 flex items-center justify-center ${
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 shrink-0 ${
                           isSelected
                             ? "border-primary bg-primary text-white"
                             : "border-outline-variant"
@@ -354,4 +366,3 @@ export default function FarmManagementPage() {
     </AppShell>
   );
 }
-

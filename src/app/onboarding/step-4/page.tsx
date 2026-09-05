@@ -36,7 +36,16 @@ export default function AspirationsPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    let email = "keziah@futurefarms.africa";
+    const cached = localStorage.getItem("future_farms_user");
+    if (cached) {
+      try {
+        const u = JSON.parse(cached);
+        if (u.email) email = u.email;
+      } catch (e) {}
+    }
+
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user?.aspiration) {
@@ -59,6 +68,8 @@ export default function AspirationsPage() {
               const parsed = JSON.parse(asp.handoverResponsibilities);
               if (Array.isArray(parsed)) setManagerResponsibilities(parsed);
             } catch (e) {}
+          } else if (asp.fmResponsibility) {
+            setManagerResponsibilities([asp.fmResponsibility]);
           }
           if (asp.personallyApprovedDecisions)
             setPersonallyApprovedDecisions(asp.personallyApprovedDecisions);
@@ -115,6 +126,7 @@ export default function AspirationsPage() {
             marketInsight,
             threeToFiveYearRole,
             managerResponsibilities,
+            fmResponsibility: managerResponsibilities[0] || "",
             handoverResponsibilities: managerResponsibilities,
             personallyApprovedDecisions,
             twentyFiveYearVision,
@@ -136,11 +148,11 @@ export default function AspirationsPage() {
         {/* Header */}
         <div className="mb-8">
           <Link
-            href="/onboarding/step-3"
+            href="/onboarding"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors mb-4"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-            Back to Step 3
+            Back to Overview
           </Link>
           <div className="flex items-center gap-3 mb-2">
             <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">
@@ -152,7 +164,7 @@ export default function AspirationsPage() {
             Your Future Farms Aspirations
           </h1>
           <p className="text-sm md:text-base text-on-surface-variant">
-            Tell us where you want your farm to go.
+            Tell us where you want your farm to go over the next 1 to 25 years.
           </p>
         </div>
 
@@ -366,4 +378,3 @@ export default function AspirationsPage() {
     </AppShell>
   );
 }
-

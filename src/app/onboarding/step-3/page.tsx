@@ -27,23 +27,52 @@ export default function OperatingStylePage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    let email = "keziah@futurefarms.africa";
+    const cached = localStorage.getItem("future_farms_user");
+    if (cached) {
+      try {
+        const u = JSON.parse(cached);
+        if (u.email) email = u.email;
+      } catch (e) {}
+    }
+
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user?.operatingStyle) {
           const os = data.user.operatingStyle;
-          if (os.decisionStyle) setDecisionStyle(os.decisionStyle);
-          if (os.failureResponse) setFailureResponse(os.failureResponse);
+          if (os.decisionStyle) {
+            if (os.decisionStyle === "data") {
+              setDecisionStyle("Gather data and analyse the situation before acting.");
+            } else if (os.decisionStyle === "trust") {
+              setDecisionStyle("Talk the decision through with someone I trust.");
+            } else if (os.decisionStyle === "instinct") {
+              setDecisionStyle("Trust my instincts and act quickly.");
+            } else {
+              setDecisionStyle(os.decisionStyle);
+            }
+          }
+          if (os.failureResponse) {
+            if (os.failureResponse === "adjust" || os.failureResponse === "investigate") {
+              setFailureResponse("I first investigate the problem before changing course.");
+            } else if (os.failureResponse === "change") {
+              setFailureResponse("I change direction quickly and try a different approach.");
+            } else {
+              setFailureResponse(os.failureResponse);
+            }
+          }
           if (os.obstacles) {
             try {
               const parsed = JSON.parse(os.obstacles);
-              if (Array.isArray(parsed)) setObstacles(parsed);
+              if (Array.isArray(parsed) && parsed.length > 0) setObstacles(parsed);
             } catch (e) {}
           }
           if (os.otherObstacle) setOtherObstacle(os.otherObstacle);
           if (os.guidancePreference) setGuidancePreference(os.guidancePreference);
           if (os.trackingFrequency) setTrackingFrequency(os.trackingFrequency);
-          if (os.updatePreferences) setUpdatePreferences(os.updatePreferences);
+          if (os.updatePreferences || os.updatePreference) {
+            setUpdatePreferences(os.updatePreferences || os.updatePreference);
+          }
         }
       })
       .catch(console.error);
@@ -74,6 +103,7 @@ export default function OperatingStylePage() {
             guidancePreference,
             trackingFrequency,
             updatePreferences,
+            updatePreference: updatePreferences,
             communicationChannels: [updatePreferences],
           },
         }),
@@ -179,11 +209,11 @@ export default function OperatingStylePage() {
         {/* Header */}
         <div className="mb-8">
           <Link
-            href="/onboarding/step-2"
+            href="/onboarding"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors mb-4"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-            Back to Step 2
+            Back to Overview
           </Link>
           <div className="flex items-center gap-3 mb-2">
             <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">
@@ -191,11 +221,11 @@ export default function OperatingStylePage() {
             </span>
             <span className="text-xs text-on-surface-variant font-medium">Questions 9 – 14</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-on-surface mb-2 tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-bold text-on-surface mb-2 tracking-tight">
             Your Operating Style
-          </h2>
+          </h1>
           <p className="text-sm md:text-base text-on-surface-variant max-w-2xl">
-            Help us understand how you make decisions
+            Help us understand how you make decisions, navigate challenges, and measure progress.
           </p>
         </div>
 
@@ -333,15 +363,19 @@ export default function OperatingStylePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3">
               {obstacleList.map((item) => {
                 const isChecked = obstacles.includes(item);
+                const isMaxed = obstacles.length >= 3 && !isChecked;
+
                 return (
                   <button
                     key={item}
                     type="button"
-                    onClick={() => toggleObstacle(item)}
-                    className={`border rounded-2xl p-4 flex items-center justify-between text-left cursor-pointer transition-all ${
+                    onClick={() => !isMaxed && toggleObstacle(item)}
+                    className={`border rounded-2xl p-4 flex items-center justify-between text-left transition-all ${
                       isChecked
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
-                        : "border-outline-variant hover:bg-surface-container-low"
+                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm cursor-pointer"
+                        : isMaxed
+                        ? "border-outline-variant/40 opacity-40 cursor-not-allowed bg-surface-container-lowest"
+                        : "border-outline-variant hover:bg-surface-container-low cursor-pointer"
                     }`}
                   >
                     <span
@@ -541,4 +575,3 @@ export default function OperatingStylePage() {
     </AppShell>
   );
 }
-

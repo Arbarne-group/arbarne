@@ -42,141 +42,172 @@ export async function POST(request: Request) {
     }
 
     switch (step) {
-      case 1:
+      case 1: {
         // Section 1: Farmer Profile (Q1-Q5)
+        const edu = data.educationLevel || data.education || "";
         await prisma.farmerProfile.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
-            jobTitle: data.jobTitle,
-            valueChain: data.valueChain,
-            experienceYears: data.experienceYears,
-            businessHistory: data.businessHistory,
-            educationLevel: data.educationLevel,
+            jobTitle: data.jobTitle || "",
+            valueChain: data.valueChain || "",
+            experienceYears: data.experienceYears || "",
+            businessHistory: data.businessHistory || "",
+            educationLevel: edu,
+            education: edu,
             otherEducation: data.otherEducation || "",
           },
           update: {
-            jobTitle: data.jobTitle,
-            valueChain: data.valueChain,
-            experienceYears: data.experienceYears,
-            businessHistory: data.businessHistory,
-            educationLevel: data.educationLevel,
+            jobTitle: data.jobTitle || "",
+            valueChain: data.valueChain || "",
+            experienceYears: data.experienceYears || "",
+            businessHistory: data.businessHistory || "",
+            educationLevel: edu,
+            education: edu,
             otherEducation: data.otherEducation || "",
           },
         });
         break;
+      }
 
-      case 2:
+      case 2: {
         // Section 2: Farm Management Experience (Q6-Q8)
+        const ops = data.operationsResponsible || data.opsResponsibility || "";
+        const operatorsVal = typeof data.operators === "string" 
+          ? data.operators 
+          : JSON.stringify(data.operators || (ops ? [ops] : []));
+
         await prisma.farmManagement.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
-            mgmtAbility: data.mgmtAbility,
-            operationsResponsible: data.operationsResponsible || "",
-            operators: JSON.stringify(data.operators || [data.operationsResponsible]),
+            mgmtAbility: data.mgmtAbility || "",
+            operationsResponsible: ops,
+            opsResponsibility: ops,
+            operators: operatorsVal,
             otherOperator: data.otherOperator || "",
-            desiredInvolvement: data.desiredInvolvement,
+            desiredInvolvement: data.desiredInvolvement || "",
           },
           update: {
-            mgmtAbility: data.mgmtAbility,
-            operationsResponsible: data.operationsResponsible || "",
-            operators: JSON.stringify(data.operators || [data.operationsResponsible]),
+            mgmtAbility: data.mgmtAbility || "",
+            operationsResponsible: ops,
+            opsResponsibility: ops,
+            operators: operatorsVal,
             otherOperator: data.otherOperator || "",
-            desiredInvolvement: data.desiredInvolvement,
+            desiredInvolvement: data.desiredInvolvement || "",
           },
         });
         break;
+      }
 
-      case 3:
+      case 3: {
         // Section 3: Operating Style (Q9-Q14)
+        const obstaclesVal = typeof data.obstacles === "string"
+          ? data.obstacles
+          : JSON.stringify(data.obstacles || []);
+        const updatePref = data.updatePreferences || data.updatePreference || "";
+        const commChannels = typeof data.communicationChannels === "string"
+          ? data.communicationChannels
+          : JSON.stringify(data.communicationChannels || (updatePref ? [updatePref] : []));
+
         await prisma.operatingStyle.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
-            decisionStyle: data.decisionStyle,
-            failureResponse: data.failureResponse,
-            obstacles: Array.isArray(data.obstacles) ? JSON.stringify(data.obstacles) : data.obstacles,
+            decisionStyle: data.decisionStyle || "",
+            failureResponse: data.failureResponse || "",
+            obstacles: obstaclesVal,
             otherObstacle: data.otherObstacle || "",
-            guidancePreference: data.guidancePreference,
-            trackingFrequency: data.trackingFrequency,
-            updatePreferences: data.updatePreferences || "",
-            communicationChannels: JSON.stringify(data.communicationChannels || [data.updatePreferences]),
+            guidancePreference: data.guidancePreference || "",
+            trackingFrequency: data.trackingFrequency || "",
+            updatePreferences: updatePref,
+            updatePreference: updatePref,
+            communicationChannels: commChannels,
           },
           update: {
-            decisionStyle: data.decisionStyle,
-            failureResponse: data.failureResponse,
-            obstacles: Array.isArray(data.obstacles) ? JSON.stringify(data.obstacles) : data.obstacles,
+            decisionStyle: data.decisionStyle || "",
+            failureResponse: data.failureResponse || "",
+            obstacles: obstaclesVal,
             otherObstacle: data.otherObstacle || "",
-            guidancePreference: data.guidancePreference,
-            trackingFrequency: data.trackingFrequency,
-            updatePreferences: data.updatePreferences || "",
-            communicationChannels: JSON.stringify(data.communicationChannels || [data.updatePreferences]),
+            guidancePreference: data.guidancePreference || "",
+            trackingFrequency: data.trackingFrequency || "",
+            updatePreferences: updatePref,
+            updatePreference: updatePref,
+            communicationChannels: commChannels,
           },
         });
         break;
+      }
 
-      case 4:
+      case 4: {
         // Section 4: Your Future Farms Aspirations (Q15-Q21)
+        const fmResp = data.fmResponsibility || "";
+        const managerRespVal = typeof data.managerResponsibilities === "string"
+          ? data.managerResponsibilities
+          : JSON.stringify(data.managerResponsibilities || (fmResp ? [fmResp] : []));
+        const handoverVal = typeof data.handoverResponsibilities === "string"
+          ? data.handoverResponsibilities
+          : JSON.stringify(data.handoverResponsibilities || (data.managerResponsibilities || (fmResp ? [fmResp] : [])));
+
         await prisma.aspiration.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
-            twelveMonthSuccess: data.twelveMonthSuccess,
-            greatestImpactSupport: data.greatestImpactSupport,
-            marketInsight: data.marketInsight,
-            threeToFiveYearRole: data.threeToFiveYearRole,
-            managerResponsibilities: Array.isArray(data.managerResponsibilities)
-              ? JSON.stringify(data.managerResponsibilities)
-              : data.managerResponsibilities || "",
-            handoverResponsibilities: Array.isArray(data.managerResponsibilities)
-              ? JSON.stringify(data.managerResponsibilities)
-              : data.managerResponsibilities || "",
-            personallyApprovedDecisions: data.personallyApprovedDecisions,
-            twentyFiveYearVision: data.twentyFiveYearVision,
+            twelveMonthSuccess: data.twelveMonthSuccess || "",
+            greatestImpactSupport: data.greatestImpactSupport || "",
+            marketInsight: data.marketInsight || "",
+            threeToFiveYearRole: data.threeToFiveYearRole || "",
+            managerResponsibilities: managerRespVal,
+            fmResponsibility: fmResp,
+            handoverResponsibilities: handoverVal,
+            personallyApprovedDecisions: data.personallyApprovedDecisions || "",
+            twentyFiveYearVision: data.twentyFiveYearVision || "",
           },
           update: {
-            twelveMonthSuccess: data.twelveMonthSuccess,
-            greatestImpactSupport: data.greatestImpactSupport,
-            marketInsight: data.marketInsight,
-            threeToFiveYearRole: data.threeToFiveYearRole,
-            managerResponsibilities: Array.isArray(data.managerResponsibilities)
-              ? JSON.stringify(data.managerResponsibilities)
-              : data.managerResponsibilities || "",
-            handoverResponsibilities: Array.isArray(data.managerResponsibilities)
-              ? JSON.stringify(data.managerResponsibilities)
-              : data.managerResponsibilities || "",
-            personallyApprovedDecisions: data.personallyApprovedDecisions,
-            twentyFiveYearVision: data.twentyFiveYearVision,
+            twelveMonthSuccess: data.twelveMonthSuccess || "",
+            greatestImpactSupport: data.greatestImpactSupport || "",
+            marketInsight: data.marketInsight || "",
+            threeToFiveYearRole: data.threeToFiveYearRole || "",
+            managerResponsibilities: managerRespVal,
+            fmResponsibility: fmResp,
+            handoverResponsibilities: handoverVal,
+            personallyApprovedDecisions: data.personallyApprovedDecisions || "",
+            twentyFiveYearVision: data.twentyFiveYearVision || "",
           },
         });
         break;
+      }
 
-      case 5:
+      case 5: {
         // Section 5: Working With Digital Farm Management Platforms (Q22-Q27)
+        const supportReasonsVal = typeof data.supportReasons === "string"
+          ? data.supportReasons
+          : JSON.stringify(data.supportReasons || []);
+
         await prisma.digitalPlatform.upsert({
           where: { userId: user.id },
           create: {
             userId: user.id,
-            supportReasons: data.supportReasons,
+            supportReasons: supportReasonsVal,
             otherSupportReason: data.otherSupportReason || "",
-            remoteConfidence: data.remoteConfidence,
-            remoteComfort: data.remoteComfort,
-            recordKeeping: data.recordKeeping,
-            physicalAudits: data.physicalAudits,
+            remoteConfidence: data.remoteConfidence || "",
+            remoteComfort: data.remoteComfort || "",
+            recordKeeping: data.recordKeeping || "",
+            physicalAudits: data.physicalAudits || "",
             additionalNotes: data.additionalNotes || "",
           },
           update: {
-            supportReasons: data.supportReasons,
+            supportReasons: supportReasonsVal,
             otherSupportReason: data.otherSupportReason || "",
-            remoteConfidence: data.remoteConfidence,
-            remoteComfort: data.remoteComfort,
-            recordKeeping: data.recordKeeping,
-            physicalAudits: data.physicalAudits,
+            remoteConfidence: data.remoteConfidence || "",
+            remoteComfort: data.remoteComfort || "",
+            recordKeeping: data.recordKeeping || "",
+            physicalAudits: data.physicalAudits || "",
             additionalNotes: data.additionalNotes || "",
           },
         });
         break;
+      }
 
       default:
         return NextResponse.json({ error: "Invalid step number" }, { status: 400 });

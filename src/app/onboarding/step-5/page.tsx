@@ -23,7 +23,16 @@ export default function DigitalPlatformsPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    let email = "keziah@futurefarms.africa";
+    const cached = localStorage.getItem("future_farms_user");
+    if (cached) {
+      try {
+        const u = JSON.parse(cached);
+        if (u.email) email = u.email;
+      } catch (e) {}
+    }
+
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user?.digitalPlatform) {
@@ -119,11 +128,11 @@ export default function DigitalPlatformsPage() {
         {/* Header */}
         <div className="mb-8">
           <Link
-            href="/onboarding/step-4"
+            href="/onboarding"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors mb-4"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-            Back to Step 4
+            Back to Overview
           </Link>
           <div className="flex items-center gap-3 mb-2">
             <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">
@@ -392,4 +401,3 @@ export default function DigitalPlatformsPage() {
     </AppShell>
   );
 }
-

@@ -35,6 +35,7 @@ model FarmerProfile {
   experienceYears String?
   businessHistory String?
   educationLevel  String?
+  education       String?
   otherEducation  String?
   updatedAt       DateTime @updatedAt
 }
@@ -45,6 +46,7 @@ model FarmManagement {
   user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   mgmtAbility           String?
   operationsResponsible String?
+  opsResponsibility     String?
   operators             String?
   otherOperator         String?
   desiredInvolvement    String?
@@ -62,6 +64,7 @@ model OperatingStyle {
   guidancePreference    String?
   trackingFrequency     String?
   updatePreferences     String?
+  updatePreference      String?
   communicationChannels String?
   updatedAt             DateTime @updatedAt
 }
@@ -89,6 +92,7 @@ model Aspiration {
   marketInsight               String?
   threeToFiveYearRole         String?
   managerResponsibilities     String?
+  fmResponsibility            String?
   handoverResponsibilities    String?
   personallyApprovedDecisions String?
   twentyFiveYearVision        String?
