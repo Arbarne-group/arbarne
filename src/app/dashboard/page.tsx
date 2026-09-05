@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import RadarChart from "@/components/dashboard/RadarChart";
 import { ALL_PILLARS } from "@/data/allPillarsData";
@@ -10,12 +11,35 @@ import {
   getMaturityTier,
   OverallAssessmentResult,
 } from "@/lib/assessmentScoring";
-import { PILLAR_BRANDS } from "@/data/brandColors";
+
+interface ActionItem {
+  id: string;
+  text: string;
+  completed: boolean;
+  category?: string;
+}
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [assessmentResult, setAssessmentResult] = useState<OverallAssessmentResult | null>(null);
+
+  // Modals & Interactive States
+  const [showProgressModal, setShowProgressModal] = useState(false);
+  const [showAllPlanModal, setShowAllPlanModal] = useState(false);
+  const [showStrengthsModal, setShowStrengthsModal] = useState(false);
+  const [showPriorityModal, setShowPriorityModal] = useState(false);
+  const [newActionText, setNewActionText] = useState("");
+  const [showAddAction, setShowAddAction] = useState(false);
+
+  // Checklist Actions State
+  const [actions, setActions] = useState<ActionItem[]>([
+    { id: "act-1", text: "Complete Energy Management learning module", completed: true, category: "Pillar 2" },
+    { id: "act-2", text: "Explore suitable solar solutions", completed: false, category: "Pillar 2" },
+    { id: "act-3", text: "Prepare financial records", completed: false, category: "Pillar 8" },
+    { id: "act-4", text: "Implement daily digital spray & harvest logs", completed: false, category: "Pillar 1" },
+  ]);
 
   useEffect(() => {
     fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
@@ -28,372 +52,682 @@ export default function DashboardPage() {
       .catch(console.error)
       .finally(() => setLoading(false));
 
-    // Load answers from localStorage
+    // Load answers from localStorage or DB
     try {
       const saved = localStorage.getItem("future_farms_all_answers");
       if (saved) {
         const answers = JSON.parse(saved);
         setAssessmentResult(computeAssessmentResults(answers));
       } else {
-        // Compute with empty to get initial framework structure
         setAssessmentResult(computeAssessmentResults({}));
+      }
+
+      const savedActions = localStorage.getItem("future_farms_dashboard_actions");
+      if (savedActions) {
+        setActions(JSON.parse(savedActions));
       }
     } catch (e) {
       console.error(e);
     }
   }, []);
 
+  const handleToggleAction = (id: string) => {
+    const updated = actions.map((act) =>
+      act.id === id ? { ...act, completed: !act.completed } : act
+    );
+    setActions(updated);
+    localStorage.setItem("future_farms_dashboard_actions", JSON.stringify(updated));
+  };
+
+  const handleAddAction = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newActionText.trim()) return;
+    const newItem: ActionItem = {
+      id: `act-${Date.now()}`,
+      text: newActionText.trim(),
+      completed: false,
+      category: "Custom",
+    };
+    const updated = [newItem, ...actions];
+    setActions(updated);
+    setNewActionText("");
+    setShowAddAction(false);
+    localStorage.setItem("future_farms_dashboard_actions", JSON.stringify(updated));
+  };
+
   // Compute canonical radar labels & scores
-  const radarData = useMemo(() => {
-    const labels = ALL_PILLARS.map((p) => {
-      // Short friendly name for chart axis
-      if (p.id === 1) return "Digital Tech";
-      if (p.id === 2) return "Renewable Energy";
-      if (p.id === 3) return "Food Safety";
-      if (p.id === 4) return "Climate Resilience";
-      if (p.id === 5) return "Farm Business";
-      if (p.id === 6) return "Human Capital";
-      if (p.id === 7) return "Market Access";
-      return "Investment Ready";
-    });
+  const radarLabels = [
+    ["P1 Smart Farming", "& Digital Transformation"],
+    "P2 Renewable Energy",
+    ["P3 Food Safety,", "Quality & Compliance"],
+    ["P4 Indigenous Knowledge", "& Climate Resilience"],
+    ["P5 Business", "Performance & Growth"],
+    ["P6 Human Capital,", "Leadership & Operations"],
+    ["P7 Market Access,", "Customer Value"],
+    ["P8 Investment", "Readiness"],
+  ];
 
-    const scores = ALL_PILLARS.map((p) => {
-      const pResult = assessmentResult?.pillarScores.find((r) => r.pillarId === p.id);
-      return pResult ? pResult.score : 75;
-    });
-
-    // Regional benchmark scores for comparison
-    const benchmarkScores = [60, 52, 65, 58, 70, 62, 68, 55];
-
-    return { labels, scores, benchmarkScores };
-  }, [assessmentResult]);
-
-  const pillarDetails = useMemo(() => {
+  const radarScores = useMemo(() => {
     return ALL_PILLARS.map((p) => {
       const pResult = assessmentResult?.pillarScores.find((r) => r.pillarId === p.id);
-      const score = pResult ? pResult.score : 75;
-      const tier = getMaturityTier(score);
-
-      return {
-        id: p.id,
-        name: p.name,
-        score,
-        yesCount: pResult?.yesCount ?? 0,
-        noCount: pResult?.noCount ?? 0,
-        status: tier.label.replace(" Stage", ""),
-        badgeColor:
-          score >= 80
-            ? "bg-primary/10 text-primary border-primary/20"
-            : score >= 60
-            ? "bg-primary-container/20 text-primary border-primary/20"
-            : score >= 40
-            ? "bg-amber-100 text-amber-800 border-amber-200"
-            : "bg-rose-100 text-rose-800 border-rose-200",
-        barColor:
-          score >= 80 ? "bg-primary" : score >= 60 ? "bg-primary/80" : "bg-amber-600",
-      };
+      return pResult ? pResult.score : 67;
     });
   }, [assessmentResult]);
 
-  const overallScore = assessmentResult?.overallFfmiScore ?? 78;
-  const maturityTier = getMaturityTier(overallScore);
+  const benchmarkScores = [62, 50, 62, 62, 55, 50, 70, 50];
+
+  // FFMI out of 24 points (8 pillars * 3 max capability points or normalized score)
+  const overallPercentage = assessmentResult?.overallFfmiScore ?? 67;
+  const ffmiScore24 = Math.round((overallPercentage / 100) * 24) || 16;
+  const maturityTier = getMaturityTier(overallPercentage);
+
+  // Development Plan Priority Items
+  const developmentPlanItems = [
+    {
+      id: 1,
+      num: 1,
+      numColor: "text-error",
+      title: "Energy Efficiency & Management",
+      subtitle: "Pillar 2 • Capability 2.3",
+      transition: "Basic → Developing",
+      pillarId: 2,
+    },
+    {
+      id: 2,
+      num: 2,
+      numColor: "text-[#d97706]",
+      title: "Financial & Investment Documentation",
+      subtitle: "Pillar 8 • Capability 8.3",
+      transition: "Emerging → Basic",
+      pillarId: 8,
+    },
+    {
+      id: 3,
+      num: 3,
+      numColor: "text-[#d97706]",
+      title: "Workforce Planning & Recruitment",
+      subtitle: "Pillar 6 • Capability 6.2",
+      transition: "Developing → Established",
+      pillarId: 6,
+    },
+  ];
 
   return (
     <AppShell
       userName={user?.name || "Keziah Wanjiku"}
       userRole={user?.farmerProfile?.jobTitle === "owner" ? "Farm Owner" : "Farm Operator"}
     >
-      <div className="max-w-[1280px] mx-auto w-full px-4 md:px-10 py-6 space-y-8 pb-20">
-        {/* Page Title & Farm Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-variant pb-6">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-wider mb-1">
-              <span className="material-symbols-outlined text-sm fill">verified</span>
-              <span>Verified Assessment • 2026 Audit</span>
+      <div className="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-background">
+        <div className="max-w-[1280px] mx-auto flex flex-col gap-lg">
+          {/* Top Section: Bento Grid for Maturity Index & Radar */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+            {/* Left Col: Maturity Index */}
+            <div className="col-span-1 lg:col-span-4 flex flex-col gap-gutter">
+              <div className="bg-surface rounded-2xl p-6 shadow-ambient h-full flex flex-col justify-between hover:shadow-hover transition-shadow relative overflow-hidden group border border-outline-variant/40">
+                {/* Subtle decorative background shape */}
+                <div className="absolute -right-10 -top-10 w-32 h-32 bg-primary-container opacity-10 rounded-full blur-2xl group-hover:bg-primary transition-colors duration-500 pointer-events-none" />
+
+                <div>
+                  <h3 className="font-title-md text-title-md text-on-surface-variant mb-1 font-semibold">
+                    Future Farm Maturity Index
+                  </h3>
+                  <p className="font-label-sm text-label-sm text-primary font-bold tracking-wider uppercase mb-6">
+                    FFMI/24
+                  </p>
+
+                  <div className="flex items-baseline gap-1 mb-4">
+                    <span className="font-display-lg text-display-lg text-on-surface font-black">
+                      {ffmiScore24}
+                    </span>
+                    <span className="font-title-md text-title-md text-on-surface-variant font-bold">
+                      /24
+                    </span>
+                  </div>
+
+                  <div className="mb-6">
+                    <p className="font-label-sm text-label-sm text-on-surface-variant mb-2 font-medium">
+                      Classification
+                    </p>
+                    <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm shadow-sm font-semibold">
+                      <span className="material-symbols-outlined text-[18px] mr-1 fill">
+                        verified
+                      </span>
+                      Structured Farm
+                    </span>
+                  </div>
+
+                  <p className="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                    You are on the right track! Keep improving your capabilities to become a Future-Ready Farm.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowProgressModal(true)}
+                  className="w-full py-3 px-4 border border-outline rounded-xl text-primary font-label-sm text-label-sm hover:bg-surface-variant transition-colors flex justify-center items-center gap-2 cursor-pointer font-semibold"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    trending_up
+                  </span>
+                  View Progress Over Time
+                </button>
+              </div>
             </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-on-surface">
-              {user?.farmName || "Highland Greens Organic Farm"}
-            </h1>
-            <p className="text-sm text-on-surface-variant">
-              Comprehensive Future Farms Maturity &amp; Capability Index across all 8 Pillars
-            </p>
+
+            {/* Right Col: Radar Chart (8 Pillar Summary) */}
+            <div className="col-span-1 lg:col-span-8 bg-surface rounded-2xl p-6 shadow-ambient h-[400px] lg:h-auto flex flex-col relative overflow-hidden border border-outline-variant/40">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-title-md text-title-md text-on-surface font-bold">
+                  8 Pillar Summary
+                </h3>
+                <Link
+                  href="/assessment"
+                  className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
+                >
+                  <span>Edit Assessment</span>
+                  <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                </Link>
+              </div>
+
+              <div className="flex-1 w-full h-full min-h-[250px] relative flex justify-center items-center">
+                <RadarChart
+                  labels={radarLabels}
+                  scores={radarScores}
+                  benchmarkScores={benchmarkScores}
+                />
+              </div>
+
+              <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-outline-variant">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-primary" />
+                  <span className="font-label-sm text-label-sm text-on-surface-variant font-medium">
+                    Your Score
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-outline-variant" />
+                  <span className="font-label-sm text-label-sm text-on-surface-variant font-medium">
+                    Average Future Farm
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* Middle Stats Row (Glassmorphism inspired pills) */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <button
               type="button"
-              onClick={() => alert("Downloading Farm Transformation Plan (PDF)...")}
-              className="px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-high text-on-surface font-semibold text-xs flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+              onClick={() => setShowStrengthsModal(true)}
+              className="bg-surface rounded-xl p-4 shadow-ambient border border-surface-variant flex items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer text-left w-full"
             >
-              <span className="material-symbols-outlined text-[18px]">download</span>
-              <span>Export PDF Plan</span>
+              <div>
+                <p className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 font-medium">
+                  <span className="material-symbols-outlined text-[16px] text-primary">
+                    psychiatry
+                  </span>{" "}
+                  Strengths
+                </p>
+                <p className="font-title-md text-title-md text-on-surface mt-1">
+                  <span className="font-bold">3</span> Capabilities
+                </p>
+              </div>
+              <span className="material-symbols-outlined text-on-surface-variant text-sm">
+                chevron_right
+              </span>
             </button>
-            <Link
-              href="/assessment"
-              className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-on-primary font-semibold text-xs flex items-center gap-1.5 shadow-sm btn-shadow hover-lift transition-all"
+
+            <button
+              type="button"
+              onClick={() => setShowPriorityModal(true)}
+              className="bg-surface rounded-xl p-4 shadow-ambient border border-error-container flex items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer text-left w-full"
             >
-              <span className="material-symbols-outlined text-[18px]">edit_note</span>
-              <span>Update Assessment</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* Top Bento Grid: Overall Score & Interactive Radar Chart */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column: Overall Index Score Card */}
-          <div className="lg:col-span-4 flex flex-col gap-6">
-            <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40 flex flex-col justify-between h-full">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                  Overall Maturity Score (FFMI)
-                </span>
-                <div className="flex items-baseline gap-3 my-4">
-                  <span className="text-5xl md:text-6xl font-extrabold text-primary">
-                    {overallScore}
-                  </span>
-                  <span className="text-xl font-bold text-on-surface-variant">
-                    / 100
-                  </span>
-                </div>
-
-                <div
-                  className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold mb-4 border ${maturityTier.badgeColor}`}
-                >
-                  <span className="material-symbols-outlined text-sm fill">workspace_premium</span>
-                  <span>Classification: {maturityTier.label}</span>
-                </div>
-
-                <p className="text-xs text-on-surface-variant leading-relaxed">
-                  {maturityTier.description}
+                <p className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 font-medium">
+                  <span className="material-symbols-outlined text-[16px] text-error">
+                    priority_high
+                  </span>{" "}
+                  Priority Areas
+                </p>
+                <p className="font-title-md text-title-md text-on-surface mt-1">
+                  <span className="font-bold">3</span> Capabilities
                 </p>
               </div>
+              <span className="material-symbols-outlined text-on-surface-variant text-sm">
+                chevron_right
+              </span>
+            </button>
 
-              <div className="pt-6 border-t border-surface-variant/50 mt-6 space-y-3">
-                <div className="flex justify-between items-center text-xs font-semibold text-on-surface">
-                  <span>8-Pillar Alignment</span>
-                  <span className="text-primary font-bold">
-                    {pillarDetails.filter((p) => p.score >= 60).length} of 8 Strong
-                  </span>
-                </div>
-                <div className="w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
-                  <div
-                    className="bg-primary h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${(pillarDetails.filter((p) => p.score >= 60).length / 8) * 100}%`,
-                    }}
-                  />
-                </div>
-                <div className="flex justify-between items-center text-[11px] text-on-surface-variant pt-1">
-                  <span>Total Answered: {assessmentResult?.totalAnswered ?? 0}/200</span>
-                  <Link href="/assessment" className="text-primary font-bold hover:underline">
-                    View Assessment &rarr;
-                  </Link>
-                </div>
+            <Link
+              href="/learning"
+              className="bg-surface rounded-xl p-4 shadow-ambient border border-tertiary-fixed flex items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer"
+            >
+              <div>
+                <p className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 font-medium">
+                  <span className="material-symbols-outlined text-[16px] text-tertiary">
+                    school
+                  </span>{" "}
+                  Learning In Progress
+                </p>
+                <p className="font-title-md text-title-md text-on-surface mt-1">
+                  <span className="font-bold">2</span> Modules
+                </p>
               </div>
-            </div>
+              <span className="material-symbols-outlined text-on-surface-variant text-sm">
+                chevron_right
+              </span>
+            </Link>
+
+            <Link
+              href="/opportunities"
+              className="bg-surface rounded-xl p-4 shadow-ambient border border-secondary-fixed flex items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer"
+            >
+              <div>
+                <p className="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1 font-medium">
+                  <span className="material-symbols-outlined text-[16px] text-secondary">
+                    handshake
+                  </span>{" "}
+                  Opportunities for You
+                </p>
+                <p className="font-title-md text-title-md text-on-surface mt-1">
+                  <span className="font-bold">5</span> New
+                </p>
+              </div>
+              <span className="material-symbols-outlined text-on-surface-variant text-sm">
+                chevron_right
+              </span>
+            </Link>
           </div>
 
-          {/* Right Column: Interactive Radar Chart Canvas */}
-          <div className="lg:col-span-8 bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40 flex flex-col">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-              <div>
-                <h3 className="text-base font-bold text-on-surface">
-                  8-Pillar Farm Maturity Spider Diagram
+          {/* Bottom Section: Lists */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+            {/* My Development Plan */}
+            <div className="bg-surface rounded-2xl p-6 shadow-ambient flex flex-col border border-outline-variant/40">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="font-title-md text-title-md text-on-surface font-bold">
+                  My Development Plan (Top Priorities)
                 </h3>
-                <p className="text-xs text-on-surface-variant">
-                  Comparison between your live assessment scores and regional benchmarks
-                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowAllPlanModal(true)}
+                  className="font-label-sm text-label-sm text-primary hover:underline font-semibold cursor-pointer"
+                >
+                  View All
+                </button>
               </div>
-              <div className="flex items-center gap-4 text-xs font-semibold text-on-surface-variant">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-3 h-3 rounded-full bg-primary inline-block" />
-                  Your Farm
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-3 h-3 rounded-full bg-secondary inline-block" />
-                  Regional Benchmark
-                </span>
+
+              <div className="flex flex-col gap-3 flex-1">
+                {developmentPlanItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center p-3 rounded-xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant group"
+                  >
+                    <span className={`font-title-md text-title-md ${item.numColor} w-8 text-center font-bold`}>
+                      {item.num}
+                    </span>
+                    <div className="flex-1 px-3">
+                      <h4 className="font-label-sm text-label-sm text-on-surface font-semibold">
+                        {item.title}
+                      </h4>
+                      <p className="text-xs text-on-surface-variant">
+                        {item.subtitle}
+                      </p>
+                    </div>
+                    <div className="hidden sm:block px-3">
+                      <span className="text-xs px-2 py-1 bg-surface-variant text-on-surface-variant rounded-md font-medium">
+                        {item.transition}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => router.push(`/assessment`)}
+                      className="ml-auto px-4 py-1.5 border border-primary text-primary rounded-full font-label-sm text-label-sm hover:bg-primary-container hover:text-on-primary-container transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer font-semibold"
+                    >
+                      Continue
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Radar Chart */}
-            <div className="flex-1">
-              <RadarChart
-                labels={radarData.labels}
-                scores={radarData.scores}
-                benchmarkScores={radarData.benchmarkScores}
-              />
+            {/* Recommended Next Actions */}
+            <div className="bg-surface rounded-2xl p-6 shadow-ambient flex flex-col relative overflow-hidden border border-outline-variant/40">
+              {/* Abstract soft green shape background */}
+              <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary-fixed-dim opacity-10 rounded-tl-full pointer-events-none" />
+
+              <div className="flex justify-between items-center mb-6 z-10">
+                <h3 className="font-title-md text-title-md text-on-surface font-bold">
+                  Recommended Next Actions
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowAddAction(!showAddAction)}
+                  className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-sm">add_circle</span>
+                  <span>{showAddAction ? "Cancel" : "Add Task"}</span>
+                </button>
+              </div>
+
+              {showAddAction && (
+                <form onSubmit={handleAddAction} className="mb-4 z-10 flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter action or goal..."
+                    value={newActionText}
+                    onChange={(e) => setNewActionText(e.target.value)}
+                    className="flex-1 text-xs p-2 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface focus:outline-primary"
+                    autoFocus
+                  />
+                  <button
+                    type="submit"
+                    className="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary/90 transition-colors"
+                  >
+                    Add
+                  </button>
+                </form>
+              )}
+
+              <div className="flex flex-col gap-4 flex-1 z-10">
+                {actions.map((act) => (
+                  <label
+                    key={act.id}
+                    className="flex items-start gap-3 cursor-pointer group select-none"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={act.completed}
+                      onChange={() => handleToggleAction(act.id)}
+                      className="mt-1 rounded text-primary focus:ring-primary border-outline-variant w-5 h-5 bg-surface transition-colors cursor-pointer"
+                    />
+                    <div>
+                      <p
+                        className={`font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors ${
+                          act.completed ? "line-through opacity-60" : ""
+                        }`}
+                      >
+                        {act.text}
+                      </p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+
+              <div className="mt-6 z-10 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setShowAllPlanModal(true)}
+                  className="py-2 px-6 bg-surface-variant text-on-surface rounded-full font-label-sm text-label-sm hover:bg-outline-variant transition-colors font-semibold cursor-pointer"
+                >
+                  View All Actions
+                </button>
+              </div>
             </div>
+          </div>
+
+          {/* Footer Info */}
+          <div className="flex justify-between items-center py-4 text-xs text-on-surface-variant px-4 border-t border-outline-variant/30">
+            <p>Last Assessment: 15 May 2025</p>
+            <p>Next Assessment Recommended: 15 Aug 2025</p>
           </div>
         </div>
 
-        {/* Middle Section: Pillar Breakdown */}
-        <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h3 className="text-lg font-bold text-on-surface">
-                Detailed 8-Pillar Performance
-              </h3>
-              <p className="text-xs text-on-surface-variant">
-                Click on any pillar card to view its diagnostic questions and tailored action plan.
-              </p>
-            </div>
-            <Link
-              href="/assessment"
-              className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
-            >
-              <span>Open Assessment</span>
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {pillarDetails.map((pillar) => {
-              const pBrand = PILLAR_BRANDS[pillar.id];
-              return (
-                <Link
-                  key={pillar.id}
-                  href="/assessment"
-                  className="p-4 rounded-2xl border border-surface-variant/60 bg-surface/50 hover:bg-surface-container-high transition-all flex flex-col justify-between group cursor-pointer"
+        {/* Modal: View Progress Over Time */}
+        {showProgressModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-surface rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-outline-variant animate-fade-in-up">
+              <div className="flex justify-between items-center mb-4 border-b border-surface-variant pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-2xl">trending_up</span>
+                  <h3 className="text-lg font-bold text-on-surface">Maturity Progress Over Time</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowProgressModal(false)}
+                  className="p-1 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-variant transition-colors cursor-pointer"
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-2.5 max-w-[70%]">
-                      <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-xs ${pBrand.iconBg} ${pBrand.iconColor}`}
-                      >
-                        <span className="material-symbols-outlined text-[18px]">
-                          {pBrand.icon}
-                        </span>
-                      </div>
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+
+              <p className="text-xs text-on-surface-variant mb-6 leading-relaxed">
+                Track your farm&apos;s capability index growth across quarterly diagnostic reviews.
+              </p>
+
+              <div className="space-y-4 mb-6">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low border border-outline-variant/40">
+                  <div>
+                    <span className="text-xs font-bold text-on-surface block">Q4 2024 • Initial Baseline</span>
+                    <span className="text-[11px] text-on-surface-variant">Stage: Emerging Farm</span>
+                  </div>
+                  <span className="text-sm font-extrabold text-on-surface-variant">11 / 24</span>
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low border border-outline-variant/40">
+                  <div>
+                    <span className="text-xs font-bold text-on-surface block">Q1 2025 • Post Soil & Water Audit</span>
+                    <span className="text-[11px] text-on-surface-variant">Stage: Developing Farm</span>
+                  </div>
+                  <span className="text-sm font-extrabold text-on-surface-variant">14 / 24</span>
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-primary/10 border border-primary/30">
+                  <div>
+                    <span className="text-xs font-bold text-primary block">Q2 2025 (Current) • Structured Audit</span>
+                    <span className="text-[11px] text-primary/80">Stage: Structured Farm</span>
+                  </div>
+                  <span className="text-base font-black text-primary">16 / 24</span>
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low border border-dashed border-outline-variant">
+                  <div>
+                    <span className="text-xs font-bold text-on-surface-variant block">Q3 2025 (Target Projection)</span>
+                    <span className="text-[11px] text-on-surface-variant">Target: Future-Ready Farm</span>
+                  </div>
+                  <span className="text-sm font-bold text-secondary">19 / 24</span>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-3 border-t border-surface-variant">
+                <button
+                  type="button"
+                  onClick={() => setShowProgressModal(false)}
+                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal: Full Development Plan */}
+        {showAllPlanModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-surface rounded-3xl p-6 md:p-8 max-w-2xl w-full shadow-2xl border border-outline-variant max-h-[85vh] overflow-y-auto animate-fade-in-up">
+              <div className="flex justify-between items-center mb-4 border-b border-surface-variant pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-2xl">assignment</span>
+                  <h3 className="text-lg font-bold text-on-surface">Complete 8-Pillar Development Plan</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowAllPlanModal(false)}
+                  className="p-1 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-variant transition-colors cursor-pointer"
+                >
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+
+              <p className="text-xs text-on-surface-variant mb-5">
+                Prioritized capability milestones across all 8 Future Farms transformation pillars.
+              </p>
+
+              <div className="space-y-3 mb-6">
+                {ALL_PILLARS.map((p, idx) => (
+                  <div
+                    key={p.id}
+                    className="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 flex items-center justify-between gap-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="w-6 h-6 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
+                        {idx + 1}
+                      </span>
                       <div>
-                        <span className="text-[10px] font-mono font-bold text-primary block">
-                          Pillar 0{pillar.id}
-                        </span>
-                        <span className="text-xs font-semibold text-on-surface group-hover:text-primary transition-colors line-clamp-1">
-                          {pillar.name}
-                        </span>
+                        <h4 className="text-xs font-bold text-on-surface">{p.name}</h4>
+                        <p className="text-[11px] text-on-surface-variant">{p.principle}</p>
                       </div>
                     </div>
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${pillar.badgeColor}`}
+                    <Link
+                      href="/assessment"
+                      className="px-3 py-1.5 rounded-lg border border-primary text-primary text-xs font-semibold hover:bg-primary hover:text-white transition-colors shrink-0"
                     >
-                      {pillar.status}
-                    </span>
+                      Audit
+                    </Link>
                   </div>
+                ))}
+              </div>
 
-                <div className="flex items-baseline justify-between my-2">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-on-surface">
-                      {pillar.score}%
-                    </span>
-                    <span className="text-xs text-on-surface-variant font-medium">
-                      ({pillar.yesCount}/25)
-                    </span>
+              <div className="flex justify-end gap-3 pt-3 border-t border-surface-variant">
+                <button
+                  type="button"
+                  onClick={() => setShowAllPlanModal(false)}
+                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                >
+                  Close Plan
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal: Strengths */}
+        {showStrengthsModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-surface rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-outline-variant animate-fade-in-up">
+              <div className="flex justify-between items-center mb-4 border-b border-surface-variant pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-2xl">psychiatry</span>
+                  <h3 className="text-lg font-bold text-on-surface">Verified Farm Strengths</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowStrengthsModal(false)}
+                  className="p-1 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-variant transition-colors cursor-pointer"
+                >
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+
+              <p className="text-xs text-on-surface-variant mb-4">
+                These capabilities are operating at or above the Future-Ready benchmark:
+              </p>
+
+              <div className="space-y-3 mb-6">
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <div className="flex items-center gap-2 font-bold text-xs text-emerald-900 mb-1">
+                    <span className="material-symbols-outlined text-emerald-700 text-sm fill">check_circle</span>
+                    <span>P4.4: Soil & Water Conservation Ecosystem</span>
                   </div>
-                  <span className="text-[11px] text-amber-700 font-semibold">
-                    {pillar.noCount} Gaps
-                  </span>
+                  <p className="text-[11px] text-emerald-800">Practicing cover cropping, biological mulching, and rainwater retention.</p>
                 </div>
 
-                <div className="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
-                  <div
-                    className={`${pillar.barColor} h-full rounded-full transition-all duration-300`}
-                    style={{ width: `${pillar.score}%` }}
-                  />
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <div className="flex items-center gap-2 font-bold text-xs text-emerald-900 mb-1">
+                    <span className="material-symbols-outlined text-emerald-700 text-sm fill">check_circle</span>
+                    <span>P3.2: Export Traceability & Hygiene</span>
+                  </div>
+                  <p className="text-[11px] text-emerald-800">Harvest batch tagging and sanitized sorting tables in place.</p>
                 </div>
-              </Link>
-            );
-          })}
-          </div>
-        </div>
 
-        {/* Action Priority Quick Wins */}
-        <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-bold text-primary uppercase">Prescriptive Interventions</span>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                  Priority Actions
-                </span>
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <div className="flex items-center gap-2 font-bold text-xs text-emerald-900 mb-1">
+                    <span className="material-symbols-outlined text-emerald-700 text-sm fill">check_circle</span>
+                    <span>P7.1: Direct Premium Offtaker Contracts</span>
+                  </div>
+                  <p className="text-[11px] text-emerald-800">Long-term supply agreements established with wholesale distributors.</p>
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-on-surface">
-                Immediate Transformation Roadmap
-              </h3>
-              <p className="text-xs text-on-surface-variant">
-                Targeted actions to unlock higher productivity, credit access, and export compliance.
-              </p>
-            </div>
-            <Link
-              href="/assessment"
-              className="px-4 py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold text-xs transition-colors self-start sm:self-center"
-            >
-              View Full Gap Roadmap &rarr;
-            </Link>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-5 rounded-2xl border border-emerald-200 bg-emerald-50/40 space-y-2">
-              <div className="flex justify-between items-start">
-                <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">
-                  🟢 Quick Win
-                </span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white text-emerald-800 border border-emerald-200">
-                  Pillar 1 • Digital
-                </span>
-              </div>
-              <h4 className="text-sm font-bold text-on-surface">
-                Daily Digital Activity Logs
-              </h4>
-              <p className="text-xs text-on-surface-variant">
-                Begin recording routine farm operations on smartphone to establish auditable yield and input history.
-              </p>
-              <div className="pt-2 text-[11px] font-semibold text-emerald-800">
-                Support: FAAB Record Keeping Module
-              </div>
-            </div>
-
-            <div className="p-5 rounded-2xl border border-amber-200 bg-amber-50/40 space-y-2">
-              <div className="flex justify-between items-start">
-                <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wider">
-                  🟡 Medium Term
-                </span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white text-amber-800 border border-amber-200">
-                  Pillar 2 • Energy
-                </span>
-              </div>
-              <h4 className="text-sm font-bold text-on-surface">
-                Solar Irrigation Feasibility
-              </h4>
-              <p className="text-xs text-on-surface-variant">
-                Evaluate expected costs, fuel savings, and crop yield increase by transitioning pump to solar PV.
-              </p>
-              <div className="pt-2 text-[11px] font-semibold text-amber-800">
-                Support: Clean Farms Advisory
-              </div>
-            </div>
-
-            <div className="p-5 rounded-2xl border border-blue-200 bg-blue-50/40 space-y-2">
-              <div className="flex justify-between items-start">
-                <span className="text-[11px] font-bold text-blue-800 uppercase tracking-wider">
-                  🔵 Strategic
-                </span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white text-blue-800 border border-blue-200">
-                  Pillar 8 • Investment
-                </span>
-              </div>
-              <h4 className="text-sm font-bold text-on-surface">
-                Investor-Grade Financial Audit
-              </h4>
-              <p className="text-xs text-on-surface-variant">
-                Compile 3-year cash flow statements and asset register to qualify for blended agricultural credit.
-              </p>
-              <div className="pt-2 text-[11px] font-semibold text-blue-800">
-                Support: Commercial Banks &amp; Future Farms Hub
+              <div className="flex justify-end pt-3 border-t border-surface-variant">
+                <button
+                  type="button"
+                  onClick={() => setShowStrengthsModal(false)}
+                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                >
+                  Done
+                </button>
               </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Modal: Priority Areas */}
+        {showPriorityModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-surface rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-outline-variant animate-fade-in-up">
+              <div className="flex justify-between items-center mb-4 border-b border-surface-variant pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-error text-2xl">priority_high</span>
+                  <h3 className="text-lg font-bold text-on-surface">Urgent Priority Gap Areas</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowPriorityModal(false)}
+                  className="p-1 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-variant transition-colors cursor-pointer"
+                >
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+
+              <p className="text-xs text-on-surface-variant mb-4">
+                Targeting these 3 priority areas will yield the highest ROI on your overall maturity score:
+              </p>
+
+              <div className="space-y-3 mb-6">
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200">
+                  <div className="flex items-center gap-2 font-bold text-xs text-rose-900 mb-1">
+                    <span className="material-symbols-outlined text-rose-700 text-sm fill">warning</span>
+                    <span>Pillar 2 • Renewable Energy Integration (Score: 40%)</span>
+                  </div>
+                  <p className="text-[11px] text-rose-800">High diesel generator expenditure. Solar drip irrigation transition recommended.</p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200">
+                  <div className="flex items-center gap-2 font-bold text-xs text-rose-900 mb-1">
+                    <span className="material-symbols-outlined text-rose-700 text-sm fill">warning</span>
+                    <span>Pillar 8 • Financial Documentation (Score: 45%)</span>
+                  </div>
+                  <p className="text-[11px] text-rose-800">Incomplete balance sheet and seasonal cash flow modeling limit bank loan eligibility.</p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200">
+                  <div className="flex items-center gap-2 font-bold text-xs text-rose-900 mb-1">
+                    <span className="material-symbols-outlined text-rose-700 text-sm fill">warning</span>
+                    <span>Pillar 6 • Formal Workforce Contracts (Score: 50%)</span>
+                  </div>
+                  <p className="text-[11px] text-rose-800">Establish written health & safety equipment logs for casual workers.</p>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center pt-3 border-t border-surface-variant">
+                <Link
+                  href="/assessment"
+                  className="text-xs font-bold text-primary hover:underline"
+                >
+                  Go to Assessment &rarr;
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowPriorityModal(false)}
+                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                >
+                  Got It
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </AppShell>
   );

@@ -60,6 +60,21 @@ export default function AssessmentStandardQuestionnaireView({
     }
   };
 
+  const handleSaveProgress = () => {
+    try {
+      localStorage.setItem(
+        "future_farms_assessment_answers",
+        JSON.stringify(answers)
+      );
+      setToastMessage("Progress saved successfully!");
+      setTimeout(() => {
+        setToastMessage(null);
+      }, 3000);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleSaveAndExit = () => {
     try {
       localStorage.setItem(
@@ -128,17 +143,17 @@ export default function AssessmentStandardQuestionnaireView({
             </h1>
           </div>
 
-          <div className="flex items-center gap-6 justify-between md:justify-end">
+          <div className="flex items-center gap-4 justify-between md:justify-end">
             <div className="font-label-sm text-label-sm text-on-surface-variant font-medium">
               Questions {startQuestionNum}-{endQuestionNum} of {totalQuestionsInPillar}
             </div>
             <button
               type="button"
-              onClick={handleSaveAndExit}
+              onClick={handleSaveProgress}
               className="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm flex items-center gap-1 border border-outline-variant rounded-lg px-3 py-1.5 hover:bg-surface-container-low cursor-pointer"
             >
               <span className="material-symbols-outlined text-[18px]">save</span>{" "}
-              Save &amp; Exit
+              Save Progress
             </button>
           </div>
         </div>
@@ -257,10 +272,10 @@ export default function AssessmentStandardQuestionnaireView({
               className="flex items-center gap-2 px-8 py-3 bg-[#009924] hover:bg-primary-container text-white font-label-sm text-label-sm font-medium rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer"
             >
               {currentCapIndex === pillar.capabilities.length - 1
-                ? `Complete Pillar ${pillar.id}`
+                ? `Submit Pillar 0${pillar.id} Assessment`
                 : "Next"}
               <span className="material-symbols-outlined text-[20px]">
-                chevron_right
+                {currentCapIndex === pillar.capabilities.length - 1 ? "send" : "chevron_right"}
               </span>
             </button>
           </div>

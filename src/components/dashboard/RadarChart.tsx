@@ -21,51 +21,55 @@ ChartJS.register(
 );
 
 interface RadarChartProps {
-  labels?: string[];
+  labels?: (string | string[])[];
   scores?: number[];
   benchmarkScores?: number[];
+  showLegend?: boolean;
 }
 
 export default function RadarChart({
   labels = [
-    "Soil & Crops",
-    "Water Mgmt",
-    "Technology",
-    "Business",
-    "Labor & Team",
-    "Resilience",
-    "Market Access",
-    "Post-Harvest",
+    ["P1 Smart Farming", "& Digital Transformation"],
+    "P2 Renewable Energy",
+    ["P3 Food Safety,", "Quality & Compliance"],
+    ["P4 Indigenous Knowledge", "& Climate Resilience"],
+    ["P5 Business", "Performance & Growth"],
+    ["P6 Human Capital,", "Leadership & Operations"],
+    ["P7 Market Access,", "Customer Value"],
+    ["P8 Investment", "Readiness"],
   ],
-  scores = [82, 75, 68, 85, 79, 72, 88, 76],
-  benchmarkScores = [65, 60, 50, 70, 62, 58, 72, 60],
+  scores = [78, 62, 70, 84, 65, 75, 72, 58],
+  benchmarkScores = [65, 55, 62, 60, 68, 60, 70, 55],
+  showLegend = false,
 }: RadarChartProps) {
   const data = {
     labels,
     datasets: [
       {
-        label: "Your Farm Score",
+        label: "Your Score",
         data: scores,
-        backgroundColor: "rgba(0, 153, 36, 0.25)",
-        borderColor: "#009924",
-        borderWidth: 2.5,
-        pointBackgroundColor: "#009924",
+        backgroundColor: "rgba(0, 107, 22, 0.2)",
+        borderColor: "#006b16",
+        pointBackgroundColor: "#006b16",
         pointBorderColor: "#ffffff",
         pointHoverBackgroundColor: "#ffffff",
-        pointHoverBorderColor: "#009924",
+        pointHoverBorderColor: "#006b16",
         pointRadius: 4,
         pointHoverRadius: 6,
+        borderWidth: 2,
       },
       {
-        label: "Regional Benchmark",
+        label: "Average Future Farm",
         data: benchmarkScores,
-        backgroundColor: "rgba(26, 104, 108, 0.1)",
-        borderColor: "#1a686c",
-        borderWidth: 1.5,
-        borderDash: [4, 4],
-        pointBackgroundColor: "#1a686c",
+        backgroundColor: "transparent",
+        borderColor: "#bdcab6",
+        borderDash: [5, 5],
+        pointBackgroundColor: "#bdcab6",
         pointBorderColor: "#ffffff",
+        pointHoverBackgroundColor: "#ffffff",
+        pointHoverBorderColor: "#bdcab6",
         pointRadius: 3,
+        borderWidth: 2,
       },
     ],
   };
@@ -76,24 +80,26 @@ export default function RadarChart({
     scales: {
       r: {
         angleLines: {
-          color: "rgba(110, 123, 105, 0.2)",
+          color: "#e1e3e4",
         },
         grid: {
-          color: "rgba(110, 123, 105, 0.15)",
+          color: "#e1e3e4",
+          circular: true,
         },
         pointLabels: {
           font: {
-            family: "var(--font-outfit)",
-            size: 11,
-            weight: 600,
+            family: "'Outfit', sans-serif",
+            size: 10,
+            weight: 500,
           },
-          color: "#191c1d",
+          color: "#3e4a3b",
+          padding: 12,
         },
         ticks: {
           display: false,
           min: 0,
           max: 100,
-          stepSize: 20,
+          stepSize: 25,
         },
         suggestedMin: 0,
         suggestedMax: 100,
@@ -101,22 +107,26 @@ export default function RadarChart({
     },
     plugins: {
       legend: {
+        display: showLegend,
         position: "bottom" as const,
         labels: {
           font: {
-            family: "var(--font-outfit)",
+            family: "'Outfit', sans-serif",
             size: 12,
-            weight: 500,
           },
           color: "#3e4a3b",
-          usePointStyle: true,
-          padding: 16,
         },
       },
       tooltip: {
+        backgroundColor: "rgba(25, 28, 29, 0.9)",
+        titleFont: { size: 12, family: "'Outfit', sans-serif" },
+        bodyFont: { size: 12, family: "'Outfit', sans-serif" },
+        padding: 10,
+        cornerRadius: 8,
+        displayColors: true,
         callbacks: {
           label: function (context: any) {
-            return ` ${context.dataset.label}: ${context.raw} / 100`;
+            return ` ${context.dataset.label}: ${context.raw}%`;
           },
         },
       },
@@ -124,7 +134,7 @@ export default function RadarChart({
   };
 
   return (
-    <div className="w-full h-[320px] md:h-[360px] flex items-center justify-center">
+    <div className="w-full h-full min-h-[260px] md:min-h-[290px] flex items-center justify-center">
       <Radar data={data} options={options} />
     </div>
   );

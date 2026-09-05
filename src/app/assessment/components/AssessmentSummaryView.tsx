@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
+import Link from "next/link";
 import {
   getPillarById,
   ALL_PILLARS,
   DEFAULT_PILLAR_2_ANSWERS,
 } from "@/data/assessmentData";
+import { ALL_PILLARS as CANONICAL_PILLARS } from "@/data/allPillarsData";
 import {
   getCapabilityTier,
   getCapabilityFeedbackText,
@@ -78,6 +80,18 @@ export default function AssessmentSummaryView({
 
   const totalQuestions = pillar.capabilities.flatMap((c) => c.questions).length || 25;
   const totalYes = capabilityScores.reduce((acc, c) => acc + c.yesCount, 0);
+
+  // Canonical Pillar with rich recommendations for gaps
+  const canonicalPillar = useMemo(() => {
+    return CANONICAL_PILLARS.find((p) => p.id === pillarId);
+  }, [pillarId]);
+
+  const pillarGaps = useMemo(() => {
+    if (!canonicalPillar) return [];
+    return canonicalPillar.capabilities
+      .flatMap((c) => c.questions)
+      .filter((q) => answers[q.id] === "no");
+  }, [canonicalPillar, answers]);
 
   // Gauge calculation: circumference = 125.6, offset = 125.6 * (1 - ratio)
   const clampedRatio = Math.max(0, Math.min(1, totalYes / totalQuestions));
@@ -344,6 +358,110 @@ export default function AssessmentSummaryView({
               </div>
             );
           })}
+        </div>
+
+        {/* Targeted Recommendations Section for Questions Answered "No" */}
+        <div className="w-full space-y-4 mb-xl text-left">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h2 className="font-title-md text-lg font-semibold text-on-surface flex items-center gap-2">
+                <span className="material-symbols-outlined text-amber-600">lightbulb</span>
+                <span>Targeted Recommendations &amp; Action Plan</span>
+              </h2>
+              <p className="text-xs text-on-surface-variant mt-0.5">
+                Actionable guidance tailored specifically to the operational areas marked as &ldquo;No&rdquo;.
+              </p>
+            </div>
+            <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200 self-start sm:self-auto">
+              {pillarGaps.length} Recommendations
+            </span>
+          </div>
+
+          {pillarGaps.length === 0 ? (
+            <div className="bg-surface rounded-2xl p-8 border border-primary/20 text-center space-y-2">
+              <span className="material-symbols-outlined text-primary text-4xl">verified</span>
+              <h4 className="text-base font-bold text-on-surface">
+                Outstanding! Zero Operational Gaps
+              </h4>
+              <p className="text-xs text-on-surface-variant max-w-md mx-auto">
+                You have verified all 25 diagnostic capabilities for this pillar. Your farm demonstrates advanced operating maturity in this area.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {pillarGaps.map((q) => (
+                <div
+                  key={q.id}
+                  className="bg-surface rounded-2xl p-5 md:p-6 border border-amber-200/80 shadow-level-1 space-y-4"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-surface-variant pb-3">
+                    <div className="flex items-start gap-3">
+                      <span className="font-mono text-xs font-bold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-lg shrink-0 mt-0.5">
+                        {q.id}
+                      </span>
+                      <div>
+                        <h4 className="text-sm md:text-base font-bold text-on-surface leading-snug">
+                          {q.question}
+                        </h4>
+                      </div>
+                    </div>
+
+                    <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-surface-variant text-on-surface-variant border border-outline-variant/60 shrink-0 self-start">
+                      Priority: {q.priority}
+                    </span>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <h5 className="text-xs font-bold text-on-surface mb-1 flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-[16px] text-primary">task_alt</span>
+                        <span>Recommended Action</span>
+                      </h5>
+                      <p className="text-xs text-on-surface-variant leading-relaxed bg-surface-container-low p-3 rounded-xl border border-outline-variant/40">
+                        {q.recommendation}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="p-3 rounded-xl bg-surface-container-high border border-outline-variant/40">
+                        <h6 className="text-[11px] font-bold text-on-surface mb-1">
+                          Why It Matters
+                        </h6>
+                        <p className="text-[11px] text-on-surface-variant leading-relaxed">
+                          {q.whyItMatters}
+                        </p>
+                      </div>
+
+                      <div className="p-3 rounded-xl bg-primary/5 border border-primary/20">
+                        <h6 className="text-[11px] font-bold text-primary mb-1 flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[14px]">bolt</span>
+                          <span>Immediate Quick Win</span>
+                        </h6>
+                        <p className="text-[11px] text-on-surface leading-relaxed">
+                          {q.quickWin}
+                        </p>
+                      </div>
+                    </div>
+
+                    {q.supportAvailable && (
+                      <div className="pt-2 border-t border-surface-variant/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
+                        <span className="text-on-surface-variant">
+                          <strong>Support Available:</strong> {q.supportAvailable}
+                        </span>
+                        <Link
+                          href="/service-desk"
+                          className="text-primary font-bold hover:underline inline-flex items-center gap-1"
+                        >
+                          <span>Request Advisory Support</span>
+                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Actions */}
