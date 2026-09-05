@@ -80,10 +80,10 @@ export default function DigitalPlatformsPage() {
           },
         }),
       });
-      router.push("/pricing");
+      router.push("/assessment");
     } catch (e) {
       console.error(e);
-      router.push("/pricing");
+      router.push("/assessment");
     } finally {
       setSaving(false);
     }
@@ -393,7 +393,7 @@ export default function DigitalPlatformsPage() {
             disabled={saving}
             className="px-8 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm btn-shadow hover-lift transition-all flex items-center gap-2 cursor-pointer disabled:opacity-70"
           >
-            <span>{saving ? "Saving..." : "Complete & Review Pricing"}</span>
+            <span>{saving ? "Saving..." : "Complete & Start Assessment"}</span>
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
           </button>
         </div>

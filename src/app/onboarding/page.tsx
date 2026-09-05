@@ -97,7 +97,7 @@ export default function OnboardingOverviewPage() {
     : !isStep3Done ? "/onboarding/step-3"
     : !isStep4Done ? "/onboarding/step-4"
     : !isStep5Done ? "/onboarding/step-5"
-    : "/pricing";
+    : "/assessment";
 
   return (
     <AppShell userName={userName} userRole={userRole}>
@@ -224,7 +224,7 @@ export default function OnboardingOverviewPage() {
               href={nextStepHref}
               className="bg-primary hover:bg-primary/90 text-white text-sm font-semibold px-8 py-3.5 rounded-xl shadow-sm hover:shadow-md btn-shadow hover-lift transition-all flex items-center gap-2"
             >
-              <span>{completedCount === totalSections ? "Proceed to Assessment Pricing" : "Continue Onboarding"}</span>
+              <span>{completedCount === totalSections ? "Proceed to Assessment" : "Continue Onboarding"}</span>
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
           </div>

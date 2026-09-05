@@ -112,13 +112,13 @@ export default function Home() {
                 href="/onboarding/step-4"
                 className="p-3 bg-surface-container-lowest rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary transition-all text-center font-medium shadow-xs"
               >
-                7. Digital Platforms
+                7. Aspirations
               </Link>
               <Link
                 href="/onboarding/step-5"
                 className="p-3 bg-surface-container-lowest rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary transition-all text-center font-medium shadow-xs"
               >
-                8. Aspirations
+                8. Digital Platforms
               </Link>
               <Link
                 href="/assessment"
