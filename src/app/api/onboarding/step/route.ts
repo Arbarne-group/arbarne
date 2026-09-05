@@ -219,3 +219,31 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Failed to save step." }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const email = searchParams.get("email") || "keziah@futurefarms.africa";
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    await prisma.$transaction([
+      prisma.farmerProfile.deleteMany({ where: { userId: user.id } }),
+      prisma.farmManagement.deleteMany({ where: { userId: user.id } }),
+      prisma.operatingStyle.deleteMany({ where: { userId: user.id } }),
+      prisma.aspiration.deleteMany({ where: { userId: user.id } }),
+      prisma.digitalPlatform.deleteMany({ where: { userId: user.id } }),
+    ]);
+
+    return NextResponse.json({ success: true, message: "Onboarding reset successfully" });
+  } catch (error: any) {
+    console.error("Error resetting onboarding:", error);
+    return NextResponse.json({ error: "Failed to reset onboarding" }, { status: 500 });
+  }
+}

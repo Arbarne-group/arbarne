@@ -6,6 +6,7 @@ import AppShell from "@/components/layout/AppShell";
 
 export default function OnboardingOverviewPage() {
   const [user, setUser] = useState<any>(null);
+  const [resetting, setResetting] = useState(false);
 
   const isStep1Done = Boolean(user?.farmerProfile?.jobTitle);
   const isStep2Done = Boolean(user?.farmManagement?.mgmtAbility);
@@ -18,27 +19,40 @@ export default function OnboardingOverviewPage() {
   const progressPercent = Math.round((completedCount / totalSections) * 100);
 
   useEffect(() => {
-    // Attempt to load from localStorage or fetch user from DB
-    const cached = localStorage.getItem("future_farms_user");
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        setUser(parsed);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
     // Fetch user details from database
     fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
       .then((res) => res.json())
       .then((data) => {
         if (data.user) {
           setUser(data.user);
+          localStorage.setItem("future_farms_user", JSON.stringify(data.user));
         }
       })
       .catch((err) => console.error(err));
   }, []);
+
+  const handleResetOnboarding = async () => {
+    if (!confirm("Are you sure you want to reset all onboarding responses to start fresh?")) return;
+    setResetting(true);
+    try {
+      localStorage.removeItem("future_farms_user");
+      await fetch("/api/onboarding/step?email=keziah@futurefarms.africa", {
+        method: "DELETE",
+      });
+      setUser((prev: any) => ({
+        ...prev,
+        farmerProfile: null,
+        farmManagement: null,
+        operatingStyle: null,
+        aspiration: null,
+        digitalPlatform: null,
+      }));
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setResetting(false);
+    }
+  };
 
   const userName = user?.name || "Keziah Wanjiku";
   const userRole = user?.farmerProfile?.jobTitle || "Farm Owner";
@@ -123,7 +137,11 @@ export default function OnboardingOverviewPage() {
                       href={nextStepHref}
                       className="text-primary hover:underline inline-flex items-center gap-1 cursor-pointer font-semibold"
                     >
-                      {completedCount === totalSections ? "Review Completed Onboarding" : "Continue Onboarding"}
+                      {completedCount === 0
+                        ? "Start Onboarding"
+                        : completedCount === totalSections
+                        ? "Review Completed Onboarding"
+                        : "Continue Onboarding"}
                       <span className="material-symbols-outlined text-sm">
                         arrow_forward
                       </span>
@@ -158,7 +176,7 @@ export default function OnboardingOverviewPage() {
 
         {/* Questionnaire Grid */}
         <section>
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
             <div>
               <h2 className="text-xl md:text-2xl font-bold text-on-surface">
                 Farmer &amp; Farm Onboarding Sections
@@ -167,9 +185,21 @@ export default function OnboardingOverviewPage() {
                 Answer all 27 questions across 5 sections to establish your farm maturity baseline
               </p>
             </div>
-            <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full">
-              Phase 1: Initial Profiling
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleResetOnboarding}
+                disabled={resetting}
+                className="text-xs font-semibold text-on-surface-variant hover:text-error bg-surface-container-high hover:bg-error/10 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                title="Clear all responses and restart onboarding from scratch"
+              >
+                <span className="material-symbols-outlined text-[15px]">restart_alt</span>
+                <span>{resetting ? "Resetting..." : "Reset Responses"}</span>
+              </button>
+              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full">
+                Phase 1: Initial Profiling
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-10">
@@ -224,7 +254,13 @@ export default function OnboardingOverviewPage() {
               href={nextStepHref}
               className="bg-primary hover:bg-primary/90 text-white text-sm font-semibold px-8 py-3.5 rounded-xl shadow-sm hover:shadow-md btn-shadow hover-lift transition-all flex items-center gap-2"
             >
-              <span>{completedCount === totalSections ? "Proceed to Assessment" : "Continue Onboarding"}</span>
+              <span>
+                {completedCount === 0
+                  ? "Start Onboarding"
+                  : completedCount === totalSections
+                  ? "Proceed to Assessment"
+                  : "Continue Onboarding"}
+              </span>
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
           </div>

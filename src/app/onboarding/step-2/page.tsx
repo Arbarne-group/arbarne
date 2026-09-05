@@ -7,14 +7,10 @@ import AppShell from "@/components/layout/AppShell";
 
 export default function FarmManagementPage() {
   const router = useRouter();
-  const [mgmtAbility, setMgmtAbility] = useState(
-    "I direct farm operations confidently and delegate execution to my team."
-  );
-  const [operationsResponsible, setOperationsResponsible] = useState("A Farm Manager");
+  const [mgmtAbility, setMgmtAbility] = useState("");
+  const [operationsResponsible, setOperationsResponsible] = useState("");
   const [otherOperator, setOtherOperator] = useState("");
-  const [desiredInvolvement, setDesiredInvolvement] = useState(
-    "Strategically involved — I want to focus on business direction while the Farm Manager handles operations."
-  );
+  const [desiredInvolvement, setDesiredInvolvement] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {

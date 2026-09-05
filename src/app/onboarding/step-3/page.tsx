@@ -7,23 +7,13 @@ import AppShell from "@/components/layout/AppShell";
 
 export default function OperatingStylePage() {
   const router = useRouter();
-  const [decisionStyle, setDecisionStyle] = useState(
-    "Gather data and analyse the situation before acting."
-  );
-  const [failureResponse, setFailureResponse] = useState(
-    "I first investigate the problem before changing course."
-  );
-  const [obstacles, setObstacles] = useState<string[]>([
-    "Finance",
-    "Time",
-    "Access to markets",
-  ]);
+  const [decisionStyle, setDecisionStyle] = useState("");
+  const [failureResponse, setFailureResponse] = useState("");
+  const [obstacles, setObstacles] = useState<string[]>([]);
   const [otherObstacle, setOtherObstacle] = useState("");
-  const [guidancePreference, setGuidancePreference] = useState(
-    "Structured — give me clear plans, actions, and deadlines."
-  );
-  const [trackingFrequency, setTrackingFrequency] = useState("Weekly");
-  const [updatePreferences, setUpdatePreferences] = useState("Weekly operational updates");
+  const [guidancePreference, setGuidancePreference] = useState("");
+  const [trackingFrequency, setTrackingFrequency] = useState("");
+  const [updatePreferences, setUpdatePreferences] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {

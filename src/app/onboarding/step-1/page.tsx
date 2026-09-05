@@ -7,11 +7,11 @@ import AppShell from "@/components/layout/AppShell";
 
 export default function FarmerProfilePage() {
   const router = useRouter();
-  const [jobTitle, setJobTitle] = useState("Farm Owner");
-  const [valueChain, setValueChain] = useState("Horticulture & Specialty Vegetables");
-  const [experienceYears, setExperienceYears] = useState("4–6 years");
-  const [businessHistory, setBusinessHistory] = useState("Yes, I currently run a business");
-  const [educationLevel, setEducationLevel] = useState("Undergraduate degree");
+  const [jobTitle, setJobTitle] = useState("");
+  const [valueChain, setValueChain] = useState("");
+  const [experienceYears, setExperienceYears] = useState("");
+  const [businessHistory, setBusinessHistory] = useState("");
+  const [educationLevel, setEducationLevel] = useState("");
   const [otherEducation, setOtherEducation] = useState("");
   const [saving, setSaving] = useState(false);
 

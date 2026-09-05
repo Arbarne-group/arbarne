@@ -7,19 +7,13 @@ import AppShell from "@/components/layout/AppShell";
 
 export default function DigitalPlatformsPage() {
   const router = useRouter();
-  const [supportReasons, setSupportReasons] = useState(
-    "I want better visibility into what is happening on the farm."
-  );
+  const [supportReasons, setSupportReasons] = useState("");
   const [otherSupportReason, setOtherSupportReason] = useState("");
-  const [remoteConfidence, setRemoteConfidence] = useState(
-    "Weekly video walkthroughs, digital field logs with geotagged photo verification, and real-time inventory dashboards."
-  );
-  const [remoteComfort, setRemoteComfort] = useState("Yes");
-  const [recordKeeping, setRecordKeeping] = useState("Yes");
-  const [physicalAudits, setPhysicalAudits] = useState("Yes, with prior scheduling");
-  const [additionalNotes, setAdditionalNotes] = useState(
-    "Looking to expand cold-chain storage and achieve export certification."
-  );
+  const [remoteConfidence, setRemoteConfidence] = useState("");
+  const [remoteComfort, setRemoteComfort] = useState("");
+  const [recordKeeping, setRecordKeeping] = useState("");
+  const [physicalAudits, setPhysicalAudits] = useState("");
+  const [additionalNotes, setAdditionalNotes] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {

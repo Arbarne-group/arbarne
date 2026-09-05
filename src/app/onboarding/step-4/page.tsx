@@ -7,32 +7,13 @@ import AppShell from "@/components/layout/AppShell";
 
 export default function AspirationsPage() {
   const router = useRouter();
-  const [twelveMonthSuccess, setTwelveMonthSuccess] = useState(
-    "Achieve 30% yield increase and certify for regional export markets."
-  );
-  const [greatestImpactSupport, setGreatestImpactSupport] = useState(
-    "Precision irrigation automation and cold storage financing."
-  );
-  const [marketInsight, setMarketInsight] = useState(
-    "Contracted supermarket supply chains yield 40% higher margins than open brokers."
-  );
-  const [threeToFiveYearRole, setThreeToFiveYearRole] = useState(
-    "Strategic planning, investor relations, and regional farm network expansion."
-  );
-  const [managerResponsibilities, setManagerResponsibilities] = useState<string[]>([
-    "Production planning",
-    "Day-to-day operations",
-    "Worker supervision",
-    "Cost control",
-    "Farm records",
-    "Reporting",
-  ]);
-  const [personallyApprovedDecisions, setPersonallyApprovedDecisions] = useState(
-    "Capital expenditures over $5,000 and major customer contract agreements."
-  );
-  const [twentyFiveYearVision, setTwentyFiveYearVision] = useState(
-    "Thriving, climate-resilient African farms powered by automated telemetry, solar cold-chains, and equitable farmer cooperatives."
-  );
+  const [twelveMonthSuccess, setTwelveMonthSuccess] = useState("");
+  const [greatestImpactSupport, setGreatestImpactSupport] = useState("");
+  const [marketInsight, setMarketInsight] = useState("");
+  const [threeToFiveYearRole, setThreeToFiveYearRole] = useState("");
+  const [managerResponsibilities, setManagerResponsibilities] = useState<string[]>([]);
+  const [personallyApprovedDecisions, setPersonallyApprovedDecisions] = useState("");
+  const [twentyFiveYearVision, setTwentyFiveYearVision] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {

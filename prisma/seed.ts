@@ -13,7 +13,7 @@ async function main() {
     where: { email: "keziah@futurefarms.africa" },
   });
 
-  // Demo user: Keziah
+  // Demo user: Keziah (Fresh / Incomplete onboarding to test and view questions)
   const user = await prisma.user.create({
     data: {
       email: "keziah@futurefarms.africa",
@@ -21,64 +21,6 @@ async function main() {
       passwordHash,
       phone: "+254 712 345 678",
       farmName: "Highland Greens Organic Farm",
-      farmerProfile: {
-        create: {
-          jobTitle: "Farm Owner",
-          valueChain: "Horticulture & Specialty Vegetables",
-          experienceYears: "4–6 years",
-          businessHistory: "Yes, I currently run a business",
-          educationLevel: "Undergraduate degree",
-          education: "Undergraduate degree",
-          otherEducation: "",
-        },
-      },
-      farmManagement: {
-        create: {
-          mgmtAbility: "I direct farm operations confidently and delegate execution to my team.",
-          operationsResponsible: "A Farm Manager",
-          opsResponsibility: "A Farm Manager",
-          operators: JSON.stringify(["I am", "A Farm Manager"]),
-          otherOperator: "",
-          desiredInvolvement: "Strategically involved — I want to focus on business direction while the Farm Manager handles operations.",
-        },
-      },
-      operatingStyle: {
-        create: {
-          decisionStyle: "Gather data and analyse the situation before acting.",
-          failureResponse: "I first investigate the problem before changing course.",
-          obstacles: JSON.stringify(["Finance", "Time", "Access to markets"]),
-          otherObstacle: "",
-          guidancePreference: "Structured — give me clear plans, actions, and deadlines.",
-          trackingFrequency: "Weekly",
-          updatePreferences: "Weekly operational updates",
-          updatePreference: "Weekly operational updates",
-          communicationChannels: JSON.stringify(["Weekly operational updates", "Monthly performance reports"]),
-        },
-      },
-      digitalPlatform: {
-        create: {
-          supportReasons: "I want better visibility into what is happening on the farm.",
-          otherSupportReason: "",
-          remoteConfidence: "Weekly video updates, real-time sensor data, and verified inventory logs.",
-          remoteComfort: "Yes",
-          recordKeeping: "Yes",
-          physicalAudits: "Yes, with prior scheduling",
-          additionalNotes: "Looking to expand cold-chain storage and export organic produce.",
-        },
-      },
-      aspiration: {
-        create: {
-          twelveMonthSuccess: "Achieve 30% yield increase and certify for regional export markets.",
-          greatestImpactSupport: "Precision irrigation automation and cold storage financing.",
-          marketInsight: "Direct-to-supermarket contracts pay 40% higher margins than open market brokers.",
-          threeToFiveYearRole: "Strategic direction, investor relations, and regional farm network expansion.",
-          managerResponsibilities: JSON.stringify(["Production planning", "Day-to-day operations", "Worker supervision", "Cost control", "Reporting"]),
-          fmResponsibility: "Production planning, Day-to-day operations, Worker supervision, Cost control, Reporting",
-          handoverResponsibilities: JSON.stringify(["Production planning", "Day-to-day operations", "Worker supervision", "Cost control", "Reporting"]),
-          personallyApprovedDecisions: "Capital expenditures above $5,000 and major commercial contract agreements.",
-          twentyFiveYearVision: "Fully tech-enabled, climate-resilient African agriculture feeding global cities sustainably.",
-        },
-      },
       orders: {
         create: [
           {
