@@ -558,28 +558,16 @@ export default function AssessmentPage() {
             </div>
 
             {/* Bottom Floating Bar */}
-            <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface/95 backdrop-blur-md border-t border-surface-variant px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-3 z-30 shadow-level-2">
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-on-surface-variant font-medium">
-                  Pillar {currentPillar.id} of 8:
-                </span>
-                <span className="text-base font-black text-primary">
-                  {currentPillarScoreResult.score}% ({currentPillarScoreResult.yesCount} / 25 Yes)
-                </span>
-                <span className="text-xs text-on-surface-variant hidden sm:inline">|</span>
-                <span className="text-xs text-on-surface-variant hidden sm:inline">
-                  Overall FFMI: <strong className="text-primary">{scoringResults.overallFfmiScore}%</strong>
-                </span>
-              </div>
+            <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface/95 backdrop-blur-md border-t border-surface-variant px-6 py-4 flex justify-between items-center z-30 shadow-level-2">
+              <button
+                type="button"
+                onClick={() => setViewMode("overview")}
+                className="px-4 py-2 rounded-xl border border-outline-variant bg-surface hover:bg-surface-variant text-on-surface font-semibold text-xs cursor-pointer"
+              >
+                &larr; Back to Overview
+              </button>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setViewMode("overview")}
-                  className="px-4 py-2 rounded-xl border border-outline-variant bg-surface hover:bg-surface-variant text-on-surface font-semibold text-xs cursor-pointer"
-                >
-                  Overview Grid
-                </button>
                 {selectedPillarId > 1 && (
                   <button
                     type="button"
@@ -587,7 +575,7 @@ export default function AssessmentPage() {
                       setSelectedPillarId(selectedPillarId - 1);
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
-                    className="px-3 py-2 rounded-xl border border-outline-variant bg-surface hover:bg-surface-variant text-on-surface font-semibold text-xs flex items-center gap-1 cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl border border-outline-variant bg-surface hover:bg-surface-variant text-on-surface font-semibold text-xs flex items-center gap-1 cursor-pointer"
                   >
                     <span className="material-symbols-outlined text-[16px]">arrow_back</span>
                     <span>Prev Pillar</span>
