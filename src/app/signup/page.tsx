@@ -72,8 +72,7 @@ export default function SignupPage() {
         <div
           className="absolute inset-0 h-full w-full bg-cover bg-center"
           style={{
-            backgroundImage:
-              "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGvmyW_iCOmYyPwkGp3vckhLEVCzHw2dhEYGTAKtjTVWVde9bOch4L-cipVHJ03vnywNHKmY5AyG66Bp1Wrnjgk-xxP-J5DRWBvJaJX8GFSNqiw-k2V6w70KbHz2uGKRPDjvI1qw2Nh9wgn1BUY_MQ7uYmOcvxnVDrcULwJU2MyO54BJpjcxB74hrtI-XavAjDY9xBmk7xAzeMjtDUdwdx2-iztSXT0iy5akM3XFZSlOlqNMna_KY')",
+            backgroundImage: "url('/images/smart-farm-landscape.jpg')",
           }}
         >
           {/* Overlays */}

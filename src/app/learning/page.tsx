@@ -28,8 +28,7 @@ export default function DigitalLearningPage() {
       role: "Agricultural Water Systems Lead",
       badge: "High Impact for Your Farm",
       progress: 60,
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuCGvmyW_iCOmYyPwkGp3vckhLEVCzHw2dhEYGTAKtjTVWVde9bOch4L-cipVHJ03vnywNHKmY5AyG66Bp1Wrnjgk-xxP-J5DRWBvJaJX8GFSNqiw-k2V6w70KbHz2uGKRPDjvI1qw2Nh9wgn1BUY_MQ7uYmOcvxnVDrcULwJU2MyO54BJpjcxB74hrtI-XavAjDY9xBmk7xAzeMjtDUdwdx2-iztSXT0iy5akM3XFZSlOlqNMna_KY",
+      image: "/images/irrigation-telemetry.jpg",
       description:
         "Learn how to integrate solar-powered telemetry with low-pressure drip tape to cut fuel pump costs by 28% and eliminate crop stress during hot spells.",
       lessons: [
@@ -49,8 +48,7 @@ export default function DigitalLearningPage() {
       role: "Phytosanitary & Export Specialist",
       badge: "Market Access Required",
       progress: 0,
-      image:
-        "https://lh3.googleusercontent.com/aida/AEtjO1We64MQUaGsXjzRP8tdnhq6TOE5QCcMOaGlV2uds2PGUjSDq0ts_RYK39wdTVQGPipX7Puw4951nBRNnB-XI3bo1m14bR7DBfgaaZDgKmUM7LbgSkRdHXqM9Jum8qVGcvdCxslhOtZd1aCcFZ2olZDV05MulVhotuh9YFrx3pNFvosBFRiYWoGg6O5PrHie_ukd-tGjd0ysF-rBjlmw_e3QynPOyQ8NP_pTcgw1rFeyc6h0Nx5NK4ocFw",
+      image: "/images/export-produce.jpg",
       description:
         "Step-by-step audit checklist for securing direct buyer contracts with European, Middle Eastern, and regional African supermarket chains.",
       lessons: [
@@ -70,8 +68,7 @@ export default function DigitalLearningPage() {
       role: "Cold Chain Logistics Engineer",
       badge: "Reduce Post-Harvest Loss",
       progress: 25,
-      image:
-        "https://lh3.googleusercontent.com/aida/AEtjO1VyfklRqqOiWnHBaFz1qydPdjD6YxAD-yXctUuelHBa1Or1qNSYa_rxGl5QoirNE2t6bkX89EW1NyiFiv7MLpB_wz29dDfHtHPCtYJxyeXbGSb36HBXjkq9y2zu3zxZ6KlIkhWXoSwICDqq5U0yM6HIIl3P-dnB82ZNTwmGq00u3Vx7YJi9nSOIj0aC0CLmTSWsiE9gJhIpd2lmsgeeqWUVf0UiDVkzm5JOmNCU49StKLYMPYUYuGkY",
+      image: "/images/smart-farm-landscape.jpg",
       description:
         "Practical routines for operating walk-in cool rooms, pre-cooling harvested greens, and managing thermal battery storage overnight.",
       lessons: [
@@ -91,8 +88,7 @@ export default function DigitalLearningPage() {
       role: "Agri-Lending Portfolio Manager",
       badge: "Investor Ready",
       progress: 0,
-      image:
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuAHcZ--zOAZIaqKU3S45BkNvc8Xy_P3a--CB0gwn466ssefMYTRS5Bdm0fVc52lrWrTGMMTVxTjPco0pQqJUZ7tbFrjmliK4ofdWxWySVTx9uiR6u-xIlYhGXxeL-Df8fZemuH85s2-iNgC4M50e8yGoxo5Ax5Ss53cXgzAg278AeUa5jvU3a62Ds39W3wpWg2d2pZYjWQAqyGnCwZHSt91oYYjm8txxW3I4nycpSpR2_nr2YfelYE",
+      image: "/images/sustainable-farmer.jpg",
       description:
         "Bridge the gap between planting expenditure and harvest sales. Build robust crop-cycle budgets banks and grantors love.",
       lessons: [
@@ -112,8 +108,7 @@ export default function DigitalLearningPage() {
       role: "Commercial Farm Operator",
       badge: "Delegation Essential",
       progress: 100,
-      image:
-        "https://lh3.googleusercontent.com/aida/AEtjO1We64MQUaGsXjzRP8tdnhq6TOE5QCcMOaGlV2uds2PGUjSDq0ts_RYK39wdTVQGPipX7Puw4951nBRNnB-XI3bo1m14bR7DBfgaaZDgKmUM7LbgSkRdHXqM9Jum8qVGcvdCxslhOtZd1aCcFZ2olZDV05MulVhotuh9YFrx3pNFvosBFRiYWoGg6O5PrHie_ukd-tGjd0ysF-rBjlmw_e3QynPOyQ8NP_pTcgw1rFeyc6h0Nx5NK4ocFw",
+      image: "/images/smart-farm-landscape.jpg",
       description:
         "Free up your time by implementing simple daily shift checklists for supervisors, pest scouting logs, and harvest grading standards.",
       lessons: [

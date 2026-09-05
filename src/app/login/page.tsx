@@ -57,8 +57,7 @@ export default function LoginPage() {
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage:
-                "url('https://lh3.googleusercontent.com/aida/AEtjO1VyfklRqqOiWnHBaFz1qydPdjD6YxAD-yXctUuelHBa1Or1qNSYa_rxGl5QoirNE2t6bkX89EW1NyiFiv7MLpB_wz29dDfHtHPCtYJxyeXbGSb36HBXjkq9y2zu3zxZ6KlIkhWXoSwICDqq5U0yM6HIIl3P-dnB82ZNTwmGq00u3Vx7YJi9nSOIj0aC0CLmTSWsiE9gJhIpd2lmsgeeqWUVf0UiDVkzm5JOmNCU49StKLYMPYUYuGkY')",
+              backgroundImage: "url('/images/smart-farm-landscape.jpg')",
             }}
           />
           {/* Gradient Overlay */}
