@@ -11,11 +11,8 @@ export default function AssessmentPage() {
   // Mode: "overview" (default matching user template) or "questionnaire" (active assessment of a pillar)
   const [viewMode, setViewMode] = useState<"overview" | "questionnaire">("overview");
   const [selectedPillarId, setSelectedPillarId] = useState<number>(1);
-  const [activeCapId, setActiveCapId] = useState<string>("all");
-  const [filterMode, setFilterMode] = useState<"all" | "gaps" | "strengths">("all");
   const [answers, setAnswers] = useState<Record<string, "yes" | "no">>({});
   const [showHistoryModal, setShowHistoryModal] = useState(false);
-  const [showRoadmapModal, setShowRoadmapModal] = useState(false);
 
   // Load answers from localStorage on mount, seeding realistic baseline if empty
   useEffect(() => {
@@ -92,22 +89,10 @@ export default function AssessmentPage() {
     );
   }, [scoringResults, selectedPillarId, currentPillar]);
 
-  // Filter capabilities & questions for display in questionnaire mode
+  // Capabilities & questions for display in questionnaire mode
   const displayedCapabilities = useMemo(() => {
-    let caps = currentPillar.capabilities;
-    if (activeCapId !== "all") {
-      caps = caps.filter((c) => c.id === activeCapId);
-    }
-
-    return caps.map((cap) => ({
-      ...cap,
-      questions: cap.questions.filter((q) => {
-        if (filterMode === "gaps") return answers[q.id] === "no";
-        if (filterMode === "strengths") return answers[q.id] === "yes";
-        return true;
-      }),
-    }));
-  }, [currentPillar, activeCapId, filterMode, answers]);
+    return currentPillar.capabilities;
+  }, [currentPillar]);
 
   // Meta for the 8 pillar bento cards aligned with official FFF branding colors:
   // FFF: #045d61 + #009924 | FFV: #1565C0 | FFMI: #FFD700 | Recommendation Engine: #EF6C00 | FAAB: #045D61 + #009924
@@ -223,7 +208,6 @@ export default function AssessmentPage() {
                   type="button"
                   onClick={() => {
                     setSelectedPillarId(1);
-                    setActiveCapId("all");
                     setViewMode("questionnaire");
                   }}
                   className="text-primary font-label-sm text-sm hover:underline flex items-center gap-1 cursor-pointer font-semibold"
@@ -241,7 +225,6 @@ export default function AssessmentPage() {
                       key={pillar.id}
                       onClick={() => {
                         setSelectedPillarId(pillar.id);
-                        setActiveCapId("all");
                         setViewMode("questionnaire");
                       }}
                       className="bg-surface rounded-2xl p-5 shadow-level-1 border border-outline-variant/50 hover:shadow-level-2 transition-all flex flex-col justify-between gap-4 hover:-translate-y-1 cursor-pointer group"
@@ -295,7 +278,6 @@ export default function AssessmentPage() {
                 type="button"
                 onClick={() => {
                   setSelectedPillarId(1);
-                  setActiveCapId("all");
                   setViewMode("questionnaire");
                 }}
                 className="bg-[#009924] text-on-primary font-label-sm text-sm px-10 py-4 rounded-xl shadow-level-1 hover:shadow-level-2 transition-all duration-200 flex items-center gap-3 w-full md:w-auto justify-center font-semibold group cursor-pointer"
@@ -315,7 +297,7 @@ export default function AssessmentPage() {
         {viewMode === "questionnaire" && (
           <div className="space-y-8 animate-fade-in">
             {/* Top Navigation Bar: Return to Overview */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-variant pb-4">
+            <div className="flex items-center justify-between border-b border-surface-variant pb-4">
               <button
                 type="button"
                 onClick={() => setViewMode("overview")}
@@ -324,24 +306,6 @@ export default function AssessmentPage() {
                 <span className="material-symbols-outlined text-sm">arrow_back</span>
                 <span>Back to Assessment Overview</span>
               </button>
-
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowRoadmapModal(true)}
-                  className="px-4 py-2 rounded-xl border border-primary/30 bg-primary/5 hover:bg-primary/10 text-primary font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
-                >
-                  <span className="material-symbols-outlined text-[18px]">assignment</span>
-                  <span>Gap Roadmap ({currentPillarScoreResult.noCount} Gaps)</span>
-                </button>
-                <Link
-                  href="/dashboard"
-                  className="px-4 py-2 rounded-xl bg-primary text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm hover:bg-primary/90 transition-all"
-                >
-                  <span className="material-symbols-outlined text-[18px]">insights</span>
-                  <span>View Farm Radar</span>
-                </Link>
-              </div>
             </div>
 
             {/* Active Pillar Hero Card with FFF Brand Colors */}
@@ -391,145 +355,6 @@ export default function AssessmentPage() {
                 </div>
               );
             })()}
-
-            {/* 8-Pillar Tab Buttons with Brand Icons */}
-            <div className="overflow-x-auto pb-2">
-              <div className="flex gap-2 min-w-max">
-                {ALL_PILLARS.map((p) => {
-                  const isSelected = p.id === selectedPillarId;
-                  const pScore =
-                    scoringResults.pillarScores.find((r) => r.pillarId === p.id)?.score ?? 0;
-                  const pBrand = PILLAR_BRANDS[p.id];
-
-                  return (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedPillarId(p.id);
-                        setActiveCapId("all");
-                      }}
-                      className={`px-3.5 py-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-                        isSelected
-                          ? "bg-primary text-white border-primary shadow-sm"
-                          : "bg-surface text-on-surface-variant border-outline-variant/60 hover:bg-surface-container-high"
-                      }`}
-                    >
-                      <div
-                        className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${
-                          isSelected
-                            ? "bg-white/20 text-white"
-                            : `${pBrand.iconBg} ${pBrand.iconColor}`
-                        }`}
-                      >
-                        <span className="material-symbols-outlined text-[16px]">
-                          {pBrand.icon}
-                        </span>
-                      </div>
-                      <span
-                        className={`text-[10px] font-bold px-1.5 py-0.2 rounded-md ${
-                          isSelected ? "bg-white/20 text-white" : "bg-surface-variant text-on-surface"
-                        }`}
-                      >
-                        P0{p.id}
-                      </span>
-                      <span className="truncate max-w-[140px]">{p.name}</span>
-                      <span
-                        className={`text-[10px] font-black px-1.5 py-0.2 rounded-full ${
-                          isSelected ? "bg-white/20 text-white" : "text-primary"
-                        }`}
-                      >
-                        {pScore}%
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Capability Sub-Tabs & Filter Options */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-surface-variant pb-3">
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveCapId("all")}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                    activeCapId === "all"
-                      ? "bg-primary text-white shadow-xs"
-                      : "bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest"
-                  }`}
-                >
-                  All 5 Capabilities
-                </button>
-                {currentPillar.capabilities.map((cap) => {
-                  const cScore =
-                    currentPillarScoreResult.capabilityScores[cap.id]?.score ?? 0;
-
-                  return (
-                    <button
-                      key={cap.id}
-                      type="button"
-                      onClick={() => setActiveCapId(cap.id)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
-                        activeCapId === cap.id
-                          ? "bg-primary text-white shadow-xs"
-                          : "bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest"
-                      }`}
-                    >
-                      <span>
-                        {cap.id}: {cap.name}
-                      </span>
-                      <span
-                        className={`text-[10px] px-1.5 rounded-full font-bold ${
-                          activeCapId === cap.id ? "bg-white/20 text-white" : "text-primary"
-                        }`}
-                      >
-                        {cScore}%
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Gaps vs Strengths Toggle */}
-              <div className="flex items-center gap-1 bg-surface-container-high p-1 rounded-xl">
-                <button
-                  type="button"
-                  onClick={() => setFilterMode("all")}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
-                    filterMode === "all"
-                      ? "bg-surface text-on-surface shadow-xs"
-                      : "text-on-surface-variant"
-                  }`}
-                >
-                  All
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFilterMode("gaps")}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer flex items-center gap-1 ${
-                    filterMode === "gaps"
-                      ? "bg-amber-600 text-white shadow-xs"
-                      : "text-on-surface-variant"
-                  }`}
-                >
-                  <span>Gaps</span>
-                  <span className="text-[10px]">({currentPillarScoreResult.noCount})</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFilterMode("strengths")}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer flex items-center gap-1 ${
-                    filterMode === "strengths"
-                      ? "bg-primary text-white shadow-xs"
-                      : "text-on-surface-variant"
-                  }`}
-                >
-                  <span>Strengths</span>
-                  <span className="text-[10px]">({currentPillarScoreResult.yesCount})</span>
-                </button>
-              </div>
-            </div>
 
             {/* Questions List by Capability */}
             <div className="space-y-8">
@@ -736,18 +561,18 @@ export default function AssessmentPage() {
             <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface/95 backdrop-blur-md border-t border-surface-variant px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-3 z-30 shadow-level-2">
               <div className="flex items-center gap-3">
                 <span className="text-xs text-on-surface-variant font-medium">
-                  Pillar {currentPillar.id} Score:
+                  Pillar {currentPillar.id} of 8:
                 </span>
-                <span className="text-lg font-black text-primary">
+                <span className="text-base font-black text-primary">
                   {currentPillarScoreResult.score}% ({currentPillarScoreResult.yesCount} / 25 Yes)
                 </span>
-                <span className="text-xs text-on-surface-variant">|</span>
-                <span className="text-xs text-on-surface-variant">
+                <span className="text-xs text-on-surface-variant hidden sm:inline">|</span>
+                <span className="text-xs text-on-surface-variant hidden sm:inline">
                   Overall FFMI: <strong className="text-primary">{scoringResults.overallFfmiScore}%</strong>
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setViewMode("overview")}
@@ -755,13 +580,41 @@ export default function AssessmentPage() {
                 >
                   Overview Grid
                 </button>
-                <Link
-                  href="/dashboard"
-                  className="px-6 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs btn-shadow flex items-center gap-1.5"
-                >
-                  <span>Sync with Radar</span>
-                  <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                </Link>
+                {selectedPillarId > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedPillarId(selectedPillarId - 1);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="px-3 py-2 rounded-xl border border-outline-variant bg-surface hover:bg-surface-variant text-on-surface font-semibold text-xs flex items-center gap-1 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+                    <span>Prev Pillar</span>
+                  </button>
+                )}
+                {selectedPillarId < 8 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedPillarId(selectedPillarId + 1);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="px-5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs btn-shadow flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <span>Next: Pillar 0{selectedPillarId + 1}</span>
+                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("overview")}
+                    className="px-5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs btn-shadow flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <span>Complete Assessment</span>
+                    <span className="material-symbols-outlined text-[16px]">check</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -828,74 +681,6 @@ export default function AssessmentPage() {
                   className="px-5 py-2 rounded-xl bg-primary text-white font-semibold text-xs cursor-pointer"
                 >
                   Close
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ========================================================
-            MODAL: GAP ROADMAP & ACTION PLAN
-            ======================================================== */}
-        {showRoadmapModal && (
-          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-            <div className="bg-surface rounded-3xl p-6 md:p-8 max-w-3xl w-full shadow-2xl border border-surface-variant my-8 max-h-[90vh] flex flex-col animate-fade-in-up">
-              <div className="flex justify-between items-start border-b border-surface-variant pb-4 mb-4 shrink-0">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-bold text-primary uppercase">Action Plan</span>
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
-                      {currentPillarScoreResult.noCount} Gaps
-                    </span>
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-on-surface">
-                    Pillar {currentPillar.id}: {currentPillar.name} Gaps
-                  </h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowRoadmapModal(false)}
-                  className="p-1.5 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-variant cursor-pointer"
-                >
-                  <span className="material-symbols-outlined">close</span>
-                </button>
-              </div>
-
-              <div className="overflow-y-auto pr-2 space-y-4 flex-1">
-                {currentPillar.capabilities
-                  .flatMap((c) => c.questions)
-                  .filter((q) => answers[q.id] === "no")
-                  .map((gap) => (
-                    <div
-                      key={gap.id}
-                      className="p-4 rounded-xl bg-surface border border-outline-variant/60 text-xs space-y-2"
-                    >
-                      <div className="flex justify-between items-start gap-2">
-                        <span className="font-bold text-on-surface">
-                          {gap.id}: {gap.question}
-                        </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant">
-                          {gap.priority}
-                        </span>
-                      </div>
-                      <p className="text-on-surface-variant leading-relaxed">
-                        <strong>Action:</strong> {gap.recommendation}
-                      </p>
-                      <div className="bg-primary/5 p-2 rounded-lg text-[11px] text-on-surface flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-[14px] text-primary">bolt</span>
-                        <span><strong>Quick Win:</strong> {gap.quickWin}</span>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-
-              <div className="pt-4 border-t border-surface-variant flex justify-end shrink-0 mt-4">
-                <button
-                  type="button"
-                  onClick={() => setShowRoadmapModal(false)}
-                  className="px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs cursor-pointer"
-                >
-                  Return to Assessment
                 </button>
               </div>
             </div>
