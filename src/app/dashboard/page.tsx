@@ -10,6 +10,7 @@ import {
   getMaturityTier,
   OverallAssessmentResult,
 } from "@/lib/assessmentScoring";
+import { PILLAR_BRANDS } from "@/data/brandColors";
 
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
@@ -247,27 +248,38 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {pillarDetails.map((pillar) => (
-              <Link
-                key={pillar.id}
-                href="/assessment"
-                className="p-4 rounded-2xl border border-surface-variant/60 bg-surface/50 hover:bg-surface-container-high transition-all flex flex-col justify-between group cursor-pointer"
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <div className="max-w-[70%]">
-                    <span className="text-[10px] font-mono font-bold text-primary block">
-                      Pillar 0{pillar.id}
-                    </span>
-                    <span className="text-xs font-semibold text-on-surface group-hover:text-primary transition-colors line-clamp-1">
-                      {pillar.name}
+            {pillarDetails.map((pillar) => {
+              const pBrand = PILLAR_BRANDS[pillar.id];
+              return (
+                <Link
+                  key={pillar.id}
+                  href="/assessment"
+                  className="p-4 rounded-2xl border border-surface-variant/60 bg-surface/50 hover:bg-surface-container-high transition-all flex flex-col justify-between group cursor-pointer"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center gap-2.5 max-w-[70%]">
+                      <div
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-xs ${pBrand.iconBg} ${pBrand.iconColor}`}
+                      >
+                        <span className="material-symbols-outlined text-[18px]">
+                          {pBrand.icon}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-mono font-bold text-primary block">
+                          Pillar 0{pillar.id}
+                        </span>
+                        <span className="text-xs font-semibold text-on-surface group-hover:text-primary transition-colors line-clamp-1">
+                          {pillar.name}
+                        </span>
+                      </div>
+                    </div>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${pillar.badgeColor}`}
+                    >
+                      {pillar.status}
                     </span>
                   </div>
-                  <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${pillar.badgeColor}`}
-                  >
-                    {pillar.status}
-                  </span>
-                </div>
 
                 <div className="flex items-baseline justify-between my-2">
                   <div className="flex items-baseline gap-1">
@@ -290,7 +302,8 @@ export default function DashboardPage() {
                   />
                 </div>
               </Link>
-            ))}
+            );
+          })}
           </div>
         </div>
 

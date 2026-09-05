@@ -5,6 +5,7 @@ import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
 import { ALL_PILLARS, PillarData, Capability, AssessmentQuestion } from "@/data/allPillarsData";
 import { computeAssessmentResults, getMaturityTier } from "@/lib/assessmentScoring";
+import { PILLAR_BRANDS } from "@/data/brandColors";
 
 export default function AssessmentPage() {
   // Mode: "overview" (default matching user template) or "questionnaire" (active assessment of a pillar)
@@ -108,57 +109,9 @@ export default function AssessmentPage() {
     }));
   }, [currentPillar, activeCapId, filterMode, answers]);
 
-  // Meta for the 8 pillar bento cards matching user design tokens
-  const pillarBentoMeta = [
-    {
-      id: 1,
-      name: "Smart Farming & Digital Transformation",
-      icon: "memory",
-      iconBg: "bg-primary-container/20 text-primary",
-    },
-    {
-      id: 2,
-      name: "Productive Use of Renewable Energy",
-      icon: "solar_power",
-      iconBg: "bg-secondary-container/30 text-secondary",
-    },
-    {
-      id: 3,
-      name: "Food Safety, Quality & Compliance",
-      icon: "verified",
-      iconBg: "bg-tertiary-container/20 text-tertiary",
-    },
-    {
-      id: 4,
-      name: "Indigenous Knowledge & Climate Resilience",
-      icon: "psychology",
-      iconBg: "bg-outline-variant/30 text-on-surface-variant",
-    },
-    {
-      id: 5,
-      name: "Farm Business Performance & Growth",
-      icon: "trending_up",
-      iconBg: "bg-primary-container/20 text-primary",
-    },
-    {
-      id: 6,
-      name: "Human Capital, Leadership & Farm Operations",
-      icon: "groups",
-      iconBg: "bg-secondary-container/30 text-secondary",
-    },
-    {
-      id: 7,
-      name: "Market Access, Customer Value & Competitiveness",
-      icon: "storefront",
-      iconBg: "bg-tertiary-container/20 text-tertiary",
-    },
-    {
-      id: 8,
-      name: "Investment Readiness & Enterprise Development",
-      icon: "account_balance",
-      iconBg: "bg-outline-variant/30 text-on-surface-variant",
-    },
-  ];
+  // Meta for the 8 pillar bento cards aligned with official FFF branding colors:
+  // FFF: #045d61 + #009924 | FFV: #1565C0 | FFMI: #FFD700 | Recommendation Engine: #EF6C00 | FAAB: #045D61 + #009924
+  const pillarBentoMeta = Object.values(PILLAR_BRANDS);
 
   const answeredCount = scoringResults.totalAnswered;
   const statusLabel =
@@ -302,20 +255,21 @@ export default function AssessmentPage() {
                     >
                       <div className="flex justify-between items-start">
                         <div
-                          className={`w-10 h-10 rounded-full flex items-center justify-center ${pillar.iconBg}`}
+                          className={`w-11 h-11 rounded-full flex items-center justify-center shadow-xs transition-transform group-hover:scale-110 ${pillar.iconBg} ${pillar.iconColor} ${pillar.borderClass}`}
                         >
-                          <span className="material-symbols-outlined text-[22px]">
+                          <span className="material-symbols-outlined text-[24px]">
                             {pillar.icon}
                           </span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          {pScore > 0 && (
-                            <span className="text-xs font-black text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                              {pScore}%
-                            </span>
-                          )}
-                          <span className="font-label-sm text-xs font-bold text-on-surface-variant bg-surface-variant px-2 py-1 rounded-full">
-                            {pillar.id}
+                          <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${pillar.badgeBg} ${pillar.badgeText}`}
+                            title={`${pillar.element}: ${pillar.meaning}`}
+                          >
+                            {pillar.element.includes("(") ? pillar.element.split("(")[1].replace(")", "") : pillar.element}
+                          </span>
+                          <span className="font-label-sm text-xs font-bold text-on-surface-variant bg-surface-variant px-2 py-0.5 rounded-full">
+                            P0{pillar.id}
                           </span>
                         </div>
                       </div>
@@ -403,41 +357,62 @@ export default function AssessmentPage() {
               </div>
             </div>
 
-            {/* Active Pillar Hero Card */}
-            <div className="bg-surface rounded-3xl p-6 md:p-8 border border-outline-variant/40 shadow-level-1">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                  <div className="inline-flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-wider mb-1">
-                    <span>Pillar {currentPillar.id} of 8</span>
-                    <span>•</span>
-                    <span>Principle: &ldquo;{currentPillar.principle}&rdquo;</span>
-                  </div>
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-on-surface">
-                    {currentPillar.name}
-                  </h2>
-                  <p className="text-xs md:text-sm text-on-surface-variant italic mt-1 max-w-3xl">
-                    &ldquo;{currentPillar.guidingQuestion}&rdquo;
-                  </p>
-                </div>
+            {/* Active Pillar Hero Card with FFF Brand Colors */}
+            {(() => {
+              const activeBrand = PILLAR_BRANDS[currentPillar.id];
+              return (
+                <div className="bg-surface rounded-3xl p-6 md:p-8 border border-outline-variant/40 shadow-level-1">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                      <div
+                        className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-xs ${activeBrand.iconBg} ${activeBrand.iconColor} ${activeBrand.borderClass}`}
+                      >
+                        <span className="material-symbols-outlined text-[32px]">
+                          {activeBrand.icon}
+                        </span>
+                      </div>
+                      <div>
+                        <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider mb-1">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] ${activeBrand.badgeBg} ${activeBrand.badgeText}`}
+                          >
+                            {activeBrand.element}
+                          </span>
+                          <span className="text-on-surface-variant">•</span>
+                          <span className="text-on-surface-variant">
+                            Principle: &ldquo;{currentPillar.principle}&rdquo;
+                          </span>
+                        </div>
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-on-surface">
+                          {currentPillar.name}
+                        </h2>
+                        <p className="text-xs md:text-sm text-on-surface-variant italic mt-1 max-w-3xl">
+                          &ldquo;{currentPillar.guidingQuestion}&rdquo;
+                        </p>
+                      </div>
+                    </div>
 
-                <div className="text-left md:text-right shrink-0 bg-primary-container/10 p-4 rounded-2xl border border-primary/20">
-                  <div className="text-2xl font-black text-primary">
-                    {currentPillarScoreResult.score}%
-                  </div>
-                  <div className="text-xs text-on-surface-variant font-semibold">
-                    {currentPillarScoreResult.yesCount} / 25 Capabilities Verified
+                    <div className="text-left md:text-right shrink-0 bg-surface-container-high p-4 rounded-2xl border border-outline-variant/60">
+                      <div className="text-2xl font-black text-primary">
+                        {currentPillarScoreResult.score}%
+                      </div>
+                      <div className="text-xs text-on-surface-variant font-semibold">
+                        {currentPillarScoreResult.yesCount} / 25 Capabilities Verified
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              );
+            })()}
 
-            {/* 8-Pillar Tab Buttons */}
+            {/* 8-Pillar Tab Buttons with Brand Icons */}
             <div className="overflow-x-auto pb-2">
               <div className="flex gap-2 min-w-max">
                 {ALL_PILLARS.map((p) => {
                   const isSelected = p.id === selectedPillarId;
                   const pScore =
                     scoringResults.pillarScores.find((r) => r.pillarId === p.id)?.score ?? 0;
+                  const pBrand = PILLAR_BRANDS[p.id];
 
                   return (
                     <button
@@ -453,6 +428,17 @@ export default function AssessmentPage() {
                           : "bg-surface text-on-surface-variant border-outline-variant/60 hover:bg-surface-container-high"
                       }`}
                     >
+                      <div
+                        className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${
+                          isSelected
+                            ? "bg-white/20 text-white"
+                            : `${pBrand.iconBg} ${pBrand.iconColor}`
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-[16px]">
+                          {pBrand.icon}
+                        </span>
+                      </div>
                       <span
                         className={`text-[10px] font-bold px-1.5 py-0.2 rounded-md ${
                           isSelected ? "bg-white/20 text-white" : "bg-surface-variant text-on-surface"

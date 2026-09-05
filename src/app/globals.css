@@ -55,6 +55,13 @@
   --color-error-container: #ffdad6;
   --color-on-error: #ffffff;
   --color-on-error-container: #93000a;
+
+  /* Future Farms Brand System */
+  --color-brand-cyan: #045d61;
+  --color-brand-green: #009924;
+  --color-brand-blue: #1565c0;
+  --color-brand-gold: #ffd700;
+  --color-brand-orange: #ef6c00;
 }
 
 /* Material Symbols Outlined Icon variations */
