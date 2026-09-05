@@ -209,11 +209,24 @@ export async function POST(request: Request) {
         break;
       }
 
-      default:
-        return NextResponse.json({ error: "Invalid step number" }, { status: 400 });
     }
 
-    return NextResponse.json({ success: true, message: `Step ${step} saved successfully.` });
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      include: {
+        farmerProfile: true,
+        farmManagement: true,
+        operatingStyle: true,
+        digitalPlatform: true,
+        aspiration: true,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: `Step ${step} saved successfully.`,
+      user: updatedUser,
+    });
   } catch (error: any) {
     console.error("Error saving step:", error);
     return NextResponse.json({ error: "Failed to save step." }, { status: 500 });

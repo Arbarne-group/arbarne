@@ -15,6 +15,7 @@ export default function AspirationsPage() {
   const [personallyApprovedDecisions, setPersonallyApprovedDecisions] = useState("");
   const [twentyFiveYearVision, setTwentyFiveYearVision] = useState("");
   const [saving, setSaving] = useState(false);
+  const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     let email = "keziah@futurefarms.africa";
@@ -92,10 +93,11 @@ export default function AspirationsPage() {
     }
   };
 
-  const handleNext = async () => {
+  const handleSave = async (navigateNext = true) => {
     setSaving(true);
+    setSaveFeedback(null);
     try {
-      await fetch("/api/onboarding/step", {
+      const res = await fetch("/api/onboarding/step", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -114,10 +116,21 @@ export default function AspirationsPage() {
           },
         }),
       });
-      router.push("/onboarding/step-5");
+      const data = await res.json();
+      if (data.user) {
+        localStorage.setItem("future_farms_user", JSON.stringify(data.user));
+      }
+      setSaveFeedback("Progress saved successfully!");
+      setTimeout(() => setSaveFeedback(null), 3000);
+
+      if (navigateNext) {
+        router.push("/onboarding/step-5");
+      }
     } catch (e) {
       console.error(e);
-      router.push("/onboarding/step-5");
+      if (navigateNext) {
+        router.push("/onboarding/step-5");
+      }
     } finally {
       setSaving(false);
     }
@@ -342,18 +355,33 @@ export default function AspirationsPage() {
           >
             &larr; Back to Step 3
           </Link>
-          <div className="text-xs text-on-surface-variant font-medium">
-            Section 4 of 5
+
+          <div className="flex items-center gap-3">
+            {saveFeedback && (
+              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full inline-flex items-center gap-1 animate-fadeIn">
+                <span className="material-symbols-outlined text-[15px]">check_circle</span>
+                {saveFeedback}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => handleSave(false)}
+              disabled={saving}
+              className="px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
+            >
+              <span className="material-symbols-outlined text-[17px]">save</span>
+              <span>Save Draft</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSave(true)}
+              disabled={saving}
+              className="px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
+            >
+              <span>{saving ? "Saving..." : "Save & Continue"}</span>
+              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={handleNext}
-            disabled={saving}
-            className="px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm btn-shadow hover-lift transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
-          >
-            <span>{saving ? "Saving..." : "Save & Continue"}</span>
-            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-          </button>
         </div>
       </div>
     </AppShell>
