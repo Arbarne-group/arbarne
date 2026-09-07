@@ -779,136 +779,153 @@ export default function OnboardingOverviewPage() {
         ) : (
           /* ─────────────────────────────────────────────────────────────
               STAGE 1: INITIAL ONBOARDING IN PROGRESS (STEPS 1 - 5)
+              Exact wording matching design & informed of second onboarding
               ───────────────────────────────────────────────────────────── */
           <div className="space-y-8 animate-fadeIn">
             {/* Hero Section */}
-            <section className="bg-surface-container-lowest rounded-3xl shadow-sm p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden border border-surface-container-high">
-              <div className="flex-1 z-10 space-y-2.5">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-                  <span className="material-symbols-outlined text-[15px]">eco</span>
-                  <span>Future Farms Agritech Platform</span>
-                </div>
+            <section className="bg-surface-container-lowest rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden border border-surface-container-high">
+              {/* Background Decorative Blob */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
-                <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight">
-                  Welcome, {userName}
+              <div className="flex-1 z-10">
+                <h1 className="text-[28px] leading-9 md:text-3xl lg:text-4xl md:leading-tight font-bold text-on-surface mb-2 tracking-tight">
+                  Welcome to Future Farms!
                 </h1>
-
-                <p className="text-xs md:text-sm text-on-surface-variant max-w-xl leading-relaxed">
-                  Start by completing your initial onboarding questionnaire below. This baseline profile helps us tailor agronomy recommendations, equipment financing, and aggregate market access to your farm.
+                <p className="text-sm md:text-base text-on-surface-variant mb-6 max-w-lg leading-relaxed">
+                  Let&apos;s get to know you and your farm so we can personalize your Future Farms journey.
                 </p>
 
-                {/* Progress Card */}
-                <div className="bg-surface-container-low rounded-2xl p-4 border border-surface-container-high max-w-md shadow-xs mt-3">
+                <div className="bg-surface rounded-xl p-5 border border-surface-container-high max-w-md shadow-xs">
                   <div className="flex justify-between items-end mb-2">
                     <div>
-                      <h3 className="font-semibold text-xs text-on-surface mb-0.5">
+                      <h3 className="font-semibold text-xs md:text-sm text-on-surface mb-0.5">
                         <Link
                           href={nextInitialStepHref}
                           className="text-primary hover:underline inline-flex items-center gap-1 font-bold"
                         >
-                          <span>Continue Initial Questionnaire</span>
-                          <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                          <span>Complete Onboarding Process</span>
+                          <span className="material-symbols-outlined text-sm">arrow_forward</span>
                         </Link>
                       </h3>
-                      <p className="text-[11px] text-on-surface-variant">
-                        {initialDoneCount} of {initialTotal} initial steps completed
+                      <p className="text-xs text-on-surface-variant">
+                        {initialDoneCount} of {initialTotal} sections completed
                       </p>
                     </div>
-                    <span className="text-base text-primary font-bold">{initialPercent}%</span>
+                    <span className="text-xl text-primary font-bold">{initialPercent}%</span>
                   </div>
-                  <div className="w-full bg-surface-container-highest rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-surface-container-highest rounded-full h-2.5 mt-3 overflow-hidden">
                     <div
-                      className="bg-primary h-full rounded-full transition-all duration-500"
+                      className="bg-primary h-2.5 rounded-full transition-all duration-500"
                       style={{ width: `${initialPercent}%` }}
                     />
                   </div>
                 </div>
-
-                <div className="pt-2">
-                  <Link
-                    href={nextInitialStepHref}
-                    className="bg-primary hover:bg-primary/90 text-white text-xs font-semibold px-6 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all inline-flex items-center gap-1.5"
-                  >
-                    <span>Continue Questionnaire</span>
-                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                  </Link>
-                </div>
               </div>
 
-              {/* Landscape Image */}
-              <div className="w-full md:w-[320px] h-[200px] md:h-[220px] relative z-10 shrink-0">
+              {/* Hero Image */}
+              <div className="w-full md:w-[380px] h-[240px] md:h-[280px] relative z-10 shrink-0">
                 <img
                   alt="Future Farms Agriculture"
-                  className="w-full h-full object-cover rounded-2xl shadow-md border border-surface-variant/30"
-                  src="/images/smart-farm-landscape.jpg"
+                  className="w-full h-full object-cover rounded-2xl shadow-sm border border-surface-container-high/60"
+                  src="https://lh3.googleusercontent.com/aida/AEtjO1We64MQUaGsXjzRP8tdnhq6TOE5QCcMOaGlV2uds2PGUjSDq0ts_RYK39wdTVQGPipX7Puw4951nBRNnB-XI3bo1m14bR7DBfgaaZDgKmUM7LbgSkRdHXqM9Jum8qVGcvdCxslhOtZd1aCcFZ2olZDV05MulVhotuh9YFrx3pNFvosBFRiYWoGg6O5PrHie_ukd-tGjd0ysF-rBjlmw_e3QynPOyQ8NP_pTcgw1rFeyc6h0Nx5NK4ocFw"
                 />
               </div>
             </section>
 
-            {/* Step Cards Grid */}
-            <section className="space-y-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            {/* Notice Informing Farmer About Second Onboarding & Assessment */}
+            <div className="p-4 rounded-2xl bg-surface-container-low border border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start sm:items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[20px]">info</span>
+                </div>
                 <div>
-                  <h2 className="text-base md:text-lg font-bold text-on-surface">
-                    Initial Onboarding Questionnaire (Steps 1 – 5)
-                  </h2>
-                  <p className="text-xs text-on-surface-variant">
-                    Complete all 5 steps to proceed to Phase 2 and Farm Profile verification
+                  <h4 className="text-xs md:text-sm font-bold text-on-surface">
+                    Two-Stage Onboarding Notice
+                  </h4>
+                  <p className="text-xs text-on-surface-variant mt-0.5 leading-relaxed">
+                    Please finish this initial questionnaire and the <strong>second onboarding section</strong> (Farm Location, Characteristics, Farming System, Business Experience, and Household &amp; Labour) to confirm your Farm Profile and access your <strong>Farm Assessment</strong>.
                   </p>
                 </div>
-                <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-                  Phase 1: Founder &amp; Farm Baseline
+              </div>
+              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full shrink-0 self-start sm:self-auto">
+                Step 1 of 2
+              </span>
+            </div>
+
+            {/* Questionnaire Grid */}
+            <section className="space-y-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <h2 className="text-lg md:text-xl font-bold text-on-surface tracking-tight">
+                  Tell us about yourself &amp; your farm
+                </h2>
+                <span className="text-xs font-semibold text-on-surface-variant">
+                  {initialDoneCount} of {initialTotal} Completed
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                 {initialCards.map((card) => {
                   const isDone = card.isDone;
                   return (
                     <Link
                       key={card.step}
                       href={card.href}
-                      className={`bg-surface-container-lowest rounded-2xl p-5 shadow-xs border transition-all hover:shadow-md flex flex-col justify-between ${
-                        isDone
-                          ? "border-primary/30 hover:border-primary"
-                          : "border-surface-container-high hover:border-primary/40"
-                      }`}
+                      className="bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-surface-container-high hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
                     >
-                      <div className="flex items-start justify-between mb-3">
-                        <div
-                          className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold ${
-                            isDone ? "bg-primary text-white" : "bg-primary/10 text-primary"
-                          }`}
-                        >
-                          <span className="material-symbols-outlined text-[18px]">{card.icon}</span>
-                        </div>
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${
-                            isDone
-                              ? "bg-primary/10 text-primary flex items-center gap-1"
-                              : "bg-surface-container-high text-on-surface-variant"
-                          }`}
-                        >
-                          {isDone && <span className="material-symbols-outlined text-[13px]">check</span>}
-                          {isDone ? "Completed" : card.questions}
-                        </span>
-                      </div>
-
                       <div>
+                        <div className="flex justify-between items-start mb-4">
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                              isDone
+                                ? "bg-primary text-white"
+                                : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
+                            }`}
+                          >
+                            <span className="material-symbols-outlined text-[20px]">{card.icon}</span>
+                          </div>
+                          {isDone ? (
+                            <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                          ) : (
+                            <span className="material-symbols-outlined text-outline text-xl">radio_button_unchecked</span>
+                          )}
+                        </div>
+
                         <div className="text-[11px] font-bold text-primary mb-0.5">
                           Step {card.step} of 5
                         </div>
-                        <h3 className="text-sm font-bold text-on-surface mb-1">{card.title}</h3>
-                        <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">{card.desc}</p>
+                        <h3 className="text-sm font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">
+                          {card.title}
+                        </h3>
+                        <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">
+                          {card.desc}
+                        </p>
                       </div>
 
                       <div className="mt-4 pt-3 border-t border-surface-container-high/60 flex items-center justify-between text-xs font-semibold text-primary">
-                        <span>{isDone ? "Edit Responses" : "Start Step"}</span>
+                        <span>{isDone ? "Edit Responses" : "Start Questionnaire"}</span>
                         <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
                       </div>
                     </Link>
                   );
                 })}
+              </div>
+
+              {/* Continue to My Assessment (locked status explaining second onboarding required) */}
+              <div className="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-surface-container-high/60">
+                <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                  <span className="material-symbols-outlined text-outline text-[18px]">lock</span>
+                  <span>Finish initial &amp; second onboarding sections to unlock My Assessment.</span>
+                </div>
+
+                <button
+                  type="button"
+                  disabled
+                  className="bg-surface-container-high text-on-surface-variant/60 text-xs md:text-sm font-semibold px-6 py-3 rounded-xl flex items-center gap-2 cursor-not-allowed opacity-80"
+                  title="Finish the initial and second onboarding sections to unlock your assessment"
+                >
+                  <span>Continue to My Assessment</span>
+                  <span className="material-symbols-outlined text-sm">lock</span>
+                </button>
               </div>
             </section>
           </div>
