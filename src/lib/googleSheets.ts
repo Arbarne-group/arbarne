@@ -1,6 +1,8 @@
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
+import { prisma } from "@/lib/prisma";
+import { ALL_PILLARS } from "@/data/allPillarsData";
 
 interface ServiceAccountCredentials {
   client_email: string;
@@ -89,6 +91,7 @@ export async function getGoogleSheetsAccessToken(): Promise<string> {
 }
 
 const DEFAULT_SPREADSHEET_ID = "1tEYJhZijyMfaZ8_btZmC9_5UJRLk4af2luL1vKixSyM";
+export const DEFAULT_ASSESSMENT_SPREADSHEET_ID = "1lia89URlWwsngU0E7Kd5zyQTzm-SBWlQj2Lsu08b1wg";
 
 export async function getSpreadsheetMetadata(spreadsheetId?: string) {
   const id = spreadsheetId || process.env.GOOGLE_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
@@ -478,4 +481,178 @@ export async function syncUserOnboardingToSheet(
     return { success: false, error: error.message };
   }
 }
+
+/**
+ * Synchronizes a user's assessment data (FFMI score, pillar scores, question responses)
+ * to the dedicated Assessment Questionnaire Google Spreadsheet:
+ * 1. Assessment Overview (Consolidated score card per farm)
+ * 2. Pillar Submissions Log (History of completed pillars)
+ * 3. Detailed Question Responses (Question-by-question responses)
+ */
+export async function syncUserAssessmentToSheet(
+  userEmail: string,
+  pillarId?: number,
+  spreadsheetId?: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const id =
+      spreadsheetId ||
+      process.env.GOOGLE_ASSESSMENT_SPREADSHEET_ID ||
+      DEFAULT_ASSESSMENT_SPREADSHEET_ID;
+
+    // Fetch user and latest assessment data
+    const user = await prisma.user.findUnique({
+      where: { email: userEmail },
+      include: {
+        farmerProfile: true,
+        farmLocation: true,
+        farmCharacteristics: true,
+        assessments: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          include: {
+            pillarAssessments: true,
+            assessmentResponses: true,
+          },
+        },
+      },
+    });
+
+    if (!user || user.assessments.length === 0) {
+      return { success: true, error: "No assessment found to sync." };
+    }
+
+    const assessment = user.assessments[0];
+    const timestamp = new Date().toISOString().replace("T", " ").substring(0, 19);
+
+    // Map pillar scores
+    const pScores: Record<number, number> = {};
+    assessment.pillarAssessments.forEach((pa) => {
+      pScores[pa.pillarId] = pa.score;
+    });
+
+    const yesCount = assessment.assessmentResponses.filter((r) => r.answer === "yes").length;
+    const noCount = assessment.assessmentResponses.filter((r) => r.answer === "no").length;
+
+    const overviewRow = [
+      timestamp,
+      user.name || "Farmer",
+      user.email,
+      user.phone ? `'${user.phone}` : "",
+      user.farmName || "Green Horizon Agri-Farm",
+      user.farmLocation?.locationSearch || user.farmLocation?.county || "Nakuru County",
+      user.farmCharacteristics?.farmSize ? String(user.farmCharacteristics.farmSize) : "12.5",
+      `${Math.round(assessment.overallScore)}%`,
+      assessment.maturityLevel || "Emerging Stage",
+      assessment.status || "IN_PROGRESS",
+      `${assessment.pillarAssessments.length} of 8`,
+      pScores[1] !== undefined ? `${Math.round(pScores[1])}%` : "—",
+      pScores[2] !== undefined ? `${Math.round(pScores[2])}%` : "—",
+      pScores[3] !== undefined ? `${Math.round(pScores[3])}%` : "—",
+      pScores[4] !== undefined ? `${Math.round(pScores[4])}%` : "—",
+      pScores[5] !== undefined ? `${Math.round(pScores[5])}%` : "—",
+      pScores[6] !== undefined ? `${Math.round(pScores[6])}%` : "—",
+      pScores[7] !== undefined ? `${Math.round(pScores[7])}%` : "—",
+      pScores[8] !== undefined ? `${Math.round(pScores[8])}%` : "—",
+      yesCount,
+      noCount,
+      noCount > 0 ? `${noCount} improvement areas flagged` : "All capabilities met",
+      timestamp,
+    ];
+
+    // 1. Sync to Assessment Overview Tab (match by email in Column C)
+    try {
+      const emailColValues = await getSheetValues("'Assessment Overview'!C3:C", id);
+      let rowIndex = -1;
+      if (emailColValues && emailColValues.length > 0) {
+        for (let i = 0; i < emailColValues.length; i++) {
+          const rowEmail = emailColValues[i][0];
+          if (rowEmail && rowEmail.toLowerCase().trim() === user.email.toLowerCase().trim()) {
+            rowIndex = i + 3;
+            break;
+          }
+        }
+      }
+
+      if (rowIndex > 0) {
+        await updateSheetValues(`'Assessment Overview'!A${rowIndex}:W${rowIndex}`, [overviewRow], id);
+      } else {
+        await appendSheetValues("'Assessment Overview'!A:W", [overviewRow], id);
+      }
+    } catch (err) {
+      console.warn("Could not sync to Assessment Overview tab:", err);
+    }
+
+    // 2. Sync to Pillar Submissions Log Tab (if pillarId provided or from assessment)
+    if (pillarId) {
+      const pa = assessment.pillarAssessments.find((p) => p.pillarId === pillarId);
+      if (pa) {
+        const submissionRow = [
+          timestamp,
+          user.name || "Farmer",
+          user.email,
+          user.farmName || "Green Horizon Agri-Farm",
+          pa.pillarId,
+          pa.pillarName,
+          `${Math.round(pa.score)}%`,
+          pa.yesCount,
+          pa.noCount,
+          pa.totalQuestions,
+          pa.maturityLevel,
+          pa.capabilityScores || "{}",
+          `${pa.noCount} gap(s) identified for action`,
+        ];
+
+        try {
+          await appendSheetValues("'Pillar Submissions Log'!A:M", [submissionRow], id);
+        } catch (err) {
+          console.warn("Could not sync to Pillar Submissions Log tab:", err);
+        }
+      }
+    }
+
+    // 3. Sync to Detailed Question Responses Tab
+    const responsesToSync = pillarId
+      ? assessment.assessmentResponses.filter((r) => r.pillarId === pillarId)
+      : assessment.assessmentResponses;
+
+    if (responsesToSync.length > 0) {
+      const questionResponseRows = responsesToSync.map((r) => {
+        const qMeta = ALL_PILLARS.flatMap((p) => p.capabilities)
+          .flatMap((c) => c.questions)
+          .find((q) => q.id === r.questionId);
+
+        return [
+          timestamp,
+          user.email,
+          user.name || "Farmer",
+          r.pillarId,
+          `Pillar ${r.pillarId}`,
+          r.capabilityId,
+          r.capabilityName,
+          r.questionId,
+          r.questionText,
+          r.answer === "yes" ? "Yes" : "No",
+          qMeta?.priority || "🟢 Quick Win",
+          r.recommendation || qMeta?.recommendation || "",
+          r.whyItMatters || qMeta?.whyItMatters || "",
+          r.quickWin || qMeta?.quickWin || "",
+          r.supportAvailable || qMeta?.supportAvailable || "",
+        ];
+      });
+
+      try {
+        await appendSheetValues("'Detailed Question Responses'!A:O", questionResponseRows, id);
+      } catch (err) {
+        console.warn("Could not sync to Detailed Question Responses tab:", err);
+      }
+    }
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error syncing assessment to Google Sheet:", error.message || error);
+    return { success: false, error: error.message };
+  }
+}
+
 

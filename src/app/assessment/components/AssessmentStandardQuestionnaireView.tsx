@@ -7,6 +7,7 @@ import {
   AssessmentCapability,
   DEFAULT_PILLAR_2_ANSWERS,
 } from "@/data/assessmentData";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 interface AssessmentStandardQuestionnaireViewProps {
   pillarId: number;
@@ -66,10 +67,11 @@ export default function AssessmentStandardQuestionnaireView({
         "future_farms_assessment_answers",
         JSON.stringify(answers)
       );
+      const email = getActiveUserEmail();
       fetch("/api/assessment/save-progress", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pillarId, answers }),
+        body: JSON.stringify({ email, pillarId, answers }),
       }).catch((e) => console.error("Error saving progress to API:", e));
 
       setToastMessage("Progress saved successfully!");
@@ -87,10 +89,11 @@ export default function AssessmentStandardQuestionnaireView({
         "future_farms_assessment_answers",
         JSON.stringify(answers)
       );
+      const email = getActiveUserEmail();
       fetch("/api/assessment/save-progress", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pillarId, answers }),
+        body: JSON.stringify({ email, pillarId, answers }),
       }).catch((e) => console.error("Error saving progress to API:", e));
 
       setToastMessage("Progress saved successfully!");
@@ -114,10 +117,11 @@ export default function AssessmentStandardQuestionnaireView({
           "future_farms_assessment_answers",
           JSON.stringify(answers)
         );
+        const email = getActiveUserEmail();
         fetch("/api/assessment/submit-pillar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pillarId, answers }),
+          body: JSON.stringify({ email, pillarId, answers }),
         }).catch((e) => console.error("Error submitting pillar to API:", e));
       } catch (e) {
         console.error(e);

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { computeAssessmentResults, getMaturityTier } from "@/lib/assessmentScoring";
+import { syncUserAssessmentToSheet } from "@/lib/googleSheets";
 
 const QUESTION_MAP = new Map<string, {
   pillarId: number;
@@ -189,6 +190,11 @@ export async function POST(request: Request) {
         pillarId: numPillarId,
         answer: "no",
       },
+    });
+
+    // 8. Asynchronously sync to Google Spreadsheet (1lia89URlWwsngU0E7Kd5zyQTzm-SBWlQj2Lsu08b1wg)
+    syncUserAssessmentToSheet(email, numPillarId).catch((err) => {
+      console.warn("Google Sheets assessment sync warning:", err?.message || err);
     });
 
     return NextResponse.json({
