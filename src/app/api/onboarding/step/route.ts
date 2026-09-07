@@ -2,6 +2,46 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { syncUserOnboardingToSheet } from "@/lib/googleSheets";
 
+function computeOnboardingStage(user: any) {
+  const isStep1Done = Boolean(user.farmerProfile?.jobTitle);
+  const isStep2Done = Boolean(user.farmManagement?.mgmtAbility);
+  const isStep3Done = Boolean(user.operatingStyle?.decisionStyle);
+  const isStep4Done = Boolean(user.aspiration?.fmResponsibility || user.aspiration?.twelveMonthSuccess);
+  const isStep5Done = Boolean(user.digitalPlatform?.remoteComfort || user.digitalPlatform?.supportReasons);
+  const initialCompleted = isStep1Done && isStep2Done && isStep3Done && isStep4Done && isStep5Done;
+
+  const isLocDone = Boolean(user.farmLocation);
+  const isCharDone = Boolean(user.farmCharacteristics);
+  const isSysDone = Boolean(user.farmingSystem);
+  const isBizDone = Boolean(user.businessExperience);
+  const isLabDone = Boolean(user.householdLabour);
+  const additionalCompleted = isLocDone && isCharDone && isSysDone && isBizDone && isLabDone;
+
+  const profileApproved = Boolean(user.onboardingStatus?.profileApproved);
+
+  let stage = "INITIAL_IN_PROGRESS";
+  if (initialCompleted) {
+    if (additionalCompleted) {
+      if (profileApproved) {
+        stage = "FULLY_COMPLETED";
+      } else {
+        stage = "ADDITIONAL_COMPLETED";
+      }
+    } else {
+      stage = "INITIAL_COMPLETED";
+    }
+  }
+
+  return {
+    stage,
+    initialCompleted,
+    additionalCompleted,
+    profileApproved,
+    initialCount: [isStep1Done, isStep2Done, isStep3Done, isStep4Done, isStep5Done].filter(Boolean).length,
+    additionalCount: [isLocDone, isCharDone, isSysDone, isBizDone, isLabDone].filter(Boolean).length,
+  };
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -15,6 +55,13 @@ export async function GET(request: Request) {
         operatingStyle: true,
         digitalPlatform: true,
         aspiration: true,
+        farmLocation: true,
+        farmCharacteristics: true,
+        farmingSystem: true,
+        businessExperience: true,
+        goalsPriorities: true,
+        householdLabour: true,
+        onboardingStatus: true,
       },
     });
 
@@ -22,7 +69,13 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, user });
+    const stageInfo = computeOnboardingStage(user);
+
+    return NextResponse.json({
+      success: true,
+      user,
+      ...stageInfo,
+    });
   } catch (error: any) {
     console.error("Error fetching onboarding data:", error);
     return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
@@ -43,7 +96,9 @@ export async function POST(request: Request) {
     }
 
     switch (step) {
-      case 1: {
+      case 1:
+      case "1":
+      case "step-1": {
         // Section 1: Farmer Profile (Q1-Q5)
         const edu = data.educationLevel || data.education || "";
         await prisma.farmerProfile.upsert({
@@ -71,11 +126,13 @@ export async function POST(request: Request) {
         break;
       }
 
-      case 2: {
+      case 2:
+      case "2":
+      case "step-2": {
         // Section 2: Farm Management Experience (Q6-Q8)
         const ops = data.operationsResponsible || data.opsResponsibility || "";
-        const operatorsVal = typeof data.operators === "string" 
-          ? data.operators 
+        const operatorsVal = typeof data.operators === "string"
+          ? data.operators
           : JSON.stringify(data.operators || (ops ? [ops] : []));
 
         await prisma.farmManagement.upsert({
@@ -101,7 +158,9 @@ export async function POST(request: Request) {
         break;
       }
 
-      case 3: {
+      case 3:
+      case "3":
+      case "step-3": {
         // Section 3: Operating Style (Q9-Q14)
         const obstaclesVal = typeof data.obstacles === "string"
           ? data.obstacles
@@ -140,7 +199,9 @@ export async function POST(request: Request) {
         break;
       }
 
-      case 4: {
+      case 4:
+      case "4":
+      case "step-4": {
         // Section 4: Your Future Farms Aspirations (Q15-Q21)
         const fmResp = data.fmResponsibility || "";
         const managerRespVal = typeof data.managerResponsibilities === "string"
@@ -179,7 +240,9 @@ export async function POST(request: Request) {
         break;
       }
 
-      case 5: {
+      case 5:
+      case "5":
+      case "step-5": {
         // Section 5: Working With Digital Farm Management Platforms (Q22-Q27)
         const supportReasonsVal = typeof data.supportReasons === "string"
           ? data.supportReasons
@@ -210,6 +273,187 @@ export async function POST(request: Request) {
         break;
       }
 
+      case 6:
+      case "location": {
+        // Additional Section 1: Farm Location
+        await prisma.farmLocation.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            locationSearch: data.locationSearch || "",
+            county: data.county || "",
+            subcounty: data.subcounty || "",
+            ward: data.ward || "",
+            landmark: data.landmark || "",
+            latitude: data.latitude !== undefined ? Number(data.latitude) : null,
+            longitude: data.longitude !== undefined ? Number(data.longitude) : null,
+          },
+          update: {
+            locationSearch: data.locationSearch || "",
+            county: data.county || "",
+            subcounty: data.subcounty || "",
+            ward: data.ward || "",
+            landmark: data.landmark || "",
+            latitude: data.latitude !== undefined ? Number(data.latitude) : null,
+            longitude: data.longitude !== undefined ? Number(data.longitude) : null,
+          },
+        });
+        break;
+      }
+
+      case 7:
+      case "characteristics": {
+        // Additional Section 2: Farm Characteristics
+        const waterVal = typeof data.waterSources === "string"
+          ? data.waterSources
+          : JSON.stringify(data.waterSources || []);
+
+        await prisma.farmCharacteristics.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            farmSize: data.farmSize !== undefined ? Number(data.farmSize) : null,
+            farmUnit: data.farmUnit || "Acres",
+            cultivatedAcres: data.cultivatedAcres !== undefined ? Number(data.cultivatedAcres) : null,
+            grazingAcres: data.grazingAcres !== undefined ? Number(data.grazingAcres) : null,
+            landTenure: data.landTenure || "",
+            waterSources: waterVal,
+            soilTested: data.soilTested || "",
+          },
+          update: {
+            farmSize: data.farmSize !== undefined ? Number(data.farmSize) : null,
+            farmUnit: data.farmUnit || "Acres",
+            cultivatedAcres: data.cultivatedAcres !== undefined ? Number(data.cultivatedAcres) : null,
+            grazingAcres: data.grazingAcres !== undefined ? Number(data.grazingAcres) : null,
+            landTenure: data.landTenure || "",
+            waterSources: waterVal,
+            soilTested: data.soilTested || "",
+          },
+        });
+        break;
+      }
+
+      case 8:
+      case "farming-system": {
+        // Additional Section 3: Farming System
+        const enterpVal = typeof data.enterprises === "string"
+          ? data.enterprises
+          : JSON.stringify(data.enterprises || []);
+
+        await prisma.farmingSystem.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            enterprises: enterpVal,
+            cultivationMethod: data.cultivationMethod || "",
+            mechanizationSetup: data.mechanizationSetup || "",
+            energySource: data.energySource || "",
+          },
+          update: {
+            enterprises: enterpVal,
+            cultivationMethod: data.cultivationMethod || "",
+            mechanizationSetup: data.mechanizationSetup || "",
+            energySource: data.energySource || "",
+          },
+        });
+        break;
+      }
+
+      case 9:
+      case "business-experience": {
+        // Additional Section 4: Business Experience
+        const buyersVal = typeof data.produceBuyers === "string"
+          ? data.produceBuyers
+          : JSON.stringify(data.produceBuyers || []);
+
+        await prisma.businessExperience.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            commercialYears: data.commercialYears || "",
+            annualRevenueBracket: data.annualRevenueBracket || "",
+            recordKeepingMethod: data.recordKeepingMethod || "",
+            produceBuyers: buyersVal,
+          },
+          update: {
+            commercialYears: data.commercialYears || "",
+            annualRevenueBracket: data.annualRevenueBracket || "",
+            recordKeepingMethod: data.recordKeepingMethod || "",
+            produceBuyers: buyersVal,
+          },
+        });
+        break;
+      }
+
+      case 10:
+      case "goals-priorities": {
+        // Additional Section 5: Goals & Priorities
+        const goalsVal = typeof data.goals === "string"
+          ? data.goals
+          : JSON.stringify(data.goals || []);
+
+        await prisma.goalsPriorities.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            goals: goalsVal,
+            operationalBottleneck: data.operationalBottleneck || "",
+            advisoryMode: data.advisoryMode || "",
+          },
+          update: {
+            goals: goalsVal,
+            operationalBottleneck: data.operationalBottleneck || "",
+            advisoryMode: data.advisoryMode || "",
+          },
+        });
+        break;
+      }
+
+      case 11:
+      case "household-labour": {
+        // Additional Section 6: Household & Labour
+        const practicesVal = typeof data.fairEmploymentPractices === "string"
+          ? data.fairEmploymentPractices
+          : JSON.stringify(data.fairEmploymentPractices || []);
+
+        await prisma.householdLabour.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            permanentWorkers: data.permanentWorkers !== undefined ? Number(data.permanentWorkers) : null,
+            seasonalWorkers: data.seasonalWorkers !== undefined ? Number(data.seasonalWorkers) : null,
+            managementStructure: data.managementStructure || "",
+            fairEmploymentPractices: practicesVal,
+          },
+          update: {
+            permanentWorkers: data.permanentWorkers !== undefined ? Number(data.permanentWorkers) : null,
+            seasonalWorkers: data.seasonalWorkers !== undefined ? Number(data.seasonalWorkers) : null,
+            managementStructure: data.managementStructure || "",
+            fairEmploymentPractices: practicesVal,
+          },
+        });
+        break;
+      }
+
+      case 12:
+      case "confirm-profile": {
+        // Approval of Farm Profile -> FULLY_COMPLETED
+        await prisma.onboardingStatus.upsert({
+          where: { userId: user.id },
+          create: {
+            userId: user.id,
+            stage: "FULLY_COMPLETED",
+            profileApproved: true,
+            completedAt: new Date(),
+          },
+          update: {
+            stage: "FULLY_COMPLETED",
+            profileApproved: true,
+            completedAt: new Date(),
+          },
+        });
+        break;
+      }
     }
 
     const updatedUser = await prisma.user.findUnique({
@@ -220,6 +464,13 @@ export async function POST(request: Request) {
         operatingStyle: true,
         digitalPlatform: true,
         aspiration: true,
+        farmLocation: true,
+        farmCharacteristics: true,
+        farmingSystem: true,
+        businessExperience: true,
+        goalsPriorities: true,
+        householdLabour: true,
+        onboardingStatus: true,
       },
     });
 
@@ -230,10 +481,13 @@ export async function POST(request: Request) {
       });
     }
 
+    const stageInfo = updatedUser ? computeOnboardingStage(updatedUser) : null;
+
     return NextResponse.json({
       success: true,
       message: `Step ${step} saved successfully.`,
       user: updatedUser,
+      ...stageInfo,
     });
   } catch (error: any) {
     console.error("Error saving step:", error);
@@ -260,9 +514,23 @@ export async function DELETE(request: Request) {
       prisma.operatingStyle.deleteMany({ where: { userId: user.id } }),
       prisma.aspiration.deleteMany({ where: { userId: user.id } }),
       prisma.digitalPlatform.deleteMany({ where: { userId: user.id } }),
+      prisma.farmLocation.deleteMany({ where: { userId: user.id } }),
+      prisma.farmCharacteristics.deleteMany({ where: { userId: user.id } }),
+      prisma.farmingSystem.deleteMany({ where: { userId: user.id } }),
+      prisma.businessExperience.deleteMany({ where: { userId: user.id } }),
+      prisma.goalsPriorities.deleteMany({ where: { userId: user.id } }),
+      prisma.householdLabour.deleteMany({ where: { userId: user.id } }),
+      prisma.onboardingStatus.deleteMany({ where: { userId: user.id } }),
     ]);
 
-    return NextResponse.json({ success: true, message: "Onboarding reset successfully" });
+    return NextResponse.json({
+      success: true,
+      message: "Onboarding reset successfully",
+      stage: "INITIAL_IN_PROGRESS",
+      initialCompleted: false,
+      additionalCompleted: false,
+      profileApproved: false,
+    });
   } catch (error: any) {
     console.error("Error resetting onboarding:", error);
     return NextResponse.json({ error: "Failed to reset onboarding" }, { status: 500 });
