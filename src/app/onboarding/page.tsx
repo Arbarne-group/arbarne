@@ -600,10 +600,10 @@ export default function OnboardingOverviewPage() {
                   <Link
                     key={idx}
                     href={card.href}
-                    className="bg-surface-container-lowest rounded-2xl p-5 shadow-xs border border-primary/20 hover:border-primary transition-all flex flex-col justify-between"
+                    className="bg-surface-container-lowest rounded-2xl p-5 shadow-xs border border-primary/20 hover:border-primary transition-all flex flex-col h-full group"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+                      <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold group-hover:bg-primary group-hover:text-white transition-colors">
                         <span className="material-symbols-outlined text-[18px]">{card.icon}</span>
                       </div>
                       <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-primary/10 text-primary flex items-center gap-1">
@@ -611,14 +611,8 @@ export default function OnboardingOverviewPage() {
                         Done
                       </span>
                     </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-on-surface mb-1">{card.title}</h3>
-                      <p className="text-xs text-on-surface-variant line-clamp-2">{card.desc}</p>
-                    </div>
-                    <div className="mt-3 pt-2 border-t border-surface-container-high/60 text-xs font-semibold text-primary flex items-center justify-between">
-                      <span>Edit Section</span>
-                      <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
-                    </div>
+                    <h3 className="text-sm font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">{card.title}</h3>
+                    <p className="text-xs text-on-surface-variant line-clamp-2 mt-auto">{card.desc}</p>
                   </Link>
                 ))}
               </div>
@@ -719,7 +713,7 @@ export default function OnboardingOverviewPage() {
                     <Link
                       key={idx}
                       href={card.href}
-                      className={`bg-surface-container-lowest rounded-2xl p-5 shadow-xs border transition-all hover:shadow-md flex flex-col justify-between ${
+                      className={`bg-surface-container-lowest rounded-2xl p-5 shadow-xs border transition-all hover:shadow-md flex flex-col h-full group ${
                         isDone
                           ? "border-primary/30 hover:border-primary"
                           : "border-surface-container-high hover:border-primary/40"
@@ -728,7 +722,7 @@ export default function OnboardingOverviewPage() {
                       <div className="flex items-start justify-between mb-3">
                         <div
                           className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold ${
-                            isDone ? "bg-primary text-white" : "bg-primary/10 text-primary"
+                            isDone ? "bg-primary text-white" : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
                           }`}
                         >
                           <span className="material-symbols-outlined text-[18px]">{card.icon}</span>
@@ -745,15 +739,8 @@ export default function OnboardingOverviewPage() {
                         </span>
                       </div>
 
-                      <div>
-                        <h3 className="text-sm font-bold text-on-surface mb-1">{card.title}</h3>
-                        <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">{card.desc}</p>
-                      </div>
-
-                      <div className="mt-4 pt-3 border-t border-surface-container-high/60 flex items-center justify-between text-xs font-semibold text-primary">
-                        <span>{isDone ? "Edit Responses" : "Start Section"}</span>
-                        <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
-                      </div>
+                      <h3 className="text-sm font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">{card.title}</h3>
+                      <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed mt-auto">{card.desc}</p>
                     </Link>
                   );
                 })}
@@ -870,41 +857,31 @@ export default function OnboardingOverviewPage() {
                     <Link
                       key={card.step}
                       href={card.href}
-                      className="bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-surface-container-high hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between"
+                      className="bg-surface-container-lowest rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-surface-container-high hover:shadow-md transition-shadow cursor-pointer group flex flex-col h-full"
                     >
-                      <div>
-                        <div className="flex justify-between items-start mb-4">
-                          <div
-                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                              isDone
-                                ? "bg-primary text-white"
-                                : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
-                            }`}
-                          >
-                            <span className="material-symbols-outlined text-[20px]">{card.icon}</span>
-                          </div>
-                          {isDone ? (
-                            <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
-                          ) : (
-                            <span className="material-symbols-outlined text-outline text-xl">radio_button_unchecked</span>
-                          )}
+                      <div className="flex justify-between items-start mb-4">
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                            isDone
+                              ? "bg-primary text-white"
+                              : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
+                          }`}
+                        >
+                          <span className="material-symbols-outlined text-[20px]">{card.icon}</span>
                         </div>
-
-                        <div className="text-[11px] font-bold text-primary mb-0.5">
-                          Step {card.step} of 5
-                        </div>
-                        <h3 className="text-sm font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">
-                          {card.title}
-                        </h3>
-                        <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">
-                          {card.desc}
-                        </p>
+                        {isDone ? (
+                          <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                        ) : (
+                          <span className="material-symbols-outlined text-outline text-xl">radio_button_unchecked</span>
+                        )}
                       </div>
 
-                      <div className="mt-4 pt-3 border-t border-surface-container-high/60 flex items-center justify-between text-xs font-semibold text-primary">
-                        <span>{isDone ? "Edit Responses" : "Start Questionnaire"}</span>
-                        <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
-                      </div>
+                      <h3 className="text-base font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">
+                        {card.title}
+                      </h3>
+                      <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed mt-auto">
+                        {card.desc}
+                      </p>
                     </Link>
                   );
                 })}

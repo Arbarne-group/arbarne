@@ -329,12 +329,11 @@ export default function AspirationsPage() {
           </div>
 
           {/* Question 21: 25-Year Vision */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.04)] relative overflow-hidden">
-            <div className="absolute left-0 top-0 bottom-0 w-2 bg-primary" />
-            <label className="block text-base font-semibold text-on-surface mb-1 ml-2">
+          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+            <label className="block text-base font-semibold text-on-surface mb-1">
               21. Describe your vision for African farms 25 years from now. How do you want your farm or agricultural business to contribute to that future?
             </label>
-            <p className="text-xs text-on-surface-variant mb-4 ml-2">
+            <p className="text-xs text-on-surface-variant mb-4">
               Share your transformative perspective on continental food security, sustainability, and technological leapfrogging.
             </p>
             <textarea
