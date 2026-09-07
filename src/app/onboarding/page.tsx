@@ -952,7 +952,7 @@ export default function OnboardingOverviewPage() {
                 <img
                   alt="Future Farms Agriculture"
                   className="w-full h-full object-cover rounded-2xl shadow-sm border border-surface-container-high/60"
-                  src="https://lh3.googleusercontent.com/aida/AEtjO1We64MQUaGsXjzRP8tdnhq6TOE5QCcMOaGlV2uds2PGUjSDq0ts_RYK39wdTVQGPipX7Puw4951nBRNnB-XI3bo1m14bR7DBfgaaZDgKmUM7LbgSkRdHXqM9Jum8qVGcvdCxslhOtZd1aCcFZ2olZDV05MulVhotuh9YFrx3pNFvosBFRiYWoGg6O5PrHie_ukd-tGjd0ysF-rBjlmw_e3QynPOyQ8NP_pTcgw1rFeyc6h0Nx5NK4ocFw"
+                  src="/images/sustainable-farmer.jpg"
                 />
               </div>
             </section>
