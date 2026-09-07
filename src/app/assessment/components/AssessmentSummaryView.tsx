@@ -289,14 +289,13 @@ export default function AssessmentSummaryView({
           </div>
 
           <div className="flex items-center gap-2 self-end sm:self-auto">
-            <button
-              type="button"
-              onClick={() => setShowReportModal(true)}
+            <Link
+              href={`/assessment/report?pillar=${pillar.id}`}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-surface-container-high bg-surface text-on-surface-variant shadow-xs hover:bg-surface-variant hover:border-outline-variant transition-all text-xs font-semibold cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[16px]">description</span>
-              Transformation Report
-            </button>
+              <span className="material-symbols-outlined text-[16px] text-emerald-700">description</span>
+              Transformation Report (PDF)
+            </Link>
             <button
               type="button"
               onClick={() => setShowCertificateModal(true)}
@@ -1342,21 +1341,20 @@ export default function AssessmentSummaryView({
               </div>
             </div>
 
-            <div className="p-4 border-t border-surface-container-high bg-surface-container-lowest flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs flex items-center gap-1.5 cursor-pointer"
+            <div className="p-4 border-t border-surface-container-high bg-surface-container-lowest flex items-center justify-between gap-3">
+              <Link
+                href={`/assessment/report?pillar=${pillar.id}`}
+                className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs"
               >
-                <span className="material-symbols-outlined text-[16px]">print</span>
-                Print Report
-              </button>
+                <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+                Open Full Printable A4 Report (PDF)
+              </Link>
               <button
                 type="button"
                 onClick={() => setShowReportModal(false)}
-                className="px-5 py-2 rounded-xl bg-primary text-white font-bold text-xs cursor-pointer"
+                className="px-5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-bold text-xs cursor-pointer"
               >
-                Done
+                Close
               </button>
             </div>
           </div>

@@ -242,13 +242,22 @@ export default function DashboardPage() {
                 <h3 className="font-title-md text-title-md text-on-surface font-bold">
                   8 Pillar Summary
                 </h3>
-                <Link
-                  href="/assessment"
-                  className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
-                >
-                  <span>Edit Assessment</span>
-                  <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                </Link>
+                <div className="flex items-center gap-3">
+                  <Link
+                    href="/assessment/report?pillar=all"
+                    className="text-xs font-semibold text-emerald-700 hover:underline flex items-center gap-1"
+                  >
+                    <span className="material-symbols-outlined text-[15px]">picture_as_pdf</span>
+                    <span>Download Report (PDF)</span>
+                  </Link>
+                  <Link
+                    href="/assessment"
+                    className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
+                  >
+                    <span>Edit Assessment</span>
+                    <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                  </Link>
+                </div>
               </div>
 
               <div className="flex-1 w-full h-full min-h-[250px] relative flex justify-center items-center">

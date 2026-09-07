@@ -260,14 +260,13 @@ export default function OnboardingOverviewPage() {
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => alert("Summary PDF downloaded!")}
+                <Link
+                  href="/assessment/report?pillar=all"
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container text-xs font-semibold text-on-surface transition-all shadow-xs cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-[18px]">download</span>
+                  <span className="material-symbols-outlined text-[18px] text-emerald-700">picture_as_pdf</span>
                   <span>Download Summary (PDF)</span>
-                </button>
+                </Link>
                 <Link
                   href="/assessment"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary/90 transition-all shadow-sm hover:shadow-md text-xs font-semibold"

@@ -98,14 +98,23 @@ export default function AssessmentOverviewView({
               areas for improvement.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowHistoryModal(true)}
-            className="px-6 py-2 border border-outline text-primary font-label-sm text-label-sm rounded-full hover:bg-surface-variant transition-colors flex items-center gap-2 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-sm">history</span>
-            Assessment History
-          </button>
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <Link
+              href="/assessment/report?pillar=all"
+              className="px-5 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-label-sm text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
+              Download 8-Pillar Report (PDF)
+            </Link>
+            <button
+              type="button"
+              onClick={() => setShowHistoryModal(true)}
+              className="px-5 py-2 border border-outline text-primary font-label-sm text-xs font-semibold rounded-full hover:bg-surface-variant transition-colors flex items-center gap-2 cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">history</span>
+              Assessment History
+            </button>
+          </div>
         </div>
 
         {/* Stats Overview Cards */}
