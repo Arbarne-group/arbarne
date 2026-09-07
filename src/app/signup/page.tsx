@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
@@ -96,13 +97,17 @@ export default function SignupPage() {
         <div className="mx-auto w-full max-w-sm lg:w-96">
           {/* Logo & Header */}
           <div>
-            <div className="flex items-center gap-2 mb-8">
-              <span className="material-symbols-outlined text-primary text-4xl fill">
-                agriculture
-              </span>
-              <span className="font-bold text-primary text-2xl tracking-tight">
-                Future Farms
-              </span>
+            <div className="flex items-center mb-8">
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/logo.webp"
+                  alt="Future Farms"
+                  width={300}
+                  height={75}
+                  className="w-full max-w-[300px] h-auto object-contain"
+                  priority
+                />
+              </Link>
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
               Create Your Account

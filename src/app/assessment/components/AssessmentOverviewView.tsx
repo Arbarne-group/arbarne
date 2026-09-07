@@ -16,12 +16,33 @@ export default function AssessmentOverviewView({
     Record<number, { completed: boolean; score?: number; answeredCount: number }>
   >({});
 
-  // Load progress from localStorage
+  // Load progress from API and localStorage
   useEffect(() => {
-    try {
-      const savedAnswers = localStorage.getItem("future_farms_assessment_answers");
-      if (savedAnswers) {
-        const answers: Record<string, "yes" | "no"> = JSON.parse(savedAnswers);
+    async function loadProgress() {
+      let answers: Record<string, "yes" | "no"> = {};
+
+      try {
+        const res = await fetch("/api/assessment/responses");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.answers && Object.keys(data.answers).length > 0) {
+            answers = data.answers;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load responses from API", e);
+      }
+
+      try {
+        const savedAnswers = localStorage.getItem("future_farms_assessment_answers");
+        if (savedAnswers) {
+          answers = { ...answers, ...JSON.parse(savedAnswers) };
+        }
+      } catch (e) {
+        console.error(e);
+      }
+
+      if (Object.keys(answers).length > 0) {
         const progress: Record<
           number,
           { completed: boolean; score?: number; answeredCount: number }
@@ -43,9 +64,9 @@ export default function AssessmentOverviewView({
 
         setPillarProgress(progress);
       }
-    } catch (e) {
-      console.error(e);
     }
+
+    loadProgress();
   }, []);
 
   const totalAnswered = Object.values(pillarProgress).reduce(

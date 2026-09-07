@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { syncUserOnboardingToSheet } from "@/lib/googleSheets";
 
 export async function GET(request: Request) {
   try {
@@ -221,6 +222,13 @@ export async function POST(request: Request) {
         aspiration: true,
       },
     });
+
+    if (updatedUser) {
+      // Sync database entries to Google Spreadsheet in background
+      syncUserOnboardingToSheet(updatedUser).catch((err) => {
+        console.error("Google Sheets onboarding sync background error:", err);
+      });
+    }
 
     return NextResponse.json({
       success: true,

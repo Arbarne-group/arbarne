@@ -66,6 +66,12 @@ export default function AssessmentStandardQuestionnaireView({
         "future_farms_assessment_answers",
         JSON.stringify(answers)
       );
+      fetch("/api/assessment/save-progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pillarId, answers }),
+      }).catch((e) => console.error("Error saving progress to API:", e));
+
       setToastMessage("Progress saved successfully!");
       setTimeout(() => {
         setToastMessage(null);
@@ -81,6 +87,12 @@ export default function AssessmentStandardQuestionnaireView({
         "future_farms_assessment_answers",
         JSON.stringify(answers)
       );
+      fetch("/api/assessment/save-progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pillarId, answers }),
+      }).catch((e) => console.error("Error saving progress to API:", e));
+
       setToastMessage("Progress saved successfully!");
       setTimeout(() => {
         onExit();
@@ -97,6 +109,19 @@ export default function AssessmentStandardQuestionnaireView({
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       // Completed all 5 capabilities in this pillar
+      try {
+        localStorage.setItem(
+          "future_farms_assessment_answers",
+          JSON.stringify(answers)
+        );
+        fetch("/api/assessment/submit-pillar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pillarId, answers }),
+        }).catch((e) => console.error("Error submitting pillar to API:", e));
+      } catch (e) {
+        console.error(e);
+      }
       onComplete(pillarId, answers);
     }
   };

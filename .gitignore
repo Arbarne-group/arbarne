@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 .env*
+*service-account*.json
+google-service-account.json
+.vscode/
 
 # ─── Python ───────────────────────────────────────────────────────────
 __pycache__/

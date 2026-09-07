@@ -2,16 +2,21 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   userName?: string;
   userRole?: string;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export default function Header({
   userName = "Keziah Wanjiku",
   userRole = "Farm Owner",
+  collapsed = false,
+  onToggleCollapse,
 }: HeaderProps) {
   const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
@@ -43,15 +48,17 @@ export default function Header({
 
   return (
     <>
-      {/* Mobile Top App Bar */}
-      <header className="sticky top-0 z-50 flex justify-between items-center w-full px-4 py-3.5 bg-surface border-b border-surface-variant md:hidden">
-        <Link href="/onboarding" className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary fill">
-            agriculture
-          </span>
-          <span className="font-bold text-primary text-lg tracking-tight">
-            Future Farms
-          </span>
+      {/* Mobile Top App Bar - Exact h-16 */}
+      <header className="sticky top-0 z-50 flex justify-between items-center w-full px-4 h-16 bg-surface border-b border-surface-variant md:hidden">
+        <Link href="/dashboard" className="flex items-center">
+          <Image
+            src="/logo.webp"
+            alt="Future Farms"
+            width={180}
+            height={44}
+            className="h-10 w-auto object-contain"
+            priority
+          />
         </Link>
         <div className="flex items-center gap-2 text-on-surface-variant relative" ref={menuRef}>
           <button
@@ -131,8 +138,30 @@ export default function Header({
         </div>
       </header>
 
-      {/* Desktop Top Nav Actions */}
-      <div className="hidden md:flex justify-end items-center px-8 py-3.5 bg-surface border-b border-surface-variant sticky top-0 z-30">
+      {/* Desktop Top Nav Bar - Exact h-20 aligning seamlessly with Sidebar */}
+      <div className="hidden md:flex justify-between items-center px-6 h-20 bg-surface border-b border-surface-variant sticky top-0 z-30 transition-all shrink-0">
+        {/* Left Side: Toggle Sidebar & Breadcrumb Context */}
+        <div className="flex items-center gap-3">
+          {onToggleCollapse && (
+            <button
+              onClick={onToggleCollapse}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className="p-2 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors cursor-pointer flex items-center justify-center border border-outline-variant/30"
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                {collapsed ? "menu" : "menu_open"}
+              </span>
+            </button>
+          )}
+          <div className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant">
+            <span className="text-primary font-bold">Future Farms</span>
+            <span className="text-outline-variant/60">/</span>
+            <span className="text-on-surface font-medium">Smallholder Transformation Platform</span>
+          </div>
+        </div>
+
+        {/* Right Side: Notifications & User Profile */}
         <div className="flex items-center gap-4 text-on-surface-variant relative" ref={menuRef}>
           {/* Notifications Button */}
           <div className="relative">

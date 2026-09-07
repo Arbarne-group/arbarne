@@ -1,18 +1,21 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col justify-between">
       {/* Top Bar */}
-      <header className="px-6 py-5 flex items-center justify-between border-b border-surface-variant bg-surface">
-        <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-3xl fill">
-            agriculture
-          </span>
-          <span className="font-bold text-primary text-2xl tracking-tight">
-            Future Farms
-          </span>
-        </div>
+      <header className="px-6 md:px-10 py-3.5 flex items-center justify-between border-b border-surface-variant bg-surface">
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo.webp"
+            alt="Future Farms"
+            width={260}
+            height={64}
+            className="h-14 md:h-16 w-auto object-contain"
+            priority
+          />
+        </Link>
         <div className="flex items-center gap-3">
           <Link
             href="/login"

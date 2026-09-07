@@ -284,11 +284,15 @@ function CheckoutContent() {
                     <h3 className="text-sm font-bold text-on-background">
                       {plan === "FULL_ASSESSMENT"
                         ? "Full Future Farm Assessment"
+                        : plan === "4_PILLARS"
+                        ? "4 Pillars Assessment"
                         : "Individual Pillar Assessment"}
                     </h3>
                     <p className="text-xs text-on-surface-variant mt-0.5">
                       {plan === "FULL_ASSESSMENT"
                         ? "All 8 pillars, Radar maturity chart & PDF plan."
+                        : plan === "4_PILLARS"
+                        ? "Any 4 key pillars, 100 questions & Summary PDF plan."
                         : "Selected pillar audit & baseline score."}
                     </p>
                   </div>

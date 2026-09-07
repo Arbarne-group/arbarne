@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 interface AssessmentNavShellProps {
@@ -21,14 +22,16 @@ export default function AssessmentNavShell({
     <div className="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
       {/* Mobile TopNavBar */}
       <header className="md:hidden bg-surface flex justify-between items-center w-full px-margin-mobile h-16 z-50 sticky top-0 shadow-sm border-b border-outline-variant/30">
-        <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-3xl">
-            agriculture
-          </span>
-          <span className="font-display-lg text-headline-lg-mobile font-bold text-primary tracking-tight">
-            FUTURE FARMS
-          </span>
-        </div>
+        <Link href="/dashboard" className="flex items-center">
+          <Image
+            src="/logo.webp"
+            alt="Future Farms"
+            width={200}
+            height={50}
+            className="h-11 w-auto object-contain"
+            priority
+          />
+        </Link>
         <div className="flex items-center gap-4 text-primary">
           <button className="hover:text-primary transition-colors opacity-80" aria-label="Notifications">
             <span className="material-symbols-outlined">notifications</span>
@@ -43,22 +46,18 @@ export default function AssessmentNavShell({
       </header>
 
       {/* Desktop SideNavBar */}
-      <nav className="hidden md:flex bg-surface flex-col h-screen w-64 border-r border-outline-variant fixed left-0 top-0 z-40 py-md">
-        <div className="px-6 mb-8 flex flex-col gap-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span
-              className="material-symbols-outlined text-primary text-4xl"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              agriculture
-            </span>
-          </div>
-          <div className="font-headline-lg text-headline-lg font-black tracking-tight text-primary uppercase">
-            Future Farms
-          </div>
-          <span className="font-label-sm text-label-sm text-on-surface-variant">
-            Sustainable AgTech
-          </span>
+      <nav className="hidden md:flex bg-surface flex-col h-screen w-64 border-r border-outline-variant fixed left-0 top-0 z-40">
+        <div className="h-16 border-b border-outline-variant/30 px-4 flex items-center justify-between shrink-0">
+          <Link href="/dashboard" className="flex items-center pl-1">
+            <Image
+              src="/logo.webp"
+              alt="Future Farms - An Initiative Of Arbarne Agriculture Group"
+              width={190}
+              height={48}
+              className="h-10 w-auto max-w-[170px] object-contain"
+              priority
+            />
+          </Link>
         </div>
 
         <div className="flex-1 flex flex-col gap-1 overflow-y-auto px-2">

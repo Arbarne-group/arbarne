@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -42,7 +43,6 @@ export default function LoginPage() {
   const handleQuickDemo = () => {
     setEmail("keziah@futurefarms.africa");
     setPassword("Password123!");
-    // directly authenticate
     setTimeout(() => {
       const fakeSubmit = new Event("submit") as any;
       handleSubmit(fakeSubmit);
@@ -50,105 +50,106 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-background text-on-background min-h-screen flex antialiased">
-      <div className="flex flex-1 w-full max-w-7xl mx-auto md:p-8 md:gap-8 min-h-screen items-center justify-center">
-        {/* Left Column: Imagery & Brand */}
-        <div className="hidden lg:flex flex-col relative w-1/2 h-[90vh] rounded-3xl overflow-hidden shadow-xl">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: "url('/images/smart-farm-landscape.jpg')",
-            }}
-          />
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-          <div className="relative z-10 flex flex-col justify-end h-full p-10 text-white">
-            <h1 className="text-3xl xl:text-4xl font-bold mb-3 leading-tight max-w-lg drop-shadow-md">
+    <div className="flex min-h-screen bg-background text-on-background">
+      {/* Left Side: Brand Imagery & Message */}
+      <div className="relative hidden w-0 flex-1 lg:block">
+        <div
+          className="absolute inset-0 h-full w-full bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/images/smart-farm-landscape.jpg')",
+          }}
+        >
+          {/* Overlays */}
+          <div className="absolute inset-0 bg-secondary/60 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+          {/* Hero text */}
+          <div className="absolute bottom-0 left-0 p-12 w-full max-w-2xl text-white">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-4 drop-shadow-lg leading-tight">
               Cultivating the Future of African Agriculture.
-            </h1>
-            <p className="text-base text-white/85 max-w-md drop-shadow">
-              Empowering farmers with data-driven insights and modern tools for sustainable growth.
+            </h2>
+            <p className="text-lg text-white/90 max-w-lg leading-relaxed drop-shadow-md">
+              Empower your agricultural journey with data-driven insights, precision tools, and a community dedicated to sustainable growth and resilience.
             </p>
           </div>
         </div>
+      </div>
 
-        {/* Right Column: Login Form */}
-        <div className="flex flex-col justify-center w-full lg:w-1/2 p-6 md:p-12 bg-surface-container-lowest md:rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-surface-variant/40 max-w-lg">
-          <div className="w-full">
-            {/* Brand Logo */}
-            <div className="flex justify-center mb-6">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-4xl fill">
-                  agriculture
-                </span>
-                <span className="font-bold text-primary text-2xl tracking-tight">
-                  Future Farms
-                </span>
-              </div>
+      {/* Right Side: Login Form */}
+      <div className="flex flex-1 flex-col justify-center px-6 py-12 sm:px-10 lg:flex-none lg:px-20 xl:px-24 bg-surface-container-lowest">
+        <div className="mx-auto w-full max-w-sm lg:w-96">
+          {/* Logo & Header */}
+          <div>
+            <div className="flex items-center mb-8">
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/logo.webp"
+                  alt="Future Farms"
+                  width={300}
+                  height={75}
+                  className="w-full max-w-[300px] h-auto object-contain"
+                  priority
+                />
+              </Link>
             </div>
+            <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
+              Welcome Back
+            </h1>
+            <p className="mt-2 text-sm text-on-surface-variant">
+              Please sign in to access your farm dashboard.
+            </p>
+          </div>
 
-            {/* Header */}
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-on-surface mb-1">
-                Welcome Back
-              </h2>
-              <p className="text-sm text-on-surface-variant">
-                Please sign in to access your farm dashboard.
-              </p>
+          {error && (
+            <div className="mt-6 p-3 rounded-xl bg-error-container text-on-error-container text-sm flex items-center gap-2">
+              <span className="material-symbols-outlined text-[18px]">error</span>
+              <span>{error}</span>
             </div>
+          )}
 
-            {error && (
-              <div className="mb-6 p-3 rounded-xl bg-error-container text-on-error-container text-sm flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px]">error</span>
-                <span>{error}</span>
-              </div>
-            )}
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="mt-8">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email Field */}
               <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1.5" htmlFor="email">
+                <label
+                  className="block text-xs font-semibold text-on-surface mb-1.5"
+                  htmlFor="email"
+                >
                   Email Address
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[20px]">mail</span>
-                  </div>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    className="block w-full pl-11 pr-4 py-2.5 bg-surface rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors text-sm text-on-surface"
-                  />
-                </div>
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className="block w-full px-3.5 py-2.5 bg-surface rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors text-sm text-on-surface placeholder:text-on-surface-variant/40"
+                />
               </div>
 
               {/* Password Field */}
               <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1.5" htmlFor="password">
+                <label
+                  className="block text-xs font-semibold text-on-surface mb-1.5"
+                  htmlFor="password"
+                >
                   Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-on-surface-variant">
-                    <span className="material-symbols-outlined text-[20px]">lock</span>
-                  </div>
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="block w-full pl-11 pr-11 py-2.5 bg-surface rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors text-sm text-on-surface"
+                    placeholder="Enter your password"
+                    className="block w-full pl-3.5 pr-10 py-2.5 bg-surface rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors text-sm text-on-surface placeholder:text-on-surface-variant/40"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-on-surface-variant hover:text-primary transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
                   >
                     <span className="material-symbols-outlined text-[20px]">
                       {showPassword ? "visibility" : "visibility_off"}
@@ -157,24 +158,27 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Options Row */}
-              <div className="flex items-center justify-between pt-1">
+              {/* Options Row: Remember Me & Forgot Password */}
+              <div className="flex items-center justify-between pt-0.5">
                 <div className="flex items-center">
                   <input
                     id="remember-me"
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 text-primary bg-surface border-outline-variant rounded focus:ring-primary cursor-pointer"
+                    className="h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary bg-surface-bright cursor-pointer"
                   />
-                  <label htmlFor="remember-me" className="ml-2 block text-xs text-on-surface-variant cursor-pointer">
+                  <label
+                    htmlFor="remember-me"
+                    className="ml-2.5 block text-xs text-on-surface-variant cursor-pointer"
+                  >
                     Remember me
                   </label>
                 </div>
                 <div className="text-xs">
                   <Link
                     href="#"
-                    className="text-primary hover:text-primary-container font-medium hover:underline"
+                    className="font-medium text-primary hover:text-primary-container hover:underline transition-colors"
                   >
                     Forgot password?
                   </Link>
@@ -182,21 +186,30 @@ export default function LoginPage() {
               </div>
 
               {/* Submit Button */}
-              <div className="pt-2">
+              <div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-on-primary bg-primary hover:bg-primary-container focus:outline-none focus:ring-2 focus:ring-primary font-semibold text-sm hover-lift btn-shadow transition-all duration-200 cursor-pointer disabled:opacity-70"
+                  className="flex w-full justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-on-primary shadow-sm hover-lift btn-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary transition-all items-center gap-2 cursor-pointer disabled:opacity-70"
                 >
-                  {loading ? "Signing In..." : "Sign In"}
+                  {loading ? (
+                    <span>Signing In...</span>
+                  ) : (
+                    <>
+                      <span>Sign In</span>
+                      <span className="material-symbols-outlined text-[18px]">
+                        arrow_forward
+                      </span>
+                    </>
+                  )}
                 </button>
               </div>
 
-              {/* Demo Quick Login Button */}
+              {/* Quick Demo Button */}
               <button
                 type="button"
                 onClick={handleQuickDemo}
-                className="w-full text-xs text-primary font-semibold py-2 px-3 rounded-lg border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors flex items-center justify-center gap-1.5"
+                className="w-full text-xs text-primary font-semibold py-2.5 px-3 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[16px]">bolt</span>
                 Quick Demo Login (Keziah - Farm Owner)
@@ -206,7 +219,7 @@ export default function LoginPage() {
             {/* Divider */}
             <div className="my-6 relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-outline-variant/50" />
+                <div className="w-full border-t border-outline-variant/40" />
               </div>
               <div className="relative flex justify-center">
                 <span className="px-3 bg-surface-container-lowest text-on-surface-variant text-xs font-medium">
@@ -215,12 +228,12 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Social Login */}
+            {/* Google Sign In */}
             <div>
               <button
                 type="button"
                 onClick={handleQuickDemo}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-outline-variant bg-surface hover:bg-surface-container-low text-on-surface font-semibold text-sm transition-colors shadow-sm cursor-pointer"
+                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border border-outline-variant bg-surface hover:bg-surface-container-low text-on-surface font-semibold text-sm transition-colors shadow-sm cursor-pointer"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24">
                   <path
@@ -250,9 +263,9 @@ export default function LoginPage() {
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/signup"
-                  className="text-primary hover:text-primary-container font-semibold hover:underline transition-all"
+                  className="font-medium text-primary hover:text-primary-container transition-colors ml-1"
                 >
-                  Sign Up
+                  Create an account
                 </Link>
               </p>
             </div>

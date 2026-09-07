@@ -1,13 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 interface SidebarProps {
   userName?: string;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-export default function Sidebar({ userName = "Keziah" }: SidebarProps) {
+export default function Sidebar({
+  userName = "Keziah",
+  collapsed = false,
+  onToggleCollapse,
+}: SidebarProps) {
   const pathname = usePathname();
 
   const navItems = [
@@ -25,19 +32,60 @@ export default function Sidebar({ userName = "Keziah" }: SidebarProps) {
   ];
 
   return (
-    <nav className="h-full w-64 fixed left-0 top-0 hidden md:flex flex-col bg-surface-container-lowest border-r border-surface-variant z-40 py-6">
-      {/* Brand Header */}
-      <div className="px-6 pb-6 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary text-3xl fill">
-          agriculture
-        </span>
-        <span className="font-bold text-primary text-[24px] tracking-tight leading-tight">
-          Future Farms
-        </span>
+    <nav
+      className={`h-full fixed left-0 top-0 hidden md:flex flex-col bg-surface-container-lowest border-r border-surface-variant z-40 transition-all duration-300 ease-in-out select-none ${
+        collapsed ? "w-20" : "w-64"
+      }`}
+    >
+      {/* Brand Header - Exact h-20 border-b aligning seamlessly with Desktop Top Header */}
+      <div className="h-20 border-b border-surface-variant flex items-center justify-between px-3.5 transition-all shrink-0">
+        {collapsed ? (
+          <div className="w-full flex items-center justify-center">
+            <Link
+              href="/dashboard"
+              className="flex items-center justify-center p-1.5 rounded-xl hover:bg-surface-container-high transition-colors"
+              title="Future Farms Dashboard"
+            >
+              <Image
+                src="/logo-icon.webp"
+                alt="Future Farms"
+                width={48}
+                height={48}
+                className="h-11 w-11 object-contain drop-shadow-xs"
+                priority
+              />
+            </Link>
+          </div>
+        ) : (
+          <div className="w-full flex items-center justify-between gap-2">
+            <Link href="/dashboard" className="flex items-center pl-1 py-1">
+              <Image
+                src="/logo-expanded.webp"
+                alt="Future Farms - An Initiative Of Arbarne Agriculture Group"
+                width={120}
+                height={114}
+                className="h-[70px] w-auto max-w-[175px] object-contain drop-shadow-xs"
+                priority
+              />
+            </Link>
+            {onToggleCollapse && (
+              <button
+                onClick={onToggleCollapse}
+                className="p-2 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors cursor-pointer"
+                title="Collapse sidebar"
+                aria-label="Collapse sidebar"
+              >
+                <span className="material-symbols-outlined text-[20px]">
+                  menu_open
+                </span>
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Main Navigation */}
-      <div className="flex-1 overflow-y-auto px-3 flex flex-col gap-1.5">
+      <div className="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1.5">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -48,57 +96,115 @@ export default function Sidebar({ userName = "Keziah" }: SidebarProps) {
             <Link
               key={item.label}
               href={item.href}
-              className={`px-4 py-3 rounded-xl flex items-center gap-3 transition-colors text-sm ${
+              title={collapsed ? item.label : undefined}
+              className={`rounded-xl flex items-center transition-colors text-sm font-medium relative group ${
+                collapsed
+                  ? "w-12 h-12 mx-auto justify-center"
+                  : "px-4 py-3 gap-3"
+              } ${
                 isActive
-                  ? "bg-primary text-white font-semibold"
-                  : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-medium"
+                  ? "bg-primary text-white font-semibold shadow-xs"
+                  : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
               }`}
             >
               <span
-                className={`material-symbols-outlined text-[20px] ${
-                  isActive ? "fill text-white" : "text-on-surface-variant"
-                }`}
+                className={`material-symbols-outlined shrink-0 ${
+                  collapsed ? "text-[22px]" : "text-[20px]"
+                } ${isActive ? "fill text-white" : "text-on-surface-variant"}`}
               >
                 {item.icon}
               </span>
-              <span>{item.label}</span>
+              {!collapsed && (
+                <span className="truncate whitespace-nowrap">{item.label}</span>
+              )}
+
+              {/* Tooltip on hover when collapsed */}
+              {collapsed && (
+                <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-inverse-surface text-inverse-on-surface text-xs font-semibold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
+                  {item.label}
+                </div>
+              )}
             </Link>
           );
         })}
       </div>
 
       {/* Bottom Nav Actions */}
-      <div className="p-4 border-t border-surface-variant mt-auto flex flex-col gap-1.5">
+      <div className="p-3 border-t border-surface-variant mt-auto flex flex-col gap-1.5 shrink-0">
         {bottomItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.label}
               href={item.href}
-              className={`px-4 py-2.5 rounded-xl transition-colors flex items-center gap-3 text-sm ${
+              title={collapsed ? item.label : undefined}
+              className={`rounded-xl flex items-center transition-colors text-sm font-medium relative group ${
+                collapsed
+                  ? "w-12 h-10 mx-auto justify-center"
+                  : "px-4 py-2.5 gap-3"
+              } ${
                 isActive
                   ? "bg-primary text-white font-semibold"
-                  : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-medium"
+                  : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
               }`}
             >
               <span
-                className={`material-symbols-outlined text-[20px] ${
+                className={`material-symbols-outlined shrink-0 text-[20px] ${
                   isActive ? "fill text-white" : "text-on-surface-variant"
                 }`}
               >
                 {item.icon}
               </span>
-              <span>{item.label}</span>
+              {!collapsed && (
+                <span className="truncate whitespace-nowrap">{item.label}</span>
+              )}
+
+              {/* Tooltip on hover when collapsed */}
+              {collapsed && (
+                <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-inverse-surface text-inverse-on-surface text-xs font-semibold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
+                  {item.label}
+                </div>
+              )}
             </Link>
           );
         })}
+
+        {/* Logout */}
         <Link
           href="/login"
-          className="text-error font-medium px-4 py-2.5 rounded-xl hover:bg-error-container/20 transition-colors flex items-center gap-3 text-sm mt-1"
+          title={collapsed ? "Logout" : undefined}
+          className={`text-error font-medium rounded-xl hover:bg-error-container/20 transition-colors flex items-center text-sm relative group ${
+            collapsed
+              ? "w-12 h-10 mx-auto justify-center"
+              : "px-4 py-2.5 gap-3 mt-1"
+          }`}
         >
-          <span className="material-symbols-outlined text-[20px] text-error">logout</span>
-          <span>Logout</span>
+          <span className="material-symbols-outlined text-[20px] text-error shrink-0">
+            logout
+          </span>
+          {!collapsed && <span>Logout</span>}
+
+          {/* Tooltip on hover when collapsed */}
+          {collapsed && (
+            <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-inverse-surface text-inverse-on-surface text-xs font-semibold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
+              Logout
+            </div>
+          )}
         </Link>
+
+        {/* Expand toggle at bottom when collapsed */}
+        {collapsed && onToggleCollapse && (
+          <button
+            onClick={onToggleCollapse}
+            title="Expand sidebar"
+            aria-label="Expand sidebar"
+            className="w-12 h-10 mx-auto mt-1 rounded-xl flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors cursor-pointer border border-outline-variant/30"
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              chevron_right
+            </span>
+          </button>
+        )}
       </div>
     </nav>
   );
