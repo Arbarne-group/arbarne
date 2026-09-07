@@ -90,6 +90,50 @@ export default function HouseholdLabourPage() {
     }
   };
 
+  const handleSaveAndStartAssessment = async () => {
+    setSaving(true);
+    setSaveFeedback(null);
+    try {
+      await fetch("/api/onboarding/step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          step: "household-labour",
+          email: "keziah@futurefarms.africa",
+          data: {
+            permanentWorkers,
+            seasonalWorkers,
+            managementStructure,
+            fairEmploymentPractices,
+          },
+        }),
+      });
+
+      const confirmRes = await fetch("/api/onboarding/step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          step: "confirm-profile",
+          email: "keziah@futurefarms.africa",
+          data: {},
+        }),
+      });
+      const resData = await confirmRes.json();
+      if (resData.user) {
+        localStorage.setItem(
+          "future_farms_user",
+          JSON.stringify({ ...resData.user, stage: "FULLY_COMPLETED" })
+        );
+      }
+      router.push("/assessment");
+    } catch (e) {
+      console.error(e);
+      router.push("/assessment");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <AppShell userName="Keziah Wanjiku" userRole="Farm Owner">
       <div className="w-full pt-4 pb-28 px-4 md:px-8 max-w-5xl mx-auto space-y-6">
@@ -407,9 +451,18 @@ export default function HouseholdLabourPage() {
               type="button"
               onClick={() => handleSave(true)}
               disabled={saving}
+              className="px-4 py-2.5 rounded-xl border border-primary/30 hover:border-primary text-primary font-semibold text-xs md:text-sm transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-70 bg-primary/5 hover:bg-primary/10"
+            >
+              <span>Review Profile</span>
+              <span className="material-symbols-outlined text-[16px]">visibility</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleSaveAndStartAssessment}
+              disabled={saving}
               className="px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
-              <span>{saving ? "Saving..." : "Proceed to Farm Profile"}</span>
+              <span>{saving ? "Saving..." : "Finish Survey & Take Assessment"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
             </button>
           </div>

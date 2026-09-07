@@ -57,8 +57,9 @@ export default function SignupPage() {
       }
 
       // Store current user info in localStorage for demo continuity
-      localStorage.setItem("future_farms_user", JSON.stringify(data.user));
-      router.push("/onboarding");
+      const userWithStage = { ...data.user, stage: "INITIAL_IN_PROGRESS" };
+      localStorage.setItem("future_farms_user", JSON.stringify(userWithStage));
+      router.push("/onboarding/step-1");
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred.");
     } finally {

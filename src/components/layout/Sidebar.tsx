@@ -2,20 +2,34 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { OnboardingStage } from "@/lib/onboardingGuard";
 
 interface SidebarProps {
   userName?: string;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
+  onboardingStage?: OnboardingStage;
 }
 
 export default function Sidebar({
   userName = "Keziah",
   collapsed = false,
   onToggleCollapse,
+  onboardingStage = "FULLY_COMPLETED",
 }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const isSurvey1 = onboardingStage === "INITIAL_IN_PROGRESS";
+  const isSurvey2 = onboardingStage === "INITIAL_COMPLETED" || onboardingStage === "ADDITIONAL_COMPLETED";
+
+  // Compute effective brand logo destination
+  const logoHref = isSurvey1
+    ? "/onboarding/step-1"
+    : isSurvey2
+    ? "/onboarding"
+    : "/dashboard";
 
   const navItems = [
     { label: "Overview", href: "/onboarding", icon: "dashboard" },
@@ -31,6 +45,32 @@ export default function Sidebar({
     { label: "Contact Us", href: "/contact", icon: "mail" },
   ];
 
+  // Helper to determine if an individual item is locked
+  const isItemLocked = (itemHref: string) => {
+    if (isSurvey1) {
+      // During Survey 1, all nav destinations outside /onboarding/step-* are locked
+      return true;
+    }
+    if (isSurvey2) {
+      // During Survey 2, Overview (/onboarding) is unlocked; other pages are locked
+      return itemHref !== "/onboarding";
+    }
+    return false;
+  };
+
+  const handleItemClick = (e: React.MouseEvent, itemHref: string) => {
+    if (isSurvey1) {
+      e.preventDefault();
+      router.push("/onboarding/step-1");
+      return;
+    }
+    if (isSurvey2 && itemHref !== "/onboarding") {
+      e.preventDefault();
+      router.push("/onboarding");
+      return;
+    }
+  };
+
   return (
     <nav
       className={`h-full fixed left-0 top-0 hidden md:flex flex-col bg-surface-container-lowest border-r border-surface-variant z-40 transition-all duration-300 ease-in-out select-none ${
@@ -42,9 +82,9 @@ export default function Sidebar({
         {collapsed ? (
           <div className="w-full flex items-center justify-center">
             <Link
-              href="/dashboard"
+              href={logoHref}
               className="flex items-center justify-center p-1.5 rounded-xl hover:bg-surface-container-high transition-colors"
-              title="Future Farms Dashboard"
+              title="Future Farms"
             >
               <Image
                 src="/logo-icon.webp"
@@ -58,7 +98,7 @@ export default function Sidebar({
           </div>
         ) : (
           <div className="w-full flex items-center justify-between gap-2">
-            <Link href="/dashboard" className="flex items-center pl-1">
+            <Link href={logoHref} className="flex items-center pl-1">
               <Image
                 src="/logo.webp"
                 alt="Future Farms - An Initiative Of Arbarne Agriculture Group"
@@ -87,6 +127,7 @@ export default function Sidebar({
       {/* Main Navigation */}
       <div className="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1.5">
         {navItems.map((item) => {
+          const locked = isItemLocked(item.href);
           const isActive =
             pathname === item.href ||
             (item.href === "/onboarding" && pathname.startsWith("/onboarding")) ||
@@ -95,8 +136,9 @@ export default function Sidebar({
           return (
             <Link
               key={item.label}
-              href={item.href}
-              title={collapsed ? item.label : undefined}
+              href={locked ? (isSurvey1 ? "/onboarding/step-1" : "/onboarding") : item.href}
+              onClick={(e) => handleItemClick(e, item.href)}
+              title={collapsed ? `${item.label}${locked ? " (Locked)" : ""}` : undefined}
               className={`rounded-xl flex items-center transition-colors text-sm font-medium relative group ${
                 collapsed
                   ? "w-12 h-12 mx-auto justify-center"
@@ -104,6 +146,8 @@ export default function Sidebar({
               } ${
                 isActive
                   ? "bg-primary text-white font-semibold shadow-xs"
+                  : locked
+                  ? "text-on-surface-variant/70 hover:bg-surface-container-high/60 cursor-pointer"
                   : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
               }`}
             >
@@ -114,14 +158,25 @@ export default function Sidebar({
               >
                 {item.icon}
               </span>
+
               {!collapsed && (
-                <span className="truncate whitespace-nowrap">{item.label}</span>
+                <div className="flex items-center justify-between flex-1 min-w-0">
+                  <span className="truncate whitespace-nowrap">{item.label}</span>
+                  {locked && (
+                    <span className="material-symbols-outlined text-[15px] text-outline ml-1 shrink-0">
+                      lock
+                    </span>
+                  )}
+                </div>
               )}
 
               {/* Tooltip on hover when collapsed */}
               {collapsed && (
-                <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-inverse-surface text-inverse-on-surface text-xs font-semibold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
-                  {item.label}
+                <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-inverse-surface text-inverse-on-surface text-xs font-semibold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg flex items-center gap-1.5">
+                  <span>{item.label}</span>
+                  {locked && (
+                    <span className="text-[10px] text-amber-300 font-bold">(Locked)</span>
+                  )}
                 </div>
               )}
             </Link>
@@ -132,11 +187,18 @@ export default function Sidebar({
       {/* Bottom Nav Actions */}
       <div className="p-3 border-t border-surface-variant mt-auto flex flex-col gap-1.5 shrink-0">
         {bottomItems.map((item) => {
+          const locked = isSurvey1;
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.label}
-              href={item.href}
+              href={locked ? "/onboarding/step-1" : item.href}
+              onClick={(e) => {
+                if (locked) {
+                  e.preventDefault();
+                  router.push("/onboarding/step-1");
+                }
+              }}
               title={collapsed ? item.label : undefined}
               className={`rounded-xl flex items-center transition-colors text-sm font-medium relative group ${
                 collapsed
@@ -156,7 +218,14 @@ export default function Sidebar({
                 {item.icon}
               </span>
               {!collapsed && (
-                <span className="truncate whitespace-nowrap">{item.label}</span>
+                <div className="flex items-center justify-between flex-1 min-w-0">
+                  <span className="truncate whitespace-nowrap">{item.label}</span>
+                  {locked && (
+                    <span className="material-symbols-outlined text-[14px] text-outline ml-1 shrink-0">
+                      lock
+                    </span>
+                  )}
+                </div>
               )}
 
               {/* Tooltip on hover when collapsed */}

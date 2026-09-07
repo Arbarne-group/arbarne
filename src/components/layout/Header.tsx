@@ -5,11 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { OnboardingStage } from "@/lib/onboardingGuard";
+
 interface HeaderProps {
   userName?: string;
   userRole?: string;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
+  onboardingStage?: OnboardingStage;
 }
 
 export default function Header({
@@ -17,11 +20,27 @@ export default function Header({
   userRole = "Farm Owner",
   collapsed = false,
   onToggleCollapse,
+  onboardingStage = "FULLY_COMPLETED",
 }: HeaderProps) {
   const router = useRouter();
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const isSurvey1 = onboardingStage === "INITIAL_IN_PROGRESS";
+  const isSurvey2 = onboardingStage === "INITIAL_COMPLETED" || onboardingStage === "ADDITIONAL_COMPLETED";
+
+  const logoHref = isSurvey1
+    ? "/onboarding/step-1"
+    : isSurvey2
+    ? "/onboarding"
+    : "/dashboard";
+
+  const getProtectedHref = (href: string) => {
+    if (isSurvey1) return "/onboarding/step-1";
+    if (isSurvey2) return "/onboarding";
+    return href;
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -50,7 +69,7 @@ export default function Header({
     <>
       {/* Mobile Top App Bar - Exact h-16 */}
       <header className="sticky top-0 z-50 flex justify-between items-center w-full px-4 h-16 bg-surface border-b border-surface-variant md:hidden">
-        <Link href="/dashboard" className="flex items-center">
+        <Link href={logoHref} className="flex items-center">
           <Image
             src="/logo.webp"
             alt="Future Farms"
@@ -83,7 +102,7 @@ export default function Header({
                 <span className="text-[11px] text-on-surface-variant">{userRole}</span>
               </div>
               <Link
-                href="/settings"
+                href={getProtectedHref("/settings")}
                 onClick={() => setProfileOpen(false)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
               >
@@ -91,7 +110,7 @@ export default function Header({
                 <span>Personal Settings</span>
               </Link>
               <Link
-                href="/dashboard"
+                href={getProtectedHref("/dashboard")}
                 onClick={() => setProfileOpen(false)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
               >
@@ -99,7 +118,7 @@ export default function Header({
                 <span>My Farm Radar</span>
               </Link>
               <Link
-                href="/assessment"
+                href={getProtectedHref("/assessment")}
                 onClick={() => setProfileOpen(false)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
               >
@@ -107,7 +126,7 @@ export default function Header({
                 <span>Assessment Hub</span>
               </Link>
               <Link
-                href="/help"
+                href={getProtectedHref("/help")}
                 onClick={() => setProfileOpen(false)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
               >
@@ -234,7 +253,7 @@ export default function Header({
                   <span className="text-[11px] text-on-surface-variant">{userRole}</span>
                 </div>
                 <Link
-                  href="/settings"
+                  href={getProtectedHref("/settings")}
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
                 >
@@ -242,7 +261,7 @@ export default function Header({
                   <span>Personal Settings</span>
                 </Link>
                 <Link
-                  href="/dashboard"
+                  href={getProtectedHref("/dashboard")}
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
                 >
@@ -250,7 +269,7 @@ export default function Header({
                   <span>My Farm Radar</span>
                 </Link>
                 <Link
-                  href="/assessment"
+                  href={getProtectedHref("/assessment")}
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
                 >
@@ -258,7 +277,7 @@ export default function Header({
                   <span>Assessment Diagnostic</span>
                 </Link>
                 <Link
-                  href="/opportunities"
+                  href={getProtectedHref("/opportunities")}
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
                 >
@@ -266,7 +285,7 @@ export default function Header({
                   <span>Matched Opportunities</span>
                 </Link>
                 <Link
-                  href="/help"
+                  href={getProtectedHref("/help")}
                   onClick={() => setProfileOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
                 >

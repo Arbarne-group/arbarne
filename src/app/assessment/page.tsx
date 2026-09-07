@@ -26,16 +26,40 @@ function AssessmentPageContent() {
   const [onboardingStage, setOnboardingStage] = useState<string>("FULLY_COMPLETED");
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    let email = "keziah@futurefarms.africa";
+    const cached = localStorage.getItem("future_farms_user");
+    if (cached) {
+      try {
+        const u = JSON.parse(cached);
+        if (u.email) email = u.email;
+        if (u.stage) {
+          setOnboardingStage(u.stage);
+          if (u.stage === "INITIAL_IN_PROGRESS") {
+            router.replace("/onboarding/step-1");
+            return;
+          } else if (u.stage === "INITIAL_COMPLETED" || u.stage === "ADDITIONAL_COMPLETED") {
+            router.replace("/onboarding");
+            return;
+          }
+        }
+      } catch (e) {}
+    }
+
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.stage) {
           setOnboardingStage(data.stage);
+          if (data.stage === "INITIAL_IN_PROGRESS") {
+            router.replace("/onboarding/step-1");
+          } else if (data.stage === "INITIAL_COMPLETED" || data.stage === "ADDITIONAL_COMPLETED") {
+            router.replace("/onboarding");
+          }
         }
       })
       .catch(console.error)
       .finally(() => setOnboardingLoaded(true));
-  }, []);
+  }, [router]);
 
   // Sync state with URL search params
   useEffect(() => {

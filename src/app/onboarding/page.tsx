@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 
+import { computeOnboardingStageFromUser } from "@/lib/onboardingGuard";
+
 export default function OnboardingOverviewPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
@@ -35,13 +37,33 @@ export default function OnboardingOverviewPage() {
   const profileApproved = Boolean(user?.onboardingStatus?.profileApproved);
 
   const fetchStatus = () => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    let email = "keziah@futurefarms.africa";
+    const cached = localStorage.getItem("future_farms_user");
+    if (cached) {
+      try {
+        const u = JSON.parse(cached);
+        if (u.email) email = u.email;
+        setUser(u);
+        const st = computeOnboardingStageFromUser(u);
+        setOnboardingStage(st.stage);
+        if (st.stage === "INITIAL_IN_PROGRESS") {
+          router.replace("/onboarding/step-1");
+          return;
+        }
+      } catch (e) {}
+    }
+
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user) {
           setUser(data.user);
-          setOnboardingStage(data.stage || "INITIAL_IN_PROGRESS");
-          localStorage.setItem("future_farms_user", JSON.stringify(data.user));
+          const st = computeOnboardingStageFromUser(data.user);
+          setOnboardingStage(st.stage);
+          localStorage.setItem("future_farms_user", JSON.stringify({ ...data.user, stage: st.stage }));
+          if (st.stage === "INITIAL_IN_PROGRESS") {
+            router.replace("/onboarding/step-1");
+          }
         }
       })
       .catch(console.error)
@@ -62,9 +84,10 @@ export default function OnboardingOverviewPage() {
       });
       setUser(null);
       setOnboardingStage("INITIAL_IN_PROGRESS");
-      fetchStatus();
+      router.push("/onboarding/step-1");
     } catch (e) {
       console.error(e);
+      router.push("/onboarding/step-1");
     } finally {
       setResetting(false);
     }
@@ -732,22 +755,25 @@ export default function OnboardingOverviewPage() {
               Clean, concise, and properly aligned
               ───────────────────────────────────────────────────────────── */
           <div className="space-y-8 animate-fadeIn">
-            {/* Dynamic Hero Section */}
+            {/* Dynamic Hero Section - Guiding User to Take Second Onboarding Survey */}
             <section className="bg-surface-container-lowest rounded-3xl shadow-sm p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden border border-secondary-container">
               <div className="absolute top-0 right-0 w-80 h-80 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none" />
 
               <div className="flex-1 z-10 space-y-2.5">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wide">
                   <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                  <span>Initial Profiling Completed (5/5)</span>
+                  <span>Survey 1 Complete (5/5) • Step 2 of 2: Second Onboarding Survey</span>
                 </div>
 
-                <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight">
-                  Complete Your Farm Profile
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-on-surface tracking-tight">
+                  Take Your Second Onboarding Survey
                 </h1>
+                <h2 className="text-xs md:text-sm font-semibold text-primary">
+                  Farm Systems &amp; Operations Deep Dive
+                </h2>
 
                 <p className="text-xs md:text-sm text-on-surface-variant max-w-lg leading-relaxed">
-                  Complete the 5 remaining farm sections below to generate your verified profile and unlock the Farm Assessment.
+                  You have completed the initial questionnaire! Now complete the <strong>second onboarding survey</strong> below (Location, Characteristics, Farming System, Business Experience, and Household &amp; Labour) to establish your farm baseline and unlock your <strong>Farm Assessment</strong>.
                 </p>
 
                 {/* Progress Card */}
@@ -759,12 +785,12 @@ export default function OnboardingOverviewPage() {
                           href={nextAdditionalStepHref}
                           className="text-primary hover:underline inline-flex items-center gap-1 font-bold"
                         >
-                          <span>Continue with Additional Onboarding</span>
+                          <span>{additionalDoneCount === 0 ? "Start Second Onboarding Survey" : "Continue Second Onboarding Survey"}</span>
                           <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
                         </Link>
                       </h3>
                       <p className="text-[11px] text-on-surface-variant">
-                        {additionalDoneCount} of {additionalTotal} additional sections completed
+                        {additionalDoneCount} of {additionalTotal} second survey sections completed
                       </p>
                     </div>
                     <span className="text-base text-primary font-bold">{additionalPercent}%</span>
@@ -780,9 +806,9 @@ export default function OnboardingOverviewPage() {
                 <div className="pt-2">
                   <Link
                     href={nextAdditionalStepHref}
-                    className="bg-primary hover:bg-primary/90 text-white text-xs font-semibold px-6 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all inline-flex items-center gap-1.5"
+                    className="bg-primary hover:bg-primary/90 text-white text-xs font-semibold px-6 py-2.5 rounded-xl shadow-sm hover:shadow-md transition-all inline-flex items-center gap-1.5 btn-shadow hover-lift"
                   >
-                    <span>Continue Additional Sections</span>
+                    <span>{additionalDoneCount === 0 ? "Start Second Onboarding Survey" : "Continue Second Onboarding Survey"}</span>
                     <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                   </Link>
                 </div>
@@ -803,14 +829,14 @@ export default function OnboardingOverviewPage() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div>
                   <h2 className="text-base md:text-lg font-bold text-on-surface">
-                    Required Additional Onboarding Sections
+                    Second Onboarding Survey Sections
                   </h2>
                   <p className="text-xs text-on-surface-variant">
-                    Complete all 5 sections to generate your verified Farm Profile
+                    Complete all 5 sections below to generate your verified Farm Profile and unlock your Farm Assessment.
                   </p>
                 </div>
                 <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-                  Phase 2: Farm &amp; Operations Profiling
+                  Step 2 of 2: Farm Profile Survey
                 </span>
               </div>
 
@@ -843,7 +869,7 @@ export default function OnboardingOverviewPage() {
                           }`}
                         >
                           {isDone && <span className="material-symbols-outlined text-[13px]">check</span>}
-                          {isDone ? "Completed" : `Stage ${card.stageNumber}`}
+                          {isDone ? "Completed" : `Section ${card.stageNumber}`}
                         </span>
                       </div>
 
@@ -856,18 +882,18 @@ export default function OnboardingOverviewPage() {
             </section>
 
             {/* Assessment Locked Notice */}
-            <div className="p-4 rounded-2xl bg-surface-container-low border border-surface-container-high flex items-center justify-between gap-4">
+            <div className="p-4 rounded-2xl bg-surface-container-low border border-surface-container-high flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-outline text-[20px]">lock</span>
                 <div>
-                  <h4 className="text-xs font-bold text-on-surface">Assessment Hub is Locked</h4>
+                  <h4 className="text-xs font-bold text-on-surface">Navigation &amp; Assessment Hub Locked</h4>
                   <p className="text-[11px] text-on-surface-variant">
-                    Access to your farm maturity assessment will unlock immediately once you complete these sections and approve your Farm Profile.
+                    Attempting to visit other pages will redirect you back here until you complete the second onboarding survey and verify your Farm Profile.
                   </p>
                 </div>
               </div>
               <span className="text-[11px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full shrink-0">
-                Phase 2 In Progress
+                Step 2 In Progress
               </span>
             </div>
           </div>

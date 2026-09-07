@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+import { computeOnboardingStageFromUser } from "@/lib/onboardingGuard";
+
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
@@ -21,6 +23,13 @@ export async function POST(request: Request) {
         operatingStyle: true,
         digitalPlatform: true,
         aspiration: true,
+        farmLocation: true,
+        farmCharacteristics: true,
+        farmingSystem: true,
+        businessExperience: true,
+        goalsPriorities: true,
+        householdLabour: true,
+        onboardingStatus: true,
       },
     });
 
@@ -39,8 +48,11 @@ export async function POST(request: Request) {
       );
     }
 
+    const status = computeOnboardingStageFromUser(user);
+
     return NextResponse.json({
       success: true,
+      stage: status.stage,
       user: {
         id: user.id,
         name: user.name,
@@ -52,6 +64,13 @@ export async function POST(request: Request) {
         operatingStyle: user.operatingStyle,
         digitalPlatform: user.digitalPlatform,
         aspiration: user.aspiration,
+        farmLocation: user.farmLocation,
+        farmCharacteristics: user.farmCharacteristics,
+        farmingSystem: user.farmingSystem,
+        businessExperience: user.businessExperience,
+        householdLabour: user.householdLabour,
+        onboardingStatus: user.onboardingStatus,
+        stage: status.stage,
       },
     });
   } catch (error: any) {

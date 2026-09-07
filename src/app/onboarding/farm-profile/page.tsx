@@ -24,7 +24,7 @@ export default function FarmProfileReviewPage() {
   const handleApprove = async () => {
     setApproving(true);
     try {
-      await fetch("/api/onboarding/step", {
+      const res = await fetch("/api/onboarding/step", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -33,10 +33,17 @@ export default function FarmProfileReviewPage() {
           data: {},
         }),
       });
-      router.push("/onboarding");
+      const data = await res.json();
+      if (data.user) {
+        localStorage.setItem(
+          "future_farms_user",
+          JSON.stringify({ ...data.user, stage: "FULLY_COMPLETED" })
+        );
+      }
+      router.push("/assessment");
     } catch (e) {
       console.error(e);
-      router.push("/onboarding");
+      router.push("/assessment");
     } finally {
       setApproving(false);
     }
@@ -90,10 +97,11 @@ export default function FarmProfileReviewPage() {
               type="button"
               onClick={handleApprove}
               disabled={approving}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary/90 transition-all shadow-sm hover:shadow-md text-xs font-semibold disabled:opacity-75"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary/90 transition-all shadow-sm hover:shadow-md text-xs font-semibold disabled:opacity-75 cursor-pointer"
             >
               <span className="material-symbols-outlined text-[18px]">verified</span>
-              <span>{approving ? "Approving..." : "Approve & Complete Onboarding"}</span>
+              <span>{approving ? "Approving Profile..." : "Approve Profile & Take Assessment"}</span>
+              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </button>
           </div>
         </div>
@@ -516,10 +524,11 @@ export default function FarmProfileReviewPage() {
             type="button"
             onClick={handleApprove}
             disabled={approving}
-            className="px-6 md:px-8 py-2.5 md:py-3 rounded-xl bg-primary text-white font-bold text-xs md:text-sm shadow-md hover:bg-primary/90 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-75"
+            className="px-6 md:px-8 py-2.5 md:py-3 rounded-xl bg-primary text-white font-bold text-xs md:text-sm shadow-md hover:bg-primary/90 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-75 btn-shadow hover-lift"
           >
             <span className="material-symbols-outlined text-[18px]">verified</span>
-            <span>{approving ? "Approving Profile..." : "Approve & Complete Onboarding"}</span>
+            <span>{approving ? "Approving Profile..." : "Approve Profile & Take Assessment"}</span>
+            <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </button>
         </div>
       </div>

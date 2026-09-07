@@ -78,7 +78,7 @@ export async function GET(request: Request) {
     });
   } catch (error: any) {
     console.error("Error fetching onboarding data:", error);
-    return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
+    return NextResponse.json({ error: error?.message || "Failed to fetch data" }, { status: 500 });
   }
 }
 
