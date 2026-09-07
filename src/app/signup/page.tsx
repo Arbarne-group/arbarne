@@ -83,11 +83,20 @@ export default function SignupPage() {
           {/* Hero text */}
           <div className="absolute bottom-0 left-0 p-12 w-full max-w-2xl text-white">
             <h2 className="text-4xl lg:text-5xl font-bold mb-4 drop-shadow-lg leading-tight">
-              Join the Future of Sustainable Farming.
+              Our Farms. Our Future.
             </h2>
-            <p className="text-lg text-white/90 max-w-lg leading-relaxed drop-shadow-md">
-              Empower your agricultural journey with data-driven insights, precision tools, and a community dedicated to growth and resilience.
+            <p className="text-base lg:text-lg text-white/90 max-w-lg leading-relaxed drop-shadow-md mb-6">
+              Join the future of farming and become part of a continent-wide effort to redesign Africa&apos;s agricultural systems for climate resilience and food security.
             </p>
+            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 max-w-lg">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-secondary-fixed mb-1 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">verified</span>
+                Future Farms Framework
+              </h3>
+              <p className="text-xs text-white/85 leading-relaxed">
+                Assess your farm using the Farm Systems Capability and Maturity Framework, designed to guide and measure your farm&apos;s transition toward future-readiness.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -97,23 +106,26 @@ export default function SignupPage() {
         <div className="mx-auto w-full max-w-sm lg:w-96">
           {/* Logo & Header */}
           <div>
-            <div className="flex items-center mb-8">
+            <div className="flex items-center mb-6">
               <Link href="/" className="flex items-center">
                 <Image
                   src="/logo.webp"
                   alt="Future Farms"
                   width={300}
                   height={75}
-                  className="w-full max-w-[300px] h-auto object-contain"
+                  className="w-full max-w-[280px] h-auto object-contain"
                   priority
                 />
               </Link>
             </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-2">
+              <span>Sign-Up</span>
+            </div>
             <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
-              Create Your Account
+              Our Farms. Our Future.
             </h1>
-            <p className="mt-2 text-sm text-on-surface-variant">
-              Start optimizing your farm&apos;s potential today.
+            <p className="mt-2 text-xs md:text-sm text-on-surface-variant leading-relaxed">
+              Join the future of farming and become part of a continent-wide effort to redesign Africa&apos;s agricultural systems for climate resilience and food security.
             </p>
           </div>
 

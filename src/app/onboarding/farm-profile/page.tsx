@@ -112,6 +112,14 @@ export default function FarmProfileReviewPage() {
                 </span>
               </div>
               <span className="text-on-surface-variant text-xs md:text-sm mt-0.5">{locationText}</span>
+              <div className="mt-1.5 flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-md bg-secondary-fixed/40 text-on-secondary-fixed text-xs font-mono font-bold tracking-wide">
+                  Future Farms ID: FFF-KE-000-001
+                </span>
+                <span className="text-[11px] text-on-surface-variant italic">
+                  (Unified Farm Profile Code)
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-6 text-xs md:text-sm text-on-surface">
@@ -135,6 +143,106 @@ export default function FarmProfileReviewPage() {
                 <span className="text-[11px] text-on-surface-variant block">Water Supply</span>
                 <span className="font-semibold text-primary">Reliable Solar Borehole</span>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Farm Profile - Complete Key Metadata Accordion/Card */}
+        <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-surface-container-high/60 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-surface-container-high">
+            <div>
+              <h3 className="text-sm md:text-base text-on-surface font-bold flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-[20px]">badge</span>
+                Farm Profile — Verified Metadata
+              </h3>
+              <p className="text-xs text-on-surface-variant">
+                Future Farms Framework key metadata holding your entire farm operational profile.
+              </p>
+            </div>
+            <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
+              FFF-KE-000-001
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 text-xs">
+            {/* 1. Farm Identity */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
+              <span className="font-bold text-primary block mb-1">1. Farm Identity</span>
+              <p className="text-on-surface font-semibold">Green Horizon Agri-Farm</p>
+              <p className="text-on-surface-variant">ID: FFF-KE-000-001 • Est. 2021</p>
+              <p className="text-on-surface-variant">Ownership: Farmer Owned (Freehold)</p>
+            </div>
+
+            {/* 2. Farmer / Manager */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
+              <span className="font-bold text-primary block mb-1">2. Farmer / Manager</span>
+              <p className="text-on-surface font-semibold">{name}</p>
+              <p className="text-on-surface-variant">Role: Lead Owner &amp; Operator</p>
+              <p className="text-on-surface-variant">Contact: {phone}</p>
+            </div>
+
+            {/* 3. Location */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
+              <span className="font-bold text-primary block mb-1">3. Location</span>
+              <p className="text-on-surface font-semibold">Kenya • Nakuru County</p>
+              <p className="text-on-surface-variant">Naivasha Sub-county • Maraigushu</p>
+              <p className="text-on-surface-variant font-mono text-[11px]">GPS: 0°59&apos;48&quot;S 36°35&apos;12&quot;E</p>
+            </div>
+
+            {/* 4. Farm Size & Land */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
+              <span className="font-bold text-primary block mb-1">4. Farm Size &amp; Land</span>
+              <p className="text-on-surface font-semibold">Total: {farmSize} {farmUnit} (5.06 Ha)</p>
+              <p className="text-on-surface-variant">Under Production: {cultivatedAcres} {farmUnit}</p>
+              <p className="text-on-surface-variant">Grazing &amp; Infrastructure: {grazingAcres} {farmUnit}</p>
+            </div>
+
+            {/* 5. Production */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
+              <span className="font-bold text-primary block mb-1">5. Production Enterprises</span>
+              <p className="text-on-surface font-semibold">Mixed: Horticulture &amp; Dairy</p>
+              <p className="text-on-surface-variant">French Beans, Field Tomatoes, Maize</p>
+              <p className="text-on-surface-variant">System: Semi-intensive drip &amp; open field</p>
+            </div>
+
+            {/* 6. Infrastructure */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
+              <span className="font-bold text-primary block mb-1">6. Infrastructure</span>
+              <p className="text-on-surface font-semibold">Solar Borehole Drip Irrigation</p>
+              <p className="text-on-surface-variant">Energy: 10kW Solar PV + Grid backup</p>
+              <p className="text-on-surface-variant">Storage: Evaporative charcoal packhouse</p>
+            </div>
+
+            {/* 7. Labour */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
+              <span className="font-bold text-primary block mb-1">7. Labour</span>
+              <p className="text-on-surface font-semibold">3 Permanent Full-time Workers</p>
+              <p className="text-on-surface-variant">8–12 Seasonal Harvest Workers</p>
+              <p className="text-on-surface-variant">2 Household / Family Managers</p>
+            </div>
+
+            {/* 8. Markets */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
+              <span className="font-bold text-primary block mb-1">8. Markets</span>
+              <p className="text-on-surface font-semibold">Primary: Export &amp; Formal Retail</p>
+              <p className="text-on-surface-variant">Buyers: Fresh produce off-takers</p>
+              <p className="text-on-surface-variant">Local: Regional wholesale aggregators</p>
+            </div>
+
+            {/* 9. Farm Business & Scale */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
+              <span className="font-bold text-primary block mb-1">9. Farm Business</span>
+              <p className="text-on-surface font-semibold">Registered Agribusiness Entity</p>
+              <p className="text-on-surface-variant">4 Years in Continuous Operation</p>
+              <p className="text-on-surface-variant">Scale: KES 2.5M – 5.0M annual band</p>
+            </div>
+
+            {/* 10. Farm Goals (spans 3 cols on large) */}
+            <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high sm:col-span-2 lg:col-span-3">
+              <span className="font-bold text-primary block mb-1">10. Farm Goals &amp; Strategic Priorities</span>
+              <p className="text-on-surface">
+                Transition to 100% renewable solar irrigation, attain Global GAP food safety certification, expand packhouse cold storage, and increase high-value export horticulture yields by 35% within 12 months.
+              </p>
             </div>
           </div>
         </div>

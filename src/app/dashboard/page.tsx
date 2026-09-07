@@ -33,12 +33,13 @@ export default function DashboardPage() {
   const [newActionText, setNewActionText] = useState("");
   const [showAddAction, setShowAddAction] = useState(false);
 
-  // Checklist Actions State
+  // 5 Top Recommendations (Question-level tasks)
   const [actions, setActions] = useState<ActionItem[]>([
-    { id: "act-1", text: "Complete Energy Management learning module", completed: true, category: "Pillar 2" },
-    { id: "act-2", text: "Explore suitable solar solutions", completed: false, category: "Pillar 2" },
-    { id: "act-3", text: "Prepare financial records", completed: false, category: "Pillar 8" },
-    { id: "act-4", text: "Implement daily digital spray & harvest logs", completed: false, category: "Pillar 1" },
+    { id: "act-1", text: "[P1.1.1] List top production challenges and explore technology solutions with an advisor", completed: true, category: "Pillar 1" },
+    { id: "act-2", text: "[P2.3.1] Install energy sub-meters on high-consumption solar & grid irrigation pumps", completed: false, category: "Pillar 2" },
+    { id: "act-3", text: "[P3.2.2] Establish daily harvest hygiene logs and designated field worker wash stations", completed: false, category: "Pillar 3" },
+    { id: "act-4", text: "[P4.1.3] Construct water-catchment swales and plant vetiver grass along field contours", completed: false, category: "Pillar 4" },
+    { id: "act-5", text: "[P8.3.1] Consolidate farm financial documentation and separate personal from enterprise cash flow", completed: false, category: "Pillar 8" },
   ]);
 
   useEffect(() => {
@@ -159,6 +160,27 @@ export default function DashboardPage() {
     >
       <div className="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-background">
         <div className="max-w-[1280px] mx-auto flex flex-col gap-lg">
+          {/* My Future Farm Page Header */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-2 border-b border-outline-variant/30">
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-[26px]">agriculture</span>
+                My Future Farm
+              </h1>
+              <p className="text-xs md:text-sm text-on-surface-variant">
+                Farm progression across 8 Pillars (P1–P8) and 40 underlying Capabilities (1.1–8.5).
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed text-xs font-mono font-bold">
+                ID: FFF-KE-000-001
+              </span>
+              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                3/8 Pillars Verified
+              </span>
+            </div>
+          </div>
+
           {/* Top Section: Bento Grid for Maturity Index & Radar */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
             {/* Left Col: Maturity Index */}
@@ -461,6 +483,264 @@ export default function DashboardPage() {
                 >
                   View All Actions
                 </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Future Farms Verification (FFV) Section */}
+          <div className="bg-surface rounded-2xl p-6 shadow-ambient border border-outline-variant/40 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="material-symbols-outlined text-primary text-[22px]">verified</span>
+                  <h3 className="font-title-md text-title-md text-on-surface font-bold">
+                    Future Farms Verification (FFV)
+                  </h3>
+                </div>
+                <p className="text-xs text-on-surface-variant max-w-xl">
+                  FFV verifies the evidence behind your self-assessment claims and strengthens the credibility of your Future Farm Profile for lenders, buyers, and investors.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs">
+                  3 of 8 pillars verified
+                </span>
+                <Link
+                  href="/assessment"
+                  className="px-4 py-2 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5 shadow-xs"
+                >
+                  <span>Start Verification</span>
+                  <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Instant Status Indicators Legend */}
+            <div className="flex flex-wrap items-center gap-4 text-xs text-on-surface-variant pb-2">
+              <span className="font-semibold text-on-surface">Status Legend:</span>
+              <span className="inline-flex items-center gap-1">
+                <span className="text-outline text-base">○</span> Not Started
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="text-[#d97706] text-base">◐</span> In Review / Submitted
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="text-primary text-base font-bold">✓</span> Verified
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="text-error text-base font-bold">!</span> Needs Review
+              </span>
+            </div>
+
+            {/* 8 Pillars FFV Matrix */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Pillar 1 */}
+              <div className="p-4 rounded-xl bg-surface-container-low border border-primary/30 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-bold text-xs text-on-surface">Pillar 1</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary flex items-center gap-0.5">
+                      ✓ Verified
+                    </span>
+                  </div>
+                  <h4 className="text-xs font-bold text-on-surface mb-2">Smart Farming &amp; Digital</h4>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-on-surface-variant flex justify-between">
+                      <span>Assessment:</span>
+                      <span className="font-semibold text-on-surface">21/25</span>
+                    </p>
+                    <p className="text-primary flex justify-between font-bold">
+                      <span>Verified:</span>
+                      <span>18/25 ✓</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-2 border-t border-outline-variant/20 text-[11px] text-on-surface-variant">
+                  4/5 Capabilities Approved
+                </div>
+              </div>
+
+              {/* Pillar 2 */}
+              <div className="p-4 rounded-xl bg-surface-container-low border border-[#d97706]/30 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-bold text-xs text-on-surface">Pillar 2</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#d97706]/10 text-[#d97706] flex items-center gap-0.5">
+                      ◐ In Review
+                    </span>
+                  </div>
+                  <h4 className="text-xs font-bold text-on-surface mb-2">Renewable Energy</h4>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-on-surface-variant flex justify-between">
+                      <span>Assessment:</span>
+                      <span className="font-semibold text-on-surface">19/25</span>
+                    </p>
+                    <p className="text-[#d97706] flex justify-between font-semibold">
+                      <span>Verified:</span>
+                      <span>16/25 (In Review)</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-2 border-t border-outline-variant/20 text-[11px] text-on-surface-variant">
+                  Telemetry logs undergoing review
+                </div>
+              </div>
+
+              {/* Pillar 3 */}
+              <div className="p-4 rounded-xl bg-surface-container-low border border-primary/30 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-bold text-xs text-on-surface">Pillar 3</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary flex items-center gap-0.5">
+                      ✓ Verified
+                    </span>
+                  </div>
+                  <h4 className="text-xs font-bold text-on-surface mb-2">Food Safety &amp; Quality</h4>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-on-surface-variant flex justify-between">
+                      <span>Assessment:</span>
+                      <span className="font-semibold text-on-surface">22/25</span>
+                    </p>
+                    <p className="text-primary flex justify-between font-bold">
+                      <span>Verified:</span>
+                      <span>20/25 ✓</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-2 border-t border-outline-variant/20 text-[11px] text-on-surface-variant">
+                  Packhouse &amp; spray records validated
+                </div>
+              </div>
+
+              {/* Pillar 4 */}
+              <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-bold text-xs text-on-surface">Pillar 4</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-container-high text-on-surface-variant">
+                      ○ Not Started
+                    </span>
+                  </div>
+                  <h4 className="text-xs font-bold text-on-surface mb-2">Climate Resilience</h4>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-on-surface-variant flex justify-between">
+                      <span>Assessment:</span>
+                      <span className="font-semibold text-on-surface">16/25</span>
+                    </p>
+                    <p className="text-outline flex justify-between">
+                      <span>Verified:</span>
+                      <span>--/25</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-2 border-t border-outline-variant/20 text-[11px] text-on-surface-variant">
+                  Evidence submission open
+                </div>
+              </div>
+
+              {/* Pillar 5 */}
+              <div className="p-4 rounded-xl bg-surface-container-low border border-[#d97706]/30 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-bold text-xs text-on-surface">Pillar 5</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#d97706]/10 text-[#d97706] flex items-center gap-0.5">
+                      ◐ In Review
+                    </span>
+                  </div>
+                  <h4 className="text-xs font-bold text-on-surface mb-2">Business Performance</h4>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-on-surface-variant flex justify-between">
+                      <span>Assessment:</span>
+                      <span className="font-semibold text-on-surface">18/25</span>
+                    </p>
+                    <p className="text-[#d97706] flex justify-between font-semibold">
+                      <span>Verified:</span>
+                      <span>15/25 (In Review)</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-2 border-t border-outline-variant/20 text-[11px] text-on-surface-variant">
+                  P&amp;L records under verification call
+                </div>
+              </div>
+
+              {/* Pillar 6 */}
+              <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-bold text-xs text-on-surface">Pillar 6</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-container-high text-on-surface-variant">
+                      ○ Not Started
+                    </span>
+                  </div>
+                  <h4 className="text-xs font-bold text-on-surface mb-2">Human Capital</h4>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-on-surface-variant flex justify-between">
+                      <span>Assessment:</span>
+                      <span className="font-semibold text-on-surface">17/25</span>
+                    </p>
+                    <p className="text-outline flex justify-between">
+                      <span>Verified:</span>
+                      <span>--/25</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-2 border-t border-outline-variant/20 text-[11px] text-on-surface-variant">
+                  Evidence submission open
+                </div>
+              </div>
+
+              {/* Pillar 7 */}
+              <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-bold text-xs text-on-surface">Pillar 7</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-container-high text-on-surface-variant">
+                      ○ Not Started
+                    </span>
+                  </div>
+                  <h4 className="text-xs font-bold text-on-surface mb-2">Market Access</h4>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-on-surface-variant flex justify-between">
+                      <span>Assessment:</span>
+                      <span className="font-semibold text-on-surface">20/25</span>
+                    </p>
+                    <p className="text-outline flex justify-between">
+                      <span>Verified:</span>
+                      <span>--/25</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-2 border-t border-outline-variant/20 text-[11px] text-on-surface-variant">
+                  Evidence submission open
+                </div>
+              </div>
+
+              {/* Pillar 8 */}
+              <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="font-bold text-xs text-on-surface">Pillar 8</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-container-high text-on-surface-variant">
+                      ○ Not Started
+                    </span>
+                  </div>
+                  <h4 className="text-xs font-bold text-on-surface mb-2">Investment Readiness</h4>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-on-surface-variant flex justify-between">
+                      <span>Assessment:</span>
+                      <span className="font-semibold text-on-surface">15/25</span>
+                    </p>
+                    <p className="text-outline flex justify-between">
+                      <span>Verified:</span>
+                      <span>--/25</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-2 border-t border-outline-variant/20 text-[11px] text-on-surface-variant">
+                  Evidence submission open
+                </div>
               </div>
             </div>
           </div>

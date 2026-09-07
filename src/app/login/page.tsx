@@ -66,11 +66,20 @@ export default function LoginPage() {
           {/* Hero text */}
           <div className="absolute bottom-0 left-0 p-12 w-full max-w-2xl text-white">
             <h2 className="text-4xl lg:text-5xl font-bold mb-4 drop-shadow-lg leading-tight">
-              Cultivating the Future of African Agriculture.
+              Build Your Farm&apos;s Capabilities. Become Future-Ready.
             </h2>
-            <p className="text-lg text-white/90 max-w-lg leading-relaxed drop-shadow-md">
-              Empower your agricultural journey with data-driven insights, precision tools, and a community dedicated to sustainable growth and resilience.
+            <p className="text-base lg:text-lg text-white/90 max-w-lg leading-relaxed drop-shadow-md mb-6">
+              Assess your farm, strengthen its capabilities, verify your progress, and build the credibility to access finance, markets, and investment opportunities.
             </p>
+            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 max-w-lg">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-secondary-fixed mb-1 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">verified</span>
+                Future Farms Framework
+              </h3>
+              <p className="text-xs text-white/85 leading-relaxed">
+                Assess your farm using the Farm Systems Capability and Maturity Framework, designed to guide and measure your farm&apos;s transition toward future-readiness.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -80,23 +89,26 @@ export default function LoginPage() {
         <div className="mx-auto w-full max-w-sm lg:w-96">
           {/* Logo & Header */}
           <div>
-            <div className="flex items-center mb-8">
+            <div className="flex items-center mb-6">
               <Link href="/" className="flex items-center">
                 <Image
                   src="/logo.webp"
                   alt="Future Farms"
                   width={300}
                   height={75}
-                  className="w-full max-w-[300px] h-auto object-contain"
+                  className="w-full max-w-[280px] h-auto object-contain"
                   priority
                 />
               </Link>
             </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-2">
+              <span>Sign-In</span>
+            </div>
             <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
-              Welcome Back
+              Build Your Farm&apos;s Capabilities.
             </h1>
-            <p className="mt-2 text-sm text-on-surface-variant">
-              Please sign in to access your farm dashboard.
+            <p className="mt-2 text-xs md:text-sm text-on-surface-variant leading-relaxed">
+              Assess your farm, strengthen its capabilities, verify your progress, and build the credibility to access finance, markets, and investment opportunities.
             </p>
           </div>
 

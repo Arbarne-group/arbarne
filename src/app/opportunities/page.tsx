@@ -17,6 +17,8 @@ interface OpportunityItem {
   requirements: string[];
   sponsor: string;
   fundingAmount?: string;
+  ffvRequirement?: "FFV Required" | "FFV Verified";
+  ffvStatusText?: string;
 }
 
 export default function OpportunityDeskPage() {
@@ -35,6 +37,51 @@ export default function OpportunityDeskPage() {
   ];
 
   const opportunities: OpportunityItem[] = [
+    {
+      id: "solar-irrigation-financing",
+      title: "Solar Irrigation Financing Programme",
+      tag: "Financing",
+      category: "Financing",
+      icon: "solar_power",
+      iconBg: "bg-[#FDD835]/20",
+      iconColor: "text-[#FDD835]",
+      description:
+        "Concessional equipment financing for high-efficiency solar borehole and drip irrigation systems to eliminate generator fuel dependency and build drought resilience.",
+      deadline: "31 Aug 2025",
+      matchScore: "95% Match",
+      sponsor: "Renewable Energy Transition Facility",
+      fundingAmount: "Up to $35,000 Asset Finance",
+      ffvRequirement: "FFV Required",
+      ffvStatusText: "Your status: Eligible after verification",
+      requirements: [
+        "✓ Pillar 2 assessment completed",
+        "✓ Energy Awareness ≥ Developing",
+        "✓ Farm records available",
+        "FFV Required",
+      ],
+    },
+    {
+      id: "premium-horticulture-buyer",
+      title: "Premium Horticulture Buyer",
+      tag: "Markets",
+      category: "Markets",
+      icon: "storefront",
+      iconBg: "bg-[#43A047]/20",
+      iconColor: "text-[#43A047]",
+      description:
+        "Contractual commercial supply partnership with premium supermarket chains and direct exporters for certified French beans and high-grade tomatoes.",
+      deadline: "Rolling Intake",
+      matchScore: "98% Match",
+      sponsor: "East Africa Fresh Produce Aggregators",
+      fundingAmount: "Guaranteed Off-take Contract",
+      ffvRequirement: "FFV Verified",
+      ffvStatusText: "Your farm matches this opportunity.",
+      requirements: [
+        "✓ Pillar 3 verified",
+        "✓ Product Quality Management ≥ Established",
+        "✓ Traceability ≥ Developing",
+      ],
+    },
     {
       id: "agri-equipment-grant",
       title: "Agri-Equipment Grant Program",
@@ -229,7 +276,25 @@ export default function OpportunityDeskPage() {
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-tertiary-container/10 text-tertiary-container border border-tertiary-container/20">
                       {opp.tag}
                     </span>
+                    {opp.ffvRequirement && (
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 ${
+                        opp.ffvRequirement === "FFV Verified"
+                          ? "bg-primary/15 text-primary border border-primary/30"
+                          : "bg-[#d97706]/15 text-[#d97706] border border-[#d97706]/30"
+                      }`}>
+                        <span className="material-symbols-outlined text-[13px]">
+                          {opp.ffvRequirement === "FFV Verified" ? "verified" : "pending_actions"}
+                        </span>
+                        {opp.ffvRequirement}
+                      </span>
+                    )}
                   </div>
+                  {opp.ffvStatusText && (
+                    <p className="text-xs font-semibold text-primary mb-1 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[14px]">info</span>
+                      <span>{opp.ffvStatusText}</span>
+                    </p>
+                  )}
                   <p className="text-on-surface-variant text-sm line-clamp-2 mb-2 md:mb-0">
                     {opp.description}
                   </p>
@@ -311,13 +376,27 @@ export default function OpportunityDeskPage() {
               </div>
 
               {selectedOpp.fundingAmount && (
-                <div className="bg-primary/5 rounded-2xl p-4 border border-primary/20 mb-5 flex justify-between items-center">
+                <div className="bg-primary/5 rounded-2xl p-4 border border-primary/20 mb-3 flex justify-between items-center">
                   <span className="text-xs text-on-surface-variant font-medium">
                     Opportunity Scope / Value
                   </span>
                   <span className="text-sm font-extrabold text-primary">
                     {selectedOpp.fundingAmount}
                   </span>
+                </div>
+              )}
+
+              {selectedOpp.ffvStatusText && (
+                <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/30 mb-4 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary text-[18px]">verified</span>
+                    <span className="text-xs font-bold text-on-surface">{selectedOpp.ffvStatusText}</span>
+                  </div>
+                  {selectedOpp.ffvRequirement && (
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary text-white">
+                      {selectedOpp.ffvRequirement}
+                    </span>
+                  )}
                 </div>
               )}
 

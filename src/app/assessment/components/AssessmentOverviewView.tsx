@@ -142,16 +142,16 @@ export default function AssessmentOverviewView({
           <div className="bg-surface rounded-2xl p-6 shadow-level-1 flex flex-col items-center justify-center gap-2 border border-outline-variant/30 relative overflow-hidden group">
             <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
             <span className="material-symbols-outlined text-3xl text-tertiary mb-1">
-              schedule
+              timer
             </span>
             <span className="font-display-lg text-display-lg font-bold text-on-surface">
-              ~60{" "}
+              ~7{" "}
               <span className="text-title-md font-normal text-on-surface-variant">
                 min
               </span>
             </span>
             <span className="font-label-sm text-label-sm text-on-surface-variant text-center">
-              Estimated Time
+              Per Pillar (7m each)
             </span>
           </div>
 
@@ -182,12 +182,37 @@ export default function AssessmentOverviewView({
           </div>
         </div>
 
+        {/* 90-Day Reassessment Cycle Notice */}
+        <div className="p-4 rounded-2xl bg-surface-container-low border border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+            </div>
+            <div>
+              <h4 className="text-xs md:text-sm font-bold text-on-surface">
+                Individual Pillar Assessments (~7 min per pillar)
+              </h4>
+              <p className="text-[11px] md:text-xs text-on-surface-variant">
+                Assess each pillar individually at your own pace. Once submitted, pillar assessments can only be repeated after <strong>3 months (90 days)</strong> to track genuine capability transition.
+              </p>
+            </div>
+          </div>
+          <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0 self-start sm:self-auto">
+            3-Month Reassessment Rule
+          </span>
+        </div>
+
         {/* The 8 Pillars Section */}
-        <div className="mt-4">
+        <div className="mt-2">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="font-title-md text-headline-lg-mobile font-semibold text-on-surface">
-              The 8 Pillars
-            </h2>
+            <div>
+              <h2 className="font-title-md text-headline-lg-mobile font-semibold text-on-surface">
+                The 8 Pillars
+              </h2>
+              <p className="text-xs text-on-surface-variant">
+                Progression across 8 pillars (P1–P8) and 40 capabilities (1.1–8.5).
+              </p>
+            </div>
             <button
               type="button"
               onClick={() => onSelectPillar(1)}
@@ -204,51 +229,83 @@ export default function AssessmentOverviewView({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {ALL_PILLARS.map((pillar) => {
               const status = pillarProgress[pillar.id];
+              const score = status?.score;
+              const feedbackSnippet =
+                score !== undefined && score >= 75
+                  ? pillar.feedback?.advanced
+                  : score !== undefined && score >= 50
+                  ? pillar.feedback?.progressing
+                  : pillar.feedback?.emerging || pillar.principle;
 
               return (
                 <div
                   key={pillar.id}
                   onClick={() => onSelectPillar(pillar.id)}
-                  className="bg-surface rounded-2xl p-5 shadow-level-1 border border-outline-variant/50 hover:shadow-level-2 transition-all flex flex-col justify-between hover:-translate-y-1 cursor-pointer group h-full"
+                  className="bg-surface rounded-2xl p-5 shadow-level-1 border border-outline-variant/50 hover:shadow-level-2 transition-all flex flex-col justify-between hover:-translate-y-1 cursor-pointer group h-full relative overflow-hidden"
                 >
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex justify-between items-start mb-3">
+                    {/* Enhanced Interesting Pillar Icon */}
                     <div
-                      className={`w-10 h-10 rounded-full ${pillar.iconBg} flex items-center justify-center shrink-0`}
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-xs transition-transform group-hover:scale-105"
                       style={{
-                        backgroundColor: `${pillar.accentColor}1A`,
-                        color: pillar.accentColor,
+                        background: `linear-gradient(135deg, ${pillar.accentColor}25 0%, ${pillar.accentColor}45 100%)`,
+                        border: `1.5px solid ${pillar.accentColor}66`,
                       }}
                     >
                       <span
-                        className="material-symbols-outlined text-[24px]"
+                        className="material-symbols-outlined text-[28px] drop-shadow-xs"
                         style={{ color: pillar.accentColor }}
                       >
                         {pillar.icon}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
+
+                    <div className="flex items-center gap-1.5">
                       {status?.completed && (
                         <span className="material-symbols-outlined text-primary text-[18px]">
                           check_circle
                         </span>
                       )}
-                      <span className="font-label-sm text-xs font-bold text-on-surface-variant bg-surface-variant px-2 py-1 rounded-full">
-                        {pillar.id}
+                      <span className="font-label-sm text-xs font-bold text-on-surface-variant bg-surface-variant px-2 py-0.5 rounded-full">
+                        P{pillar.id}
                       </span>
                     </div>
                   </div>
+
                   <div className="flex flex-col justify-between flex-1">
-                    <h3 className="font-title-md text-title-md font-semibold text-on-surface leading-snug mb-3 group-hover:text-primary transition-colors min-h-[3.75rem] flex items-start">
-                      {pillar.name}
-                    </h3>
-                    <div className="flex items-center justify-between text-xs text-on-surface-variant pt-3 border-t border-outline-variant/20 mt-auto">
-                      <span>5 Capabilities • 25 Questions</span>
+                    <div>
+                      <h3 className="font-title-md text-title-md font-semibold text-on-surface leading-snug mb-1 group-hover:text-primary transition-colors">
+                        {pillar.name}
+                      </h3>
+                      <p className="text-[11px] text-on-surface-variant/80 line-clamp-2 mb-3">
+                        {pillar.principle}
+                      </p>
+
+                      {/* Pillar Progression / Score & Feedback */}
                       {status?.score !== undefined ? (
-                        <span className="font-bold text-primary">
-                          {status.score}%
-                        </span>
+                        <div className="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/30 mb-3">
+                          <div className="flex justify-between items-center text-xs mb-1">
+                            <span className="text-on-surface-variant font-medium">Progression Score:</span>
+                            <span className="font-bold text-primary">{status.score}%</span>
+                          </div>
+                          <p className="text-[11px] text-on-surface-variant line-clamp-2 leading-relaxed italic">
+                            &ldquo;{feedbackSnippet}&rdquo;
+                          </p>
+                        </div>
                       ) : (
-                        <span className="text-outline">Ready</span>
+                        <div className="p-2 rounded-xl bg-surface-container-low/60 border border-outline-variant/20 mb-3 text-[11px] text-on-surface-variant flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[15px] text-primary">timer</span>
+                          <span>Est. ~7 min • 5 Capabilities</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs text-on-surface-variant pt-2.5 border-t border-outline-variant/20 mt-auto">
+                      <span className="font-mono text-[11px]">Cap. {pillar.id}.1–{pillar.id}.5</span>
+                      {status?.score !== undefined ? (
+                        <span className="font-semibold text-primary text-[11px]">Completed</span>
+                      ) : (
+                        <span className="text-primary font-semibold text-[11px] group-hover:underline">Start Pillar →</span>
                       )}
                     </div>
                   </div>
