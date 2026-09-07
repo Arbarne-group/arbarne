@@ -84,12 +84,12 @@ export default function DigitalPlatformsPage() {
       setTimeout(() => setSaveFeedback(null), 3000);
 
       if (navigateNext) {
-        router.push("/assessment");
+        router.push("/onboarding");
       }
     } catch (e) {
       console.error(e);
       if (navigateNext) {
-        router.push("/assessment");
+        router.push("/onboarding");
       }
     } finally {
       setSaving(false);
@@ -414,7 +414,7 @@ export default function DigitalPlatformsPage() {
               disabled={saving}
               className="px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
-              <span>{saving ? "Saving..." : "Complete & Start Assessment"}</span>
+              <span>{saving ? "Saving..." : "Save & Return to Overview"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
             </button>
           </div>

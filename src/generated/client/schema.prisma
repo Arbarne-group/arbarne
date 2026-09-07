@@ -23,8 +23,17 @@ model User {
   operatingStyle  OperatingStyle?
   digitalPlatform DigitalPlatform?
   aspiration      Aspiration?
-  orders          Order[]
-  assessments     Assessment[]
+
+  farmLocation        FarmLocation?
+  farmCharacteristics FarmCharacteristics?
+  farmingSystem       FarmingSystem?
+  businessExperience  BusinessExperience?
+  goalsPriorities     GoalsPriorities?
+  householdLabour     HouseholdLabour?
+  onboardingStatus    OnboardingStatus?
+
+  orders      Order[]
+  assessments Assessment[]
 }
 
 model FarmerProfile {
@@ -98,6 +107,87 @@ model Aspiration {
   personallyApprovedDecisions String?
   twentyFiveYearVision        String?
   updatedAt                   DateTime @updatedAt
+}
+
+model FarmLocation {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  locationSearch String?
+  county         String?
+  subcounty      String?
+  ward           String?
+  landmark       String?
+  latitude       Float?
+  longitude      Float?
+  updatedAt      DateTime @updatedAt
+}
+
+model FarmCharacteristics {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  farmSize        Float?
+  farmUnit        String?  @default("Acres")
+  cultivatedAcres Float?
+  grazingAcres    Float?
+  landTenure      String?
+  waterSources    String?
+  soilTested      String?
+  updatedAt       DateTime @updatedAt
+}
+
+model FarmingSystem {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enterprises        String?
+  cultivationMethod  String?
+  mechanizationSetup String?
+  energySource       String?
+  updatedAt          DateTime @updatedAt
+}
+
+model BusinessExperience {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commercialYears      String?
+  annualRevenueBracket String?
+  recordKeepingMethod  String?
+  produceBuyers        String?
+  updatedAt            DateTime @updatedAt
+}
+
+model GoalsPriorities {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goals                 String?
+  operationalBottleneck String?
+  advisoryMode          String?
+  updatedAt             DateTime @updatedAt
+}
+
+model HouseholdLabour {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permanentWorkers        Int?     @default(0)
+  seasonalWorkers         Int?     @default(0)
+  managementStructure     String?
+  fairEmploymentPractices String?
+  updatedAt               DateTime @updatedAt
+}
+
+model OnboardingStatus {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stage           String    @default("INITIAL_IN_PROGRESS")
+  profileApproved Boolean   @default(false)
+  completedAt     DateTime?
+  updatedAt       DateTime  @updatedAt
 }
 
 model Order {

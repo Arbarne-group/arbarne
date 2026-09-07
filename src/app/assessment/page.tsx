@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import AssessmentNavShell from "./components/AssessmentNavShell";
 import AssessmentOverviewView from "./components/AssessmentOverviewView";
 import AssessmentStandardQuestionnaireView from "./components/AssessmentStandardQuestionnaireView";
@@ -20,6 +21,21 @@ function AssessmentPageContent() {
   );
   const [selectedPillarId, setSelectedPillarId] = useState<number>(initialPillar);
   const [currentAnswers, setCurrentAnswers] = useState<Record<string, "yes" | "no">>({});
+
+  const [onboardingLoaded, setOnboardingLoaded] = useState(false);
+  const [onboardingStage, setOnboardingStage] = useState<string>("FULLY_COMPLETED");
+
+  useEffect(() => {
+    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.stage) {
+          setOnboardingStage(data.stage);
+        }
+      })
+      .catch(console.error)
+      .finally(() => setOnboardingLoaded(true));
+  }, []);
 
   // Sync state with URL search params
   useEffect(() => {
@@ -73,6 +89,43 @@ function AssessmentPageContent() {
       router.push(`/assessment?view=focus&pillar=${nextPillarId}`);
     }
   };
+
+  // If onboarding is loaded and not yet completed, show onboarding lock screen
+  if (onboardingLoaded && onboardingStage !== "FULLY_COMPLETED") {
+    return (
+      <AssessmentNavShell headerTitle="Assessment Hub (Locked)">
+        <div className="flex-1 flex items-center justify-center p-6 md:p-12">
+          <div className="max-w-lg w-full bg-surface-container-lowest rounded-3xl p-8 md:p-10 text-center shadow-sm border border-surface-container-high/60 space-y-5">
+            <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto shadow-xs">
+              <span className="material-symbols-outlined text-[32px]">lock</span>
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-xs font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-full uppercase tracking-wider">
+                Onboarding Incomplete
+              </span>
+              <h2 className="text-xl md:text-2xl font-bold text-on-surface">
+                Complete Onboarding to Access Your Assessment
+              </h2>
+              <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
+                To generate an accurate maturity rating and unlock personalized recommendations, you must first complete all onboarding questionnaire sections and verify your Farm Profile.
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <Link
+                href="/onboarding"
+                className="w-full py-3.5 px-6 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-sm shadow-md btn-shadow hover-lift transition-all inline-flex items-center justify-center gap-2"
+              >
+                <span>Return to Onboarding Overview</span>
+                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </AssessmentNavShell>
+    );
+  }
 
   return (
     <AssessmentNavShell

@@ -193,6 +193,80 @@ exports.Prisma.AspirationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FarmLocationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  locationSearch: 'locationSearch',
+  county: 'county',
+  subcounty: 'subcounty',
+  ward: 'ward',
+  landmark: 'landmark',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FarmCharacteristicsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  farmSize: 'farmSize',
+  farmUnit: 'farmUnit',
+  cultivatedAcres: 'cultivatedAcres',
+  grazingAcres: 'grazingAcres',
+  landTenure: 'landTenure',
+  waterSources: 'waterSources',
+  soilTested: 'soilTested',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FarmingSystemScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  enterprises: 'enterprises',
+  cultivationMethod: 'cultivationMethod',
+  mechanizationSetup: 'mechanizationSetup',
+  energySource: 'energySource',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BusinessExperienceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  commercialYears: 'commercialYears',
+  annualRevenueBracket: 'annualRevenueBracket',
+  recordKeepingMethod: 'recordKeepingMethod',
+  produceBuyers: 'produceBuyers',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.GoalsPrioritiesScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  goals: 'goals',
+  operationalBottleneck: 'operationalBottleneck',
+  advisoryMode: 'advisoryMode',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.HouseholdLabourScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  permanentWorkers: 'permanentWorkers',
+  seasonalWorkers: 'seasonalWorkers',
+  managementStructure: 'managementStructure',
+  fairEmploymentPractices: 'fairEmploymentPractices',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OnboardingStatusScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  stage: 'stage',
+  profileApproved: 'profileApproved',
+  completedAt: 'completedAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -269,6 +343,13 @@ exports.Prisma.ModelName = {
   OperatingStyle: 'OperatingStyle',
   DigitalPlatform: 'DigitalPlatform',
   Aspiration: 'Aspiration',
+  FarmLocation: 'FarmLocation',
+  FarmCharacteristics: 'FarmCharacteristics',
+  FarmingSystem: 'FarmingSystem',
+  BusinessExperience: 'BusinessExperience',
+  GoalsPriorities: 'GoalsPriorities',
+  HouseholdLabour: 'HouseholdLabour',
+  OnboardingStatus: 'OnboardingStatus',
   Order: 'Order',
   Assessment: 'Assessment',
   PillarAssessment: 'PillarAssessment',

@@ -83,6 +83,14 @@ export default function Header({
                 <span className="text-[11px] text-on-surface-variant">{userRole}</span>
               </div>
               <Link
+                href="/settings"
+                onClick={() => setProfileOpen(false)}
+                className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
+              >
+                <span className="material-symbols-outlined text-[18px] text-primary">person</span>
+                <span>Personal Settings</span>
+              </Link>
+              <Link
                 href="/dashboard"
                 onClick={() => setProfileOpen(false)}
                 className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
@@ -225,6 +233,14 @@ export default function Header({
                   <span className="font-bold text-xs text-on-surface block">{userName}</span>
                   <span className="text-[11px] text-on-surface-variant">{userRole}</span>
                 </div>
+                <Link
+                  href="/settings"
+                  onClick={() => setProfileOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-primary">person</span>
+                  <span>Personal Settings</span>
+                </Link>
                 <Link
                   href="/dashboard"
                   onClick={() => setProfileOpen(false)}

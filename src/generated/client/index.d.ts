@@ -44,6 +44,41 @@ export type DigitalPlatform = $Result.DefaultSelection<Prisma.$DigitalPlatformPa
  */
 export type Aspiration = $Result.DefaultSelection<Prisma.$AspirationPayload>
 /**
+ * Model FarmLocation
+ * 
+ */
+export type FarmLocation = $Result.DefaultSelection<Prisma.$FarmLocationPayload>
+/**
+ * Model FarmCharacteristics
+ * 
+ */
+export type FarmCharacteristics = $Result.DefaultSelection<Prisma.$FarmCharacteristicsPayload>
+/**
+ * Model FarmingSystem
+ * 
+ */
+export type FarmingSystem = $Result.DefaultSelection<Prisma.$FarmingSystemPayload>
+/**
+ * Model BusinessExperience
+ * 
+ */
+export type BusinessExperience = $Result.DefaultSelection<Prisma.$BusinessExperiencePayload>
+/**
+ * Model GoalsPriorities
+ * 
+ */
+export type GoalsPriorities = $Result.DefaultSelection<Prisma.$GoalsPrioritiesPayload>
+/**
+ * Model HouseholdLabour
+ * 
+ */
+export type HouseholdLabour = $Result.DefaultSelection<Prisma.$HouseholdLabourPayload>
+/**
+ * Model OnboardingStatus
+ * 
+ */
+export type OnboardingStatus = $Result.DefaultSelection<Prisma.$OnboardingStatusPayload>
+/**
  * Model Order
  * 
  */
@@ -248,6 +283,76 @@ export class PrismaClient<
     * ```
     */
   get aspiration(): Prisma.AspirationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.farmLocation`: Exposes CRUD operations for the **FarmLocation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FarmLocations
+    * const farmLocations = await prisma.farmLocation.findMany()
+    * ```
+    */
+  get farmLocation(): Prisma.FarmLocationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.farmCharacteristics`: Exposes CRUD operations for the **FarmCharacteristics** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FarmCharacteristics
+    * const farmCharacteristics = await prisma.farmCharacteristics.findMany()
+    * ```
+    */
+  get farmCharacteristics(): Prisma.FarmCharacteristicsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.farmingSystem`: Exposes CRUD operations for the **FarmingSystem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FarmingSystems
+    * const farmingSystems = await prisma.farmingSystem.findMany()
+    * ```
+    */
+  get farmingSystem(): Prisma.FarmingSystemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.businessExperience`: Exposes CRUD operations for the **BusinessExperience** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BusinessExperiences
+    * const businessExperiences = await prisma.businessExperience.findMany()
+    * ```
+    */
+  get businessExperience(): Prisma.BusinessExperienceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.goalsPriorities`: Exposes CRUD operations for the **GoalsPriorities** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GoalsPriorities
+    * const goalsPriorities = await prisma.goalsPriorities.findMany()
+    * ```
+    */
+  get goalsPriorities(): Prisma.GoalsPrioritiesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.householdLabour`: Exposes CRUD operations for the **HouseholdLabour** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more HouseholdLabours
+    * const householdLabours = await prisma.householdLabour.findMany()
+    * ```
+    */
+  get householdLabour(): Prisma.HouseholdLabourDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.onboardingStatus`: Exposes CRUD operations for the **OnboardingStatus** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OnboardingStatuses
+    * const onboardingStatuses = await prisma.onboardingStatus.findMany()
+    * ```
+    */
+  get onboardingStatus(): Prisma.OnboardingStatusDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.order`: Exposes CRUD operations for the **Order** model.
@@ -734,6 +839,13 @@ export namespace Prisma {
     OperatingStyle: 'OperatingStyle',
     DigitalPlatform: 'DigitalPlatform',
     Aspiration: 'Aspiration',
+    FarmLocation: 'FarmLocation',
+    FarmCharacteristics: 'FarmCharacteristics',
+    FarmingSystem: 'FarmingSystem',
+    BusinessExperience: 'BusinessExperience',
+    GoalsPriorities: 'GoalsPriorities',
+    HouseholdLabour: 'HouseholdLabour',
+    OnboardingStatus: 'OnboardingStatus',
     Order: 'Order',
     Assessment: 'Assessment',
     PillarAssessment: 'PillarAssessment',
@@ -753,7 +865,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "farmerProfile" | "farmManagement" | "operatingStyle" | "digitalPlatform" | "aspiration" | "order" | "assessment" | "pillarAssessment" | "assessmentResponse"
+      modelProps: "user" | "farmerProfile" | "farmManagement" | "operatingStyle" | "digitalPlatform" | "aspiration" | "farmLocation" | "farmCharacteristics" | "farmingSystem" | "businessExperience" | "goalsPriorities" | "householdLabour" | "onboardingStatus" | "order" | "assessment" | "pillarAssessment" | "assessmentResponse"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1201,6 +1313,524 @@ export namespace Prisma {
           }
         }
       }
+      FarmLocation: {
+        payload: Prisma.$FarmLocationPayload<ExtArgs>
+        fields: Prisma.FarmLocationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FarmLocationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FarmLocationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload>
+          }
+          findFirst: {
+            args: Prisma.FarmLocationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FarmLocationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload>
+          }
+          findMany: {
+            args: Prisma.FarmLocationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload>[]
+          }
+          create: {
+            args: Prisma.FarmLocationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload>
+          }
+          createMany: {
+            args: Prisma.FarmLocationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FarmLocationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload>[]
+          }
+          delete: {
+            args: Prisma.FarmLocationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload>
+          }
+          update: {
+            args: Prisma.FarmLocationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload>
+          }
+          deleteMany: {
+            args: Prisma.FarmLocationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FarmLocationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FarmLocationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload>[]
+          }
+          upsert: {
+            args: Prisma.FarmLocationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmLocationPayload>
+          }
+          aggregate: {
+            args: Prisma.FarmLocationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFarmLocation>
+          }
+          groupBy: {
+            args: Prisma.FarmLocationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FarmLocationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FarmLocationCountArgs<ExtArgs>
+            result: $Utils.Optional<FarmLocationCountAggregateOutputType> | number
+          }
+        }
+      }
+      FarmCharacteristics: {
+        payload: Prisma.$FarmCharacteristicsPayload<ExtArgs>
+        fields: Prisma.FarmCharacteristicsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FarmCharacteristicsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FarmCharacteristicsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload>
+          }
+          findFirst: {
+            args: Prisma.FarmCharacteristicsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FarmCharacteristicsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload>
+          }
+          findMany: {
+            args: Prisma.FarmCharacteristicsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload>[]
+          }
+          create: {
+            args: Prisma.FarmCharacteristicsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload>
+          }
+          createMany: {
+            args: Prisma.FarmCharacteristicsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FarmCharacteristicsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload>[]
+          }
+          delete: {
+            args: Prisma.FarmCharacteristicsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload>
+          }
+          update: {
+            args: Prisma.FarmCharacteristicsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload>
+          }
+          deleteMany: {
+            args: Prisma.FarmCharacteristicsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FarmCharacteristicsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FarmCharacteristicsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload>[]
+          }
+          upsert: {
+            args: Prisma.FarmCharacteristicsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmCharacteristicsPayload>
+          }
+          aggregate: {
+            args: Prisma.FarmCharacteristicsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFarmCharacteristics>
+          }
+          groupBy: {
+            args: Prisma.FarmCharacteristicsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FarmCharacteristicsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FarmCharacteristicsCountArgs<ExtArgs>
+            result: $Utils.Optional<FarmCharacteristicsCountAggregateOutputType> | number
+          }
+        }
+      }
+      FarmingSystem: {
+        payload: Prisma.$FarmingSystemPayload<ExtArgs>
+        fields: Prisma.FarmingSystemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FarmingSystemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FarmingSystemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload>
+          }
+          findFirst: {
+            args: Prisma.FarmingSystemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FarmingSystemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload>
+          }
+          findMany: {
+            args: Prisma.FarmingSystemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload>[]
+          }
+          create: {
+            args: Prisma.FarmingSystemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload>
+          }
+          createMany: {
+            args: Prisma.FarmingSystemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FarmingSystemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload>[]
+          }
+          delete: {
+            args: Prisma.FarmingSystemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload>
+          }
+          update: {
+            args: Prisma.FarmingSystemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload>
+          }
+          deleteMany: {
+            args: Prisma.FarmingSystemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FarmingSystemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FarmingSystemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload>[]
+          }
+          upsert: {
+            args: Prisma.FarmingSystemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FarmingSystemPayload>
+          }
+          aggregate: {
+            args: Prisma.FarmingSystemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFarmingSystem>
+          }
+          groupBy: {
+            args: Prisma.FarmingSystemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FarmingSystemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FarmingSystemCountArgs<ExtArgs>
+            result: $Utils.Optional<FarmingSystemCountAggregateOutputType> | number
+          }
+        }
+      }
+      BusinessExperience: {
+        payload: Prisma.$BusinessExperiencePayload<ExtArgs>
+        fields: Prisma.BusinessExperienceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BusinessExperienceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BusinessExperienceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload>
+          }
+          findFirst: {
+            args: Prisma.BusinessExperienceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BusinessExperienceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload>
+          }
+          findMany: {
+            args: Prisma.BusinessExperienceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload>[]
+          }
+          create: {
+            args: Prisma.BusinessExperienceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload>
+          }
+          createMany: {
+            args: Prisma.BusinessExperienceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BusinessExperienceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload>[]
+          }
+          delete: {
+            args: Prisma.BusinessExperienceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload>
+          }
+          update: {
+            args: Prisma.BusinessExperienceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload>
+          }
+          deleteMany: {
+            args: Prisma.BusinessExperienceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BusinessExperienceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BusinessExperienceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload>[]
+          }
+          upsert: {
+            args: Prisma.BusinessExperienceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BusinessExperiencePayload>
+          }
+          aggregate: {
+            args: Prisma.BusinessExperienceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBusinessExperience>
+          }
+          groupBy: {
+            args: Prisma.BusinessExperienceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BusinessExperienceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BusinessExperienceCountArgs<ExtArgs>
+            result: $Utils.Optional<BusinessExperienceCountAggregateOutputType> | number
+          }
+        }
+      }
+      GoalsPriorities: {
+        payload: Prisma.$GoalsPrioritiesPayload<ExtArgs>
+        fields: Prisma.GoalsPrioritiesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GoalsPrioritiesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GoalsPrioritiesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload>
+          }
+          findFirst: {
+            args: Prisma.GoalsPrioritiesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GoalsPrioritiesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload>
+          }
+          findMany: {
+            args: Prisma.GoalsPrioritiesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload>[]
+          }
+          create: {
+            args: Prisma.GoalsPrioritiesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload>
+          }
+          createMany: {
+            args: Prisma.GoalsPrioritiesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GoalsPrioritiesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload>[]
+          }
+          delete: {
+            args: Prisma.GoalsPrioritiesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload>
+          }
+          update: {
+            args: Prisma.GoalsPrioritiesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload>
+          }
+          deleteMany: {
+            args: Prisma.GoalsPrioritiesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GoalsPrioritiesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GoalsPrioritiesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload>[]
+          }
+          upsert: {
+            args: Prisma.GoalsPrioritiesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoalsPrioritiesPayload>
+          }
+          aggregate: {
+            args: Prisma.GoalsPrioritiesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGoalsPriorities>
+          }
+          groupBy: {
+            args: Prisma.GoalsPrioritiesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GoalsPrioritiesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GoalsPrioritiesCountArgs<ExtArgs>
+            result: $Utils.Optional<GoalsPrioritiesCountAggregateOutputType> | number
+          }
+        }
+      }
+      HouseholdLabour: {
+        payload: Prisma.$HouseholdLabourPayload<ExtArgs>
+        fields: Prisma.HouseholdLabourFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.HouseholdLabourFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.HouseholdLabourFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload>
+          }
+          findFirst: {
+            args: Prisma.HouseholdLabourFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.HouseholdLabourFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload>
+          }
+          findMany: {
+            args: Prisma.HouseholdLabourFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload>[]
+          }
+          create: {
+            args: Prisma.HouseholdLabourCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload>
+          }
+          createMany: {
+            args: Prisma.HouseholdLabourCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.HouseholdLabourCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload>[]
+          }
+          delete: {
+            args: Prisma.HouseholdLabourDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload>
+          }
+          update: {
+            args: Prisma.HouseholdLabourUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload>
+          }
+          deleteMany: {
+            args: Prisma.HouseholdLabourDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.HouseholdLabourUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.HouseholdLabourUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload>[]
+          }
+          upsert: {
+            args: Prisma.HouseholdLabourUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HouseholdLabourPayload>
+          }
+          aggregate: {
+            args: Prisma.HouseholdLabourAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHouseholdLabour>
+          }
+          groupBy: {
+            args: Prisma.HouseholdLabourGroupByArgs<ExtArgs>
+            result: $Utils.Optional<HouseholdLabourGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.HouseholdLabourCountArgs<ExtArgs>
+            result: $Utils.Optional<HouseholdLabourCountAggregateOutputType> | number
+          }
+        }
+      }
+      OnboardingStatus: {
+        payload: Prisma.$OnboardingStatusPayload<ExtArgs>
+        fields: Prisma.OnboardingStatusFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OnboardingStatusFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OnboardingStatusFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload>
+          }
+          findFirst: {
+            args: Prisma.OnboardingStatusFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OnboardingStatusFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload>
+          }
+          findMany: {
+            args: Prisma.OnboardingStatusFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload>[]
+          }
+          create: {
+            args: Prisma.OnboardingStatusCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload>
+          }
+          createMany: {
+            args: Prisma.OnboardingStatusCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OnboardingStatusCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload>[]
+          }
+          delete: {
+            args: Prisma.OnboardingStatusDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload>
+          }
+          update: {
+            args: Prisma.OnboardingStatusUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload>
+          }
+          deleteMany: {
+            args: Prisma.OnboardingStatusDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OnboardingStatusUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OnboardingStatusUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload>[]
+          }
+          upsert: {
+            args: Prisma.OnboardingStatusUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OnboardingStatusPayload>
+          }
+          aggregate: {
+            args: Prisma.OnboardingStatusAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOnboardingStatus>
+          }
+          groupBy: {
+            args: Prisma.OnboardingStatusGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OnboardingStatusGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OnboardingStatusCountArgs<ExtArgs>
+            result: $Utils.Optional<OnboardingStatusCountAggregateOutputType> | number
+          }
+        }
+      }
       Order: {
         payload: Prisma.$OrderPayload<ExtArgs>
         fields: Prisma.OrderFieldRefs
@@ -1587,6 +2217,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleOmit
     digitalPlatform?: DigitalPlatformOmit
     aspiration?: AspirationOmit
+    farmLocation?: FarmLocationOmit
+    farmCharacteristics?: FarmCharacteristicsOmit
+    farmingSystem?: FarmingSystemOmit
+    businessExperience?: BusinessExperienceOmit
+    goalsPriorities?: GoalsPrioritiesOmit
+    householdLabour?: HouseholdLabourOmit
+    onboardingStatus?: OnboardingStatusOmit
     order?: OrderOmit
     assessment?: AssessmentOmit
     pillarAssessment?: PillarAssessmentOmit
@@ -1957,6 +2594,13 @@ export namespace Prisma {
     operatingStyle?: boolean | User$operatingStyleArgs<ExtArgs>
     digitalPlatform?: boolean | User$digitalPlatformArgs<ExtArgs>
     aspiration?: boolean | User$aspirationArgs<ExtArgs>
+    farmLocation?: boolean | User$farmLocationArgs<ExtArgs>
+    farmCharacteristics?: boolean | User$farmCharacteristicsArgs<ExtArgs>
+    farmingSystem?: boolean | User$farmingSystemArgs<ExtArgs>
+    businessExperience?: boolean | User$businessExperienceArgs<ExtArgs>
+    goalsPriorities?: boolean | User$goalsPrioritiesArgs<ExtArgs>
+    householdLabour?: boolean | User$householdLabourArgs<ExtArgs>
+    onboardingStatus?: boolean | User$onboardingStatusArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     assessments?: boolean | User$assessmentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2002,6 +2646,13 @@ export namespace Prisma {
     operatingStyle?: boolean | User$operatingStyleArgs<ExtArgs>
     digitalPlatform?: boolean | User$digitalPlatformArgs<ExtArgs>
     aspiration?: boolean | User$aspirationArgs<ExtArgs>
+    farmLocation?: boolean | User$farmLocationArgs<ExtArgs>
+    farmCharacteristics?: boolean | User$farmCharacteristicsArgs<ExtArgs>
+    farmingSystem?: boolean | User$farmingSystemArgs<ExtArgs>
+    businessExperience?: boolean | User$businessExperienceArgs<ExtArgs>
+    goalsPriorities?: boolean | User$goalsPrioritiesArgs<ExtArgs>
+    householdLabour?: boolean | User$householdLabourArgs<ExtArgs>
+    onboardingStatus?: boolean | User$onboardingStatusArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
     assessments?: boolean | User$assessmentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -2017,6 +2668,13 @@ export namespace Prisma {
       operatingStyle: Prisma.$OperatingStylePayload<ExtArgs> | null
       digitalPlatform: Prisma.$DigitalPlatformPayload<ExtArgs> | null
       aspiration: Prisma.$AspirationPayload<ExtArgs> | null
+      farmLocation: Prisma.$FarmLocationPayload<ExtArgs> | null
+      farmCharacteristics: Prisma.$FarmCharacteristicsPayload<ExtArgs> | null
+      farmingSystem: Prisma.$FarmingSystemPayload<ExtArgs> | null
+      businessExperience: Prisma.$BusinessExperiencePayload<ExtArgs> | null
+      goalsPriorities: Prisma.$GoalsPrioritiesPayload<ExtArgs> | null
+      householdLabour: Prisma.$HouseholdLabourPayload<ExtArgs> | null
+      onboardingStatus: Prisma.$OnboardingStatusPayload<ExtArgs> | null
       orders: Prisma.$OrderPayload<ExtArgs>[]
       assessments: Prisma.$AssessmentPayload<ExtArgs>[]
     }
@@ -2428,6 +3086,13 @@ export namespace Prisma {
     operatingStyle<T extends User$operatingStyleArgs<ExtArgs> = {}>(args?: Subset<T, User$operatingStyleArgs<ExtArgs>>): Prisma__OperatingStyleClient<$Result.GetResult<Prisma.$OperatingStylePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     digitalPlatform<T extends User$digitalPlatformArgs<ExtArgs> = {}>(args?: Subset<T, User$digitalPlatformArgs<ExtArgs>>): Prisma__DigitalPlatformClient<$Result.GetResult<Prisma.$DigitalPlatformPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     aspiration<T extends User$aspirationArgs<ExtArgs> = {}>(args?: Subset<T, User$aspirationArgs<ExtArgs>>): Prisma__AspirationClient<$Result.GetResult<Prisma.$AspirationPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    farmLocation<T extends User$farmLocationArgs<ExtArgs> = {}>(args?: Subset<T, User$farmLocationArgs<ExtArgs>>): Prisma__FarmLocationClient<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    farmCharacteristics<T extends User$farmCharacteristicsArgs<ExtArgs> = {}>(args?: Subset<T, User$farmCharacteristicsArgs<ExtArgs>>): Prisma__FarmCharacteristicsClient<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    farmingSystem<T extends User$farmingSystemArgs<ExtArgs> = {}>(args?: Subset<T, User$farmingSystemArgs<ExtArgs>>): Prisma__FarmingSystemClient<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    businessExperience<T extends User$businessExperienceArgs<ExtArgs> = {}>(args?: Subset<T, User$businessExperienceArgs<ExtArgs>>): Prisma__BusinessExperienceClient<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    goalsPriorities<T extends User$goalsPrioritiesArgs<ExtArgs> = {}>(args?: Subset<T, User$goalsPrioritiesArgs<ExtArgs>>): Prisma__GoalsPrioritiesClient<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    householdLabour<T extends User$householdLabourArgs<ExtArgs> = {}>(args?: Subset<T, User$householdLabourArgs<ExtArgs>>): Prisma__HouseholdLabourClient<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
+    onboardingStatus<T extends User$onboardingStatusArgs<ExtArgs> = {}>(args?: Subset<T, User$onboardingStatusArgs<ExtArgs>>): Prisma__OnboardingStatusClient<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | null, null, ExtArgs, ClientOptions>
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     assessments<T extends User$assessmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$assessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssessmentPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
@@ -2945,6 +3610,139 @@ export namespace Prisma {
      */
     include?: AspirationInclude<ExtArgs> | null
     where?: AspirationWhereInput
+  }
+
+  /**
+   * User.farmLocation
+   */
+  export type User$farmLocationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    where?: FarmLocationWhereInput
+  }
+
+  /**
+   * User.farmCharacteristics
+   */
+  export type User$farmCharacteristicsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    where?: FarmCharacteristicsWhereInput
+  }
+
+  /**
+   * User.farmingSystem
+   */
+  export type User$farmingSystemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    where?: FarmingSystemWhereInput
+  }
+
+  /**
+   * User.businessExperience
+   */
+  export type User$businessExperienceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    where?: BusinessExperienceWhereInput
+  }
+
+  /**
+   * User.goalsPriorities
+   */
+  export type User$goalsPrioritiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    where?: GoalsPrioritiesWhereInput
+  }
+
+  /**
+   * User.householdLabour
+   */
+  export type User$householdLabourArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    where?: HouseholdLabourWhereInput
+  }
+
+  /**
+   * User.onboardingStatus
+   */
+  export type User$onboardingStatusArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    where?: OnboardingStatusWhereInput
   }
 
   /**
@@ -8659,6 +9457,7750 @@ export namespace Prisma {
 
 
   /**
+   * Model FarmLocation
+   */
+
+  export type AggregateFarmLocation = {
+    _count: FarmLocationCountAggregateOutputType | null
+    _avg: FarmLocationAvgAggregateOutputType | null
+    _sum: FarmLocationSumAggregateOutputType | null
+    _min: FarmLocationMinAggregateOutputType | null
+    _max: FarmLocationMaxAggregateOutputType | null
+  }
+
+  export type FarmLocationAvgAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
+  }
+
+  export type FarmLocationSumAggregateOutputType = {
+    latitude: number | null
+    longitude: number | null
+  }
+
+  export type FarmLocationMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    locationSearch: string | null
+    county: string | null
+    subcounty: string | null
+    ward: string | null
+    landmark: string | null
+    latitude: number | null
+    longitude: number | null
+    updatedAt: Date | null
+  }
+
+  export type FarmLocationMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    locationSearch: string | null
+    county: string | null
+    subcounty: string | null
+    ward: string | null
+    landmark: string | null
+    latitude: number | null
+    longitude: number | null
+    updatedAt: Date | null
+  }
+
+  export type FarmLocationCountAggregateOutputType = {
+    id: number
+    userId: number
+    locationSearch: number
+    county: number
+    subcounty: number
+    ward: number
+    landmark: number
+    latitude: number
+    longitude: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FarmLocationAvgAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
+  export type FarmLocationSumAggregateInputType = {
+    latitude?: true
+    longitude?: true
+  }
+
+  export type FarmLocationMinAggregateInputType = {
+    id?: true
+    userId?: true
+    locationSearch?: true
+    county?: true
+    subcounty?: true
+    ward?: true
+    landmark?: true
+    latitude?: true
+    longitude?: true
+    updatedAt?: true
+  }
+
+  export type FarmLocationMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    locationSearch?: true
+    county?: true
+    subcounty?: true
+    ward?: true
+    landmark?: true
+    latitude?: true
+    longitude?: true
+    updatedAt?: true
+  }
+
+  export type FarmLocationCountAggregateInputType = {
+    id?: true
+    userId?: true
+    locationSearch?: true
+    county?: true
+    subcounty?: true
+    ward?: true
+    landmark?: true
+    latitude?: true
+    longitude?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FarmLocationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FarmLocation to aggregate.
+     */
+    where?: FarmLocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmLocations to fetch.
+     */
+    orderBy?: FarmLocationOrderByWithRelationInput | FarmLocationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FarmLocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmLocations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmLocations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FarmLocations
+    **/
+    _count?: true | FarmLocationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FarmLocationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FarmLocationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FarmLocationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FarmLocationMaxAggregateInputType
+  }
+
+  export type GetFarmLocationAggregateType<T extends FarmLocationAggregateArgs> = {
+        [P in keyof T & keyof AggregateFarmLocation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFarmLocation[P]>
+      : GetScalarType<T[P], AggregateFarmLocation[P]>
+  }
+
+
+
+
+  export type FarmLocationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FarmLocationWhereInput
+    orderBy?: FarmLocationOrderByWithAggregationInput | FarmLocationOrderByWithAggregationInput[]
+    by: FarmLocationScalarFieldEnum[] | FarmLocationScalarFieldEnum
+    having?: FarmLocationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FarmLocationCountAggregateInputType | true
+    _avg?: FarmLocationAvgAggregateInputType
+    _sum?: FarmLocationSumAggregateInputType
+    _min?: FarmLocationMinAggregateInputType
+    _max?: FarmLocationMaxAggregateInputType
+  }
+
+  export type FarmLocationGroupByOutputType = {
+    id: string
+    userId: string
+    locationSearch: string | null
+    county: string | null
+    subcounty: string | null
+    ward: string | null
+    landmark: string | null
+    latitude: number | null
+    longitude: number | null
+    updatedAt: Date
+    _count: FarmLocationCountAggregateOutputType | null
+    _avg: FarmLocationAvgAggregateOutputType | null
+    _sum: FarmLocationSumAggregateOutputType | null
+    _min: FarmLocationMinAggregateOutputType | null
+    _max: FarmLocationMaxAggregateOutputType | null
+  }
+
+  type GetFarmLocationGroupByPayload<T extends FarmLocationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FarmLocationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FarmLocationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FarmLocationGroupByOutputType[P]>
+            : GetScalarType<T[P], FarmLocationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FarmLocationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    locationSearch?: boolean
+    county?: boolean
+    subcounty?: boolean
+    ward?: boolean
+    landmark?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["farmLocation"]>
+
+  export type FarmLocationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    locationSearch?: boolean
+    county?: boolean
+    subcounty?: boolean
+    ward?: boolean
+    landmark?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["farmLocation"]>
+
+  export type FarmLocationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    locationSearch?: boolean
+    county?: boolean
+    subcounty?: boolean
+    ward?: boolean
+    landmark?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["farmLocation"]>
+
+  export type FarmLocationSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    locationSearch?: boolean
+    county?: boolean
+    subcounty?: boolean
+    ward?: boolean
+    landmark?: boolean
+    latitude?: boolean
+    longitude?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FarmLocationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "locationSearch" | "county" | "subcounty" | "ward" | "landmark" | "latitude" | "longitude" | "updatedAt", ExtArgs["result"]["farmLocation"]>
+  export type FarmLocationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FarmLocationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FarmLocationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FarmLocationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FarmLocation"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      locationSearch: string | null
+      county: string | null
+      subcounty: string | null
+      ward: string | null
+      landmark: string | null
+      latitude: number | null
+      longitude: number | null
+      updatedAt: Date
+    }, ExtArgs["result"]["farmLocation"]>
+    composites: {}
+  }
+
+  type FarmLocationGetPayload<S extends boolean | null | undefined | FarmLocationDefaultArgs> = $Result.GetResult<Prisma.$FarmLocationPayload, S>
+
+  type FarmLocationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FarmLocationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FarmLocationCountAggregateInputType | true
+    }
+
+  export interface FarmLocationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FarmLocation'], meta: { name: 'FarmLocation' } }
+    /**
+     * Find zero or one FarmLocation that matches the filter.
+     * @param {FarmLocationFindUniqueArgs} args - Arguments to find a FarmLocation
+     * @example
+     * // Get one FarmLocation
+     * const farmLocation = await prisma.farmLocation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FarmLocationFindUniqueArgs>(args: SelectSubset<T, FarmLocationFindUniqueArgs<ExtArgs>>): Prisma__FarmLocationClient<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one FarmLocation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FarmLocationFindUniqueOrThrowArgs} args - Arguments to find a FarmLocation
+     * @example
+     * // Get one FarmLocation
+     * const farmLocation = await prisma.farmLocation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FarmLocationFindUniqueOrThrowArgs>(args: SelectSubset<T, FarmLocationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FarmLocationClient<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first FarmLocation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmLocationFindFirstArgs} args - Arguments to find a FarmLocation
+     * @example
+     * // Get one FarmLocation
+     * const farmLocation = await prisma.farmLocation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FarmLocationFindFirstArgs>(args?: SelectSubset<T, FarmLocationFindFirstArgs<ExtArgs>>): Prisma__FarmLocationClient<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first FarmLocation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmLocationFindFirstOrThrowArgs} args - Arguments to find a FarmLocation
+     * @example
+     * // Get one FarmLocation
+     * const farmLocation = await prisma.farmLocation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FarmLocationFindFirstOrThrowArgs>(args?: SelectSubset<T, FarmLocationFindFirstOrThrowArgs<ExtArgs>>): Prisma__FarmLocationClient<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more FarmLocations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmLocationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FarmLocations
+     * const farmLocations = await prisma.farmLocation.findMany()
+     * 
+     * // Get first 10 FarmLocations
+     * const farmLocations = await prisma.farmLocation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const farmLocationWithIdOnly = await prisma.farmLocation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FarmLocationFindManyArgs>(args?: SelectSubset<T, FarmLocationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a FarmLocation.
+     * @param {FarmLocationCreateArgs} args - Arguments to create a FarmLocation.
+     * @example
+     * // Create one FarmLocation
+     * const FarmLocation = await prisma.farmLocation.create({
+     *   data: {
+     *     // ... data to create a FarmLocation
+     *   }
+     * })
+     * 
+     */
+    create<T extends FarmLocationCreateArgs>(args: SelectSubset<T, FarmLocationCreateArgs<ExtArgs>>): Prisma__FarmLocationClient<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many FarmLocations.
+     * @param {FarmLocationCreateManyArgs} args - Arguments to create many FarmLocations.
+     * @example
+     * // Create many FarmLocations
+     * const farmLocation = await prisma.farmLocation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FarmLocationCreateManyArgs>(args?: SelectSubset<T, FarmLocationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FarmLocations and returns the data saved in the database.
+     * @param {FarmLocationCreateManyAndReturnArgs} args - Arguments to create many FarmLocations.
+     * @example
+     * // Create many FarmLocations
+     * const farmLocation = await prisma.farmLocation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FarmLocations and only return the `id`
+     * const farmLocationWithIdOnly = await prisma.farmLocation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FarmLocationCreateManyAndReturnArgs>(args?: SelectSubset<T, FarmLocationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a FarmLocation.
+     * @param {FarmLocationDeleteArgs} args - Arguments to delete one FarmLocation.
+     * @example
+     * // Delete one FarmLocation
+     * const FarmLocation = await prisma.farmLocation.delete({
+     *   where: {
+     *     // ... filter to delete one FarmLocation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FarmLocationDeleteArgs>(args: SelectSubset<T, FarmLocationDeleteArgs<ExtArgs>>): Prisma__FarmLocationClient<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one FarmLocation.
+     * @param {FarmLocationUpdateArgs} args - Arguments to update one FarmLocation.
+     * @example
+     * // Update one FarmLocation
+     * const farmLocation = await prisma.farmLocation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FarmLocationUpdateArgs>(args: SelectSubset<T, FarmLocationUpdateArgs<ExtArgs>>): Prisma__FarmLocationClient<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more FarmLocations.
+     * @param {FarmLocationDeleteManyArgs} args - Arguments to filter FarmLocations to delete.
+     * @example
+     * // Delete a few FarmLocations
+     * const { count } = await prisma.farmLocation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FarmLocationDeleteManyArgs>(args?: SelectSubset<T, FarmLocationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FarmLocations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmLocationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FarmLocations
+     * const farmLocation = await prisma.farmLocation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FarmLocationUpdateManyArgs>(args: SelectSubset<T, FarmLocationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FarmLocations and returns the data updated in the database.
+     * @param {FarmLocationUpdateManyAndReturnArgs} args - Arguments to update many FarmLocations.
+     * @example
+     * // Update many FarmLocations
+     * const farmLocation = await prisma.farmLocation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FarmLocations and only return the `id`
+     * const farmLocationWithIdOnly = await prisma.farmLocation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FarmLocationUpdateManyAndReturnArgs>(args: SelectSubset<T, FarmLocationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one FarmLocation.
+     * @param {FarmLocationUpsertArgs} args - Arguments to update or create a FarmLocation.
+     * @example
+     * // Update or create a FarmLocation
+     * const farmLocation = await prisma.farmLocation.upsert({
+     *   create: {
+     *     // ... data to create a FarmLocation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FarmLocation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FarmLocationUpsertArgs>(args: SelectSubset<T, FarmLocationUpsertArgs<ExtArgs>>): Prisma__FarmLocationClient<$Result.GetResult<Prisma.$FarmLocationPayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of FarmLocations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmLocationCountArgs} args - Arguments to filter FarmLocations to count.
+     * @example
+     * // Count the number of FarmLocations
+     * const count = await prisma.farmLocation.count({
+     *   where: {
+     *     // ... the filter for the FarmLocations we want to count
+     *   }
+     * })
+    **/
+    count<T extends FarmLocationCountArgs>(
+      args?: Subset<T, FarmLocationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FarmLocationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FarmLocation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmLocationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FarmLocationAggregateArgs>(args: Subset<T, FarmLocationAggregateArgs>): Prisma.PrismaPromise<GetFarmLocationAggregateType<T>>
+
+    /**
+     * Group by FarmLocation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmLocationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FarmLocationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FarmLocationGroupByArgs['orderBy'] }
+        : { orderBy?: FarmLocationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FarmLocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFarmLocationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FarmLocation model
+   */
+  readonly fields: FarmLocationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FarmLocation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FarmLocationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FarmLocation model
+   */ 
+  interface FarmLocationFieldRefs {
+    readonly id: FieldRef<"FarmLocation", 'String'>
+    readonly userId: FieldRef<"FarmLocation", 'String'>
+    readonly locationSearch: FieldRef<"FarmLocation", 'String'>
+    readonly county: FieldRef<"FarmLocation", 'String'>
+    readonly subcounty: FieldRef<"FarmLocation", 'String'>
+    readonly ward: FieldRef<"FarmLocation", 'String'>
+    readonly landmark: FieldRef<"FarmLocation", 'String'>
+    readonly latitude: FieldRef<"FarmLocation", 'Float'>
+    readonly longitude: FieldRef<"FarmLocation", 'Float'>
+    readonly updatedAt: FieldRef<"FarmLocation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FarmLocation findUnique
+   */
+  export type FarmLocationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmLocation to fetch.
+     */
+    where: FarmLocationWhereUniqueInput
+  }
+
+  /**
+   * FarmLocation findUniqueOrThrow
+   */
+  export type FarmLocationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmLocation to fetch.
+     */
+    where: FarmLocationWhereUniqueInput
+  }
+
+  /**
+   * FarmLocation findFirst
+   */
+  export type FarmLocationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmLocation to fetch.
+     */
+    where?: FarmLocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmLocations to fetch.
+     */
+    orderBy?: FarmLocationOrderByWithRelationInput | FarmLocationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FarmLocations.
+     */
+    cursor?: FarmLocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmLocations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmLocations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FarmLocations.
+     */
+    distinct?: FarmLocationScalarFieldEnum | FarmLocationScalarFieldEnum[]
+  }
+
+  /**
+   * FarmLocation findFirstOrThrow
+   */
+  export type FarmLocationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmLocation to fetch.
+     */
+    where?: FarmLocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmLocations to fetch.
+     */
+    orderBy?: FarmLocationOrderByWithRelationInput | FarmLocationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FarmLocations.
+     */
+    cursor?: FarmLocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmLocations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmLocations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FarmLocations.
+     */
+    distinct?: FarmLocationScalarFieldEnum | FarmLocationScalarFieldEnum[]
+  }
+
+  /**
+   * FarmLocation findMany
+   */
+  export type FarmLocationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmLocations to fetch.
+     */
+    where?: FarmLocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmLocations to fetch.
+     */
+    orderBy?: FarmLocationOrderByWithRelationInput | FarmLocationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FarmLocations.
+     */
+    cursor?: FarmLocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmLocations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmLocations.
+     */
+    skip?: number
+    distinct?: FarmLocationScalarFieldEnum | FarmLocationScalarFieldEnum[]
+  }
+
+  /**
+   * FarmLocation create
+   */
+  export type FarmLocationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FarmLocation.
+     */
+    data: XOR<FarmLocationCreateInput, FarmLocationUncheckedCreateInput>
+  }
+
+  /**
+   * FarmLocation createMany
+   */
+  export type FarmLocationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FarmLocations.
+     */
+    data: FarmLocationCreateManyInput | FarmLocationCreateManyInput[]
+  }
+
+  /**
+   * FarmLocation createManyAndReturn
+   */
+  export type FarmLocationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * The data used to create many FarmLocations.
+     */
+    data: FarmLocationCreateManyInput | FarmLocationCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FarmLocation update
+   */
+  export type FarmLocationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FarmLocation.
+     */
+    data: XOR<FarmLocationUpdateInput, FarmLocationUncheckedUpdateInput>
+    /**
+     * Choose, which FarmLocation to update.
+     */
+    where: FarmLocationWhereUniqueInput
+  }
+
+  /**
+   * FarmLocation updateMany
+   */
+  export type FarmLocationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FarmLocations.
+     */
+    data: XOR<FarmLocationUpdateManyMutationInput, FarmLocationUncheckedUpdateManyInput>
+    /**
+     * Filter which FarmLocations to update
+     */
+    where?: FarmLocationWhereInput
+    /**
+     * Limit how many FarmLocations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FarmLocation updateManyAndReturn
+   */
+  export type FarmLocationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * The data used to update FarmLocations.
+     */
+    data: XOR<FarmLocationUpdateManyMutationInput, FarmLocationUncheckedUpdateManyInput>
+    /**
+     * Filter which FarmLocations to update
+     */
+    where?: FarmLocationWhereInput
+    /**
+     * Limit how many FarmLocations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FarmLocation upsert
+   */
+  export type FarmLocationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FarmLocation to update in case it exists.
+     */
+    where: FarmLocationWhereUniqueInput
+    /**
+     * In case the FarmLocation found by the `where` argument doesn't exist, create a new FarmLocation with this data.
+     */
+    create: XOR<FarmLocationCreateInput, FarmLocationUncheckedCreateInput>
+    /**
+     * In case the FarmLocation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FarmLocationUpdateInput, FarmLocationUncheckedUpdateInput>
+  }
+
+  /**
+   * FarmLocation delete
+   */
+  export type FarmLocationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+    /**
+     * Filter which FarmLocation to delete.
+     */
+    where: FarmLocationWhereUniqueInput
+  }
+
+  /**
+   * FarmLocation deleteMany
+   */
+  export type FarmLocationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FarmLocations to delete
+     */
+    where?: FarmLocationWhereInput
+    /**
+     * Limit how many FarmLocations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FarmLocation without action
+   */
+  export type FarmLocationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmLocation
+     */
+    select?: FarmLocationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmLocation
+     */
+    omit?: FarmLocationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmLocationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FarmCharacteristics
+   */
+
+  export type AggregateFarmCharacteristics = {
+    _count: FarmCharacteristicsCountAggregateOutputType | null
+    _avg: FarmCharacteristicsAvgAggregateOutputType | null
+    _sum: FarmCharacteristicsSumAggregateOutputType | null
+    _min: FarmCharacteristicsMinAggregateOutputType | null
+    _max: FarmCharacteristicsMaxAggregateOutputType | null
+  }
+
+  export type FarmCharacteristicsAvgAggregateOutputType = {
+    farmSize: number | null
+    cultivatedAcres: number | null
+    grazingAcres: number | null
+  }
+
+  export type FarmCharacteristicsSumAggregateOutputType = {
+    farmSize: number | null
+    cultivatedAcres: number | null
+    grazingAcres: number | null
+  }
+
+  export type FarmCharacteristicsMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    farmSize: number | null
+    farmUnit: string | null
+    cultivatedAcres: number | null
+    grazingAcres: number | null
+    landTenure: string | null
+    waterSources: string | null
+    soilTested: string | null
+    updatedAt: Date | null
+  }
+
+  export type FarmCharacteristicsMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    farmSize: number | null
+    farmUnit: string | null
+    cultivatedAcres: number | null
+    grazingAcres: number | null
+    landTenure: string | null
+    waterSources: string | null
+    soilTested: string | null
+    updatedAt: Date | null
+  }
+
+  export type FarmCharacteristicsCountAggregateOutputType = {
+    id: number
+    userId: number
+    farmSize: number
+    farmUnit: number
+    cultivatedAcres: number
+    grazingAcres: number
+    landTenure: number
+    waterSources: number
+    soilTested: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FarmCharacteristicsAvgAggregateInputType = {
+    farmSize?: true
+    cultivatedAcres?: true
+    grazingAcres?: true
+  }
+
+  export type FarmCharacteristicsSumAggregateInputType = {
+    farmSize?: true
+    cultivatedAcres?: true
+    grazingAcres?: true
+  }
+
+  export type FarmCharacteristicsMinAggregateInputType = {
+    id?: true
+    userId?: true
+    farmSize?: true
+    farmUnit?: true
+    cultivatedAcres?: true
+    grazingAcres?: true
+    landTenure?: true
+    waterSources?: true
+    soilTested?: true
+    updatedAt?: true
+  }
+
+  export type FarmCharacteristicsMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    farmSize?: true
+    farmUnit?: true
+    cultivatedAcres?: true
+    grazingAcres?: true
+    landTenure?: true
+    waterSources?: true
+    soilTested?: true
+    updatedAt?: true
+  }
+
+  export type FarmCharacteristicsCountAggregateInputType = {
+    id?: true
+    userId?: true
+    farmSize?: true
+    farmUnit?: true
+    cultivatedAcres?: true
+    grazingAcres?: true
+    landTenure?: true
+    waterSources?: true
+    soilTested?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FarmCharacteristicsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FarmCharacteristics to aggregate.
+     */
+    where?: FarmCharacteristicsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmCharacteristics to fetch.
+     */
+    orderBy?: FarmCharacteristicsOrderByWithRelationInput | FarmCharacteristicsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FarmCharacteristicsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmCharacteristics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmCharacteristics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FarmCharacteristics
+    **/
+    _count?: true | FarmCharacteristicsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FarmCharacteristicsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FarmCharacteristicsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FarmCharacteristicsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FarmCharacteristicsMaxAggregateInputType
+  }
+
+  export type GetFarmCharacteristicsAggregateType<T extends FarmCharacteristicsAggregateArgs> = {
+        [P in keyof T & keyof AggregateFarmCharacteristics]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFarmCharacteristics[P]>
+      : GetScalarType<T[P], AggregateFarmCharacteristics[P]>
+  }
+
+
+
+
+  export type FarmCharacteristicsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FarmCharacteristicsWhereInput
+    orderBy?: FarmCharacteristicsOrderByWithAggregationInput | FarmCharacteristicsOrderByWithAggregationInput[]
+    by: FarmCharacteristicsScalarFieldEnum[] | FarmCharacteristicsScalarFieldEnum
+    having?: FarmCharacteristicsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FarmCharacteristicsCountAggregateInputType | true
+    _avg?: FarmCharacteristicsAvgAggregateInputType
+    _sum?: FarmCharacteristicsSumAggregateInputType
+    _min?: FarmCharacteristicsMinAggregateInputType
+    _max?: FarmCharacteristicsMaxAggregateInputType
+  }
+
+  export type FarmCharacteristicsGroupByOutputType = {
+    id: string
+    userId: string
+    farmSize: number | null
+    farmUnit: string | null
+    cultivatedAcres: number | null
+    grazingAcres: number | null
+    landTenure: string | null
+    waterSources: string | null
+    soilTested: string | null
+    updatedAt: Date
+    _count: FarmCharacteristicsCountAggregateOutputType | null
+    _avg: FarmCharacteristicsAvgAggregateOutputType | null
+    _sum: FarmCharacteristicsSumAggregateOutputType | null
+    _min: FarmCharacteristicsMinAggregateOutputType | null
+    _max: FarmCharacteristicsMaxAggregateOutputType | null
+  }
+
+  type GetFarmCharacteristicsGroupByPayload<T extends FarmCharacteristicsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FarmCharacteristicsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FarmCharacteristicsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FarmCharacteristicsGroupByOutputType[P]>
+            : GetScalarType<T[P], FarmCharacteristicsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FarmCharacteristicsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    farmSize?: boolean
+    farmUnit?: boolean
+    cultivatedAcres?: boolean
+    grazingAcres?: boolean
+    landTenure?: boolean
+    waterSources?: boolean
+    soilTested?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["farmCharacteristics"]>
+
+  export type FarmCharacteristicsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    farmSize?: boolean
+    farmUnit?: boolean
+    cultivatedAcres?: boolean
+    grazingAcres?: boolean
+    landTenure?: boolean
+    waterSources?: boolean
+    soilTested?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["farmCharacteristics"]>
+
+  export type FarmCharacteristicsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    farmSize?: boolean
+    farmUnit?: boolean
+    cultivatedAcres?: boolean
+    grazingAcres?: boolean
+    landTenure?: boolean
+    waterSources?: boolean
+    soilTested?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["farmCharacteristics"]>
+
+  export type FarmCharacteristicsSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    farmSize?: boolean
+    farmUnit?: boolean
+    cultivatedAcres?: boolean
+    grazingAcres?: boolean
+    landTenure?: boolean
+    waterSources?: boolean
+    soilTested?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FarmCharacteristicsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "farmSize" | "farmUnit" | "cultivatedAcres" | "grazingAcres" | "landTenure" | "waterSources" | "soilTested" | "updatedAt", ExtArgs["result"]["farmCharacteristics"]>
+  export type FarmCharacteristicsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FarmCharacteristicsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FarmCharacteristicsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FarmCharacteristicsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FarmCharacteristics"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      farmSize: number | null
+      farmUnit: string | null
+      cultivatedAcres: number | null
+      grazingAcres: number | null
+      landTenure: string | null
+      waterSources: string | null
+      soilTested: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["farmCharacteristics"]>
+    composites: {}
+  }
+
+  type FarmCharacteristicsGetPayload<S extends boolean | null | undefined | FarmCharacteristicsDefaultArgs> = $Result.GetResult<Prisma.$FarmCharacteristicsPayload, S>
+
+  type FarmCharacteristicsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FarmCharacteristicsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FarmCharacteristicsCountAggregateInputType | true
+    }
+
+  export interface FarmCharacteristicsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FarmCharacteristics'], meta: { name: 'FarmCharacteristics' } }
+    /**
+     * Find zero or one FarmCharacteristics that matches the filter.
+     * @param {FarmCharacteristicsFindUniqueArgs} args - Arguments to find a FarmCharacteristics
+     * @example
+     * // Get one FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FarmCharacteristicsFindUniqueArgs>(args: SelectSubset<T, FarmCharacteristicsFindUniqueArgs<ExtArgs>>): Prisma__FarmCharacteristicsClient<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one FarmCharacteristics that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FarmCharacteristicsFindUniqueOrThrowArgs} args - Arguments to find a FarmCharacteristics
+     * @example
+     * // Get one FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FarmCharacteristicsFindUniqueOrThrowArgs>(args: SelectSubset<T, FarmCharacteristicsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FarmCharacteristicsClient<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first FarmCharacteristics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmCharacteristicsFindFirstArgs} args - Arguments to find a FarmCharacteristics
+     * @example
+     * // Get one FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FarmCharacteristicsFindFirstArgs>(args?: SelectSubset<T, FarmCharacteristicsFindFirstArgs<ExtArgs>>): Prisma__FarmCharacteristicsClient<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first FarmCharacteristics that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmCharacteristicsFindFirstOrThrowArgs} args - Arguments to find a FarmCharacteristics
+     * @example
+     * // Get one FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FarmCharacteristicsFindFirstOrThrowArgs>(args?: SelectSubset<T, FarmCharacteristicsFindFirstOrThrowArgs<ExtArgs>>): Prisma__FarmCharacteristicsClient<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more FarmCharacteristics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmCharacteristicsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.findMany()
+     * 
+     * // Get first 10 FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const farmCharacteristicsWithIdOnly = await prisma.farmCharacteristics.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FarmCharacteristicsFindManyArgs>(args?: SelectSubset<T, FarmCharacteristicsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a FarmCharacteristics.
+     * @param {FarmCharacteristicsCreateArgs} args - Arguments to create a FarmCharacteristics.
+     * @example
+     * // Create one FarmCharacteristics
+     * const FarmCharacteristics = await prisma.farmCharacteristics.create({
+     *   data: {
+     *     // ... data to create a FarmCharacteristics
+     *   }
+     * })
+     * 
+     */
+    create<T extends FarmCharacteristicsCreateArgs>(args: SelectSubset<T, FarmCharacteristicsCreateArgs<ExtArgs>>): Prisma__FarmCharacteristicsClient<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many FarmCharacteristics.
+     * @param {FarmCharacteristicsCreateManyArgs} args - Arguments to create many FarmCharacteristics.
+     * @example
+     * // Create many FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FarmCharacteristicsCreateManyArgs>(args?: SelectSubset<T, FarmCharacteristicsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FarmCharacteristics and returns the data saved in the database.
+     * @param {FarmCharacteristicsCreateManyAndReturnArgs} args - Arguments to create many FarmCharacteristics.
+     * @example
+     * // Create many FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FarmCharacteristics and only return the `id`
+     * const farmCharacteristicsWithIdOnly = await prisma.farmCharacteristics.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FarmCharacteristicsCreateManyAndReturnArgs>(args?: SelectSubset<T, FarmCharacteristicsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a FarmCharacteristics.
+     * @param {FarmCharacteristicsDeleteArgs} args - Arguments to delete one FarmCharacteristics.
+     * @example
+     * // Delete one FarmCharacteristics
+     * const FarmCharacteristics = await prisma.farmCharacteristics.delete({
+     *   where: {
+     *     // ... filter to delete one FarmCharacteristics
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FarmCharacteristicsDeleteArgs>(args: SelectSubset<T, FarmCharacteristicsDeleteArgs<ExtArgs>>): Prisma__FarmCharacteristicsClient<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one FarmCharacteristics.
+     * @param {FarmCharacteristicsUpdateArgs} args - Arguments to update one FarmCharacteristics.
+     * @example
+     * // Update one FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FarmCharacteristicsUpdateArgs>(args: SelectSubset<T, FarmCharacteristicsUpdateArgs<ExtArgs>>): Prisma__FarmCharacteristicsClient<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more FarmCharacteristics.
+     * @param {FarmCharacteristicsDeleteManyArgs} args - Arguments to filter FarmCharacteristics to delete.
+     * @example
+     * // Delete a few FarmCharacteristics
+     * const { count } = await prisma.farmCharacteristics.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FarmCharacteristicsDeleteManyArgs>(args?: SelectSubset<T, FarmCharacteristicsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FarmCharacteristics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmCharacteristicsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FarmCharacteristicsUpdateManyArgs>(args: SelectSubset<T, FarmCharacteristicsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FarmCharacteristics and returns the data updated in the database.
+     * @param {FarmCharacteristicsUpdateManyAndReturnArgs} args - Arguments to update many FarmCharacteristics.
+     * @example
+     * // Update many FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FarmCharacteristics and only return the `id`
+     * const farmCharacteristicsWithIdOnly = await prisma.farmCharacteristics.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FarmCharacteristicsUpdateManyAndReturnArgs>(args: SelectSubset<T, FarmCharacteristicsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one FarmCharacteristics.
+     * @param {FarmCharacteristicsUpsertArgs} args - Arguments to update or create a FarmCharacteristics.
+     * @example
+     * // Update or create a FarmCharacteristics
+     * const farmCharacteristics = await prisma.farmCharacteristics.upsert({
+     *   create: {
+     *     // ... data to create a FarmCharacteristics
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FarmCharacteristics we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FarmCharacteristicsUpsertArgs>(args: SelectSubset<T, FarmCharacteristicsUpsertArgs<ExtArgs>>): Prisma__FarmCharacteristicsClient<$Result.GetResult<Prisma.$FarmCharacteristicsPayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of FarmCharacteristics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmCharacteristicsCountArgs} args - Arguments to filter FarmCharacteristics to count.
+     * @example
+     * // Count the number of FarmCharacteristics
+     * const count = await prisma.farmCharacteristics.count({
+     *   where: {
+     *     // ... the filter for the FarmCharacteristics we want to count
+     *   }
+     * })
+    **/
+    count<T extends FarmCharacteristicsCountArgs>(
+      args?: Subset<T, FarmCharacteristicsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FarmCharacteristicsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FarmCharacteristics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmCharacteristicsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FarmCharacteristicsAggregateArgs>(args: Subset<T, FarmCharacteristicsAggregateArgs>): Prisma.PrismaPromise<GetFarmCharacteristicsAggregateType<T>>
+
+    /**
+     * Group by FarmCharacteristics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmCharacteristicsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FarmCharacteristicsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FarmCharacteristicsGroupByArgs['orderBy'] }
+        : { orderBy?: FarmCharacteristicsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FarmCharacteristicsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFarmCharacteristicsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FarmCharacteristics model
+   */
+  readonly fields: FarmCharacteristicsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FarmCharacteristics.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FarmCharacteristicsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FarmCharacteristics model
+   */ 
+  interface FarmCharacteristicsFieldRefs {
+    readonly id: FieldRef<"FarmCharacteristics", 'String'>
+    readonly userId: FieldRef<"FarmCharacteristics", 'String'>
+    readonly farmSize: FieldRef<"FarmCharacteristics", 'Float'>
+    readonly farmUnit: FieldRef<"FarmCharacteristics", 'String'>
+    readonly cultivatedAcres: FieldRef<"FarmCharacteristics", 'Float'>
+    readonly grazingAcres: FieldRef<"FarmCharacteristics", 'Float'>
+    readonly landTenure: FieldRef<"FarmCharacteristics", 'String'>
+    readonly waterSources: FieldRef<"FarmCharacteristics", 'String'>
+    readonly soilTested: FieldRef<"FarmCharacteristics", 'String'>
+    readonly updatedAt: FieldRef<"FarmCharacteristics", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FarmCharacteristics findUnique
+   */
+  export type FarmCharacteristicsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmCharacteristics to fetch.
+     */
+    where: FarmCharacteristicsWhereUniqueInput
+  }
+
+  /**
+   * FarmCharacteristics findUniqueOrThrow
+   */
+  export type FarmCharacteristicsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmCharacteristics to fetch.
+     */
+    where: FarmCharacteristicsWhereUniqueInput
+  }
+
+  /**
+   * FarmCharacteristics findFirst
+   */
+  export type FarmCharacteristicsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmCharacteristics to fetch.
+     */
+    where?: FarmCharacteristicsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmCharacteristics to fetch.
+     */
+    orderBy?: FarmCharacteristicsOrderByWithRelationInput | FarmCharacteristicsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FarmCharacteristics.
+     */
+    cursor?: FarmCharacteristicsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmCharacteristics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmCharacteristics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FarmCharacteristics.
+     */
+    distinct?: FarmCharacteristicsScalarFieldEnum | FarmCharacteristicsScalarFieldEnum[]
+  }
+
+  /**
+   * FarmCharacteristics findFirstOrThrow
+   */
+  export type FarmCharacteristicsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmCharacteristics to fetch.
+     */
+    where?: FarmCharacteristicsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmCharacteristics to fetch.
+     */
+    orderBy?: FarmCharacteristicsOrderByWithRelationInput | FarmCharacteristicsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FarmCharacteristics.
+     */
+    cursor?: FarmCharacteristicsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmCharacteristics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmCharacteristics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FarmCharacteristics.
+     */
+    distinct?: FarmCharacteristicsScalarFieldEnum | FarmCharacteristicsScalarFieldEnum[]
+  }
+
+  /**
+   * FarmCharacteristics findMany
+   */
+  export type FarmCharacteristicsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmCharacteristics to fetch.
+     */
+    where?: FarmCharacteristicsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmCharacteristics to fetch.
+     */
+    orderBy?: FarmCharacteristicsOrderByWithRelationInput | FarmCharacteristicsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FarmCharacteristics.
+     */
+    cursor?: FarmCharacteristicsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmCharacteristics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmCharacteristics.
+     */
+    skip?: number
+    distinct?: FarmCharacteristicsScalarFieldEnum | FarmCharacteristicsScalarFieldEnum[]
+  }
+
+  /**
+   * FarmCharacteristics create
+   */
+  export type FarmCharacteristicsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FarmCharacteristics.
+     */
+    data: XOR<FarmCharacteristicsCreateInput, FarmCharacteristicsUncheckedCreateInput>
+  }
+
+  /**
+   * FarmCharacteristics createMany
+   */
+  export type FarmCharacteristicsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FarmCharacteristics.
+     */
+    data: FarmCharacteristicsCreateManyInput | FarmCharacteristicsCreateManyInput[]
+  }
+
+  /**
+   * FarmCharacteristics createManyAndReturn
+   */
+  export type FarmCharacteristicsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * The data used to create many FarmCharacteristics.
+     */
+    data: FarmCharacteristicsCreateManyInput | FarmCharacteristicsCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FarmCharacteristics update
+   */
+  export type FarmCharacteristicsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FarmCharacteristics.
+     */
+    data: XOR<FarmCharacteristicsUpdateInput, FarmCharacteristicsUncheckedUpdateInput>
+    /**
+     * Choose, which FarmCharacteristics to update.
+     */
+    where: FarmCharacteristicsWhereUniqueInput
+  }
+
+  /**
+   * FarmCharacteristics updateMany
+   */
+  export type FarmCharacteristicsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FarmCharacteristics.
+     */
+    data: XOR<FarmCharacteristicsUpdateManyMutationInput, FarmCharacteristicsUncheckedUpdateManyInput>
+    /**
+     * Filter which FarmCharacteristics to update
+     */
+    where?: FarmCharacteristicsWhereInput
+    /**
+     * Limit how many FarmCharacteristics to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FarmCharacteristics updateManyAndReturn
+   */
+  export type FarmCharacteristicsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * The data used to update FarmCharacteristics.
+     */
+    data: XOR<FarmCharacteristicsUpdateManyMutationInput, FarmCharacteristicsUncheckedUpdateManyInput>
+    /**
+     * Filter which FarmCharacteristics to update
+     */
+    where?: FarmCharacteristicsWhereInput
+    /**
+     * Limit how many FarmCharacteristics to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FarmCharacteristics upsert
+   */
+  export type FarmCharacteristicsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FarmCharacteristics to update in case it exists.
+     */
+    where: FarmCharacteristicsWhereUniqueInput
+    /**
+     * In case the FarmCharacteristics found by the `where` argument doesn't exist, create a new FarmCharacteristics with this data.
+     */
+    create: XOR<FarmCharacteristicsCreateInput, FarmCharacteristicsUncheckedCreateInput>
+    /**
+     * In case the FarmCharacteristics was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FarmCharacteristicsUpdateInput, FarmCharacteristicsUncheckedUpdateInput>
+  }
+
+  /**
+   * FarmCharacteristics delete
+   */
+  export type FarmCharacteristicsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+    /**
+     * Filter which FarmCharacteristics to delete.
+     */
+    where: FarmCharacteristicsWhereUniqueInput
+  }
+
+  /**
+   * FarmCharacteristics deleteMany
+   */
+  export type FarmCharacteristicsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FarmCharacteristics to delete
+     */
+    where?: FarmCharacteristicsWhereInput
+    /**
+     * Limit how many FarmCharacteristics to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FarmCharacteristics without action
+   */
+  export type FarmCharacteristicsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmCharacteristics
+     */
+    select?: FarmCharacteristicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmCharacteristics
+     */
+    omit?: FarmCharacteristicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmCharacteristicsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FarmingSystem
+   */
+
+  export type AggregateFarmingSystem = {
+    _count: FarmingSystemCountAggregateOutputType | null
+    _min: FarmingSystemMinAggregateOutputType | null
+    _max: FarmingSystemMaxAggregateOutputType | null
+  }
+
+  export type FarmingSystemMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    enterprises: string | null
+    cultivationMethod: string | null
+    mechanizationSetup: string | null
+    energySource: string | null
+    updatedAt: Date | null
+  }
+
+  export type FarmingSystemMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    enterprises: string | null
+    cultivationMethod: string | null
+    mechanizationSetup: string | null
+    energySource: string | null
+    updatedAt: Date | null
+  }
+
+  export type FarmingSystemCountAggregateOutputType = {
+    id: number
+    userId: number
+    enterprises: number
+    cultivationMethod: number
+    mechanizationSetup: number
+    energySource: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FarmingSystemMinAggregateInputType = {
+    id?: true
+    userId?: true
+    enterprises?: true
+    cultivationMethod?: true
+    mechanizationSetup?: true
+    energySource?: true
+    updatedAt?: true
+  }
+
+  export type FarmingSystemMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    enterprises?: true
+    cultivationMethod?: true
+    mechanizationSetup?: true
+    energySource?: true
+    updatedAt?: true
+  }
+
+  export type FarmingSystemCountAggregateInputType = {
+    id?: true
+    userId?: true
+    enterprises?: true
+    cultivationMethod?: true
+    mechanizationSetup?: true
+    energySource?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FarmingSystemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FarmingSystem to aggregate.
+     */
+    where?: FarmingSystemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmingSystems to fetch.
+     */
+    orderBy?: FarmingSystemOrderByWithRelationInput | FarmingSystemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FarmingSystemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmingSystems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmingSystems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FarmingSystems
+    **/
+    _count?: true | FarmingSystemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FarmingSystemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FarmingSystemMaxAggregateInputType
+  }
+
+  export type GetFarmingSystemAggregateType<T extends FarmingSystemAggregateArgs> = {
+        [P in keyof T & keyof AggregateFarmingSystem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFarmingSystem[P]>
+      : GetScalarType<T[P], AggregateFarmingSystem[P]>
+  }
+
+
+
+
+  export type FarmingSystemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FarmingSystemWhereInput
+    orderBy?: FarmingSystemOrderByWithAggregationInput | FarmingSystemOrderByWithAggregationInput[]
+    by: FarmingSystemScalarFieldEnum[] | FarmingSystemScalarFieldEnum
+    having?: FarmingSystemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FarmingSystemCountAggregateInputType | true
+    _min?: FarmingSystemMinAggregateInputType
+    _max?: FarmingSystemMaxAggregateInputType
+  }
+
+  export type FarmingSystemGroupByOutputType = {
+    id: string
+    userId: string
+    enterprises: string | null
+    cultivationMethod: string | null
+    mechanizationSetup: string | null
+    energySource: string | null
+    updatedAt: Date
+    _count: FarmingSystemCountAggregateOutputType | null
+    _min: FarmingSystemMinAggregateOutputType | null
+    _max: FarmingSystemMaxAggregateOutputType | null
+  }
+
+  type GetFarmingSystemGroupByPayload<T extends FarmingSystemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FarmingSystemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FarmingSystemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FarmingSystemGroupByOutputType[P]>
+            : GetScalarType<T[P], FarmingSystemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FarmingSystemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    enterprises?: boolean
+    cultivationMethod?: boolean
+    mechanizationSetup?: boolean
+    energySource?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["farmingSystem"]>
+
+  export type FarmingSystemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    enterprises?: boolean
+    cultivationMethod?: boolean
+    mechanizationSetup?: boolean
+    energySource?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["farmingSystem"]>
+
+  export type FarmingSystemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    enterprises?: boolean
+    cultivationMethod?: boolean
+    mechanizationSetup?: boolean
+    energySource?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["farmingSystem"]>
+
+  export type FarmingSystemSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    enterprises?: boolean
+    cultivationMethod?: boolean
+    mechanizationSetup?: boolean
+    energySource?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FarmingSystemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "enterprises" | "cultivationMethod" | "mechanizationSetup" | "energySource" | "updatedAt", ExtArgs["result"]["farmingSystem"]>
+  export type FarmingSystemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FarmingSystemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FarmingSystemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FarmingSystemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FarmingSystem"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      enterprises: string | null
+      cultivationMethod: string | null
+      mechanizationSetup: string | null
+      energySource: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["farmingSystem"]>
+    composites: {}
+  }
+
+  type FarmingSystemGetPayload<S extends boolean | null | undefined | FarmingSystemDefaultArgs> = $Result.GetResult<Prisma.$FarmingSystemPayload, S>
+
+  type FarmingSystemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FarmingSystemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FarmingSystemCountAggregateInputType | true
+    }
+
+  export interface FarmingSystemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FarmingSystem'], meta: { name: 'FarmingSystem' } }
+    /**
+     * Find zero or one FarmingSystem that matches the filter.
+     * @param {FarmingSystemFindUniqueArgs} args - Arguments to find a FarmingSystem
+     * @example
+     * // Get one FarmingSystem
+     * const farmingSystem = await prisma.farmingSystem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FarmingSystemFindUniqueArgs>(args: SelectSubset<T, FarmingSystemFindUniqueArgs<ExtArgs>>): Prisma__FarmingSystemClient<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one FarmingSystem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FarmingSystemFindUniqueOrThrowArgs} args - Arguments to find a FarmingSystem
+     * @example
+     * // Get one FarmingSystem
+     * const farmingSystem = await prisma.farmingSystem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FarmingSystemFindUniqueOrThrowArgs>(args: SelectSubset<T, FarmingSystemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FarmingSystemClient<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first FarmingSystem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmingSystemFindFirstArgs} args - Arguments to find a FarmingSystem
+     * @example
+     * // Get one FarmingSystem
+     * const farmingSystem = await prisma.farmingSystem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FarmingSystemFindFirstArgs>(args?: SelectSubset<T, FarmingSystemFindFirstArgs<ExtArgs>>): Prisma__FarmingSystemClient<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first FarmingSystem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmingSystemFindFirstOrThrowArgs} args - Arguments to find a FarmingSystem
+     * @example
+     * // Get one FarmingSystem
+     * const farmingSystem = await prisma.farmingSystem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FarmingSystemFindFirstOrThrowArgs>(args?: SelectSubset<T, FarmingSystemFindFirstOrThrowArgs<ExtArgs>>): Prisma__FarmingSystemClient<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more FarmingSystems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmingSystemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FarmingSystems
+     * const farmingSystems = await prisma.farmingSystem.findMany()
+     * 
+     * // Get first 10 FarmingSystems
+     * const farmingSystems = await prisma.farmingSystem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const farmingSystemWithIdOnly = await prisma.farmingSystem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FarmingSystemFindManyArgs>(args?: SelectSubset<T, FarmingSystemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a FarmingSystem.
+     * @param {FarmingSystemCreateArgs} args - Arguments to create a FarmingSystem.
+     * @example
+     * // Create one FarmingSystem
+     * const FarmingSystem = await prisma.farmingSystem.create({
+     *   data: {
+     *     // ... data to create a FarmingSystem
+     *   }
+     * })
+     * 
+     */
+    create<T extends FarmingSystemCreateArgs>(args: SelectSubset<T, FarmingSystemCreateArgs<ExtArgs>>): Prisma__FarmingSystemClient<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many FarmingSystems.
+     * @param {FarmingSystemCreateManyArgs} args - Arguments to create many FarmingSystems.
+     * @example
+     * // Create many FarmingSystems
+     * const farmingSystem = await prisma.farmingSystem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FarmingSystemCreateManyArgs>(args?: SelectSubset<T, FarmingSystemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FarmingSystems and returns the data saved in the database.
+     * @param {FarmingSystemCreateManyAndReturnArgs} args - Arguments to create many FarmingSystems.
+     * @example
+     * // Create many FarmingSystems
+     * const farmingSystem = await prisma.farmingSystem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FarmingSystems and only return the `id`
+     * const farmingSystemWithIdOnly = await prisma.farmingSystem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FarmingSystemCreateManyAndReturnArgs>(args?: SelectSubset<T, FarmingSystemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a FarmingSystem.
+     * @param {FarmingSystemDeleteArgs} args - Arguments to delete one FarmingSystem.
+     * @example
+     * // Delete one FarmingSystem
+     * const FarmingSystem = await prisma.farmingSystem.delete({
+     *   where: {
+     *     // ... filter to delete one FarmingSystem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FarmingSystemDeleteArgs>(args: SelectSubset<T, FarmingSystemDeleteArgs<ExtArgs>>): Prisma__FarmingSystemClient<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one FarmingSystem.
+     * @param {FarmingSystemUpdateArgs} args - Arguments to update one FarmingSystem.
+     * @example
+     * // Update one FarmingSystem
+     * const farmingSystem = await prisma.farmingSystem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FarmingSystemUpdateArgs>(args: SelectSubset<T, FarmingSystemUpdateArgs<ExtArgs>>): Prisma__FarmingSystemClient<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more FarmingSystems.
+     * @param {FarmingSystemDeleteManyArgs} args - Arguments to filter FarmingSystems to delete.
+     * @example
+     * // Delete a few FarmingSystems
+     * const { count } = await prisma.farmingSystem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FarmingSystemDeleteManyArgs>(args?: SelectSubset<T, FarmingSystemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FarmingSystems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmingSystemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FarmingSystems
+     * const farmingSystem = await prisma.farmingSystem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FarmingSystemUpdateManyArgs>(args: SelectSubset<T, FarmingSystemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FarmingSystems and returns the data updated in the database.
+     * @param {FarmingSystemUpdateManyAndReturnArgs} args - Arguments to update many FarmingSystems.
+     * @example
+     * // Update many FarmingSystems
+     * const farmingSystem = await prisma.farmingSystem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FarmingSystems and only return the `id`
+     * const farmingSystemWithIdOnly = await prisma.farmingSystem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FarmingSystemUpdateManyAndReturnArgs>(args: SelectSubset<T, FarmingSystemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one FarmingSystem.
+     * @param {FarmingSystemUpsertArgs} args - Arguments to update or create a FarmingSystem.
+     * @example
+     * // Update or create a FarmingSystem
+     * const farmingSystem = await prisma.farmingSystem.upsert({
+     *   create: {
+     *     // ... data to create a FarmingSystem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FarmingSystem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FarmingSystemUpsertArgs>(args: SelectSubset<T, FarmingSystemUpsertArgs<ExtArgs>>): Prisma__FarmingSystemClient<$Result.GetResult<Prisma.$FarmingSystemPayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of FarmingSystems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmingSystemCountArgs} args - Arguments to filter FarmingSystems to count.
+     * @example
+     * // Count the number of FarmingSystems
+     * const count = await prisma.farmingSystem.count({
+     *   where: {
+     *     // ... the filter for the FarmingSystems we want to count
+     *   }
+     * })
+    **/
+    count<T extends FarmingSystemCountArgs>(
+      args?: Subset<T, FarmingSystemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FarmingSystemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FarmingSystem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmingSystemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FarmingSystemAggregateArgs>(args: Subset<T, FarmingSystemAggregateArgs>): Prisma.PrismaPromise<GetFarmingSystemAggregateType<T>>
+
+    /**
+     * Group by FarmingSystem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FarmingSystemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FarmingSystemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FarmingSystemGroupByArgs['orderBy'] }
+        : { orderBy?: FarmingSystemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FarmingSystemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFarmingSystemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FarmingSystem model
+   */
+  readonly fields: FarmingSystemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FarmingSystem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FarmingSystemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FarmingSystem model
+   */ 
+  interface FarmingSystemFieldRefs {
+    readonly id: FieldRef<"FarmingSystem", 'String'>
+    readonly userId: FieldRef<"FarmingSystem", 'String'>
+    readonly enterprises: FieldRef<"FarmingSystem", 'String'>
+    readonly cultivationMethod: FieldRef<"FarmingSystem", 'String'>
+    readonly mechanizationSetup: FieldRef<"FarmingSystem", 'String'>
+    readonly energySource: FieldRef<"FarmingSystem", 'String'>
+    readonly updatedAt: FieldRef<"FarmingSystem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FarmingSystem findUnique
+   */
+  export type FarmingSystemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmingSystem to fetch.
+     */
+    where: FarmingSystemWhereUniqueInput
+  }
+
+  /**
+   * FarmingSystem findUniqueOrThrow
+   */
+  export type FarmingSystemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmingSystem to fetch.
+     */
+    where: FarmingSystemWhereUniqueInput
+  }
+
+  /**
+   * FarmingSystem findFirst
+   */
+  export type FarmingSystemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmingSystem to fetch.
+     */
+    where?: FarmingSystemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmingSystems to fetch.
+     */
+    orderBy?: FarmingSystemOrderByWithRelationInput | FarmingSystemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FarmingSystems.
+     */
+    cursor?: FarmingSystemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmingSystems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmingSystems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FarmingSystems.
+     */
+    distinct?: FarmingSystemScalarFieldEnum | FarmingSystemScalarFieldEnum[]
+  }
+
+  /**
+   * FarmingSystem findFirstOrThrow
+   */
+  export type FarmingSystemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmingSystem to fetch.
+     */
+    where?: FarmingSystemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmingSystems to fetch.
+     */
+    orderBy?: FarmingSystemOrderByWithRelationInput | FarmingSystemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FarmingSystems.
+     */
+    cursor?: FarmingSystemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmingSystems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmingSystems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FarmingSystems.
+     */
+    distinct?: FarmingSystemScalarFieldEnum | FarmingSystemScalarFieldEnum[]
+  }
+
+  /**
+   * FarmingSystem findMany
+   */
+  export type FarmingSystemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    /**
+     * Filter, which FarmingSystems to fetch.
+     */
+    where?: FarmingSystemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FarmingSystems to fetch.
+     */
+    orderBy?: FarmingSystemOrderByWithRelationInput | FarmingSystemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FarmingSystems.
+     */
+    cursor?: FarmingSystemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FarmingSystems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FarmingSystems.
+     */
+    skip?: number
+    distinct?: FarmingSystemScalarFieldEnum | FarmingSystemScalarFieldEnum[]
+  }
+
+  /**
+   * FarmingSystem create
+   */
+  export type FarmingSystemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FarmingSystem.
+     */
+    data: XOR<FarmingSystemCreateInput, FarmingSystemUncheckedCreateInput>
+  }
+
+  /**
+   * FarmingSystem createMany
+   */
+  export type FarmingSystemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FarmingSystems.
+     */
+    data: FarmingSystemCreateManyInput | FarmingSystemCreateManyInput[]
+  }
+
+  /**
+   * FarmingSystem createManyAndReturn
+   */
+  export type FarmingSystemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * The data used to create many FarmingSystems.
+     */
+    data: FarmingSystemCreateManyInput | FarmingSystemCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FarmingSystem update
+   */
+  export type FarmingSystemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FarmingSystem.
+     */
+    data: XOR<FarmingSystemUpdateInput, FarmingSystemUncheckedUpdateInput>
+    /**
+     * Choose, which FarmingSystem to update.
+     */
+    where: FarmingSystemWhereUniqueInput
+  }
+
+  /**
+   * FarmingSystem updateMany
+   */
+  export type FarmingSystemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FarmingSystems.
+     */
+    data: XOR<FarmingSystemUpdateManyMutationInput, FarmingSystemUncheckedUpdateManyInput>
+    /**
+     * Filter which FarmingSystems to update
+     */
+    where?: FarmingSystemWhereInput
+    /**
+     * Limit how many FarmingSystems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FarmingSystem updateManyAndReturn
+   */
+  export type FarmingSystemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * The data used to update FarmingSystems.
+     */
+    data: XOR<FarmingSystemUpdateManyMutationInput, FarmingSystemUncheckedUpdateManyInput>
+    /**
+     * Filter which FarmingSystems to update
+     */
+    where?: FarmingSystemWhereInput
+    /**
+     * Limit how many FarmingSystems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FarmingSystem upsert
+   */
+  export type FarmingSystemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FarmingSystem to update in case it exists.
+     */
+    where: FarmingSystemWhereUniqueInput
+    /**
+     * In case the FarmingSystem found by the `where` argument doesn't exist, create a new FarmingSystem with this data.
+     */
+    create: XOR<FarmingSystemCreateInput, FarmingSystemUncheckedCreateInput>
+    /**
+     * In case the FarmingSystem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FarmingSystemUpdateInput, FarmingSystemUncheckedUpdateInput>
+  }
+
+  /**
+   * FarmingSystem delete
+   */
+  export type FarmingSystemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+    /**
+     * Filter which FarmingSystem to delete.
+     */
+    where: FarmingSystemWhereUniqueInput
+  }
+
+  /**
+   * FarmingSystem deleteMany
+   */
+  export type FarmingSystemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FarmingSystems to delete
+     */
+    where?: FarmingSystemWhereInput
+    /**
+     * Limit how many FarmingSystems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FarmingSystem without action
+   */
+  export type FarmingSystemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FarmingSystem
+     */
+    select?: FarmingSystemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FarmingSystem
+     */
+    omit?: FarmingSystemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FarmingSystemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BusinessExperience
+   */
+
+  export type AggregateBusinessExperience = {
+    _count: BusinessExperienceCountAggregateOutputType | null
+    _min: BusinessExperienceMinAggregateOutputType | null
+    _max: BusinessExperienceMaxAggregateOutputType | null
+  }
+
+  export type BusinessExperienceMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    commercialYears: string | null
+    annualRevenueBracket: string | null
+    recordKeepingMethod: string | null
+    produceBuyers: string | null
+    updatedAt: Date | null
+  }
+
+  export type BusinessExperienceMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    commercialYears: string | null
+    annualRevenueBracket: string | null
+    recordKeepingMethod: string | null
+    produceBuyers: string | null
+    updatedAt: Date | null
+  }
+
+  export type BusinessExperienceCountAggregateOutputType = {
+    id: number
+    userId: number
+    commercialYears: number
+    annualRevenueBracket: number
+    recordKeepingMethod: number
+    produceBuyers: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BusinessExperienceMinAggregateInputType = {
+    id?: true
+    userId?: true
+    commercialYears?: true
+    annualRevenueBracket?: true
+    recordKeepingMethod?: true
+    produceBuyers?: true
+    updatedAt?: true
+  }
+
+  export type BusinessExperienceMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    commercialYears?: true
+    annualRevenueBracket?: true
+    recordKeepingMethod?: true
+    produceBuyers?: true
+    updatedAt?: true
+  }
+
+  export type BusinessExperienceCountAggregateInputType = {
+    id?: true
+    userId?: true
+    commercialYears?: true
+    annualRevenueBracket?: true
+    recordKeepingMethod?: true
+    produceBuyers?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BusinessExperienceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BusinessExperience to aggregate.
+     */
+    where?: BusinessExperienceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessExperiences to fetch.
+     */
+    orderBy?: BusinessExperienceOrderByWithRelationInput | BusinessExperienceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BusinessExperienceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessExperiences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessExperiences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BusinessExperiences
+    **/
+    _count?: true | BusinessExperienceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BusinessExperienceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BusinessExperienceMaxAggregateInputType
+  }
+
+  export type GetBusinessExperienceAggregateType<T extends BusinessExperienceAggregateArgs> = {
+        [P in keyof T & keyof AggregateBusinessExperience]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBusinessExperience[P]>
+      : GetScalarType<T[P], AggregateBusinessExperience[P]>
+  }
+
+
+
+
+  export type BusinessExperienceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BusinessExperienceWhereInput
+    orderBy?: BusinessExperienceOrderByWithAggregationInput | BusinessExperienceOrderByWithAggregationInput[]
+    by: BusinessExperienceScalarFieldEnum[] | BusinessExperienceScalarFieldEnum
+    having?: BusinessExperienceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BusinessExperienceCountAggregateInputType | true
+    _min?: BusinessExperienceMinAggregateInputType
+    _max?: BusinessExperienceMaxAggregateInputType
+  }
+
+  export type BusinessExperienceGroupByOutputType = {
+    id: string
+    userId: string
+    commercialYears: string | null
+    annualRevenueBracket: string | null
+    recordKeepingMethod: string | null
+    produceBuyers: string | null
+    updatedAt: Date
+    _count: BusinessExperienceCountAggregateOutputType | null
+    _min: BusinessExperienceMinAggregateOutputType | null
+    _max: BusinessExperienceMaxAggregateOutputType | null
+  }
+
+  type GetBusinessExperienceGroupByPayload<T extends BusinessExperienceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BusinessExperienceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BusinessExperienceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BusinessExperienceGroupByOutputType[P]>
+            : GetScalarType<T[P], BusinessExperienceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BusinessExperienceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    commercialYears?: boolean
+    annualRevenueBracket?: boolean
+    recordKeepingMethod?: boolean
+    produceBuyers?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["businessExperience"]>
+
+  export type BusinessExperienceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    commercialYears?: boolean
+    annualRevenueBracket?: boolean
+    recordKeepingMethod?: boolean
+    produceBuyers?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["businessExperience"]>
+
+  export type BusinessExperienceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    commercialYears?: boolean
+    annualRevenueBracket?: boolean
+    recordKeepingMethod?: boolean
+    produceBuyers?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["businessExperience"]>
+
+  export type BusinessExperienceSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    commercialYears?: boolean
+    annualRevenueBracket?: boolean
+    recordKeepingMethod?: boolean
+    produceBuyers?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BusinessExperienceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "commercialYears" | "annualRevenueBracket" | "recordKeepingMethod" | "produceBuyers" | "updatedAt", ExtArgs["result"]["businessExperience"]>
+  export type BusinessExperienceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type BusinessExperienceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type BusinessExperienceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $BusinessExperiencePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BusinessExperience"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      commercialYears: string | null
+      annualRevenueBracket: string | null
+      recordKeepingMethod: string | null
+      produceBuyers: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["businessExperience"]>
+    composites: {}
+  }
+
+  type BusinessExperienceGetPayload<S extends boolean | null | undefined | BusinessExperienceDefaultArgs> = $Result.GetResult<Prisma.$BusinessExperiencePayload, S>
+
+  type BusinessExperienceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BusinessExperienceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BusinessExperienceCountAggregateInputType | true
+    }
+
+  export interface BusinessExperienceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BusinessExperience'], meta: { name: 'BusinessExperience' } }
+    /**
+     * Find zero or one BusinessExperience that matches the filter.
+     * @param {BusinessExperienceFindUniqueArgs} args - Arguments to find a BusinessExperience
+     * @example
+     * // Get one BusinessExperience
+     * const businessExperience = await prisma.businessExperience.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BusinessExperienceFindUniqueArgs>(args: SelectSubset<T, BusinessExperienceFindUniqueArgs<ExtArgs>>): Prisma__BusinessExperienceClient<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one BusinessExperience that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BusinessExperienceFindUniqueOrThrowArgs} args - Arguments to find a BusinessExperience
+     * @example
+     * // Get one BusinessExperience
+     * const businessExperience = await prisma.businessExperience.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BusinessExperienceFindUniqueOrThrowArgs>(args: SelectSubset<T, BusinessExperienceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BusinessExperienceClient<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first BusinessExperience that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessExperienceFindFirstArgs} args - Arguments to find a BusinessExperience
+     * @example
+     * // Get one BusinessExperience
+     * const businessExperience = await prisma.businessExperience.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BusinessExperienceFindFirstArgs>(args?: SelectSubset<T, BusinessExperienceFindFirstArgs<ExtArgs>>): Prisma__BusinessExperienceClient<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first BusinessExperience that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessExperienceFindFirstOrThrowArgs} args - Arguments to find a BusinessExperience
+     * @example
+     * // Get one BusinessExperience
+     * const businessExperience = await prisma.businessExperience.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BusinessExperienceFindFirstOrThrowArgs>(args?: SelectSubset<T, BusinessExperienceFindFirstOrThrowArgs<ExtArgs>>): Prisma__BusinessExperienceClient<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more BusinessExperiences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessExperienceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BusinessExperiences
+     * const businessExperiences = await prisma.businessExperience.findMany()
+     * 
+     * // Get first 10 BusinessExperiences
+     * const businessExperiences = await prisma.businessExperience.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const businessExperienceWithIdOnly = await prisma.businessExperience.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BusinessExperienceFindManyArgs>(args?: SelectSubset<T, BusinessExperienceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a BusinessExperience.
+     * @param {BusinessExperienceCreateArgs} args - Arguments to create a BusinessExperience.
+     * @example
+     * // Create one BusinessExperience
+     * const BusinessExperience = await prisma.businessExperience.create({
+     *   data: {
+     *     // ... data to create a BusinessExperience
+     *   }
+     * })
+     * 
+     */
+    create<T extends BusinessExperienceCreateArgs>(args: SelectSubset<T, BusinessExperienceCreateArgs<ExtArgs>>): Prisma__BusinessExperienceClient<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many BusinessExperiences.
+     * @param {BusinessExperienceCreateManyArgs} args - Arguments to create many BusinessExperiences.
+     * @example
+     * // Create many BusinessExperiences
+     * const businessExperience = await prisma.businessExperience.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BusinessExperienceCreateManyArgs>(args?: SelectSubset<T, BusinessExperienceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BusinessExperiences and returns the data saved in the database.
+     * @param {BusinessExperienceCreateManyAndReturnArgs} args - Arguments to create many BusinessExperiences.
+     * @example
+     * // Create many BusinessExperiences
+     * const businessExperience = await prisma.businessExperience.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BusinessExperiences and only return the `id`
+     * const businessExperienceWithIdOnly = await prisma.businessExperience.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BusinessExperienceCreateManyAndReturnArgs>(args?: SelectSubset<T, BusinessExperienceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a BusinessExperience.
+     * @param {BusinessExperienceDeleteArgs} args - Arguments to delete one BusinessExperience.
+     * @example
+     * // Delete one BusinessExperience
+     * const BusinessExperience = await prisma.businessExperience.delete({
+     *   where: {
+     *     // ... filter to delete one BusinessExperience
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BusinessExperienceDeleteArgs>(args: SelectSubset<T, BusinessExperienceDeleteArgs<ExtArgs>>): Prisma__BusinessExperienceClient<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one BusinessExperience.
+     * @param {BusinessExperienceUpdateArgs} args - Arguments to update one BusinessExperience.
+     * @example
+     * // Update one BusinessExperience
+     * const businessExperience = await prisma.businessExperience.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BusinessExperienceUpdateArgs>(args: SelectSubset<T, BusinessExperienceUpdateArgs<ExtArgs>>): Prisma__BusinessExperienceClient<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more BusinessExperiences.
+     * @param {BusinessExperienceDeleteManyArgs} args - Arguments to filter BusinessExperiences to delete.
+     * @example
+     * // Delete a few BusinessExperiences
+     * const { count } = await prisma.businessExperience.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BusinessExperienceDeleteManyArgs>(args?: SelectSubset<T, BusinessExperienceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BusinessExperiences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessExperienceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BusinessExperiences
+     * const businessExperience = await prisma.businessExperience.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BusinessExperienceUpdateManyArgs>(args: SelectSubset<T, BusinessExperienceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BusinessExperiences and returns the data updated in the database.
+     * @param {BusinessExperienceUpdateManyAndReturnArgs} args - Arguments to update many BusinessExperiences.
+     * @example
+     * // Update many BusinessExperiences
+     * const businessExperience = await prisma.businessExperience.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more BusinessExperiences and only return the `id`
+     * const businessExperienceWithIdOnly = await prisma.businessExperience.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BusinessExperienceUpdateManyAndReturnArgs>(args: SelectSubset<T, BusinessExperienceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one BusinessExperience.
+     * @param {BusinessExperienceUpsertArgs} args - Arguments to update or create a BusinessExperience.
+     * @example
+     * // Update or create a BusinessExperience
+     * const businessExperience = await prisma.businessExperience.upsert({
+     *   create: {
+     *     // ... data to create a BusinessExperience
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BusinessExperience we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BusinessExperienceUpsertArgs>(args: SelectSubset<T, BusinessExperienceUpsertArgs<ExtArgs>>): Prisma__BusinessExperienceClient<$Result.GetResult<Prisma.$BusinessExperiencePayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of BusinessExperiences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessExperienceCountArgs} args - Arguments to filter BusinessExperiences to count.
+     * @example
+     * // Count the number of BusinessExperiences
+     * const count = await prisma.businessExperience.count({
+     *   where: {
+     *     // ... the filter for the BusinessExperiences we want to count
+     *   }
+     * })
+    **/
+    count<T extends BusinessExperienceCountArgs>(
+      args?: Subset<T, BusinessExperienceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BusinessExperienceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BusinessExperience.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessExperienceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BusinessExperienceAggregateArgs>(args: Subset<T, BusinessExperienceAggregateArgs>): Prisma.PrismaPromise<GetBusinessExperienceAggregateType<T>>
+
+    /**
+     * Group by BusinessExperience.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BusinessExperienceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BusinessExperienceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BusinessExperienceGroupByArgs['orderBy'] }
+        : { orderBy?: BusinessExperienceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BusinessExperienceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBusinessExperienceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BusinessExperience model
+   */
+  readonly fields: BusinessExperienceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BusinessExperience.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BusinessExperienceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BusinessExperience model
+   */ 
+  interface BusinessExperienceFieldRefs {
+    readonly id: FieldRef<"BusinessExperience", 'String'>
+    readonly userId: FieldRef<"BusinessExperience", 'String'>
+    readonly commercialYears: FieldRef<"BusinessExperience", 'String'>
+    readonly annualRevenueBracket: FieldRef<"BusinessExperience", 'String'>
+    readonly recordKeepingMethod: FieldRef<"BusinessExperience", 'String'>
+    readonly produceBuyers: FieldRef<"BusinessExperience", 'String'>
+    readonly updatedAt: FieldRef<"BusinessExperience", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BusinessExperience findUnique
+   */
+  export type BusinessExperienceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessExperience to fetch.
+     */
+    where: BusinessExperienceWhereUniqueInput
+  }
+
+  /**
+   * BusinessExperience findUniqueOrThrow
+   */
+  export type BusinessExperienceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessExperience to fetch.
+     */
+    where: BusinessExperienceWhereUniqueInput
+  }
+
+  /**
+   * BusinessExperience findFirst
+   */
+  export type BusinessExperienceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessExperience to fetch.
+     */
+    where?: BusinessExperienceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessExperiences to fetch.
+     */
+    orderBy?: BusinessExperienceOrderByWithRelationInput | BusinessExperienceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BusinessExperiences.
+     */
+    cursor?: BusinessExperienceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessExperiences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessExperiences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BusinessExperiences.
+     */
+    distinct?: BusinessExperienceScalarFieldEnum | BusinessExperienceScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessExperience findFirstOrThrow
+   */
+  export type BusinessExperienceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessExperience to fetch.
+     */
+    where?: BusinessExperienceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessExperiences to fetch.
+     */
+    orderBy?: BusinessExperienceOrderByWithRelationInput | BusinessExperienceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BusinessExperiences.
+     */
+    cursor?: BusinessExperienceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessExperiences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessExperiences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BusinessExperiences.
+     */
+    distinct?: BusinessExperienceScalarFieldEnum | BusinessExperienceScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessExperience findMany
+   */
+  export type BusinessExperienceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    /**
+     * Filter, which BusinessExperiences to fetch.
+     */
+    where?: BusinessExperienceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BusinessExperiences to fetch.
+     */
+    orderBy?: BusinessExperienceOrderByWithRelationInput | BusinessExperienceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BusinessExperiences.
+     */
+    cursor?: BusinessExperienceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BusinessExperiences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BusinessExperiences.
+     */
+    skip?: number
+    distinct?: BusinessExperienceScalarFieldEnum | BusinessExperienceScalarFieldEnum[]
+  }
+
+  /**
+   * BusinessExperience create
+   */
+  export type BusinessExperienceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BusinessExperience.
+     */
+    data: XOR<BusinessExperienceCreateInput, BusinessExperienceUncheckedCreateInput>
+  }
+
+  /**
+   * BusinessExperience createMany
+   */
+  export type BusinessExperienceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BusinessExperiences.
+     */
+    data: BusinessExperienceCreateManyInput | BusinessExperienceCreateManyInput[]
+  }
+
+  /**
+   * BusinessExperience createManyAndReturn
+   */
+  export type BusinessExperienceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * The data used to create many BusinessExperiences.
+     */
+    data: BusinessExperienceCreateManyInput | BusinessExperienceCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BusinessExperience update
+   */
+  export type BusinessExperienceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BusinessExperience.
+     */
+    data: XOR<BusinessExperienceUpdateInput, BusinessExperienceUncheckedUpdateInput>
+    /**
+     * Choose, which BusinessExperience to update.
+     */
+    where: BusinessExperienceWhereUniqueInput
+  }
+
+  /**
+   * BusinessExperience updateMany
+   */
+  export type BusinessExperienceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BusinessExperiences.
+     */
+    data: XOR<BusinessExperienceUpdateManyMutationInput, BusinessExperienceUncheckedUpdateManyInput>
+    /**
+     * Filter which BusinessExperiences to update
+     */
+    where?: BusinessExperienceWhereInput
+    /**
+     * Limit how many BusinessExperiences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BusinessExperience updateManyAndReturn
+   */
+  export type BusinessExperienceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * The data used to update BusinessExperiences.
+     */
+    data: XOR<BusinessExperienceUpdateManyMutationInput, BusinessExperienceUncheckedUpdateManyInput>
+    /**
+     * Filter which BusinessExperiences to update
+     */
+    where?: BusinessExperienceWhereInput
+    /**
+     * Limit how many BusinessExperiences to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BusinessExperience upsert
+   */
+  export type BusinessExperienceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BusinessExperience to update in case it exists.
+     */
+    where: BusinessExperienceWhereUniqueInput
+    /**
+     * In case the BusinessExperience found by the `where` argument doesn't exist, create a new BusinessExperience with this data.
+     */
+    create: XOR<BusinessExperienceCreateInput, BusinessExperienceUncheckedCreateInput>
+    /**
+     * In case the BusinessExperience was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BusinessExperienceUpdateInput, BusinessExperienceUncheckedUpdateInput>
+  }
+
+  /**
+   * BusinessExperience delete
+   */
+  export type BusinessExperienceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+    /**
+     * Filter which BusinessExperience to delete.
+     */
+    where: BusinessExperienceWhereUniqueInput
+  }
+
+  /**
+   * BusinessExperience deleteMany
+   */
+  export type BusinessExperienceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BusinessExperiences to delete
+     */
+    where?: BusinessExperienceWhereInput
+    /**
+     * Limit how many BusinessExperiences to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * BusinessExperience without action
+   */
+  export type BusinessExperienceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessExperience
+     */
+    select?: BusinessExperienceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessExperience
+     */
+    omit?: BusinessExperienceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessExperienceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GoalsPriorities
+   */
+
+  export type AggregateGoalsPriorities = {
+    _count: GoalsPrioritiesCountAggregateOutputType | null
+    _min: GoalsPrioritiesMinAggregateOutputType | null
+    _max: GoalsPrioritiesMaxAggregateOutputType | null
+  }
+
+  export type GoalsPrioritiesMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    goals: string | null
+    operationalBottleneck: string | null
+    advisoryMode: string | null
+    updatedAt: Date | null
+  }
+
+  export type GoalsPrioritiesMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    goals: string | null
+    operationalBottleneck: string | null
+    advisoryMode: string | null
+    updatedAt: Date | null
+  }
+
+  export type GoalsPrioritiesCountAggregateOutputType = {
+    id: number
+    userId: number
+    goals: number
+    operationalBottleneck: number
+    advisoryMode: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GoalsPrioritiesMinAggregateInputType = {
+    id?: true
+    userId?: true
+    goals?: true
+    operationalBottleneck?: true
+    advisoryMode?: true
+    updatedAt?: true
+  }
+
+  export type GoalsPrioritiesMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    goals?: true
+    operationalBottleneck?: true
+    advisoryMode?: true
+    updatedAt?: true
+  }
+
+  export type GoalsPrioritiesCountAggregateInputType = {
+    id?: true
+    userId?: true
+    goals?: true
+    operationalBottleneck?: true
+    advisoryMode?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GoalsPrioritiesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GoalsPriorities to aggregate.
+     */
+    where?: GoalsPrioritiesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoalsPriorities to fetch.
+     */
+    orderBy?: GoalsPrioritiesOrderByWithRelationInput | GoalsPrioritiesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GoalsPrioritiesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoalsPriorities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoalsPriorities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GoalsPriorities
+    **/
+    _count?: true | GoalsPrioritiesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GoalsPrioritiesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GoalsPrioritiesMaxAggregateInputType
+  }
+
+  export type GetGoalsPrioritiesAggregateType<T extends GoalsPrioritiesAggregateArgs> = {
+        [P in keyof T & keyof AggregateGoalsPriorities]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGoalsPriorities[P]>
+      : GetScalarType<T[P], AggregateGoalsPriorities[P]>
+  }
+
+
+
+
+  export type GoalsPrioritiesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GoalsPrioritiesWhereInput
+    orderBy?: GoalsPrioritiesOrderByWithAggregationInput | GoalsPrioritiesOrderByWithAggregationInput[]
+    by: GoalsPrioritiesScalarFieldEnum[] | GoalsPrioritiesScalarFieldEnum
+    having?: GoalsPrioritiesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GoalsPrioritiesCountAggregateInputType | true
+    _min?: GoalsPrioritiesMinAggregateInputType
+    _max?: GoalsPrioritiesMaxAggregateInputType
+  }
+
+  export type GoalsPrioritiesGroupByOutputType = {
+    id: string
+    userId: string
+    goals: string | null
+    operationalBottleneck: string | null
+    advisoryMode: string | null
+    updatedAt: Date
+    _count: GoalsPrioritiesCountAggregateOutputType | null
+    _min: GoalsPrioritiesMinAggregateOutputType | null
+    _max: GoalsPrioritiesMaxAggregateOutputType | null
+  }
+
+  type GetGoalsPrioritiesGroupByPayload<T extends GoalsPrioritiesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GoalsPrioritiesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GoalsPrioritiesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GoalsPrioritiesGroupByOutputType[P]>
+            : GetScalarType<T[P], GoalsPrioritiesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GoalsPrioritiesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    goals?: boolean
+    operationalBottleneck?: boolean
+    advisoryMode?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["goalsPriorities"]>
+
+  export type GoalsPrioritiesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    goals?: boolean
+    operationalBottleneck?: boolean
+    advisoryMode?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["goalsPriorities"]>
+
+  export type GoalsPrioritiesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    goals?: boolean
+    operationalBottleneck?: boolean
+    advisoryMode?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["goalsPriorities"]>
+
+  export type GoalsPrioritiesSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    goals?: boolean
+    operationalBottleneck?: boolean
+    advisoryMode?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GoalsPrioritiesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "goals" | "operationalBottleneck" | "advisoryMode" | "updatedAt", ExtArgs["result"]["goalsPriorities"]>
+  export type GoalsPrioritiesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GoalsPrioritiesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type GoalsPrioritiesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $GoalsPrioritiesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GoalsPriorities"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      goals: string | null
+      operationalBottleneck: string | null
+      advisoryMode: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["goalsPriorities"]>
+    composites: {}
+  }
+
+  type GoalsPrioritiesGetPayload<S extends boolean | null | undefined | GoalsPrioritiesDefaultArgs> = $Result.GetResult<Prisma.$GoalsPrioritiesPayload, S>
+
+  type GoalsPrioritiesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GoalsPrioritiesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GoalsPrioritiesCountAggregateInputType | true
+    }
+
+  export interface GoalsPrioritiesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GoalsPriorities'], meta: { name: 'GoalsPriorities' } }
+    /**
+     * Find zero or one GoalsPriorities that matches the filter.
+     * @param {GoalsPrioritiesFindUniqueArgs} args - Arguments to find a GoalsPriorities
+     * @example
+     * // Get one GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GoalsPrioritiesFindUniqueArgs>(args: SelectSubset<T, GoalsPrioritiesFindUniqueArgs<ExtArgs>>): Prisma__GoalsPrioritiesClient<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one GoalsPriorities that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GoalsPrioritiesFindUniqueOrThrowArgs} args - Arguments to find a GoalsPriorities
+     * @example
+     * // Get one GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GoalsPrioritiesFindUniqueOrThrowArgs>(args: SelectSubset<T, GoalsPrioritiesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GoalsPrioritiesClient<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first GoalsPriorities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalsPrioritiesFindFirstArgs} args - Arguments to find a GoalsPriorities
+     * @example
+     * // Get one GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GoalsPrioritiesFindFirstArgs>(args?: SelectSubset<T, GoalsPrioritiesFindFirstArgs<ExtArgs>>): Prisma__GoalsPrioritiesClient<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first GoalsPriorities that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalsPrioritiesFindFirstOrThrowArgs} args - Arguments to find a GoalsPriorities
+     * @example
+     * // Get one GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GoalsPrioritiesFindFirstOrThrowArgs>(args?: SelectSubset<T, GoalsPrioritiesFindFirstOrThrowArgs<ExtArgs>>): Prisma__GoalsPrioritiesClient<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more GoalsPriorities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalsPrioritiesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.findMany()
+     * 
+     * // Get first 10 GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const goalsPrioritiesWithIdOnly = await prisma.goalsPriorities.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GoalsPrioritiesFindManyArgs>(args?: SelectSubset<T, GoalsPrioritiesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a GoalsPriorities.
+     * @param {GoalsPrioritiesCreateArgs} args - Arguments to create a GoalsPriorities.
+     * @example
+     * // Create one GoalsPriorities
+     * const GoalsPriorities = await prisma.goalsPriorities.create({
+     *   data: {
+     *     // ... data to create a GoalsPriorities
+     *   }
+     * })
+     * 
+     */
+    create<T extends GoalsPrioritiesCreateArgs>(args: SelectSubset<T, GoalsPrioritiesCreateArgs<ExtArgs>>): Prisma__GoalsPrioritiesClient<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many GoalsPriorities.
+     * @param {GoalsPrioritiesCreateManyArgs} args - Arguments to create many GoalsPriorities.
+     * @example
+     * // Create many GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GoalsPrioritiesCreateManyArgs>(args?: SelectSubset<T, GoalsPrioritiesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GoalsPriorities and returns the data saved in the database.
+     * @param {GoalsPrioritiesCreateManyAndReturnArgs} args - Arguments to create many GoalsPriorities.
+     * @example
+     * // Create many GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GoalsPriorities and only return the `id`
+     * const goalsPrioritiesWithIdOnly = await prisma.goalsPriorities.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GoalsPrioritiesCreateManyAndReturnArgs>(args?: SelectSubset<T, GoalsPrioritiesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a GoalsPriorities.
+     * @param {GoalsPrioritiesDeleteArgs} args - Arguments to delete one GoalsPriorities.
+     * @example
+     * // Delete one GoalsPriorities
+     * const GoalsPriorities = await prisma.goalsPriorities.delete({
+     *   where: {
+     *     // ... filter to delete one GoalsPriorities
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GoalsPrioritiesDeleteArgs>(args: SelectSubset<T, GoalsPrioritiesDeleteArgs<ExtArgs>>): Prisma__GoalsPrioritiesClient<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one GoalsPriorities.
+     * @param {GoalsPrioritiesUpdateArgs} args - Arguments to update one GoalsPriorities.
+     * @example
+     * // Update one GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GoalsPrioritiesUpdateArgs>(args: SelectSubset<T, GoalsPrioritiesUpdateArgs<ExtArgs>>): Prisma__GoalsPrioritiesClient<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more GoalsPriorities.
+     * @param {GoalsPrioritiesDeleteManyArgs} args - Arguments to filter GoalsPriorities to delete.
+     * @example
+     * // Delete a few GoalsPriorities
+     * const { count } = await prisma.goalsPriorities.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GoalsPrioritiesDeleteManyArgs>(args?: SelectSubset<T, GoalsPrioritiesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GoalsPriorities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalsPrioritiesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GoalsPrioritiesUpdateManyArgs>(args: SelectSubset<T, GoalsPrioritiesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GoalsPriorities and returns the data updated in the database.
+     * @param {GoalsPrioritiesUpdateManyAndReturnArgs} args - Arguments to update many GoalsPriorities.
+     * @example
+     * // Update many GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GoalsPriorities and only return the `id`
+     * const goalsPrioritiesWithIdOnly = await prisma.goalsPriorities.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GoalsPrioritiesUpdateManyAndReturnArgs>(args: SelectSubset<T, GoalsPrioritiesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one GoalsPriorities.
+     * @param {GoalsPrioritiesUpsertArgs} args - Arguments to update or create a GoalsPriorities.
+     * @example
+     * // Update or create a GoalsPriorities
+     * const goalsPriorities = await prisma.goalsPriorities.upsert({
+     *   create: {
+     *     // ... data to create a GoalsPriorities
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GoalsPriorities we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GoalsPrioritiesUpsertArgs>(args: SelectSubset<T, GoalsPrioritiesUpsertArgs<ExtArgs>>): Prisma__GoalsPrioritiesClient<$Result.GetResult<Prisma.$GoalsPrioritiesPayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of GoalsPriorities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalsPrioritiesCountArgs} args - Arguments to filter GoalsPriorities to count.
+     * @example
+     * // Count the number of GoalsPriorities
+     * const count = await prisma.goalsPriorities.count({
+     *   where: {
+     *     // ... the filter for the GoalsPriorities we want to count
+     *   }
+     * })
+    **/
+    count<T extends GoalsPrioritiesCountArgs>(
+      args?: Subset<T, GoalsPrioritiesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GoalsPrioritiesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GoalsPriorities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalsPrioritiesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GoalsPrioritiesAggregateArgs>(args: Subset<T, GoalsPrioritiesAggregateArgs>): Prisma.PrismaPromise<GetGoalsPrioritiesAggregateType<T>>
+
+    /**
+     * Group by GoalsPriorities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoalsPrioritiesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GoalsPrioritiesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GoalsPrioritiesGroupByArgs['orderBy'] }
+        : { orderBy?: GoalsPrioritiesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GoalsPrioritiesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGoalsPrioritiesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GoalsPriorities model
+   */
+  readonly fields: GoalsPrioritiesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GoalsPriorities.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GoalsPrioritiesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GoalsPriorities model
+   */ 
+  interface GoalsPrioritiesFieldRefs {
+    readonly id: FieldRef<"GoalsPriorities", 'String'>
+    readonly userId: FieldRef<"GoalsPriorities", 'String'>
+    readonly goals: FieldRef<"GoalsPriorities", 'String'>
+    readonly operationalBottleneck: FieldRef<"GoalsPriorities", 'String'>
+    readonly advisoryMode: FieldRef<"GoalsPriorities", 'String'>
+    readonly updatedAt: FieldRef<"GoalsPriorities", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GoalsPriorities findUnique
+   */
+  export type GoalsPrioritiesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    /**
+     * Filter, which GoalsPriorities to fetch.
+     */
+    where: GoalsPrioritiesWhereUniqueInput
+  }
+
+  /**
+   * GoalsPriorities findUniqueOrThrow
+   */
+  export type GoalsPrioritiesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    /**
+     * Filter, which GoalsPriorities to fetch.
+     */
+    where: GoalsPrioritiesWhereUniqueInput
+  }
+
+  /**
+   * GoalsPriorities findFirst
+   */
+  export type GoalsPrioritiesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    /**
+     * Filter, which GoalsPriorities to fetch.
+     */
+    where?: GoalsPrioritiesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoalsPriorities to fetch.
+     */
+    orderBy?: GoalsPrioritiesOrderByWithRelationInput | GoalsPrioritiesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GoalsPriorities.
+     */
+    cursor?: GoalsPrioritiesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoalsPriorities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoalsPriorities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GoalsPriorities.
+     */
+    distinct?: GoalsPrioritiesScalarFieldEnum | GoalsPrioritiesScalarFieldEnum[]
+  }
+
+  /**
+   * GoalsPriorities findFirstOrThrow
+   */
+  export type GoalsPrioritiesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    /**
+     * Filter, which GoalsPriorities to fetch.
+     */
+    where?: GoalsPrioritiesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoalsPriorities to fetch.
+     */
+    orderBy?: GoalsPrioritiesOrderByWithRelationInput | GoalsPrioritiesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GoalsPriorities.
+     */
+    cursor?: GoalsPrioritiesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoalsPriorities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoalsPriorities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GoalsPriorities.
+     */
+    distinct?: GoalsPrioritiesScalarFieldEnum | GoalsPrioritiesScalarFieldEnum[]
+  }
+
+  /**
+   * GoalsPriorities findMany
+   */
+  export type GoalsPrioritiesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    /**
+     * Filter, which GoalsPriorities to fetch.
+     */
+    where?: GoalsPrioritiesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoalsPriorities to fetch.
+     */
+    orderBy?: GoalsPrioritiesOrderByWithRelationInput | GoalsPrioritiesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GoalsPriorities.
+     */
+    cursor?: GoalsPrioritiesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoalsPriorities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoalsPriorities.
+     */
+    skip?: number
+    distinct?: GoalsPrioritiesScalarFieldEnum | GoalsPrioritiesScalarFieldEnum[]
+  }
+
+  /**
+   * GoalsPriorities create
+   */
+  export type GoalsPrioritiesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GoalsPriorities.
+     */
+    data: XOR<GoalsPrioritiesCreateInput, GoalsPrioritiesUncheckedCreateInput>
+  }
+
+  /**
+   * GoalsPriorities createMany
+   */
+  export type GoalsPrioritiesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GoalsPriorities.
+     */
+    data: GoalsPrioritiesCreateManyInput | GoalsPrioritiesCreateManyInput[]
+  }
+
+  /**
+   * GoalsPriorities createManyAndReturn
+   */
+  export type GoalsPrioritiesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * The data used to create many GoalsPriorities.
+     */
+    data: GoalsPrioritiesCreateManyInput | GoalsPrioritiesCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GoalsPriorities update
+   */
+  export type GoalsPrioritiesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GoalsPriorities.
+     */
+    data: XOR<GoalsPrioritiesUpdateInput, GoalsPrioritiesUncheckedUpdateInput>
+    /**
+     * Choose, which GoalsPriorities to update.
+     */
+    where: GoalsPrioritiesWhereUniqueInput
+  }
+
+  /**
+   * GoalsPriorities updateMany
+   */
+  export type GoalsPrioritiesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GoalsPriorities.
+     */
+    data: XOR<GoalsPrioritiesUpdateManyMutationInput, GoalsPrioritiesUncheckedUpdateManyInput>
+    /**
+     * Filter which GoalsPriorities to update
+     */
+    where?: GoalsPrioritiesWhereInput
+    /**
+     * Limit how many GoalsPriorities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GoalsPriorities updateManyAndReturn
+   */
+  export type GoalsPrioritiesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * The data used to update GoalsPriorities.
+     */
+    data: XOR<GoalsPrioritiesUpdateManyMutationInput, GoalsPrioritiesUncheckedUpdateManyInput>
+    /**
+     * Filter which GoalsPriorities to update
+     */
+    where?: GoalsPrioritiesWhereInput
+    /**
+     * Limit how many GoalsPriorities to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GoalsPriorities upsert
+   */
+  export type GoalsPrioritiesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GoalsPriorities to update in case it exists.
+     */
+    where: GoalsPrioritiesWhereUniqueInput
+    /**
+     * In case the GoalsPriorities found by the `where` argument doesn't exist, create a new GoalsPriorities with this data.
+     */
+    create: XOR<GoalsPrioritiesCreateInput, GoalsPrioritiesUncheckedCreateInput>
+    /**
+     * In case the GoalsPriorities was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GoalsPrioritiesUpdateInput, GoalsPrioritiesUncheckedUpdateInput>
+  }
+
+  /**
+   * GoalsPriorities delete
+   */
+  export type GoalsPrioritiesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+    /**
+     * Filter which GoalsPriorities to delete.
+     */
+    where: GoalsPrioritiesWhereUniqueInput
+  }
+
+  /**
+   * GoalsPriorities deleteMany
+   */
+  export type GoalsPrioritiesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GoalsPriorities to delete
+     */
+    where?: GoalsPrioritiesWhereInput
+    /**
+     * Limit how many GoalsPriorities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GoalsPriorities without action
+   */
+  export type GoalsPrioritiesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoalsPriorities
+     */
+    select?: GoalsPrioritiesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoalsPriorities
+     */
+    omit?: GoalsPrioritiesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoalsPrioritiesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model HouseholdLabour
+   */
+
+  export type AggregateHouseholdLabour = {
+    _count: HouseholdLabourCountAggregateOutputType | null
+    _avg: HouseholdLabourAvgAggregateOutputType | null
+    _sum: HouseholdLabourSumAggregateOutputType | null
+    _min: HouseholdLabourMinAggregateOutputType | null
+    _max: HouseholdLabourMaxAggregateOutputType | null
+  }
+
+  export type HouseholdLabourAvgAggregateOutputType = {
+    permanentWorkers: number | null
+    seasonalWorkers: number | null
+  }
+
+  export type HouseholdLabourSumAggregateOutputType = {
+    permanentWorkers: number | null
+    seasonalWorkers: number | null
+  }
+
+  export type HouseholdLabourMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    permanentWorkers: number | null
+    seasonalWorkers: number | null
+    managementStructure: string | null
+    fairEmploymentPractices: string | null
+    updatedAt: Date | null
+  }
+
+  export type HouseholdLabourMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    permanentWorkers: number | null
+    seasonalWorkers: number | null
+    managementStructure: string | null
+    fairEmploymentPractices: string | null
+    updatedAt: Date | null
+  }
+
+  export type HouseholdLabourCountAggregateOutputType = {
+    id: number
+    userId: number
+    permanentWorkers: number
+    seasonalWorkers: number
+    managementStructure: number
+    fairEmploymentPractices: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type HouseholdLabourAvgAggregateInputType = {
+    permanentWorkers?: true
+    seasonalWorkers?: true
+  }
+
+  export type HouseholdLabourSumAggregateInputType = {
+    permanentWorkers?: true
+    seasonalWorkers?: true
+  }
+
+  export type HouseholdLabourMinAggregateInputType = {
+    id?: true
+    userId?: true
+    permanentWorkers?: true
+    seasonalWorkers?: true
+    managementStructure?: true
+    fairEmploymentPractices?: true
+    updatedAt?: true
+  }
+
+  export type HouseholdLabourMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    permanentWorkers?: true
+    seasonalWorkers?: true
+    managementStructure?: true
+    fairEmploymentPractices?: true
+    updatedAt?: true
+  }
+
+  export type HouseholdLabourCountAggregateInputType = {
+    id?: true
+    userId?: true
+    permanentWorkers?: true
+    seasonalWorkers?: true
+    managementStructure?: true
+    fairEmploymentPractices?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type HouseholdLabourAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HouseholdLabour to aggregate.
+     */
+    where?: HouseholdLabourWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HouseholdLabours to fetch.
+     */
+    orderBy?: HouseholdLabourOrderByWithRelationInput | HouseholdLabourOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: HouseholdLabourWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HouseholdLabours from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HouseholdLabours.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned HouseholdLabours
+    **/
+    _count?: true | HouseholdLabourCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: HouseholdLabourAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: HouseholdLabourSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: HouseholdLabourMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: HouseholdLabourMaxAggregateInputType
+  }
+
+  export type GetHouseholdLabourAggregateType<T extends HouseholdLabourAggregateArgs> = {
+        [P in keyof T & keyof AggregateHouseholdLabour]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHouseholdLabour[P]>
+      : GetScalarType<T[P], AggregateHouseholdLabour[P]>
+  }
+
+
+
+
+  export type HouseholdLabourGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HouseholdLabourWhereInput
+    orderBy?: HouseholdLabourOrderByWithAggregationInput | HouseholdLabourOrderByWithAggregationInput[]
+    by: HouseholdLabourScalarFieldEnum[] | HouseholdLabourScalarFieldEnum
+    having?: HouseholdLabourScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: HouseholdLabourCountAggregateInputType | true
+    _avg?: HouseholdLabourAvgAggregateInputType
+    _sum?: HouseholdLabourSumAggregateInputType
+    _min?: HouseholdLabourMinAggregateInputType
+    _max?: HouseholdLabourMaxAggregateInputType
+  }
+
+  export type HouseholdLabourGroupByOutputType = {
+    id: string
+    userId: string
+    permanentWorkers: number | null
+    seasonalWorkers: number | null
+    managementStructure: string | null
+    fairEmploymentPractices: string | null
+    updatedAt: Date
+    _count: HouseholdLabourCountAggregateOutputType | null
+    _avg: HouseholdLabourAvgAggregateOutputType | null
+    _sum: HouseholdLabourSumAggregateOutputType | null
+    _min: HouseholdLabourMinAggregateOutputType | null
+    _max: HouseholdLabourMaxAggregateOutputType | null
+  }
+
+  type GetHouseholdLabourGroupByPayload<T extends HouseholdLabourGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<HouseholdLabourGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof HouseholdLabourGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], HouseholdLabourGroupByOutputType[P]>
+            : GetScalarType<T[P], HouseholdLabourGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type HouseholdLabourSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    permanentWorkers?: boolean
+    seasonalWorkers?: boolean
+    managementStructure?: boolean
+    fairEmploymentPractices?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["householdLabour"]>
+
+  export type HouseholdLabourSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    permanentWorkers?: boolean
+    seasonalWorkers?: boolean
+    managementStructure?: boolean
+    fairEmploymentPractices?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["householdLabour"]>
+
+  export type HouseholdLabourSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    permanentWorkers?: boolean
+    seasonalWorkers?: boolean
+    managementStructure?: boolean
+    fairEmploymentPractices?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["householdLabour"]>
+
+  export type HouseholdLabourSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    permanentWorkers?: boolean
+    seasonalWorkers?: boolean
+    managementStructure?: boolean
+    fairEmploymentPractices?: boolean
+    updatedAt?: boolean
+  }
+
+  export type HouseholdLabourOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "permanentWorkers" | "seasonalWorkers" | "managementStructure" | "fairEmploymentPractices" | "updatedAt", ExtArgs["result"]["householdLabour"]>
+  export type HouseholdLabourInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type HouseholdLabourIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type HouseholdLabourIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $HouseholdLabourPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "HouseholdLabour"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      permanentWorkers: number | null
+      seasonalWorkers: number | null
+      managementStructure: string | null
+      fairEmploymentPractices: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["householdLabour"]>
+    composites: {}
+  }
+
+  type HouseholdLabourGetPayload<S extends boolean | null | undefined | HouseholdLabourDefaultArgs> = $Result.GetResult<Prisma.$HouseholdLabourPayload, S>
+
+  type HouseholdLabourCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<HouseholdLabourFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: HouseholdLabourCountAggregateInputType | true
+    }
+
+  export interface HouseholdLabourDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['HouseholdLabour'], meta: { name: 'HouseholdLabour' } }
+    /**
+     * Find zero or one HouseholdLabour that matches the filter.
+     * @param {HouseholdLabourFindUniqueArgs} args - Arguments to find a HouseholdLabour
+     * @example
+     * // Get one HouseholdLabour
+     * const householdLabour = await prisma.householdLabour.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends HouseholdLabourFindUniqueArgs>(args: SelectSubset<T, HouseholdLabourFindUniqueArgs<ExtArgs>>): Prisma__HouseholdLabourClient<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one HouseholdLabour that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {HouseholdLabourFindUniqueOrThrowArgs} args - Arguments to find a HouseholdLabour
+     * @example
+     * // Get one HouseholdLabour
+     * const householdLabour = await prisma.householdLabour.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends HouseholdLabourFindUniqueOrThrowArgs>(args: SelectSubset<T, HouseholdLabourFindUniqueOrThrowArgs<ExtArgs>>): Prisma__HouseholdLabourClient<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first HouseholdLabour that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HouseholdLabourFindFirstArgs} args - Arguments to find a HouseholdLabour
+     * @example
+     * // Get one HouseholdLabour
+     * const householdLabour = await prisma.householdLabour.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends HouseholdLabourFindFirstArgs>(args?: SelectSubset<T, HouseholdLabourFindFirstArgs<ExtArgs>>): Prisma__HouseholdLabourClient<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first HouseholdLabour that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HouseholdLabourFindFirstOrThrowArgs} args - Arguments to find a HouseholdLabour
+     * @example
+     * // Get one HouseholdLabour
+     * const householdLabour = await prisma.householdLabour.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends HouseholdLabourFindFirstOrThrowArgs>(args?: SelectSubset<T, HouseholdLabourFindFirstOrThrowArgs<ExtArgs>>): Prisma__HouseholdLabourClient<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more HouseholdLabours that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HouseholdLabourFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all HouseholdLabours
+     * const householdLabours = await prisma.householdLabour.findMany()
+     * 
+     * // Get first 10 HouseholdLabours
+     * const householdLabours = await prisma.householdLabour.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const householdLabourWithIdOnly = await prisma.householdLabour.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends HouseholdLabourFindManyArgs>(args?: SelectSubset<T, HouseholdLabourFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a HouseholdLabour.
+     * @param {HouseholdLabourCreateArgs} args - Arguments to create a HouseholdLabour.
+     * @example
+     * // Create one HouseholdLabour
+     * const HouseholdLabour = await prisma.householdLabour.create({
+     *   data: {
+     *     // ... data to create a HouseholdLabour
+     *   }
+     * })
+     * 
+     */
+    create<T extends HouseholdLabourCreateArgs>(args: SelectSubset<T, HouseholdLabourCreateArgs<ExtArgs>>): Prisma__HouseholdLabourClient<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many HouseholdLabours.
+     * @param {HouseholdLabourCreateManyArgs} args - Arguments to create many HouseholdLabours.
+     * @example
+     * // Create many HouseholdLabours
+     * const householdLabour = await prisma.householdLabour.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends HouseholdLabourCreateManyArgs>(args?: SelectSubset<T, HouseholdLabourCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many HouseholdLabours and returns the data saved in the database.
+     * @param {HouseholdLabourCreateManyAndReturnArgs} args - Arguments to create many HouseholdLabours.
+     * @example
+     * // Create many HouseholdLabours
+     * const householdLabour = await prisma.householdLabour.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many HouseholdLabours and only return the `id`
+     * const householdLabourWithIdOnly = await prisma.householdLabour.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends HouseholdLabourCreateManyAndReturnArgs>(args?: SelectSubset<T, HouseholdLabourCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a HouseholdLabour.
+     * @param {HouseholdLabourDeleteArgs} args - Arguments to delete one HouseholdLabour.
+     * @example
+     * // Delete one HouseholdLabour
+     * const HouseholdLabour = await prisma.householdLabour.delete({
+     *   where: {
+     *     // ... filter to delete one HouseholdLabour
+     *   }
+     * })
+     * 
+     */
+    delete<T extends HouseholdLabourDeleteArgs>(args: SelectSubset<T, HouseholdLabourDeleteArgs<ExtArgs>>): Prisma__HouseholdLabourClient<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one HouseholdLabour.
+     * @param {HouseholdLabourUpdateArgs} args - Arguments to update one HouseholdLabour.
+     * @example
+     * // Update one HouseholdLabour
+     * const householdLabour = await prisma.householdLabour.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends HouseholdLabourUpdateArgs>(args: SelectSubset<T, HouseholdLabourUpdateArgs<ExtArgs>>): Prisma__HouseholdLabourClient<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more HouseholdLabours.
+     * @param {HouseholdLabourDeleteManyArgs} args - Arguments to filter HouseholdLabours to delete.
+     * @example
+     * // Delete a few HouseholdLabours
+     * const { count } = await prisma.householdLabour.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends HouseholdLabourDeleteManyArgs>(args?: SelectSubset<T, HouseholdLabourDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HouseholdLabours.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HouseholdLabourUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many HouseholdLabours
+     * const householdLabour = await prisma.householdLabour.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends HouseholdLabourUpdateManyArgs>(args: SelectSubset<T, HouseholdLabourUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HouseholdLabours and returns the data updated in the database.
+     * @param {HouseholdLabourUpdateManyAndReturnArgs} args - Arguments to update many HouseholdLabours.
+     * @example
+     * // Update many HouseholdLabours
+     * const householdLabour = await prisma.householdLabour.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more HouseholdLabours and only return the `id`
+     * const householdLabourWithIdOnly = await prisma.householdLabour.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends HouseholdLabourUpdateManyAndReturnArgs>(args: SelectSubset<T, HouseholdLabourUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one HouseholdLabour.
+     * @param {HouseholdLabourUpsertArgs} args - Arguments to update or create a HouseholdLabour.
+     * @example
+     * // Update or create a HouseholdLabour
+     * const householdLabour = await prisma.householdLabour.upsert({
+     *   create: {
+     *     // ... data to create a HouseholdLabour
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the HouseholdLabour we want to update
+     *   }
+     * })
+     */
+    upsert<T extends HouseholdLabourUpsertArgs>(args: SelectSubset<T, HouseholdLabourUpsertArgs<ExtArgs>>): Prisma__HouseholdLabourClient<$Result.GetResult<Prisma.$HouseholdLabourPayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of HouseholdLabours.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HouseholdLabourCountArgs} args - Arguments to filter HouseholdLabours to count.
+     * @example
+     * // Count the number of HouseholdLabours
+     * const count = await prisma.householdLabour.count({
+     *   where: {
+     *     // ... the filter for the HouseholdLabours we want to count
+     *   }
+     * })
+    **/
+    count<T extends HouseholdLabourCountArgs>(
+      args?: Subset<T, HouseholdLabourCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], HouseholdLabourCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a HouseholdLabour.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HouseholdLabourAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends HouseholdLabourAggregateArgs>(args: Subset<T, HouseholdLabourAggregateArgs>): Prisma.PrismaPromise<GetHouseholdLabourAggregateType<T>>
+
+    /**
+     * Group by HouseholdLabour.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HouseholdLabourGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends HouseholdLabourGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: HouseholdLabourGroupByArgs['orderBy'] }
+        : { orderBy?: HouseholdLabourGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, HouseholdLabourGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHouseholdLabourGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the HouseholdLabour model
+   */
+  readonly fields: HouseholdLabourFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for HouseholdLabour.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__HouseholdLabourClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the HouseholdLabour model
+   */ 
+  interface HouseholdLabourFieldRefs {
+    readonly id: FieldRef<"HouseholdLabour", 'String'>
+    readonly userId: FieldRef<"HouseholdLabour", 'String'>
+    readonly permanentWorkers: FieldRef<"HouseholdLabour", 'Int'>
+    readonly seasonalWorkers: FieldRef<"HouseholdLabour", 'Int'>
+    readonly managementStructure: FieldRef<"HouseholdLabour", 'String'>
+    readonly fairEmploymentPractices: FieldRef<"HouseholdLabour", 'String'>
+    readonly updatedAt: FieldRef<"HouseholdLabour", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * HouseholdLabour findUnique
+   */
+  export type HouseholdLabourFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    /**
+     * Filter, which HouseholdLabour to fetch.
+     */
+    where: HouseholdLabourWhereUniqueInput
+  }
+
+  /**
+   * HouseholdLabour findUniqueOrThrow
+   */
+  export type HouseholdLabourFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    /**
+     * Filter, which HouseholdLabour to fetch.
+     */
+    where: HouseholdLabourWhereUniqueInput
+  }
+
+  /**
+   * HouseholdLabour findFirst
+   */
+  export type HouseholdLabourFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    /**
+     * Filter, which HouseholdLabour to fetch.
+     */
+    where?: HouseholdLabourWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HouseholdLabours to fetch.
+     */
+    orderBy?: HouseholdLabourOrderByWithRelationInput | HouseholdLabourOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HouseholdLabours.
+     */
+    cursor?: HouseholdLabourWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HouseholdLabours from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HouseholdLabours.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HouseholdLabours.
+     */
+    distinct?: HouseholdLabourScalarFieldEnum | HouseholdLabourScalarFieldEnum[]
+  }
+
+  /**
+   * HouseholdLabour findFirstOrThrow
+   */
+  export type HouseholdLabourFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    /**
+     * Filter, which HouseholdLabour to fetch.
+     */
+    where?: HouseholdLabourWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HouseholdLabours to fetch.
+     */
+    orderBy?: HouseholdLabourOrderByWithRelationInput | HouseholdLabourOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HouseholdLabours.
+     */
+    cursor?: HouseholdLabourWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HouseholdLabours from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HouseholdLabours.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HouseholdLabours.
+     */
+    distinct?: HouseholdLabourScalarFieldEnum | HouseholdLabourScalarFieldEnum[]
+  }
+
+  /**
+   * HouseholdLabour findMany
+   */
+  export type HouseholdLabourFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    /**
+     * Filter, which HouseholdLabours to fetch.
+     */
+    where?: HouseholdLabourWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HouseholdLabours to fetch.
+     */
+    orderBy?: HouseholdLabourOrderByWithRelationInput | HouseholdLabourOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing HouseholdLabours.
+     */
+    cursor?: HouseholdLabourWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HouseholdLabours from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HouseholdLabours.
+     */
+    skip?: number
+    distinct?: HouseholdLabourScalarFieldEnum | HouseholdLabourScalarFieldEnum[]
+  }
+
+  /**
+   * HouseholdLabour create
+   */
+  export type HouseholdLabourCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    /**
+     * The data needed to create a HouseholdLabour.
+     */
+    data: XOR<HouseholdLabourCreateInput, HouseholdLabourUncheckedCreateInput>
+  }
+
+  /**
+   * HouseholdLabour createMany
+   */
+  export type HouseholdLabourCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many HouseholdLabours.
+     */
+    data: HouseholdLabourCreateManyInput | HouseholdLabourCreateManyInput[]
+  }
+
+  /**
+   * HouseholdLabour createManyAndReturn
+   */
+  export type HouseholdLabourCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * The data used to create many HouseholdLabours.
+     */
+    data: HouseholdLabourCreateManyInput | HouseholdLabourCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * HouseholdLabour update
+   */
+  export type HouseholdLabourUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    /**
+     * The data needed to update a HouseholdLabour.
+     */
+    data: XOR<HouseholdLabourUpdateInput, HouseholdLabourUncheckedUpdateInput>
+    /**
+     * Choose, which HouseholdLabour to update.
+     */
+    where: HouseholdLabourWhereUniqueInput
+  }
+
+  /**
+   * HouseholdLabour updateMany
+   */
+  export type HouseholdLabourUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update HouseholdLabours.
+     */
+    data: XOR<HouseholdLabourUpdateManyMutationInput, HouseholdLabourUncheckedUpdateManyInput>
+    /**
+     * Filter which HouseholdLabours to update
+     */
+    where?: HouseholdLabourWhereInput
+    /**
+     * Limit how many HouseholdLabours to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * HouseholdLabour updateManyAndReturn
+   */
+  export type HouseholdLabourUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * The data used to update HouseholdLabours.
+     */
+    data: XOR<HouseholdLabourUpdateManyMutationInput, HouseholdLabourUncheckedUpdateManyInput>
+    /**
+     * Filter which HouseholdLabours to update
+     */
+    where?: HouseholdLabourWhereInput
+    /**
+     * Limit how many HouseholdLabours to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * HouseholdLabour upsert
+   */
+  export type HouseholdLabourUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    /**
+     * The filter to search for the HouseholdLabour to update in case it exists.
+     */
+    where: HouseholdLabourWhereUniqueInput
+    /**
+     * In case the HouseholdLabour found by the `where` argument doesn't exist, create a new HouseholdLabour with this data.
+     */
+    create: XOR<HouseholdLabourCreateInput, HouseholdLabourUncheckedCreateInput>
+    /**
+     * In case the HouseholdLabour was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<HouseholdLabourUpdateInput, HouseholdLabourUncheckedUpdateInput>
+  }
+
+  /**
+   * HouseholdLabour delete
+   */
+  export type HouseholdLabourDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+    /**
+     * Filter which HouseholdLabour to delete.
+     */
+    where: HouseholdLabourWhereUniqueInput
+  }
+
+  /**
+   * HouseholdLabour deleteMany
+   */
+  export type HouseholdLabourDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HouseholdLabours to delete
+     */
+    where?: HouseholdLabourWhereInput
+    /**
+     * Limit how many HouseholdLabours to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * HouseholdLabour without action
+   */
+  export type HouseholdLabourDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HouseholdLabour
+     */
+    select?: HouseholdLabourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the HouseholdLabour
+     */
+    omit?: HouseholdLabourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HouseholdLabourInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OnboardingStatus
+   */
+
+  export type AggregateOnboardingStatus = {
+    _count: OnboardingStatusCountAggregateOutputType | null
+    _min: OnboardingStatusMinAggregateOutputType | null
+    _max: OnboardingStatusMaxAggregateOutputType | null
+  }
+
+  export type OnboardingStatusMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    stage: string | null
+    profileApproved: boolean | null
+    completedAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OnboardingStatusMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    stage: string | null
+    profileApproved: boolean | null
+    completedAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OnboardingStatusCountAggregateOutputType = {
+    id: number
+    userId: number
+    stage: number
+    profileApproved: number
+    completedAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type OnboardingStatusMinAggregateInputType = {
+    id?: true
+    userId?: true
+    stage?: true
+    profileApproved?: true
+    completedAt?: true
+    updatedAt?: true
+  }
+
+  export type OnboardingStatusMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    stage?: true
+    profileApproved?: true
+    completedAt?: true
+    updatedAt?: true
+  }
+
+  export type OnboardingStatusCountAggregateInputType = {
+    id?: true
+    userId?: true
+    stage?: true
+    profileApproved?: true
+    completedAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type OnboardingStatusAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OnboardingStatus to aggregate.
+     */
+    where?: OnboardingStatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OnboardingStatuses to fetch.
+     */
+    orderBy?: OnboardingStatusOrderByWithRelationInput | OnboardingStatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OnboardingStatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OnboardingStatuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OnboardingStatuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OnboardingStatuses
+    **/
+    _count?: true | OnboardingStatusCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OnboardingStatusMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OnboardingStatusMaxAggregateInputType
+  }
+
+  export type GetOnboardingStatusAggregateType<T extends OnboardingStatusAggregateArgs> = {
+        [P in keyof T & keyof AggregateOnboardingStatus]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOnboardingStatus[P]>
+      : GetScalarType<T[P], AggregateOnboardingStatus[P]>
+  }
+
+
+
+
+  export type OnboardingStatusGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OnboardingStatusWhereInput
+    orderBy?: OnboardingStatusOrderByWithAggregationInput | OnboardingStatusOrderByWithAggregationInput[]
+    by: OnboardingStatusScalarFieldEnum[] | OnboardingStatusScalarFieldEnum
+    having?: OnboardingStatusScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OnboardingStatusCountAggregateInputType | true
+    _min?: OnboardingStatusMinAggregateInputType
+    _max?: OnboardingStatusMaxAggregateInputType
+  }
+
+  export type OnboardingStatusGroupByOutputType = {
+    id: string
+    userId: string
+    stage: string
+    profileApproved: boolean
+    completedAt: Date | null
+    updatedAt: Date
+    _count: OnboardingStatusCountAggregateOutputType | null
+    _min: OnboardingStatusMinAggregateOutputType | null
+    _max: OnboardingStatusMaxAggregateOutputType | null
+  }
+
+  type GetOnboardingStatusGroupByPayload<T extends OnboardingStatusGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OnboardingStatusGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OnboardingStatusGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OnboardingStatusGroupByOutputType[P]>
+            : GetScalarType<T[P], OnboardingStatusGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OnboardingStatusSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    stage?: boolean
+    profileApproved?: boolean
+    completedAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["onboardingStatus"]>
+
+  export type OnboardingStatusSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    stage?: boolean
+    profileApproved?: boolean
+    completedAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["onboardingStatus"]>
+
+  export type OnboardingStatusSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    stage?: boolean
+    profileApproved?: boolean
+    completedAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["onboardingStatus"]>
+
+  export type OnboardingStatusSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    stage?: boolean
+    profileApproved?: boolean
+    completedAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type OnboardingStatusOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "stage" | "profileApproved" | "completedAt" | "updatedAt", ExtArgs["result"]["onboardingStatus"]>
+  export type OnboardingStatusInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OnboardingStatusIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OnboardingStatusIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $OnboardingStatusPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OnboardingStatus"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      stage: string
+      profileApproved: boolean
+      completedAt: Date | null
+      updatedAt: Date
+    }, ExtArgs["result"]["onboardingStatus"]>
+    composites: {}
+  }
+
+  type OnboardingStatusGetPayload<S extends boolean | null | undefined | OnboardingStatusDefaultArgs> = $Result.GetResult<Prisma.$OnboardingStatusPayload, S>
+
+  type OnboardingStatusCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OnboardingStatusFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OnboardingStatusCountAggregateInputType | true
+    }
+
+  export interface OnboardingStatusDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OnboardingStatus'], meta: { name: 'OnboardingStatus' } }
+    /**
+     * Find zero or one OnboardingStatus that matches the filter.
+     * @param {OnboardingStatusFindUniqueArgs} args - Arguments to find a OnboardingStatus
+     * @example
+     * // Get one OnboardingStatus
+     * const onboardingStatus = await prisma.onboardingStatus.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OnboardingStatusFindUniqueArgs>(args: SelectSubset<T, OnboardingStatusFindUniqueArgs<ExtArgs>>): Prisma__OnboardingStatusClient<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one OnboardingStatus that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OnboardingStatusFindUniqueOrThrowArgs} args - Arguments to find a OnboardingStatus
+     * @example
+     * // Get one OnboardingStatus
+     * const onboardingStatus = await prisma.onboardingStatus.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OnboardingStatusFindUniqueOrThrowArgs>(args: SelectSubset<T, OnboardingStatusFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OnboardingStatusClient<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first OnboardingStatus that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OnboardingStatusFindFirstArgs} args - Arguments to find a OnboardingStatus
+     * @example
+     * // Get one OnboardingStatus
+     * const onboardingStatus = await prisma.onboardingStatus.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OnboardingStatusFindFirstArgs>(args?: SelectSubset<T, OnboardingStatusFindFirstArgs<ExtArgs>>): Prisma__OnboardingStatusClient<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first OnboardingStatus that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OnboardingStatusFindFirstOrThrowArgs} args - Arguments to find a OnboardingStatus
+     * @example
+     * // Get one OnboardingStatus
+     * const onboardingStatus = await prisma.onboardingStatus.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OnboardingStatusFindFirstOrThrowArgs>(args?: SelectSubset<T, OnboardingStatusFindFirstOrThrowArgs<ExtArgs>>): Prisma__OnboardingStatusClient<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more OnboardingStatuses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OnboardingStatusFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OnboardingStatuses
+     * const onboardingStatuses = await prisma.onboardingStatus.findMany()
+     * 
+     * // Get first 10 OnboardingStatuses
+     * const onboardingStatuses = await prisma.onboardingStatus.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const onboardingStatusWithIdOnly = await prisma.onboardingStatus.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OnboardingStatusFindManyArgs>(args?: SelectSubset<T, OnboardingStatusFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a OnboardingStatus.
+     * @param {OnboardingStatusCreateArgs} args - Arguments to create a OnboardingStatus.
+     * @example
+     * // Create one OnboardingStatus
+     * const OnboardingStatus = await prisma.onboardingStatus.create({
+     *   data: {
+     *     // ... data to create a OnboardingStatus
+     *   }
+     * })
+     * 
+     */
+    create<T extends OnboardingStatusCreateArgs>(args: SelectSubset<T, OnboardingStatusCreateArgs<ExtArgs>>): Prisma__OnboardingStatusClient<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many OnboardingStatuses.
+     * @param {OnboardingStatusCreateManyArgs} args - Arguments to create many OnboardingStatuses.
+     * @example
+     * // Create many OnboardingStatuses
+     * const onboardingStatus = await prisma.onboardingStatus.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OnboardingStatusCreateManyArgs>(args?: SelectSubset<T, OnboardingStatusCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OnboardingStatuses and returns the data saved in the database.
+     * @param {OnboardingStatusCreateManyAndReturnArgs} args - Arguments to create many OnboardingStatuses.
+     * @example
+     * // Create many OnboardingStatuses
+     * const onboardingStatus = await prisma.onboardingStatus.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OnboardingStatuses and only return the `id`
+     * const onboardingStatusWithIdOnly = await prisma.onboardingStatus.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OnboardingStatusCreateManyAndReturnArgs>(args?: SelectSubset<T, OnboardingStatusCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a OnboardingStatus.
+     * @param {OnboardingStatusDeleteArgs} args - Arguments to delete one OnboardingStatus.
+     * @example
+     * // Delete one OnboardingStatus
+     * const OnboardingStatus = await prisma.onboardingStatus.delete({
+     *   where: {
+     *     // ... filter to delete one OnboardingStatus
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OnboardingStatusDeleteArgs>(args: SelectSubset<T, OnboardingStatusDeleteArgs<ExtArgs>>): Prisma__OnboardingStatusClient<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one OnboardingStatus.
+     * @param {OnboardingStatusUpdateArgs} args - Arguments to update one OnboardingStatus.
+     * @example
+     * // Update one OnboardingStatus
+     * const onboardingStatus = await prisma.onboardingStatus.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OnboardingStatusUpdateArgs>(args: SelectSubset<T, OnboardingStatusUpdateArgs<ExtArgs>>): Prisma__OnboardingStatusClient<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more OnboardingStatuses.
+     * @param {OnboardingStatusDeleteManyArgs} args - Arguments to filter OnboardingStatuses to delete.
+     * @example
+     * // Delete a few OnboardingStatuses
+     * const { count } = await prisma.onboardingStatus.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OnboardingStatusDeleteManyArgs>(args?: SelectSubset<T, OnboardingStatusDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OnboardingStatuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OnboardingStatusUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OnboardingStatuses
+     * const onboardingStatus = await prisma.onboardingStatus.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OnboardingStatusUpdateManyArgs>(args: SelectSubset<T, OnboardingStatusUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OnboardingStatuses and returns the data updated in the database.
+     * @param {OnboardingStatusUpdateManyAndReturnArgs} args - Arguments to update many OnboardingStatuses.
+     * @example
+     * // Update many OnboardingStatuses
+     * const onboardingStatus = await prisma.onboardingStatus.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OnboardingStatuses and only return the `id`
+     * const onboardingStatusWithIdOnly = await prisma.onboardingStatus.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OnboardingStatusUpdateManyAndReturnArgs>(args: SelectSubset<T, OnboardingStatusUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one OnboardingStatus.
+     * @param {OnboardingStatusUpsertArgs} args - Arguments to update or create a OnboardingStatus.
+     * @example
+     * // Update or create a OnboardingStatus
+     * const onboardingStatus = await prisma.onboardingStatus.upsert({
+     *   create: {
+     *     // ... data to create a OnboardingStatus
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OnboardingStatus we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OnboardingStatusUpsertArgs>(args: SelectSubset<T, OnboardingStatusUpsertArgs<ExtArgs>>): Prisma__OnboardingStatusClient<$Result.GetResult<Prisma.$OnboardingStatusPayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of OnboardingStatuses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OnboardingStatusCountArgs} args - Arguments to filter OnboardingStatuses to count.
+     * @example
+     * // Count the number of OnboardingStatuses
+     * const count = await prisma.onboardingStatus.count({
+     *   where: {
+     *     // ... the filter for the OnboardingStatuses we want to count
+     *   }
+     * })
+    **/
+    count<T extends OnboardingStatusCountArgs>(
+      args?: Subset<T, OnboardingStatusCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OnboardingStatusCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OnboardingStatus.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OnboardingStatusAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OnboardingStatusAggregateArgs>(args: Subset<T, OnboardingStatusAggregateArgs>): Prisma.PrismaPromise<GetOnboardingStatusAggregateType<T>>
+
+    /**
+     * Group by OnboardingStatus.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OnboardingStatusGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OnboardingStatusGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OnboardingStatusGroupByArgs['orderBy'] }
+        : { orderBy?: OnboardingStatusGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OnboardingStatusGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOnboardingStatusGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OnboardingStatus model
+   */
+  readonly fields: OnboardingStatusFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OnboardingStatus.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OnboardingStatusClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OnboardingStatus model
+   */ 
+  interface OnboardingStatusFieldRefs {
+    readonly id: FieldRef<"OnboardingStatus", 'String'>
+    readonly userId: FieldRef<"OnboardingStatus", 'String'>
+    readonly stage: FieldRef<"OnboardingStatus", 'String'>
+    readonly profileApproved: FieldRef<"OnboardingStatus", 'Boolean'>
+    readonly completedAt: FieldRef<"OnboardingStatus", 'DateTime'>
+    readonly updatedAt: FieldRef<"OnboardingStatus", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OnboardingStatus findUnique
+   */
+  export type OnboardingStatusFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    /**
+     * Filter, which OnboardingStatus to fetch.
+     */
+    where: OnboardingStatusWhereUniqueInput
+  }
+
+  /**
+   * OnboardingStatus findUniqueOrThrow
+   */
+  export type OnboardingStatusFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    /**
+     * Filter, which OnboardingStatus to fetch.
+     */
+    where: OnboardingStatusWhereUniqueInput
+  }
+
+  /**
+   * OnboardingStatus findFirst
+   */
+  export type OnboardingStatusFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    /**
+     * Filter, which OnboardingStatus to fetch.
+     */
+    where?: OnboardingStatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OnboardingStatuses to fetch.
+     */
+    orderBy?: OnboardingStatusOrderByWithRelationInput | OnboardingStatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OnboardingStatuses.
+     */
+    cursor?: OnboardingStatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OnboardingStatuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OnboardingStatuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OnboardingStatuses.
+     */
+    distinct?: OnboardingStatusScalarFieldEnum | OnboardingStatusScalarFieldEnum[]
+  }
+
+  /**
+   * OnboardingStatus findFirstOrThrow
+   */
+  export type OnboardingStatusFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    /**
+     * Filter, which OnboardingStatus to fetch.
+     */
+    where?: OnboardingStatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OnboardingStatuses to fetch.
+     */
+    orderBy?: OnboardingStatusOrderByWithRelationInput | OnboardingStatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OnboardingStatuses.
+     */
+    cursor?: OnboardingStatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OnboardingStatuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OnboardingStatuses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OnboardingStatuses.
+     */
+    distinct?: OnboardingStatusScalarFieldEnum | OnboardingStatusScalarFieldEnum[]
+  }
+
+  /**
+   * OnboardingStatus findMany
+   */
+  export type OnboardingStatusFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    /**
+     * Filter, which OnboardingStatuses to fetch.
+     */
+    where?: OnboardingStatusWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OnboardingStatuses to fetch.
+     */
+    orderBy?: OnboardingStatusOrderByWithRelationInput | OnboardingStatusOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OnboardingStatuses.
+     */
+    cursor?: OnboardingStatusWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OnboardingStatuses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OnboardingStatuses.
+     */
+    skip?: number
+    distinct?: OnboardingStatusScalarFieldEnum | OnboardingStatusScalarFieldEnum[]
+  }
+
+  /**
+   * OnboardingStatus create
+   */
+  export type OnboardingStatusCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OnboardingStatus.
+     */
+    data: XOR<OnboardingStatusCreateInput, OnboardingStatusUncheckedCreateInput>
+  }
+
+  /**
+   * OnboardingStatus createMany
+   */
+  export type OnboardingStatusCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OnboardingStatuses.
+     */
+    data: OnboardingStatusCreateManyInput | OnboardingStatusCreateManyInput[]
+  }
+
+  /**
+   * OnboardingStatus createManyAndReturn
+   */
+  export type OnboardingStatusCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * The data used to create many OnboardingStatuses.
+     */
+    data: OnboardingStatusCreateManyInput | OnboardingStatusCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OnboardingStatus update
+   */
+  export type OnboardingStatusUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OnboardingStatus.
+     */
+    data: XOR<OnboardingStatusUpdateInput, OnboardingStatusUncheckedUpdateInput>
+    /**
+     * Choose, which OnboardingStatus to update.
+     */
+    where: OnboardingStatusWhereUniqueInput
+  }
+
+  /**
+   * OnboardingStatus updateMany
+   */
+  export type OnboardingStatusUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OnboardingStatuses.
+     */
+    data: XOR<OnboardingStatusUpdateManyMutationInput, OnboardingStatusUncheckedUpdateManyInput>
+    /**
+     * Filter which OnboardingStatuses to update
+     */
+    where?: OnboardingStatusWhereInput
+    /**
+     * Limit how many OnboardingStatuses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OnboardingStatus updateManyAndReturn
+   */
+  export type OnboardingStatusUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * The data used to update OnboardingStatuses.
+     */
+    data: XOR<OnboardingStatusUpdateManyMutationInput, OnboardingStatusUncheckedUpdateManyInput>
+    /**
+     * Filter which OnboardingStatuses to update
+     */
+    where?: OnboardingStatusWhereInput
+    /**
+     * Limit how many OnboardingStatuses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OnboardingStatus upsert
+   */
+  export type OnboardingStatusUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OnboardingStatus to update in case it exists.
+     */
+    where: OnboardingStatusWhereUniqueInput
+    /**
+     * In case the OnboardingStatus found by the `where` argument doesn't exist, create a new OnboardingStatus with this data.
+     */
+    create: XOR<OnboardingStatusCreateInput, OnboardingStatusUncheckedCreateInput>
+    /**
+     * In case the OnboardingStatus was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OnboardingStatusUpdateInput, OnboardingStatusUncheckedUpdateInput>
+  }
+
+  /**
+   * OnboardingStatus delete
+   */
+  export type OnboardingStatusDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+    /**
+     * Filter which OnboardingStatus to delete.
+     */
+    where: OnboardingStatusWhereUniqueInput
+  }
+
+  /**
+   * OnboardingStatus deleteMany
+   */
+  export type OnboardingStatusDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OnboardingStatuses to delete
+     */
+    where?: OnboardingStatusWhereInput
+    /**
+     * Limit how many OnboardingStatuses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OnboardingStatus without action
+   */
+  export type OnboardingStatusDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OnboardingStatus
+     */
+    select?: OnboardingStatusSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OnboardingStatus
+     */
+    omit?: OnboardingStatusOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OnboardingStatusInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Order
    */
 
@@ -13538,6 +22080,101 @@ export namespace Prisma {
   export type AspirationScalarFieldEnum = (typeof AspirationScalarFieldEnum)[keyof typeof AspirationScalarFieldEnum]
 
 
+  export const FarmLocationScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    locationSearch: 'locationSearch',
+    county: 'county',
+    subcounty: 'subcounty',
+    ward: 'ward',
+    landmark: 'landmark',
+    latitude: 'latitude',
+    longitude: 'longitude',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FarmLocationScalarFieldEnum = (typeof FarmLocationScalarFieldEnum)[keyof typeof FarmLocationScalarFieldEnum]
+
+
+  export const FarmCharacteristicsScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    farmSize: 'farmSize',
+    farmUnit: 'farmUnit',
+    cultivatedAcres: 'cultivatedAcres',
+    grazingAcres: 'grazingAcres',
+    landTenure: 'landTenure',
+    waterSources: 'waterSources',
+    soilTested: 'soilTested',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FarmCharacteristicsScalarFieldEnum = (typeof FarmCharacteristicsScalarFieldEnum)[keyof typeof FarmCharacteristicsScalarFieldEnum]
+
+
+  export const FarmingSystemScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    enterprises: 'enterprises',
+    cultivationMethod: 'cultivationMethod',
+    mechanizationSetup: 'mechanizationSetup',
+    energySource: 'energySource',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FarmingSystemScalarFieldEnum = (typeof FarmingSystemScalarFieldEnum)[keyof typeof FarmingSystemScalarFieldEnum]
+
+
+  export const BusinessExperienceScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    commercialYears: 'commercialYears',
+    annualRevenueBracket: 'annualRevenueBracket',
+    recordKeepingMethod: 'recordKeepingMethod',
+    produceBuyers: 'produceBuyers',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BusinessExperienceScalarFieldEnum = (typeof BusinessExperienceScalarFieldEnum)[keyof typeof BusinessExperienceScalarFieldEnum]
+
+
+  export const GoalsPrioritiesScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    goals: 'goals',
+    operationalBottleneck: 'operationalBottleneck',
+    advisoryMode: 'advisoryMode',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GoalsPrioritiesScalarFieldEnum = (typeof GoalsPrioritiesScalarFieldEnum)[keyof typeof GoalsPrioritiesScalarFieldEnum]
+
+
+  export const HouseholdLabourScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    permanentWorkers: 'permanentWorkers',
+    seasonalWorkers: 'seasonalWorkers',
+    managementStructure: 'managementStructure',
+    fairEmploymentPractices: 'fairEmploymentPractices',
+    updatedAt: 'updatedAt'
+  };
+
+  export type HouseholdLabourScalarFieldEnum = (typeof HouseholdLabourScalarFieldEnum)[keyof typeof HouseholdLabourScalarFieldEnum]
+
+
+  export const OnboardingStatusScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    stage: 'stage',
+    profileApproved: 'profileApproved',
+    completedAt: 'completedAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type OnboardingStatusScalarFieldEnum = (typeof OnboardingStatusScalarFieldEnum)[keyof typeof OnboardingStatusScalarFieldEnum]
+
+
   export const OrderScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -13684,6 +22321,13 @@ export namespace Prisma {
     operatingStyle?: XOR<OperatingStyleNullableScalarRelationFilter, OperatingStyleWhereInput> | null
     digitalPlatform?: XOR<DigitalPlatformNullableScalarRelationFilter, DigitalPlatformWhereInput> | null
     aspiration?: XOR<AspirationNullableScalarRelationFilter, AspirationWhereInput> | null
+    farmLocation?: XOR<FarmLocationNullableScalarRelationFilter, FarmLocationWhereInput> | null
+    farmCharacteristics?: XOR<FarmCharacteristicsNullableScalarRelationFilter, FarmCharacteristicsWhereInput> | null
+    farmingSystem?: XOR<FarmingSystemNullableScalarRelationFilter, FarmingSystemWhereInput> | null
+    businessExperience?: XOR<BusinessExperienceNullableScalarRelationFilter, BusinessExperienceWhereInput> | null
+    goalsPriorities?: XOR<GoalsPrioritiesNullableScalarRelationFilter, GoalsPrioritiesWhereInput> | null
+    householdLabour?: XOR<HouseholdLabourNullableScalarRelationFilter, HouseholdLabourWhereInput> | null
+    onboardingStatus?: XOR<OnboardingStatusNullableScalarRelationFilter, OnboardingStatusWhereInput> | null
     orders?: OrderListRelationFilter
     assessments?: AssessmentListRelationFilter
   }
@@ -13702,6 +22346,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleOrderByWithRelationInput
     digitalPlatform?: DigitalPlatformOrderByWithRelationInput
     aspiration?: AspirationOrderByWithRelationInput
+    farmLocation?: FarmLocationOrderByWithRelationInput
+    farmCharacteristics?: FarmCharacteristicsOrderByWithRelationInput
+    farmingSystem?: FarmingSystemOrderByWithRelationInput
+    businessExperience?: BusinessExperienceOrderByWithRelationInput
+    goalsPriorities?: GoalsPrioritiesOrderByWithRelationInput
+    householdLabour?: HouseholdLabourOrderByWithRelationInput
+    onboardingStatus?: OnboardingStatusOrderByWithRelationInput
     orders?: OrderOrderByRelationAggregateInput
     assessments?: AssessmentOrderByRelationAggregateInput
   }
@@ -13723,6 +22374,13 @@ export namespace Prisma {
     operatingStyle?: XOR<OperatingStyleNullableScalarRelationFilter, OperatingStyleWhereInput> | null
     digitalPlatform?: XOR<DigitalPlatformNullableScalarRelationFilter, DigitalPlatformWhereInput> | null
     aspiration?: XOR<AspirationNullableScalarRelationFilter, AspirationWhereInput> | null
+    farmLocation?: XOR<FarmLocationNullableScalarRelationFilter, FarmLocationWhereInput> | null
+    farmCharacteristics?: XOR<FarmCharacteristicsNullableScalarRelationFilter, FarmCharacteristicsWhereInput> | null
+    farmingSystem?: XOR<FarmingSystemNullableScalarRelationFilter, FarmingSystemWhereInput> | null
+    businessExperience?: XOR<BusinessExperienceNullableScalarRelationFilter, BusinessExperienceWhereInput> | null
+    goalsPriorities?: XOR<GoalsPrioritiesNullableScalarRelationFilter, GoalsPrioritiesWhereInput> | null
+    householdLabour?: XOR<HouseholdLabourNullableScalarRelationFilter, HouseholdLabourWhereInput> | null
+    onboardingStatus?: XOR<OnboardingStatusNullableScalarRelationFilter, OnboardingStatusWhereInput> | null
     orders?: OrderListRelationFilter
     assessments?: AssessmentListRelationFilter
   }, "id" | "email">
@@ -14170,6 +22828,487 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Aspiration"> | Date | string
   }
 
+  export type FarmLocationWhereInput = {
+    AND?: FarmLocationWhereInput | FarmLocationWhereInput[]
+    OR?: FarmLocationWhereInput[]
+    NOT?: FarmLocationWhereInput | FarmLocationWhereInput[]
+    id?: StringFilter<"FarmLocation"> | string
+    userId?: StringFilter<"FarmLocation"> | string
+    locationSearch?: StringNullableFilter<"FarmLocation"> | string | null
+    county?: StringNullableFilter<"FarmLocation"> | string | null
+    subcounty?: StringNullableFilter<"FarmLocation"> | string | null
+    ward?: StringNullableFilter<"FarmLocation"> | string | null
+    landmark?: StringNullableFilter<"FarmLocation"> | string | null
+    latitude?: FloatNullableFilter<"FarmLocation"> | number | null
+    longitude?: FloatNullableFilter<"FarmLocation"> | number | null
+    updatedAt?: DateTimeFilter<"FarmLocation"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type FarmLocationOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationSearch?: SortOrderInput | SortOrder
+    county?: SortOrderInput | SortOrder
+    subcounty?: SortOrderInput | SortOrder
+    ward?: SortOrderInput | SortOrder
+    landmark?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type FarmLocationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: FarmLocationWhereInput | FarmLocationWhereInput[]
+    OR?: FarmLocationWhereInput[]
+    NOT?: FarmLocationWhereInput | FarmLocationWhereInput[]
+    locationSearch?: StringNullableFilter<"FarmLocation"> | string | null
+    county?: StringNullableFilter<"FarmLocation"> | string | null
+    subcounty?: StringNullableFilter<"FarmLocation"> | string | null
+    ward?: StringNullableFilter<"FarmLocation"> | string | null
+    landmark?: StringNullableFilter<"FarmLocation"> | string | null
+    latitude?: FloatNullableFilter<"FarmLocation"> | number | null
+    longitude?: FloatNullableFilter<"FarmLocation"> | number | null
+    updatedAt?: DateTimeFilter<"FarmLocation"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type FarmLocationOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationSearch?: SortOrderInput | SortOrder
+    county?: SortOrderInput | SortOrder
+    subcounty?: SortOrderInput | SortOrder
+    ward?: SortOrderInput | SortOrder
+    landmark?: SortOrderInput | SortOrder
+    latitude?: SortOrderInput | SortOrder
+    longitude?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: FarmLocationCountOrderByAggregateInput
+    _avg?: FarmLocationAvgOrderByAggregateInput
+    _max?: FarmLocationMaxOrderByAggregateInput
+    _min?: FarmLocationMinOrderByAggregateInput
+    _sum?: FarmLocationSumOrderByAggregateInput
+  }
+
+  export type FarmLocationScalarWhereWithAggregatesInput = {
+    AND?: FarmLocationScalarWhereWithAggregatesInput | FarmLocationScalarWhereWithAggregatesInput[]
+    OR?: FarmLocationScalarWhereWithAggregatesInput[]
+    NOT?: FarmLocationScalarWhereWithAggregatesInput | FarmLocationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FarmLocation"> | string
+    userId?: StringWithAggregatesFilter<"FarmLocation"> | string
+    locationSearch?: StringNullableWithAggregatesFilter<"FarmLocation"> | string | null
+    county?: StringNullableWithAggregatesFilter<"FarmLocation"> | string | null
+    subcounty?: StringNullableWithAggregatesFilter<"FarmLocation"> | string | null
+    ward?: StringNullableWithAggregatesFilter<"FarmLocation"> | string | null
+    landmark?: StringNullableWithAggregatesFilter<"FarmLocation"> | string | null
+    latitude?: FloatNullableWithAggregatesFilter<"FarmLocation"> | number | null
+    longitude?: FloatNullableWithAggregatesFilter<"FarmLocation"> | number | null
+    updatedAt?: DateTimeWithAggregatesFilter<"FarmLocation"> | Date | string
+  }
+
+  export type FarmCharacteristicsWhereInput = {
+    AND?: FarmCharacteristicsWhereInput | FarmCharacteristicsWhereInput[]
+    OR?: FarmCharacteristicsWhereInput[]
+    NOT?: FarmCharacteristicsWhereInput | FarmCharacteristicsWhereInput[]
+    id?: StringFilter<"FarmCharacteristics"> | string
+    userId?: StringFilter<"FarmCharacteristics"> | string
+    farmSize?: FloatNullableFilter<"FarmCharacteristics"> | number | null
+    farmUnit?: StringNullableFilter<"FarmCharacteristics"> | string | null
+    cultivatedAcres?: FloatNullableFilter<"FarmCharacteristics"> | number | null
+    grazingAcres?: FloatNullableFilter<"FarmCharacteristics"> | number | null
+    landTenure?: StringNullableFilter<"FarmCharacteristics"> | string | null
+    waterSources?: StringNullableFilter<"FarmCharacteristics"> | string | null
+    soilTested?: StringNullableFilter<"FarmCharacteristics"> | string | null
+    updatedAt?: DateTimeFilter<"FarmCharacteristics"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type FarmCharacteristicsOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    farmSize?: SortOrderInput | SortOrder
+    farmUnit?: SortOrderInput | SortOrder
+    cultivatedAcres?: SortOrderInput | SortOrder
+    grazingAcres?: SortOrderInput | SortOrder
+    landTenure?: SortOrderInput | SortOrder
+    waterSources?: SortOrderInput | SortOrder
+    soilTested?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type FarmCharacteristicsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: FarmCharacteristicsWhereInput | FarmCharacteristicsWhereInput[]
+    OR?: FarmCharacteristicsWhereInput[]
+    NOT?: FarmCharacteristicsWhereInput | FarmCharacteristicsWhereInput[]
+    farmSize?: FloatNullableFilter<"FarmCharacteristics"> | number | null
+    farmUnit?: StringNullableFilter<"FarmCharacteristics"> | string | null
+    cultivatedAcres?: FloatNullableFilter<"FarmCharacteristics"> | number | null
+    grazingAcres?: FloatNullableFilter<"FarmCharacteristics"> | number | null
+    landTenure?: StringNullableFilter<"FarmCharacteristics"> | string | null
+    waterSources?: StringNullableFilter<"FarmCharacteristics"> | string | null
+    soilTested?: StringNullableFilter<"FarmCharacteristics"> | string | null
+    updatedAt?: DateTimeFilter<"FarmCharacteristics"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type FarmCharacteristicsOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    farmSize?: SortOrderInput | SortOrder
+    farmUnit?: SortOrderInput | SortOrder
+    cultivatedAcres?: SortOrderInput | SortOrder
+    grazingAcres?: SortOrderInput | SortOrder
+    landTenure?: SortOrderInput | SortOrder
+    waterSources?: SortOrderInput | SortOrder
+    soilTested?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: FarmCharacteristicsCountOrderByAggregateInput
+    _avg?: FarmCharacteristicsAvgOrderByAggregateInput
+    _max?: FarmCharacteristicsMaxOrderByAggregateInput
+    _min?: FarmCharacteristicsMinOrderByAggregateInput
+    _sum?: FarmCharacteristicsSumOrderByAggregateInput
+  }
+
+  export type FarmCharacteristicsScalarWhereWithAggregatesInput = {
+    AND?: FarmCharacteristicsScalarWhereWithAggregatesInput | FarmCharacteristicsScalarWhereWithAggregatesInput[]
+    OR?: FarmCharacteristicsScalarWhereWithAggregatesInput[]
+    NOT?: FarmCharacteristicsScalarWhereWithAggregatesInput | FarmCharacteristicsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FarmCharacteristics"> | string
+    userId?: StringWithAggregatesFilter<"FarmCharacteristics"> | string
+    farmSize?: FloatNullableWithAggregatesFilter<"FarmCharacteristics"> | number | null
+    farmUnit?: StringNullableWithAggregatesFilter<"FarmCharacteristics"> | string | null
+    cultivatedAcres?: FloatNullableWithAggregatesFilter<"FarmCharacteristics"> | number | null
+    grazingAcres?: FloatNullableWithAggregatesFilter<"FarmCharacteristics"> | number | null
+    landTenure?: StringNullableWithAggregatesFilter<"FarmCharacteristics"> | string | null
+    waterSources?: StringNullableWithAggregatesFilter<"FarmCharacteristics"> | string | null
+    soilTested?: StringNullableWithAggregatesFilter<"FarmCharacteristics"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"FarmCharacteristics"> | Date | string
+  }
+
+  export type FarmingSystemWhereInput = {
+    AND?: FarmingSystemWhereInput | FarmingSystemWhereInput[]
+    OR?: FarmingSystemWhereInput[]
+    NOT?: FarmingSystemWhereInput | FarmingSystemWhereInput[]
+    id?: StringFilter<"FarmingSystem"> | string
+    userId?: StringFilter<"FarmingSystem"> | string
+    enterprises?: StringNullableFilter<"FarmingSystem"> | string | null
+    cultivationMethod?: StringNullableFilter<"FarmingSystem"> | string | null
+    mechanizationSetup?: StringNullableFilter<"FarmingSystem"> | string | null
+    energySource?: StringNullableFilter<"FarmingSystem"> | string | null
+    updatedAt?: DateTimeFilter<"FarmingSystem"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type FarmingSystemOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    enterprises?: SortOrderInput | SortOrder
+    cultivationMethod?: SortOrderInput | SortOrder
+    mechanizationSetup?: SortOrderInput | SortOrder
+    energySource?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type FarmingSystemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: FarmingSystemWhereInput | FarmingSystemWhereInput[]
+    OR?: FarmingSystemWhereInput[]
+    NOT?: FarmingSystemWhereInput | FarmingSystemWhereInput[]
+    enterprises?: StringNullableFilter<"FarmingSystem"> | string | null
+    cultivationMethod?: StringNullableFilter<"FarmingSystem"> | string | null
+    mechanizationSetup?: StringNullableFilter<"FarmingSystem"> | string | null
+    energySource?: StringNullableFilter<"FarmingSystem"> | string | null
+    updatedAt?: DateTimeFilter<"FarmingSystem"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type FarmingSystemOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    enterprises?: SortOrderInput | SortOrder
+    cultivationMethod?: SortOrderInput | SortOrder
+    mechanizationSetup?: SortOrderInput | SortOrder
+    energySource?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: FarmingSystemCountOrderByAggregateInput
+    _max?: FarmingSystemMaxOrderByAggregateInput
+    _min?: FarmingSystemMinOrderByAggregateInput
+  }
+
+  export type FarmingSystemScalarWhereWithAggregatesInput = {
+    AND?: FarmingSystemScalarWhereWithAggregatesInput | FarmingSystemScalarWhereWithAggregatesInput[]
+    OR?: FarmingSystemScalarWhereWithAggregatesInput[]
+    NOT?: FarmingSystemScalarWhereWithAggregatesInput | FarmingSystemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FarmingSystem"> | string
+    userId?: StringWithAggregatesFilter<"FarmingSystem"> | string
+    enterprises?: StringNullableWithAggregatesFilter<"FarmingSystem"> | string | null
+    cultivationMethod?: StringNullableWithAggregatesFilter<"FarmingSystem"> | string | null
+    mechanizationSetup?: StringNullableWithAggregatesFilter<"FarmingSystem"> | string | null
+    energySource?: StringNullableWithAggregatesFilter<"FarmingSystem"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"FarmingSystem"> | Date | string
+  }
+
+  export type BusinessExperienceWhereInput = {
+    AND?: BusinessExperienceWhereInput | BusinessExperienceWhereInput[]
+    OR?: BusinessExperienceWhereInput[]
+    NOT?: BusinessExperienceWhereInput | BusinessExperienceWhereInput[]
+    id?: StringFilter<"BusinessExperience"> | string
+    userId?: StringFilter<"BusinessExperience"> | string
+    commercialYears?: StringNullableFilter<"BusinessExperience"> | string | null
+    annualRevenueBracket?: StringNullableFilter<"BusinessExperience"> | string | null
+    recordKeepingMethod?: StringNullableFilter<"BusinessExperience"> | string | null
+    produceBuyers?: StringNullableFilter<"BusinessExperience"> | string | null
+    updatedAt?: DateTimeFilter<"BusinessExperience"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type BusinessExperienceOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    commercialYears?: SortOrderInput | SortOrder
+    annualRevenueBracket?: SortOrderInput | SortOrder
+    recordKeepingMethod?: SortOrderInput | SortOrder
+    produceBuyers?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type BusinessExperienceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: BusinessExperienceWhereInput | BusinessExperienceWhereInput[]
+    OR?: BusinessExperienceWhereInput[]
+    NOT?: BusinessExperienceWhereInput | BusinessExperienceWhereInput[]
+    commercialYears?: StringNullableFilter<"BusinessExperience"> | string | null
+    annualRevenueBracket?: StringNullableFilter<"BusinessExperience"> | string | null
+    recordKeepingMethod?: StringNullableFilter<"BusinessExperience"> | string | null
+    produceBuyers?: StringNullableFilter<"BusinessExperience"> | string | null
+    updatedAt?: DateTimeFilter<"BusinessExperience"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type BusinessExperienceOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    commercialYears?: SortOrderInput | SortOrder
+    annualRevenueBracket?: SortOrderInput | SortOrder
+    recordKeepingMethod?: SortOrderInput | SortOrder
+    produceBuyers?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: BusinessExperienceCountOrderByAggregateInput
+    _max?: BusinessExperienceMaxOrderByAggregateInput
+    _min?: BusinessExperienceMinOrderByAggregateInput
+  }
+
+  export type BusinessExperienceScalarWhereWithAggregatesInput = {
+    AND?: BusinessExperienceScalarWhereWithAggregatesInput | BusinessExperienceScalarWhereWithAggregatesInput[]
+    OR?: BusinessExperienceScalarWhereWithAggregatesInput[]
+    NOT?: BusinessExperienceScalarWhereWithAggregatesInput | BusinessExperienceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BusinessExperience"> | string
+    userId?: StringWithAggregatesFilter<"BusinessExperience"> | string
+    commercialYears?: StringNullableWithAggregatesFilter<"BusinessExperience"> | string | null
+    annualRevenueBracket?: StringNullableWithAggregatesFilter<"BusinessExperience"> | string | null
+    recordKeepingMethod?: StringNullableWithAggregatesFilter<"BusinessExperience"> | string | null
+    produceBuyers?: StringNullableWithAggregatesFilter<"BusinessExperience"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"BusinessExperience"> | Date | string
+  }
+
+  export type GoalsPrioritiesWhereInput = {
+    AND?: GoalsPrioritiesWhereInput | GoalsPrioritiesWhereInput[]
+    OR?: GoalsPrioritiesWhereInput[]
+    NOT?: GoalsPrioritiesWhereInput | GoalsPrioritiesWhereInput[]
+    id?: StringFilter<"GoalsPriorities"> | string
+    userId?: StringFilter<"GoalsPriorities"> | string
+    goals?: StringNullableFilter<"GoalsPriorities"> | string | null
+    operationalBottleneck?: StringNullableFilter<"GoalsPriorities"> | string | null
+    advisoryMode?: StringNullableFilter<"GoalsPriorities"> | string | null
+    updatedAt?: DateTimeFilter<"GoalsPriorities"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type GoalsPrioritiesOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    goals?: SortOrderInput | SortOrder
+    operationalBottleneck?: SortOrderInput | SortOrder
+    advisoryMode?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type GoalsPrioritiesWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: GoalsPrioritiesWhereInput | GoalsPrioritiesWhereInput[]
+    OR?: GoalsPrioritiesWhereInput[]
+    NOT?: GoalsPrioritiesWhereInput | GoalsPrioritiesWhereInput[]
+    goals?: StringNullableFilter<"GoalsPriorities"> | string | null
+    operationalBottleneck?: StringNullableFilter<"GoalsPriorities"> | string | null
+    advisoryMode?: StringNullableFilter<"GoalsPriorities"> | string | null
+    updatedAt?: DateTimeFilter<"GoalsPriorities"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type GoalsPrioritiesOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    goals?: SortOrderInput | SortOrder
+    operationalBottleneck?: SortOrderInput | SortOrder
+    advisoryMode?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: GoalsPrioritiesCountOrderByAggregateInput
+    _max?: GoalsPrioritiesMaxOrderByAggregateInput
+    _min?: GoalsPrioritiesMinOrderByAggregateInput
+  }
+
+  export type GoalsPrioritiesScalarWhereWithAggregatesInput = {
+    AND?: GoalsPrioritiesScalarWhereWithAggregatesInput | GoalsPrioritiesScalarWhereWithAggregatesInput[]
+    OR?: GoalsPrioritiesScalarWhereWithAggregatesInput[]
+    NOT?: GoalsPrioritiesScalarWhereWithAggregatesInput | GoalsPrioritiesScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GoalsPriorities"> | string
+    userId?: StringWithAggregatesFilter<"GoalsPriorities"> | string
+    goals?: StringNullableWithAggregatesFilter<"GoalsPriorities"> | string | null
+    operationalBottleneck?: StringNullableWithAggregatesFilter<"GoalsPriorities"> | string | null
+    advisoryMode?: StringNullableWithAggregatesFilter<"GoalsPriorities"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"GoalsPriorities"> | Date | string
+  }
+
+  export type HouseholdLabourWhereInput = {
+    AND?: HouseholdLabourWhereInput | HouseholdLabourWhereInput[]
+    OR?: HouseholdLabourWhereInput[]
+    NOT?: HouseholdLabourWhereInput | HouseholdLabourWhereInput[]
+    id?: StringFilter<"HouseholdLabour"> | string
+    userId?: StringFilter<"HouseholdLabour"> | string
+    permanentWorkers?: IntNullableFilter<"HouseholdLabour"> | number | null
+    seasonalWorkers?: IntNullableFilter<"HouseholdLabour"> | number | null
+    managementStructure?: StringNullableFilter<"HouseholdLabour"> | string | null
+    fairEmploymentPractices?: StringNullableFilter<"HouseholdLabour"> | string | null
+    updatedAt?: DateTimeFilter<"HouseholdLabour"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type HouseholdLabourOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    permanentWorkers?: SortOrderInput | SortOrder
+    seasonalWorkers?: SortOrderInput | SortOrder
+    managementStructure?: SortOrderInput | SortOrder
+    fairEmploymentPractices?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type HouseholdLabourWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: HouseholdLabourWhereInput | HouseholdLabourWhereInput[]
+    OR?: HouseholdLabourWhereInput[]
+    NOT?: HouseholdLabourWhereInput | HouseholdLabourWhereInput[]
+    permanentWorkers?: IntNullableFilter<"HouseholdLabour"> | number | null
+    seasonalWorkers?: IntNullableFilter<"HouseholdLabour"> | number | null
+    managementStructure?: StringNullableFilter<"HouseholdLabour"> | string | null
+    fairEmploymentPractices?: StringNullableFilter<"HouseholdLabour"> | string | null
+    updatedAt?: DateTimeFilter<"HouseholdLabour"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type HouseholdLabourOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    permanentWorkers?: SortOrderInput | SortOrder
+    seasonalWorkers?: SortOrderInput | SortOrder
+    managementStructure?: SortOrderInput | SortOrder
+    fairEmploymentPractices?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: HouseholdLabourCountOrderByAggregateInput
+    _avg?: HouseholdLabourAvgOrderByAggregateInput
+    _max?: HouseholdLabourMaxOrderByAggregateInput
+    _min?: HouseholdLabourMinOrderByAggregateInput
+    _sum?: HouseholdLabourSumOrderByAggregateInput
+  }
+
+  export type HouseholdLabourScalarWhereWithAggregatesInput = {
+    AND?: HouseholdLabourScalarWhereWithAggregatesInput | HouseholdLabourScalarWhereWithAggregatesInput[]
+    OR?: HouseholdLabourScalarWhereWithAggregatesInput[]
+    NOT?: HouseholdLabourScalarWhereWithAggregatesInput | HouseholdLabourScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"HouseholdLabour"> | string
+    userId?: StringWithAggregatesFilter<"HouseholdLabour"> | string
+    permanentWorkers?: IntNullableWithAggregatesFilter<"HouseholdLabour"> | number | null
+    seasonalWorkers?: IntNullableWithAggregatesFilter<"HouseholdLabour"> | number | null
+    managementStructure?: StringNullableWithAggregatesFilter<"HouseholdLabour"> | string | null
+    fairEmploymentPractices?: StringNullableWithAggregatesFilter<"HouseholdLabour"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"HouseholdLabour"> | Date | string
+  }
+
+  export type OnboardingStatusWhereInput = {
+    AND?: OnboardingStatusWhereInput | OnboardingStatusWhereInput[]
+    OR?: OnboardingStatusWhereInput[]
+    NOT?: OnboardingStatusWhereInput | OnboardingStatusWhereInput[]
+    id?: StringFilter<"OnboardingStatus"> | string
+    userId?: StringFilter<"OnboardingStatus"> | string
+    stage?: StringFilter<"OnboardingStatus"> | string
+    profileApproved?: BoolFilter<"OnboardingStatus"> | boolean
+    completedAt?: DateTimeNullableFilter<"OnboardingStatus"> | Date | string | null
+    updatedAt?: DateTimeFilter<"OnboardingStatus"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type OnboardingStatusOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    stage?: SortOrder
+    profileApproved?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type OnboardingStatusWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: OnboardingStatusWhereInput | OnboardingStatusWhereInput[]
+    OR?: OnboardingStatusWhereInput[]
+    NOT?: OnboardingStatusWhereInput | OnboardingStatusWhereInput[]
+    stage?: StringFilter<"OnboardingStatus"> | string
+    profileApproved?: BoolFilter<"OnboardingStatus"> | boolean
+    completedAt?: DateTimeNullableFilter<"OnboardingStatus"> | Date | string | null
+    updatedAt?: DateTimeFilter<"OnboardingStatus"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type OnboardingStatusOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    stage?: SortOrder
+    profileApproved?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: OnboardingStatusCountOrderByAggregateInput
+    _max?: OnboardingStatusMaxOrderByAggregateInput
+    _min?: OnboardingStatusMinOrderByAggregateInput
+  }
+
+  export type OnboardingStatusScalarWhereWithAggregatesInput = {
+    AND?: OnboardingStatusScalarWhereWithAggregatesInput | OnboardingStatusScalarWhereWithAggregatesInput[]
+    OR?: OnboardingStatusScalarWhereWithAggregatesInput[]
+    NOT?: OnboardingStatusScalarWhereWithAggregatesInput | OnboardingStatusScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OnboardingStatus"> | string
+    userId?: StringWithAggregatesFilter<"OnboardingStatus"> | string
+    stage?: StringWithAggregatesFilter<"OnboardingStatus"> | string
+    profileApproved?: BoolWithAggregatesFilter<"OnboardingStatus"> | boolean
+    completedAt?: DateTimeNullableWithAggregatesFilter<"OnboardingStatus"> | Date | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"OnboardingStatus"> | Date | string
+  }
+
   export type OrderWhereInput = {
     AND?: OrderWhereInput | OrderWhereInput[]
     OR?: OrderWhereInput[]
@@ -14550,6 +23689,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
     aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     assessments?: AssessmentCreateNestedManyWithoutUserInput
   }
@@ -14568,6 +23714,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
     aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
   }
@@ -14586,6 +23739,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUpdateManyWithoutUserNestedInput
   }
@@ -14604,6 +23764,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -15112,6 +24279,517 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FarmLocationCreateInput = {
+    id?: string
+    locationSearch?: string | null
+    county?: string | null
+    subcounty?: string | null
+    ward?: string | null
+    landmark?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFarmLocationInput
+  }
+
+  export type FarmLocationUncheckedCreateInput = {
+    id?: string
+    userId: string
+    locationSearch?: string | null
+    county?: string | null
+    subcounty?: string | null
+    ward?: string | null
+    landmark?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmLocationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    locationSearch?: NullableStringFieldUpdateOperationsInput | string | null
+    county?: NullableStringFieldUpdateOperationsInput | string | null
+    subcounty?: NullableStringFieldUpdateOperationsInput | string | null
+    ward?: NullableStringFieldUpdateOperationsInput | string | null
+    landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFarmLocationNestedInput
+  }
+
+  export type FarmLocationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    locationSearch?: NullableStringFieldUpdateOperationsInput | string | null
+    county?: NullableStringFieldUpdateOperationsInput | string | null
+    subcounty?: NullableStringFieldUpdateOperationsInput | string | null
+    ward?: NullableStringFieldUpdateOperationsInput | string | null
+    landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmLocationCreateManyInput = {
+    id?: string
+    userId: string
+    locationSearch?: string | null
+    county?: string | null
+    subcounty?: string | null
+    ward?: string | null
+    landmark?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmLocationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    locationSearch?: NullableStringFieldUpdateOperationsInput | string | null
+    county?: NullableStringFieldUpdateOperationsInput | string | null
+    subcounty?: NullableStringFieldUpdateOperationsInput | string | null
+    ward?: NullableStringFieldUpdateOperationsInput | string | null
+    landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmLocationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    locationSearch?: NullableStringFieldUpdateOperationsInput | string | null
+    county?: NullableStringFieldUpdateOperationsInput | string | null
+    subcounty?: NullableStringFieldUpdateOperationsInput | string | null
+    ward?: NullableStringFieldUpdateOperationsInput | string | null
+    landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmCharacteristicsCreateInput = {
+    id?: string
+    farmSize?: number | null
+    farmUnit?: string | null
+    cultivatedAcres?: number | null
+    grazingAcres?: number | null
+    landTenure?: string | null
+    waterSources?: string | null
+    soilTested?: string | null
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFarmCharacteristicsInput
+  }
+
+  export type FarmCharacteristicsUncheckedCreateInput = {
+    id?: string
+    userId: string
+    farmSize?: number | null
+    farmUnit?: string | null
+    cultivatedAcres?: number | null
+    grazingAcres?: number | null
+    landTenure?: string | null
+    waterSources?: string | null
+    soilTested?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmCharacteristicsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    farmSize?: NullableFloatFieldUpdateOperationsInput | number | null
+    farmUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivatedAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    grazingAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    landTenure?: NullableStringFieldUpdateOperationsInput | string | null
+    waterSources?: NullableStringFieldUpdateOperationsInput | string | null
+    soilTested?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFarmCharacteristicsNestedInput
+  }
+
+  export type FarmCharacteristicsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    farmSize?: NullableFloatFieldUpdateOperationsInput | number | null
+    farmUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivatedAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    grazingAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    landTenure?: NullableStringFieldUpdateOperationsInput | string | null
+    waterSources?: NullableStringFieldUpdateOperationsInput | string | null
+    soilTested?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmCharacteristicsCreateManyInput = {
+    id?: string
+    userId: string
+    farmSize?: number | null
+    farmUnit?: string | null
+    cultivatedAcres?: number | null
+    grazingAcres?: number | null
+    landTenure?: string | null
+    waterSources?: string | null
+    soilTested?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmCharacteristicsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    farmSize?: NullableFloatFieldUpdateOperationsInput | number | null
+    farmUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivatedAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    grazingAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    landTenure?: NullableStringFieldUpdateOperationsInput | string | null
+    waterSources?: NullableStringFieldUpdateOperationsInput | string | null
+    soilTested?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmCharacteristicsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    farmSize?: NullableFloatFieldUpdateOperationsInput | number | null
+    farmUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivatedAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    grazingAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    landTenure?: NullableStringFieldUpdateOperationsInput | string | null
+    waterSources?: NullableStringFieldUpdateOperationsInput | string | null
+    soilTested?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmingSystemCreateInput = {
+    id?: string
+    enterprises?: string | null
+    cultivationMethod?: string | null
+    mechanizationSetup?: string | null
+    energySource?: string | null
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutFarmingSystemInput
+  }
+
+  export type FarmingSystemUncheckedCreateInput = {
+    id?: string
+    userId: string
+    enterprises?: string | null
+    cultivationMethod?: string | null
+    mechanizationSetup?: string | null
+    energySource?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmingSystemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enterprises?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivationMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    mechanizationSetup?: NullableStringFieldUpdateOperationsInput | string | null
+    energySource?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFarmingSystemNestedInput
+  }
+
+  export type FarmingSystemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    enterprises?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivationMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    mechanizationSetup?: NullableStringFieldUpdateOperationsInput | string | null
+    energySource?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmingSystemCreateManyInput = {
+    id?: string
+    userId: string
+    enterprises?: string | null
+    cultivationMethod?: string | null
+    mechanizationSetup?: string | null
+    energySource?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmingSystemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enterprises?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivationMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    mechanizationSetup?: NullableStringFieldUpdateOperationsInput | string | null
+    energySource?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmingSystemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    enterprises?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivationMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    mechanizationSetup?: NullableStringFieldUpdateOperationsInput | string | null
+    energySource?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BusinessExperienceCreateInput = {
+    id?: string
+    commercialYears?: string | null
+    annualRevenueBracket?: string | null
+    recordKeepingMethod?: string | null
+    produceBuyers?: string | null
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutBusinessExperienceInput
+  }
+
+  export type BusinessExperienceUncheckedCreateInput = {
+    id?: string
+    userId: string
+    commercialYears?: string | null
+    annualRevenueBracket?: string | null
+    recordKeepingMethod?: string | null
+    produceBuyers?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type BusinessExperienceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commercialYears?: NullableStringFieldUpdateOperationsInput | string | null
+    annualRevenueBracket?: NullableStringFieldUpdateOperationsInput | string | null
+    recordKeepingMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    produceBuyers?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutBusinessExperienceNestedInput
+  }
+
+  export type BusinessExperienceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    commercialYears?: NullableStringFieldUpdateOperationsInput | string | null
+    annualRevenueBracket?: NullableStringFieldUpdateOperationsInput | string | null
+    recordKeepingMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    produceBuyers?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BusinessExperienceCreateManyInput = {
+    id?: string
+    userId: string
+    commercialYears?: string | null
+    annualRevenueBracket?: string | null
+    recordKeepingMethod?: string | null
+    produceBuyers?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type BusinessExperienceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commercialYears?: NullableStringFieldUpdateOperationsInput | string | null
+    annualRevenueBracket?: NullableStringFieldUpdateOperationsInput | string | null
+    recordKeepingMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    produceBuyers?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BusinessExperienceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    commercialYears?: NullableStringFieldUpdateOperationsInput | string | null
+    annualRevenueBracket?: NullableStringFieldUpdateOperationsInput | string | null
+    recordKeepingMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    produceBuyers?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalsPrioritiesCreateInput = {
+    id?: string
+    goals?: string | null
+    operationalBottleneck?: string | null
+    advisoryMode?: string | null
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutGoalsPrioritiesInput
+  }
+
+  export type GoalsPrioritiesUncheckedCreateInput = {
+    id?: string
+    userId: string
+    goals?: string | null
+    operationalBottleneck?: string | null
+    advisoryMode?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type GoalsPrioritiesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    operationalBottleneck?: NullableStringFieldUpdateOperationsInput | string | null
+    advisoryMode?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutGoalsPrioritiesNestedInput
+  }
+
+  export type GoalsPrioritiesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    operationalBottleneck?: NullableStringFieldUpdateOperationsInput | string | null
+    advisoryMode?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalsPrioritiesCreateManyInput = {
+    id?: string
+    userId: string
+    goals?: string | null
+    operationalBottleneck?: string | null
+    advisoryMode?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type GoalsPrioritiesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    operationalBottleneck?: NullableStringFieldUpdateOperationsInput | string | null
+    advisoryMode?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalsPrioritiesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    operationalBottleneck?: NullableStringFieldUpdateOperationsInput | string | null
+    advisoryMode?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HouseholdLabourCreateInput = {
+    id?: string
+    permanentWorkers?: number | null
+    seasonalWorkers?: number | null
+    managementStructure?: string | null
+    fairEmploymentPractices?: string | null
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutHouseholdLabourInput
+  }
+
+  export type HouseholdLabourUncheckedCreateInput = {
+    id?: string
+    userId: string
+    permanentWorkers?: number | null
+    seasonalWorkers?: number | null
+    managementStructure?: string | null
+    fairEmploymentPractices?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type HouseholdLabourUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    permanentWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    seasonalWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    managementStructure?: NullableStringFieldUpdateOperationsInput | string | null
+    fairEmploymentPractices?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutHouseholdLabourNestedInput
+  }
+
+  export type HouseholdLabourUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    permanentWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    seasonalWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    managementStructure?: NullableStringFieldUpdateOperationsInput | string | null
+    fairEmploymentPractices?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HouseholdLabourCreateManyInput = {
+    id?: string
+    userId: string
+    permanentWorkers?: number | null
+    seasonalWorkers?: number | null
+    managementStructure?: string | null
+    fairEmploymentPractices?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type HouseholdLabourUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    permanentWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    seasonalWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    managementStructure?: NullableStringFieldUpdateOperationsInput | string | null
+    fairEmploymentPractices?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HouseholdLabourUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    permanentWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    seasonalWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    managementStructure?: NullableStringFieldUpdateOperationsInput | string | null
+    fairEmploymentPractices?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OnboardingStatusCreateInput = {
+    id?: string
+    stage?: string
+    profileApproved?: boolean
+    completedAt?: Date | string | null
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutOnboardingStatusInput
+  }
+
+  export type OnboardingStatusUncheckedCreateInput = {
+    id?: string
+    userId: string
+    stage?: string
+    profileApproved?: boolean
+    completedAt?: Date | string | null
+    updatedAt?: Date | string
+  }
+
+  export type OnboardingStatusUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    profileApproved?: BoolFieldUpdateOperationsInput | boolean
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutOnboardingStatusNestedInput
+  }
+
+  export type OnboardingStatusUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    profileApproved?: BoolFieldUpdateOperationsInput | boolean
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OnboardingStatusCreateManyInput = {
+    id?: string
+    userId: string
+    stage?: string
+    profileApproved?: boolean
+    completedAt?: Date | string | null
+    updatedAt?: Date | string
+  }
+
+  export type OnboardingStatusUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    profileApproved?: BoolFieldUpdateOperationsInput | boolean
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OnboardingStatusUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    profileApproved?: BoolFieldUpdateOperationsInput | boolean
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrderCreateInput = {
     id?: string
     planType: string
@@ -15586,6 +25264,41 @@ export namespace Prisma {
     isNot?: AspirationWhereInput | null
   }
 
+  export type FarmLocationNullableScalarRelationFilter = {
+    is?: FarmLocationWhereInput | null
+    isNot?: FarmLocationWhereInput | null
+  }
+
+  export type FarmCharacteristicsNullableScalarRelationFilter = {
+    is?: FarmCharacteristicsWhereInput | null
+    isNot?: FarmCharacteristicsWhereInput | null
+  }
+
+  export type FarmingSystemNullableScalarRelationFilter = {
+    is?: FarmingSystemWhereInput | null
+    isNot?: FarmingSystemWhereInput | null
+  }
+
+  export type BusinessExperienceNullableScalarRelationFilter = {
+    is?: BusinessExperienceWhereInput | null
+    isNot?: BusinessExperienceWhereInput | null
+  }
+
+  export type GoalsPrioritiesNullableScalarRelationFilter = {
+    is?: GoalsPrioritiesWhereInput | null
+    isNot?: GoalsPrioritiesWhereInput | null
+  }
+
+  export type HouseholdLabourNullableScalarRelationFilter = {
+    is?: HouseholdLabourWhereInput | null
+    isNot?: HouseholdLabourWhereInput | null
+  }
+
+  export type OnboardingStatusNullableScalarRelationFilter = {
+    is?: OnboardingStatusWhereInput | null
+    isNot?: OnboardingStatusWhereInput | null
+  }
+
   export type OrderListRelationFilter = {
     every?: OrderWhereInput
     some?: OrderWhereInput
@@ -15901,6 +25614,352 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type FarmLocationCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationSearch?: SortOrder
+    county?: SortOrder
+    subcounty?: SortOrder
+    ward?: SortOrder
+    landmark?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FarmLocationAvgOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type FarmLocationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationSearch?: SortOrder
+    county?: SortOrder
+    subcounty?: SortOrder
+    ward?: SortOrder
+    landmark?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FarmLocationMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationSearch?: SortOrder
+    county?: SortOrder
+    subcounty?: SortOrder
+    ward?: SortOrder
+    landmark?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FarmLocationSumOrderByAggregateInput = {
+    latitude?: SortOrder
+    longitude?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type FarmCharacteristicsCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    farmSize?: SortOrder
+    farmUnit?: SortOrder
+    cultivatedAcres?: SortOrder
+    grazingAcres?: SortOrder
+    landTenure?: SortOrder
+    waterSources?: SortOrder
+    soilTested?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FarmCharacteristicsAvgOrderByAggregateInput = {
+    farmSize?: SortOrder
+    cultivatedAcres?: SortOrder
+    grazingAcres?: SortOrder
+  }
+
+  export type FarmCharacteristicsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    farmSize?: SortOrder
+    farmUnit?: SortOrder
+    cultivatedAcres?: SortOrder
+    grazingAcres?: SortOrder
+    landTenure?: SortOrder
+    waterSources?: SortOrder
+    soilTested?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FarmCharacteristicsMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    farmSize?: SortOrder
+    farmUnit?: SortOrder
+    cultivatedAcres?: SortOrder
+    grazingAcres?: SortOrder
+    landTenure?: SortOrder
+    waterSources?: SortOrder
+    soilTested?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FarmCharacteristicsSumOrderByAggregateInput = {
+    farmSize?: SortOrder
+    cultivatedAcres?: SortOrder
+    grazingAcres?: SortOrder
+  }
+
+  export type FarmingSystemCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    enterprises?: SortOrder
+    cultivationMethod?: SortOrder
+    mechanizationSetup?: SortOrder
+    energySource?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FarmingSystemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    enterprises?: SortOrder
+    cultivationMethod?: SortOrder
+    mechanizationSetup?: SortOrder
+    energySource?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FarmingSystemMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    enterprises?: SortOrder
+    cultivationMethod?: SortOrder
+    mechanizationSetup?: SortOrder
+    energySource?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BusinessExperienceCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    commercialYears?: SortOrder
+    annualRevenueBracket?: SortOrder
+    recordKeepingMethod?: SortOrder
+    produceBuyers?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BusinessExperienceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    commercialYears?: SortOrder
+    annualRevenueBracket?: SortOrder
+    recordKeepingMethod?: SortOrder
+    produceBuyers?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BusinessExperienceMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    commercialYears?: SortOrder
+    annualRevenueBracket?: SortOrder
+    recordKeepingMethod?: SortOrder
+    produceBuyers?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GoalsPrioritiesCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    goals?: SortOrder
+    operationalBottleneck?: SortOrder
+    advisoryMode?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GoalsPrioritiesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    goals?: SortOrder
+    operationalBottleneck?: SortOrder
+    advisoryMode?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GoalsPrioritiesMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    goals?: SortOrder
+    operationalBottleneck?: SortOrder
+    advisoryMode?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type HouseholdLabourCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    permanentWorkers?: SortOrder
+    seasonalWorkers?: SortOrder
+    managementStructure?: SortOrder
+    fairEmploymentPractices?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HouseholdLabourAvgOrderByAggregateInput = {
+    permanentWorkers?: SortOrder
+    seasonalWorkers?: SortOrder
+  }
+
+  export type HouseholdLabourMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    permanentWorkers?: SortOrder
+    seasonalWorkers?: SortOrder
+    managementStructure?: SortOrder
+    fairEmploymentPractices?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HouseholdLabourMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    permanentWorkers?: SortOrder
+    seasonalWorkers?: SortOrder
+    managementStructure?: SortOrder
+    fairEmploymentPractices?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HouseholdLabourSumOrderByAggregateInput = {
+    permanentWorkers?: SortOrder
+    seasonalWorkers?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type OnboardingStatusCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    stage?: SortOrder
+    profileApproved?: SortOrder
+    completedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OnboardingStatusMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    stage?: SortOrder
+    profileApproved?: SortOrder
+    completedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OnboardingStatusMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    stage?: SortOrder
+    profileApproved?: SortOrder
+    completedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[]
@@ -16066,22 +26125,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type AssessmentScalarRelationFilter = {
     is?: AssessmentWhereInput
     isNot?: AssessmentWhereInput
@@ -16154,28 +26197,6 @@ export namespace Prisma {
     yesCount?: SortOrder
     noCount?: SortOrder
     totalQuestions?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type AssessmentResponseAssessmentIdQuestionIdCompoundUniqueInput = {
@@ -16272,6 +26293,48 @@ export namespace Prisma {
     connect?: AspirationWhereUniqueInput
   }
 
+  export type FarmLocationCreateNestedOneWithoutUserInput = {
+    create?: XOR<FarmLocationCreateWithoutUserInput, FarmLocationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmLocationCreateOrConnectWithoutUserInput
+    connect?: FarmLocationWhereUniqueInput
+  }
+
+  export type FarmCharacteristicsCreateNestedOneWithoutUserInput = {
+    create?: XOR<FarmCharacteristicsCreateWithoutUserInput, FarmCharacteristicsUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmCharacteristicsCreateOrConnectWithoutUserInput
+    connect?: FarmCharacteristicsWhereUniqueInput
+  }
+
+  export type FarmingSystemCreateNestedOneWithoutUserInput = {
+    create?: XOR<FarmingSystemCreateWithoutUserInput, FarmingSystemUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmingSystemCreateOrConnectWithoutUserInput
+    connect?: FarmingSystemWhereUniqueInput
+  }
+
+  export type BusinessExperienceCreateNestedOneWithoutUserInput = {
+    create?: XOR<BusinessExperienceCreateWithoutUserInput, BusinessExperienceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: BusinessExperienceCreateOrConnectWithoutUserInput
+    connect?: BusinessExperienceWhereUniqueInput
+  }
+
+  export type GoalsPrioritiesCreateNestedOneWithoutUserInput = {
+    create?: XOR<GoalsPrioritiesCreateWithoutUserInput, GoalsPrioritiesUncheckedCreateWithoutUserInput>
+    connectOrCreate?: GoalsPrioritiesCreateOrConnectWithoutUserInput
+    connect?: GoalsPrioritiesWhereUniqueInput
+  }
+
+  export type HouseholdLabourCreateNestedOneWithoutUserInput = {
+    create?: XOR<HouseholdLabourCreateWithoutUserInput, HouseholdLabourUncheckedCreateWithoutUserInput>
+    connectOrCreate?: HouseholdLabourCreateOrConnectWithoutUserInput
+    connect?: HouseholdLabourWhereUniqueInput
+  }
+
+  export type OnboardingStatusCreateNestedOneWithoutUserInput = {
+    create?: XOR<OnboardingStatusCreateWithoutUserInput, OnboardingStatusUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OnboardingStatusCreateOrConnectWithoutUserInput
+    connect?: OnboardingStatusWhereUniqueInput
+  }
+
   export type OrderCreateNestedManyWithoutUserInput = {
     create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
@@ -16314,6 +26377,48 @@ export namespace Prisma {
     create?: XOR<AspirationCreateWithoutUserInput, AspirationUncheckedCreateWithoutUserInput>
     connectOrCreate?: AspirationCreateOrConnectWithoutUserInput
     connect?: AspirationWhereUniqueInput
+  }
+
+  export type FarmLocationUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<FarmLocationCreateWithoutUserInput, FarmLocationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmLocationCreateOrConnectWithoutUserInput
+    connect?: FarmLocationWhereUniqueInput
+  }
+
+  export type FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<FarmCharacteristicsCreateWithoutUserInput, FarmCharacteristicsUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmCharacteristicsCreateOrConnectWithoutUserInput
+    connect?: FarmCharacteristicsWhereUniqueInput
+  }
+
+  export type FarmingSystemUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<FarmingSystemCreateWithoutUserInput, FarmingSystemUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmingSystemCreateOrConnectWithoutUserInput
+    connect?: FarmingSystemWhereUniqueInput
+  }
+
+  export type BusinessExperienceUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<BusinessExperienceCreateWithoutUserInput, BusinessExperienceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: BusinessExperienceCreateOrConnectWithoutUserInput
+    connect?: BusinessExperienceWhereUniqueInput
+  }
+
+  export type GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<GoalsPrioritiesCreateWithoutUserInput, GoalsPrioritiesUncheckedCreateWithoutUserInput>
+    connectOrCreate?: GoalsPrioritiesCreateOrConnectWithoutUserInput
+    connect?: GoalsPrioritiesWhereUniqueInput
+  }
+
+  export type HouseholdLabourUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<HouseholdLabourCreateWithoutUserInput, HouseholdLabourUncheckedCreateWithoutUserInput>
+    connectOrCreate?: HouseholdLabourCreateOrConnectWithoutUserInput
+    connect?: HouseholdLabourWhereUniqueInput
+  }
+
+  export type OnboardingStatusUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<OnboardingStatusCreateWithoutUserInput, OnboardingStatusUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OnboardingStatusCreateOrConnectWithoutUserInput
+    connect?: OnboardingStatusWhereUniqueInput
   }
 
   export type OrderUncheckedCreateNestedManyWithoutUserInput = {
@@ -16392,6 +26497,76 @@ export namespace Prisma {
     update?: XOR<XOR<AspirationUpdateToOneWithWhereWithoutUserInput, AspirationUpdateWithoutUserInput>, AspirationUncheckedUpdateWithoutUserInput>
   }
 
+  export type FarmLocationUpdateOneWithoutUserNestedInput = {
+    create?: XOR<FarmLocationCreateWithoutUserInput, FarmLocationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmLocationCreateOrConnectWithoutUserInput
+    upsert?: FarmLocationUpsertWithoutUserInput
+    disconnect?: FarmLocationWhereInput | boolean
+    delete?: FarmLocationWhereInput | boolean
+    connect?: FarmLocationWhereUniqueInput
+    update?: XOR<XOR<FarmLocationUpdateToOneWithWhereWithoutUserInput, FarmLocationUpdateWithoutUserInput>, FarmLocationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FarmCharacteristicsUpdateOneWithoutUserNestedInput = {
+    create?: XOR<FarmCharacteristicsCreateWithoutUserInput, FarmCharacteristicsUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmCharacteristicsCreateOrConnectWithoutUserInput
+    upsert?: FarmCharacteristicsUpsertWithoutUserInput
+    disconnect?: FarmCharacteristicsWhereInput | boolean
+    delete?: FarmCharacteristicsWhereInput | boolean
+    connect?: FarmCharacteristicsWhereUniqueInput
+    update?: XOR<XOR<FarmCharacteristicsUpdateToOneWithWhereWithoutUserInput, FarmCharacteristicsUpdateWithoutUserInput>, FarmCharacteristicsUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FarmingSystemUpdateOneWithoutUserNestedInput = {
+    create?: XOR<FarmingSystemCreateWithoutUserInput, FarmingSystemUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmingSystemCreateOrConnectWithoutUserInput
+    upsert?: FarmingSystemUpsertWithoutUserInput
+    disconnect?: FarmingSystemWhereInput | boolean
+    delete?: FarmingSystemWhereInput | boolean
+    connect?: FarmingSystemWhereUniqueInput
+    update?: XOR<XOR<FarmingSystemUpdateToOneWithWhereWithoutUserInput, FarmingSystemUpdateWithoutUserInput>, FarmingSystemUncheckedUpdateWithoutUserInput>
+  }
+
+  export type BusinessExperienceUpdateOneWithoutUserNestedInput = {
+    create?: XOR<BusinessExperienceCreateWithoutUserInput, BusinessExperienceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: BusinessExperienceCreateOrConnectWithoutUserInput
+    upsert?: BusinessExperienceUpsertWithoutUserInput
+    disconnect?: BusinessExperienceWhereInput | boolean
+    delete?: BusinessExperienceWhereInput | boolean
+    connect?: BusinessExperienceWhereUniqueInput
+    update?: XOR<XOR<BusinessExperienceUpdateToOneWithWhereWithoutUserInput, BusinessExperienceUpdateWithoutUserInput>, BusinessExperienceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type GoalsPrioritiesUpdateOneWithoutUserNestedInput = {
+    create?: XOR<GoalsPrioritiesCreateWithoutUserInput, GoalsPrioritiesUncheckedCreateWithoutUserInput>
+    connectOrCreate?: GoalsPrioritiesCreateOrConnectWithoutUserInput
+    upsert?: GoalsPrioritiesUpsertWithoutUserInput
+    disconnect?: GoalsPrioritiesWhereInput | boolean
+    delete?: GoalsPrioritiesWhereInput | boolean
+    connect?: GoalsPrioritiesWhereUniqueInput
+    update?: XOR<XOR<GoalsPrioritiesUpdateToOneWithWhereWithoutUserInput, GoalsPrioritiesUpdateWithoutUserInput>, GoalsPrioritiesUncheckedUpdateWithoutUserInput>
+  }
+
+  export type HouseholdLabourUpdateOneWithoutUserNestedInput = {
+    create?: XOR<HouseholdLabourCreateWithoutUserInput, HouseholdLabourUncheckedCreateWithoutUserInput>
+    connectOrCreate?: HouseholdLabourCreateOrConnectWithoutUserInput
+    upsert?: HouseholdLabourUpsertWithoutUserInput
+    disconnect?: HouseholdLabourWhereInput | boolean
+    delete?: HouseholdLabourWhereInput | boolean
+    connect?: HouseholdLabourWhereUniqueInput
+    update?: XOR<XOR<HouseholdLabourUpdateToOneWithWhereWithoutUserInput, HouseholdLabourUpdateWithoutUserInput>, HouseholdLabourUncheckedUpdateWithoutUserInput>
+  }
+
+  export type OnboardingStatusUpdateOneWithoutUserNestedInput = {
+    create?: XOR<OnboardingStatusCreateWithoutUserInput, OnboardingStatusUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OnboardingStatusCreateOrConnectWithoutUserInput
+    upsert?: OnboardingStatusUpsertWithoutUserInput
+    disconnect?: OnboardingStatusWhereInput | boolean
+    delete?: OnboardingStatusWhereInput | boolean
+    connect?: OnboardingStatusWhereUniqueInput
+    update?: XOR<XOR<OnboardingStatusUpdateToOneWithWhereWithoutUserInput, OnboardingStatusUpdateWithoutUserInput>, OnboardingStatusUncheckedUpdateWithoutUserInput>
+  }
+
   export type OrderUpdateManyWithoutUserNestedInput = {
     create?: XOR<OrderCreateWithoutUserInput, OrderUncheckedCreateWithoutUserInput> | OrderCreateWithoutUserInput[] | OrderUncheckedCreateWithoutUserInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutUserInput | OrderCreateOrConnectWithoutUserInput[]
@@ -16468,6 +26643,76 @@ export namespace Prisma {
     delete?: AspirationWhereInput | boolean
     connect?: AspirationWhereUniqueInput
     update?: XOR<XOR<AspirationUpdateToOneWithWhereWithoutUserInput, AspirationUpdateWithoutUserInput>, AspirationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FarmLocationUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<FarmLocationCreateWithoutUserInput, FarmLocationUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmLocationCreateOrConnectWithoutUserInput
+    upsert?: FarmLocationUpsertWithoutUserInput
+    disconnect?: FarmLocationWhereInput | boolean
+    delete?: FarmLocationWhereInput | boolean
+    connect?: FarmLocationWhereUniqueInput
+    update?: XOR<XOR<FarmLocationUpdateToOneWithWhereWithoutUserInput, FarmLocationUpdateWithoutUserInput>, FarmLocationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<FarmCharacteristicsCreateWithoutUserInput, FarmCharacteristicsUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmCharacteristicsCreateOrConnectWithoutUserInput
+    upsert?: FarmCharacteristicsUpsertWithoutUserInput
+    disconnect?: FarmCharacteristicsWhereInput | boolean
+    delete?: FarmCharacteristicsWhereInput | boolean
+    connect?: FarmCharacteristicsWhereUniqueInput
+    update?: XOR<XOR<FarmCharacteristicsUpdateToOneWithWhereWithoutUserInput, FarmCharacteristicsUpdateWithoutUserInput>, FarmCharacteristicsUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FarmingSystemUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<FarmingSystemCreateWithoutUserInput, FarmingSystemUncheckedCreateWithoutUserInput>
+    connectOrCreate?: FarmingSystemCreateOrConnectWithoutUserInput
+    upsert?: FarmingSystemUpsertWithoutUserInput
+    disconnect?: FarmingSystemWhereInput | boolean
+    delete?: FarmingSystemWhereInput | boolean
+    connect?: FarmingSystemWhereUniqueInput
+    update?: XOR<XOR<FarmingSystemUpdateToOneWithWhereWithoutUserInput, FarmingSystemUpdateWithoutUserInput>, FarmingSystemUncheckedUpdateWithoutUserInput>
+  }
+
+  export type BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<BusinessExperienceCreateWithoutUserInput, BusinessExperienceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: BusinessExperienceCreateOrConnectWithoutUserInput
+    upsert?: BusinessExperienceUpsertWithoutUserInput
+    disconnect?: BusinessExperienceWhereInput | boolean
+    delete?: BusinessExperienceWhereInput | boolean
+    connect?: BusinessExperienceWhereUniqueInput
+    update?: XOR<XOR<BusinessExperienceUpdateToOneWithWhereWithoutUserInput, BusinessExperienceUpdateWithoutUserInput>, BusinessExperienceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<GoalsPrioritiesCreateWithoutUserInput, GoalsPrioritiesUncheckedCreateWithoutUserInput>
+    connectOrCreate?: GoalsPrioritiesCreateOrConnectWithoutUserInput
+    upsert?: GoalsPrioritiesUpsertWithoutUserInput
+    disconnect?: GoalsPrioritiesWhereInput | boolean
+    delete?: GoalsPrioritiesWhereInput | boolean
+    connect?: GoalsPrioritiesWhereUniqueInput
+    update?: XOR<XOR<GoalsPrioritiesUpdateToOneWithWhereWithoutUserInput, GoalsPrioritiesUpdateWithoutUserInput>, GoalsPrioritiesUncheckedUpdateWithoutUserInput>
+  }
+
+  export type HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<HouseholdLabourCreateWithoutUserInput, HouseholdLabourUncheckedCreateWithoutUserInput>
+    connectOrCreate?: HouseholdLabourCreateOrConnectWithoutUserInput
+    upsert?: HouseholdLabourUpsertWithoutUserInput
+    disconnect?: HouseholdLabourWhereInput | boolean
+    delete?: HouseholdLabourWhereInput | boolean
+    connect?: HouseholdLabourWhereUniqueInput
+    update?: XOR<XOR<HouseholdLabourUpdateToOneWithWhereWithoutUserInput, HouseholdLabourUpdateWithoutUserInput>, HouseholdLabourUncheckedUpdateWithoutUserInput>
+  }
+
+  export type OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<OnboardingStatusCreateWithoutUserInput, OnboardingStatusUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OnboardingStatusCreateOrConnectWithoutUserInput
+    upsert?: OnboardingStatusUpsertWithoutUserInput
+    disconnect?: OnboardingStatusWhereInput | boolean
+    delete?: OnboardingStatusWhereInput | boolean
+    connect?: OnboardingStatusWhereUniqueInput
+    update?: XOR<XOR<OnboardingStatusUpdateToOneWithWhereWithoutUserInput, OnboardingStatusUpdateWithoutUserInput>, OnboardingStatusUncheckedUpdateWithoutUserInput>
   }
 
   export type OrderUncheckedUpdateManyWithoutUserNestedInput = {
@@ -16566,6 +26811,128 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutAspirationInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAspirationInput, UserUpdateWithoutAspirationInput>, UserUncheckedUpdateWithoutAspirationInput>
+  }
+
+  export type UserCreateNestedOneWithoutFarmLocationInput = {
+    create?: XOR<UserCreateWithoutFarmLocationInput, UserUncheckedCreateWithoutFarmLocationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFarmLocationInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutFarmLocationNestedInput = {
+    create?: XOR<UserCreateWithoutFarmLocationInput, UserUncheckedCreateWithoutFarmLocationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFarmLocationInput
+    upsert?: UserUpsertWithoutFarmLocationInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFarmLocationInput, UserUpdateWithoutFarmLocationInput>, UserUncheckedUpdateWithoutFarmLocationInput>
+  }
+
+  export type UserCreateNestedOneWithoutFarmCharacteristicsInput = {
+    create?: XOR<UserCreateWithoutFarmCharacteristicsInput, UserUncheckedCreateWithoutFarmCharacteristicsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFarmCharacteristicsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutFarmCharacteristicsNestedInput = {
+    create?: XOR<UserCreateWithoutFarmCharacteristicsInput, UserUncheckedCreateWithoutFarmCharacteristicsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFarmCharacteristicsInput
+    upsert?: UserUpsertWithoutFarmCharacteristicsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFarmCharacteristicsInput, UserUpdateWithoutFarmCharacteristicsInput>, UserUncheckedUpdateWithoutFarmCharacteristicsInput>
+  }
+
+  export type UserCreateNestedOneWithoutFarmingSystemInput = {
+    create?: XOR<UserCreateWithoutFarmingSystemInput, UserUncheckedCreateWithoutFarmingSystemInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFarmingSystemInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutFarmingSystemNestedInput = {
+    create?: XOR<UserCreateWithoutFarmingSystemInput, UserUncheckedCreateWithoutFarmingSystemInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFarmingSystemInput
+    upsert?: UserUpsertWithoutFarmingSystemInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFarmingSystemInput, UserUpdateWithoutFarmingSystemInput>, UserUncheckedUpdateWithoutFarmingSystemInput>
+  }
+
+  export type UserCreateNestedOneWithoutBusinessExperienceInput = {
+    create?: XOR<UserCreateWithoutBusinessExperienceInput, UserUncheckedCreateWithoutBusinessExperienceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBusinessExperienceInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutBusinessExperienceNestedInput = {
+    create?: XOR<UserCreateWithoutBusinessExperienceInput, UserUncheckedCreateWithoutBusinessExperienceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBusinessExperienceInput
+    upsert?: UserUpsertWithoutBusinessExperienceInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBusinessExperienceInput, UserUpdateWithoutBusinessExperienceInput>, UserUncheckedUpdateWithoutBusinessExperienceInput>
+  }
+
+  export type UserCreateNestedOneWithoutGoalsPrioritiesInput = {
+    create?: XOR<UserCreateWithoutGoalsPrioritiesInput, UserUncheckedCreateWithoutGoalsPrioritiesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGoalsPrioritiesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutGoalsPrioritiesNestedInput = {
+    create?: XOR<UserCreateWithoutGoalsPrioritiesInput, UserUncheckedCreateWithoutGoalsPrioritiesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGoalsPrioritiesInput
+    upsert?: UserUpsertWithoutGoalsPrioritiesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGoalsPrioritiesInput, UserUpdateWithoutGoalsPrioritiesInput>, UserUncheckedUpdateWithoutGoalsPrioritiesInput>
+  }
+
+  export type UserCreateNestedOneWithoutHouseholdLabourInput = {
+    create?: XOR<UserCreateWithoutHouseholdLabourInput, UserUncheckedCreateWithoutHouseholdLabourInput>
+    connectOrCreate?: UserCreateOrConnectWithoutHouseholdLabourInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutHouseholdLabourNestedInput = {
+    create?: XOR<UserCreateWithoutHouseholdLabourInput, UserUncheckedCreateWithoutHouseholdLabourInput>
+    connectOrCreate?: UserCreateOrConnectWithoutHouseholdLabourInput
+    upsert?: UserUpsertWithoutHouseholdLabourInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutHouseholdLabourInput, UserUpdateWithoutHouseholdLabourInput>, UserUncheckedUpdateWithoutHouseholdLabourInput>
+  }
+
+  export type UserCreateNestedOneWithoutOnboardingStatusInput = {
+    create?: XOR<UserCreateWithoutOnboardingStatusInput, UserUncheckedCreateWithoutOnboardingStatusInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOnboardingStatusInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutOnboardingStatusNestedInput = {
+    create?: XOR<UserCreateWithoutOnboardingStatusInput, UserUncheckedCreateWithoutOnboardingStatusInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOnboardingStatusInput
+    upsert?: UserUpsertWithoutOnboardingStatusInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOnboardingStatusInput, UserUpdateWithoutOnboardingStatusInput>, UserUncheckedUpdateWithoutOnboardingStatusInput>
   }
 
   export type UserCreateNestedOneWithoutOrdersInput = {
@@ -16702,14 +27069,6 @@ export namespace Prisma {
     connect?: AssessmentWhereUniqueInput
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type AssessmentUpdateOneRequiredWithoutPillarAssessmentsNestedInput = {
     create?: XOR<AssessmentCreateWithoutPillarAssessmentsInput, AssessmentUncheckedCreateWithoutPillarAssessmentsInput>
     connectOrCreate?: AssessmentCreateOrConnectWithoutPillarAssessmentsInput
@@ -16841,6 +27200,87 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedFloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[]
@@ -16882,44 +27322,6 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type FarmerProfileCreateWithoutUserInput = {
@@ -17071,6 +27473,175 @@ export namespace Prisma {
   export type AspirationCreateOrConnectWithoutUserInput = {
     where: AspirationWhereUniqueInput
     create: XOR<AspirationCreateWithoutUserInput, AspirationUncheckedCreateWithoutUserInput>
+  }
+
+  export type FarmLocationCreateWithoutUserInput = {
+    id?: string
+    locationSearch?: string | null
+    county?: string | null
+    subcounty?: string | null
+    ward?: string | null
+    landmark?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmLocationUncheckedCreateWithoutUserInput = {
+    id?: string
+    locationSearch?: string | null
+    county?: string | null
+    subcounty?: string | null
+    ward?: string | null
+    landmark?: string | null
+    latitude?: number | null
+    longitude?: number | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmLocationCreateOrConnectWithoutUserInput = {
+    where: FarmLocationWhereUniqueInput
+    create: XOR<FarmLocationCreateWithoutUserInput, FarmLocationUncheckedCreateWithoutUserInput>
+  }
+
+  export type FarmCharacteristicsCreateWithoutUserInput = {
+    id?: string
+    farmSize?: number | null
+    farmUnit?: string | null
+    cultivatedAcres?: number | null
+    grazingAcres?: number | null
+    landTenure?: string | null
+    waterSources?: string | null
+    soilTested?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmCharacteristicsUncheckedCreateWithoutUserInput = {
+    id?: string
+    farmSize?: number | null
+    farmUnit?: string | null
+    cultivatedAcres?: number | null
+    grazingAcres?: number | null
+    landTenure?: string | null
+    waterSources?: string | null
+    soilTested?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmCharacteristicsCreateOrConnectWithoutUserInput = {
+    where: FarmCharacteristicsWhereUniqueInput
+    create: XOR<FarmCharacteristicsCreateWithoutUserInput, FarmCharacteristicsUncheckedCreateWithoutUserInput>
+  }
+
+  export type FarmingSystemCreateWithoutUserInput = {
+    id?: string
+    enterprises?: string | null
+    cultivationMethod?: string | null
+    mechanizationSetup?: string | null
+    energySource?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmingSystemUncheckedCreateWithoutUserInput = {
+    id?: string
+    enterprises?: string | null
+    cultivationMethod?: string | null
+    mechanizationSetup?: string | null
+    energySource?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type FarmingSystemCreateOrConnectWithoutUserInput = {
+    where: FarmingSystemWhereUniqueInput
+    create: XOR<FarmingSystemCreateWithoutUserInput, FarmingSystemUncheckedCreateWithoutUserInput>
+  }
+
+  export type BusinessExperienceCreateWithoutUserInput = {
+    id?: string
+    commercialYears?: string | null
+    annualRevenueBracket?: string | null
+    recordKeepingMethod?: string | null
+    produceBuyers?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type BusinessExperienceUncheckedCreateWithoutUserInput = {
+    id?: string
+    commercialYears?: string | null
+    annualRevenueBracket?: string | null
+    recordKeepingMethod?: string | null
+    produceBuyers?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type BusinessExperienceCreateOrConnectWithoutUserInput = {
+    where: BusinessExperienceWhereUniqueInput
+    create: XOR<BusinessExperienceCreateWithoutUserInput, BusinessExperienceUncheckedCreateWithoutUserInput>
+  }
+
+  export type GoalsPrioritiesCreateWithoutUserInput = {
+    id?: string
+    goals?: string | null
+    operationalBottleneck?: string | null
+    advisoryMode?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type GoalsPrioritiesUncheckedCreateWithoutUserInput = {
+    id?: string
+    goals?: string | null
+    operationalBottleneck?: string | null
+    advisoryMode?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type GoalsPrioritiesCreateOrConnectWithoutUserInput = {
+    where: GoalsPrioritiesWhereUniqueInput
+    create: XOR<GoalsPrioritiesCreateWithoutUserInput, GoalsPrioritiesUncheckedCreateWithoutUserInput>
+  }
+
+  export type HouseholdLabourCreateWithoutUserInput = {
+    id?: string
+    permanentWorkers?: number | null
+    seasonalWorkers?: number | null
+    managementStructure?: string | null
+    fairEmploymentPractices?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type HouseholdLabourUncheckedCreateWithoutUserInput = {
+    id?: string
+    permanentWorkers?: number | null
+    seasonalWorkers?: number | null
+    managementStructure?: string | null
+    fairEmploymentPractices?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type HouseholdLabourCreateOrConnectWithoutUserInput = {
+    where: HouseholdLabourWhereUniqueInput
+    create: XOR<HouseholdLabourCreateWithoutUserInput, HouseholdLabourUncheckedCreateWithoutUserInput>
+  }
+
+  export type OnboardingStatusCreateWithoutUserInput = {
+    id?: string
+    stage?: string
+    profileApproved?: boolean
+    completedAt?: Date | string | null
+    updatedAt?: Date | string
+  }
+
+  export type OnboardingStatusUncheckedCreateWithoutUserInput = {
+    id?: string
+    stage?: string
+    profileApproved?: boolean
+    completedAt?: Date | string | null
+    updatedAt?: Date | string
+  }
+
+  export type OnboardingStatusCreateOrConnectWithoutUserInput = {
+    where: OnboardingStatusWhereUniqueInput
+    create: XOR<OnboardingStatusCreateWithoutUserInput, OnboardingStatusUncheckedCreateWithoutUserInput>
   }
 
   export type OrderCreateWithoutUserInput = {
@@ -17322,6 +27893,217 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FarmLocationUpsertWithoutUserInput = {
+    update: XOR<FarmLocationUpdateWithoutUserInput, FarmLocationUncheckedUpdateWithoutUserInput>
+    create: XOR<FarmLocationCreateWithoutUserInput, FarmLocationUncheckedCreateWithoutUserInput>
+    where?: FarmLocationWhereInput
+  }
+
+  export type FarmLocationUpdateToOneWithWhereWithoutUserInput = {
+    where?: FarmLocationWhereInput
+    data: XOR<FarmLocationUpdateWithoutUserInput, FarmLocationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FarmLocationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    locationSearch?: NullableStringFieldUpdateOperationsInput | string | null
+    county?: NullableStringFieldUpdateOperationsInput | string | null
+    subcounty?: NullableStringFieldUpdateOperationsInput | string | null
+    ward?: NullableStringFieldUpdateOperationsInput | string | null
+    landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmLocationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    locationSearch?: NullableStringFieldUpdateOperationsInput | string | null
+    county?: NullableStringFieldUpdateOperationsInput | string | null
+    subcounty?: NullableStringFieldUpdateOperationsInput | string | null
+    ward?: NullableStringFieldUpdateOperationsInput | string | null
+    landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmCharacteristicsUpsertWithoutUserInput = {
+    update: XOR<FarmCharacteristicsUpdateWithoutUserInput, FarmCharacteristicsUncheckedUpdateWithoutUserInput>
+    create: XOR<FarmCharacteristicsCreateWithoutUserInput, FarmCharacteristicsUncheckedCreateWithoutUserInput>
+    where?: FarmCharacteristicsWhereInput
+  }
+
+  export type FarmCharacteristicsUpdateToOneWithWhereWithoutUserInput = {
+    where?: FarmCharacteristicsWhereInput
+    data: XOR<FarmCharacteristicsUpdateWithoutUserInput, FarmCharacteristicsUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FarmCharacteristicsUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    farmSize?: NullableFloatFieldUpdateOperationsInput | number | null
+    farmUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivatedAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    grazingAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    landTenure?: NullableStringFieldUpdateOperationsInput | string | null
+    waterSources?: NullableStringFieldUpdateOperationsInput | string | null
+    soilTested?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmCharacteristicsUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    farmSize?: NullableFloatFieldUpdateOperationsInput | number | null
+    farmUnit?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivatedAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    grazingAcres?: NullableFloatFieldUpdateOperationsInput | number | null
+    landTenure?: NullableStringFieldUpdateOperationsInput | string | null
+    waterSources?: NullableStringFieldUpdateOperationsInput | string | null
+    soilTested?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmingSystemUpsertWithoutUserInput = {
+    update: XOR<FarmingSystemUpdateWithoutUserInput, FarmingSystemUncheckedUpdateWithoutUserInput>
+    create: XOR<FarmingSystemCreateWithoutUserInput, FarmingSystemUncheckedCreateWithoutUserInput>
+    where?: FarmingSystemWhereInput
+  }
+
+  export type FarmingSystemUpdateToOneWithWhereWithoutUserInput = {
+    where?: FarmingSystemWhereInput
+    data: XOR<FarmingSystemUpdateWithoutUserInput, FarmingSystemUncheckedUpdateWithoutUserInput>
+  }
+
+  export type FarmingSystemUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enterprises?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivationMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    mechanizationSetup?: NullableStringFieldUpdateOperationsInput | string | null
+    energySource?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FarmingSystemUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enterprises?: NullableStringFieldUpdateOperationsInput | string | null
+    cultivationMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    mechanizationSetup?: NullableStringFieldUpdateOperationsInput | string | null
+    energySource?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BusinessExperienceUpsertWithoutUserInput = {
+    update: XOR<BusinessExperienceUpdateWithoutUserInput, BusinessExperienceUncheckedUpdateWithoutUserInput>
+    create: XOR<BusinessExperienceCreateWithoutUserInput, BusinessExperienceUncheckedCreateWithoutUserInput>
+    where?: BusinessExperienceWhereInput
+  }
+
+  export type BusinessExperienceUpdateToOneWithWhereWithoutUserInput = {
+    where?: BusinessExperienceWhereInput
+    data: XOR<BusinessExperienceUpdateWithoutUserInput, BusinessExperienceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type BusinessExperienceUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commercialYears?: NullableStringFieldUpdateOperationsInput | string | null
+    annualRevenueBracket?: NullableStringFieldUpdateOperationsInput | string | null
+    recordKeepingMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    produceBuyers?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BusinessExperienceUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    commercialYears?: NullableStringFieldUpdateOperationsInput | string | null
+    annualRevenueBracket?: NullableStringFieldUpdateOperationsInput | string | null
+    recordKeepingMethod?: NullableStringFieldUpdateOperationsInput | string | null
+    produceBuyers?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalsPrioritiesUpsertWithoutUserInput = {
+    update: XOR<GoalsPrioritiesUpdateWithoutUserInput, GoalsPrioritiesUncheckedUpdateWithoutUserInput>
+    create: XOR<GoalsPrioritiesCreateWithoutUserInput, GoalsPrioritiesUncheckedCreateWithoutUserInput>
+    where?: GoalsPrioritiesWhereInput
+  }
+
+  export type GoalsPrioritiesUpdateToOneWithWhereWithoutUserInput = {
+    where?: GoalsPrioritiesWhereInput
+    data: XOR<GoalsPrioritiesUpdateWithoutUserInput, GoalsPrioritiesUncheckedUpdateWithoutUserInput>
+  }
+
+  export type GoalsPrioritiesUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    operationalBottleneck?: NullableStringFieldUpdateOperationsInput | string | null
+    advisoryMode?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoalsPrioritiesUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    goals?: NullableStringFieldUpdateOperationsInput | string | null
+    operationalBottleneck?: NullableStringFieldUpdateOperationsInput | string | null
+    advisoryMode?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HouseholdLabourUpsertWithoutUserInput = {
+    update: XOR<HouseholdLabourUpdateWithoutUserInput, HouseholdLabourUncheckedUpdateWithoutUserInput>
+    create: XOR<HouseholdLabourCreateWithoutUserInput, HouseholdLabourUncheckedCreateWithoutUserInput>
+    where?: HouseholdLabourWhereInput
+  }
+
+  export type HouseholdLabourUpdateToOneWithWhereWithoutUserInput = {
+    where?: HouseholdLabourWhereInput
+    data: XOR<HouseholdLabourUpdateWithoutUserInput, HouseholdLabourUncheckedUpdateWithoutUserInput>
+  }
+
+  export type HouseholdLabourUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    permanentWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    seasonalWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    managementStructure?: NullableStringFieldUpdateOperationsInput | string | null
+    fairEmploymentPractices?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HouseholdLabourUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    permanentWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    seasonalWorkers?: NullableIntFieldUpdateOperationsInput | number | null
+    managementStructure?: NullableStringFieldUpdateOperationsInput | string | null
+    fairEmploymentPractices?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OnboardingStatusUpsertWithoutUserInput = {
+    update: XOR<OnboardingStatusUpdateWithoutUserInput, OnboardingStatusUncheckedUpdateWithoutUserInput>
+    create: XOR<OnboardingStatusCreateWithoutUserInput, OnboardingStatusUncheckedCreateWithoutUserInput>
+    where?: OnboardingStatusWhereInput
+  }
+
+  export type OnboardingStatusUpdateToOneWithWhereWithoutUserInput = {
+    where?: OnboardingStatusWhereInput
+    data: XOR<OnboardingStatusUpdateWithoutUserInput, OnboardingStatusUncheckedUpdateWithoutUserInput>
+  }
+
+  export type OnboardingStatusUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    profileApproved?: BoolFieldUpdateOperationsInput | boolean
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OnboardingStatusUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stage?: StringFieldUpdateOperationsInput | string
+    profileApproved?: BoolFieldUpdateOperationsInput | boolean
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrderUpsertWithWhereUniqueWithoutUserInput = {
     where: OrderWhereUniqueInput
     update: XOR<OrderUpdateWithoutUserInput, OrderUncheckedUpdateWithoutUserInput>
@@ -17398,6 +28180,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
     aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     assessments?: AssessmentCreateNestedManyWithoutUserInput
   }
@@ -17415,6 +28204,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
     aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
   }
@@ -17448,6 +28244,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUpdateManyWithoutUserNestedInput
   }
@@ -17465,6 +28268,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -17482,6 +28292,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
     aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     assessments?: AssessmentCreateNestedManyWithoutUserInput
   }
@@ -17499,6 +28316,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
     aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
   }
@@ -17532,6 +28356,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUpdateManyWithoutUserNestedInput
   }
@@ -17549,6 +28380,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -17566,6 +28404,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
     aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     assessments?: AssessmentCreateNestedManyWithoutUserInput
   }
@@ -17583,6 +28428,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
     aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
   }
@@ -17616,6 +28468,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUpdateManyWithoutUserNestedInput
   }
@@ -17633,6 +28492,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -17650,6 +28516,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
     operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
     aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     assessments?: AssessmentCreateNestedManyWithoutUserInput
   }
@@ -17667,6 +28540,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
     operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
     aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
   }
@@ -17700,6 +28580,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
     operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUpdateManyWithoutUserNestedInput
   }
@@ -17717,6 +28604,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
     operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -17734,6 +28628,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
     operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
     assessments?: AssessmentCreateNestedManyWithoutUserInput
   }
@@ -17751,6 +28652,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
     operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
     assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
   }
@@ -17784,6 +28692,13 @@ export namespace Prisma {
     farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
     operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUpdateManyWithoutUserNestedInput
   }
@@ -17801,6 +28716,797 @@ export namespace Prisma {
     farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
     operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutFarmLocationInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
+    aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    assessments?: AssessmentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFarmLocationInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileUncheckedCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
+    aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFarmLocationInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFarmLocationInput, UserUncheckedCreateWithoutFarmLocationInput>
+  }
+
+  export type UserUpsertWithoutFarmLocationInput = {
+    update: XOR<UserUpdateWithoutFarmLocationInput, UserUncheckedUpdateWithoutFarmLocationInput>
+    create: XOR<UserCreateWithoutFarmLocationInput, UserUncheckedCreateWithoutFarmLocationInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFarmLocationInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFarmLocationInput, UserUncheckedUpdateWithoutFarmLocationInput>
+  }
+
+  export type UserUpdateWithoutFarmLocationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFarmLocationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUncheckedUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutFarmCharacteristicsInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
+    aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    assessments?: AssessmentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFarmCharacteristicsInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileUncheckedCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
+    aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFarmCharacteristicsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFarmCharacteristicsInput, UserUncheckedCreateWithoutFarmCharacteristicsInput>
+  }
+
+  export type UserUpsertWithoutFarmCharacteristicsInput = {
+    update: XOR<UserUpdateWithoutFarmCharacteristicsInput, UserUncheckedUpdateWithoutFarmCharacteristicsInput>
+    create: XOR<UserCreateWithoutFarmCharacteristicsInput, UserUncheckedCreateWithoutFarmCharacteristicsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFarmCharacteristicsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFarmCharacteristicsInput, UserUncheckedUpdateWithoutFarmCharacteristicsInput>
+  }
+
+  export type UserUpdateWithoutFarmCharacteristicsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFarmCharacteristicsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUncheckedUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutFarmingSystemInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
+    aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    assessments?: AssessmentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFarmingSystemInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileUncheckedCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
+    aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFarmingSystemInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFarmingSystemInput, UserUncheckedCreateWithoutFarmingSystemInput>
+  }
+
+  export type UserUpsertWithoutFarmingSystemInput = {
+    update: XOR<UserUpdateWithoutFarmingSystemInput, UserUncheckedUpdateWithoutFarmingSystemInput>
+    create: XOR<UserCreateWithoutFarmingSystemInput, UserUncheckedCreateWithoutFarmingSystemInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFarmingSystemInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFarmingSystemInput, UserUncheckedUpdateWithoutFarmingSystemInput>
+  }
+
+  export type UserUpdateWithoutFarmingSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFarmingSystemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUncheckedUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutBusinessExperienceInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
+    aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    assessments?: AssessmentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutBusinessExperienceInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileUncheckedCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
+    aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutBusinessExperienceInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBusinessExperienceInput, UserUncheckedCreateWithoutBusinessExperienceInput>
+  }
+
+  export type UserUpsertWithoutBusinessExperienceInput = {
+    update: XOR<UserUpdateWithoutBusinessExperienceInput, UserUncheckedUpdateWithoutBusinessExperienceInput>
+    create: XOR<UserCreateWithoutBusinessExperienceInput, UserUncheckedCreateWithoutBusinessExperienceInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBusinessExperienceInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBusinessExperienceInput, UserUncheckedUpdateWithoutBusinessExperienceInput>
+  }
+
+  export type UserUpdateWithoutBusinessExperienceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBusinessExperienceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUncheckedUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutGoalsPrioritiesInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
+    aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    assessments?: AssessmentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutGoalsPrioritiesInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileUncheckedCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
+    aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutGoalsPrioritiesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutGoalsPrioritiesInput, UserUncheckedCreateWithoutGoalsPrioritiesInput>
+  }
+
+  export type UserUpsertWithoutGoalsPrioritiesInput = {
+    update: XOR<UserUpdateWithoutGoalsPrioritiesInput, UserUncheckedUpdateWithoutGoalsPrioritiesInput>
+    create: XOR<UserCreateWithoutGoalsPrioritiesInput, UserUncheckedCreateWithoutGoalsPrioritiesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutGoalsPrioritiesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutGoalsPrioritiesInput, UserUncheckedUpdateWithoutGoalsPrioritiesInput>
+  }
+
+  export type UserUpdateWithoutGoalsPrioritiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutGoalsPrioritiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUncheckedUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutHouseholdLabourInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
+    aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    assessments?: AssessmentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutHouseholdLabourInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileUncheckedCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
+    aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutHouseholdLabourInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutHouseholdLabourInput, UserUncheckedCreateWithoutHouseholdLabourInput>
+  }
+
+  export type UserUpsertWithoutHouseholdLabourInput = {
+    update: XOR<UserUpdateWithoutHouseholdLabourInput, UserUncheckedUpdateWithoutHouseholdLabourInput>
+    create: XOR<UserCreateWithoutHouseholdLabourInput, UserUncheckedCreateWithoutHouseholdLabourInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutHouseholdLabourInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutHouseholdLabourInput, UserUncheckedUpdateWithoutHouseholdLabourInput>
+  }
+
+  export type UserUpdateWithoutHouseholdLabourInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutHouseholdLabourInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUncheckedUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutOnboardingStatusInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
+    aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    orders?: OrderCreateNestedManyWithoutUserInput
+    assessments?: AssessmentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutOnboardingStatusInput = {
+    id?: string
+    name: string
+    email: string
+    passwordHash: string
+    phone?: string | null
+    farmName?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerProfile?: FarmerProfileUncheckedCreateNestedOneWithoutUserInput
+    farmManagement?: FarmManagementUncheckedCreateNestedOneWithoutUserInput
+    operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
+    digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
+    aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    orders?: OrderUncheckedCreateNestedManyWithoutUserInput
+    assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutOnboardingStatusInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOnboardingStatusInput, UserUncheckedCreateWithoutOnboardingStatusInput>
+  }
+
+  export type UserUpsertWithoutOnboardingStatusInput = {
+    update: XOR<UserUpdateWithoutOnboardingStatusInput, UserUncheckedUpdateWithoutOnboardingStatusInput>
+    create: XOR<UserCreateWithoutOnboardingStatusInput, UserUncheckedCreateWithoutOnboardingStatusInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOnboardingStatusInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOnboardingStatusInput, UserUncheckedUpdateWithoutOnboardingStatusInput>
+  }
+
+  export type UserUpdateWithoutOnboardingStatusInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    orders?: OrderUpdateManyWithoutUserNestedInput
+    assessments?: AssessmentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOnboardingStatusInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    farmName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerProfile?: FarmerProfileUncheckedUpdateOneWithoutUserNestedInput
+    farmManagement?: FarmManagementUncheckedUpdateOneWithoutUserNestedInput
+    operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
+    digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
+    aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
     assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -17819,6 +29525,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
     aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
     assessments?: AssessmentCreateNestedManyWithoutUserInput
   }
 
@@ -17836,6 +29549,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
     aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
     assessments?: AssessmentUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -17869,6 +29589,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
     assessments?: AssessmentUpdateManyWithoutUserNestedInput
   }
 
@@ -17886,6 +29613,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
     assessments?: AssessmentUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -17903,6 +29637,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformCreateNestedOneWithoutUserInput
     aspiration?: AspirationCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusCreateNestedOneWithoutUserInput
     orders?: OrderCreateNestedManyWithoutUserInput
   }
 
@@ -17920,6 +29661,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedCreateNestedOneWithoutUserInput
     digitalPlatform?: DigitalPlatformUncheckedCreateNestedOneWithoutUserInput
     aspiration?: AspirationUncheckedCreateNestedOneWithoutUserInput
+    farmLocation?: FarmLocationUncheckedCreateNestedOneWithoutUserInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedCreateNestedOneWithoutUserInput
+    farmingSystem?: FarmingSystemUncheckedCreateNestedOneWithoutUserInput
+    businessExperience?: BusinessExperienceUncheckedCreateNestedOneWithoutUserInput
+    goalsPriorities?: GoalsPrioritiesUncheckedCreateNestedOneWithoutUserInput
+    householdLabour?: HouseholdLabourUncheckedCreateNestedOneWithoutUserInput
+    onboardingStatus?: OnboardingStatusUncheckedCreateNestedOneWithoutUserInput
     orders?: OrderUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -18033,6 +29781,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUpdateOneWithoutUserNestedInput
     orders?: OrderUpdateManyWithoutUserNestedInput
   }
 
@@ -18050,6 +29805,13 @@ export namespace Prisma {
     operatingStyle?: OperatingStyleUncheckedUpdateOneWithoutUserNestedInput
     digitalPlatform?: DigitalPlatformUncheckedUpdateOneWithoutUserNestedInput
     aspiration?: AspirationUncheckedUpdateOneWithoutUserNestedInput
+    farmLocation?: FarmLocationUncheckedUpdateOneWithoutUserNestedInput
+    farmCharacteristics?: FarmCharacteristicsUncheckedUpdateOneWithoutUserNestedInput
+    farmingSystem?: FarmingSystemUncheckedUpdateOneWithoutUserNestedInput
+    businessExperience?: BusinessExperienceUncheckedUpdateOneWithoutUserNestedInput
+    goalsPriorities?: GoalsPrioritiesUncheckedUpdateOneWithoutUserNestedInput
+    householdLabour?: HouseholdLabourUncheckedUpdateOneWithoutUserNestedInput
+    onboardingStatus?: OnboardingStatusUncheckedUpdateOneWithoutUserNestedInput
     orders?: OrderUncheckedUpdateManyWithoutUserNestedInput
   }
 
