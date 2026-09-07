@@ -12,9 +12,15 @@ export const metadata: Metadata = {
   title: "Future Farms - Cultivating the Future of African Agriculture",
   description: "Empower your agricultural journey with data-driven insights, precision tools, and a community dedicated to sustainable growth and resilience.",
   icons: {
-    icon: "/logo.webp",
-    shortcut: "/logo.webp",
-    apple: "/logo.webp",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo-icon.webp", type: "image/webp" },
+      { url: "/icon.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/logo-icon.webp",
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
 };
 
