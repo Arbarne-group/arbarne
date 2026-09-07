@@ -170,9 +170,11 @@ export async function appendSheetValues(range: string, values: any[][], spreadsh
 }
 
 /**
- * Synchronizes a user's database onboarding responses to the Google Spreadsheet.
- * If the user already exists in the sheet (matched by email), updates their row.
- * Otherwise, appends a new row.
+ * Synchronizes a user's database onboarding responses (both Survey 1 and Survey 2)
+ * to the Google Spreadsheet across:
+ * 1. Master Consolidated (Combined profile)
+ * 2. Survey 1 - Farmer (Shambany) (Steps 1-5)
+ * 3. Survey 2 - Farm Profile (Location, Land, Systems, Labour, Business & Goals)
  */
 export async function syncUserOnboardingToSheet(
   userRecord: any,
@@ -186,8 +188,23 @@ export async function syncUserOnboardingToSheet(
     const asp = userRecord.aspiration;
     const dp = userRecord.digitalPlatform;
 
-    const isComplete = Boolean(fp && fm && os && asp && dp);
+    const loc = userRecord.farmLocation;
+    const char = userRecord.farmCharacteristics;
+    const sys = userRecord.farmingSystem;
+    const lab = userRecord.householdLabour;
+    const biz = userRecord.businessExperience;
+    const goals = userRecord.goalsPriorities;
+    const status = userRecord.onboardingStatus;
+
+    const hasS1 = Boolean(fp || fm || os || asp || dp);
+    const hasS2 = Boolean(loc || char || sys || lab || biz || goals);
+
+    if (!hasS1 && !hasS2) {
+      return { success: true, message: "No onboarding data to sync." };
+    }
+
     const timestamp = new Date().toISOString().replace("T", " ").substring(0, 19);
+    const futureFarmId = "FFF-KE-000-001";
 
     const cleanField = (val: any) => {
       if (val === null || val === undefined) return "";
@@ -212,13 +229,162 @@ export async function syncUserOnboardingToSheet(
       return trimmed.startsWith("+") ? `'${trimmed}` : trimmed;
     };
 
-    const rowData = [
+    const formatCoordinates = (lat: number | null | undefined, lng: number | null | undefined) => {
+      if (lat === null || lat === undefined || lng === null || lng === undefined) return "";
+      return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+    };
+
+    // --- 1. SYNC SURVEY 1 - FARMER (SHAMBANY) ---
+    if (hasS1) {
+      const s1RowData = [
+        timestamp,
+        userRecord.name || "Farmer",
+        userRecord.email,
+        formatPhone(userRecord.phone),
+        userRecord.farmName || "",
+        (fp && fm && os && asp && dp) ? "Completed" : "In Progress",
+        cleanField(fp?.jobTitle),
+        cleanField(fp?.valueChain),
+        cleanField(fp?.experienceYears),
+        cleanField(fp?.businessHistory),
+        cleanField(fp?.educationLevel || fp?.education),
+        cleanField(fm?.mgmtAbility),
+        cleanField(fm?.opsResponsibility || fm?.operationsResponsible),
+        cleanField(fm?.desiredInvolvement),
+        cleanField(os?.decisionStyle),
+        cleanField(os?.failureResponse),
+        cleanField(os?.obstacles),
+        cleanField(os?.guidancePreference),
+        cleanField(os?.trackingFrequency),
+        cleanField(os?.updatePreference || os?.updatePreferences),
+        cleanField(asp?.twelveMonthSuccess),
+        cleanField(asp?.greatestImpactSupport),
+        cleanField(asp?.marketInsight),
+        cleanField(asp?.threeToFiveYearRole),
+        cleanField(asp?.fmResponsibility || asp?.managerResponsibilities),
+        cleanField(asp?.personallyApprovedDecisions),
+        cleanField(asp?.twentyFiveYearVision),
+        cleanField(dp?.supportReasons),
+        cleanField(dp?.remoteConfidence),
+        cleanField(dp?.remoteComfort),
+        cleanField(dp?.recordKeeping),
+        cleanField(dp?.physicalAudits),
+        cleanField(dp?.additionalNotes),
+      ];
+
+      try {
+        const s1EmailValues = await getSheetValues("'Survey 1 - Farmer (Shambany)'!C3:C", id);
+        let s1RowIndex = -1;
+        if (s1EmailValues && s1EmailValues.length > 0) {
+          for (let i = 0; i < s1EmailValues.length; i++) {
+            const rowEmail = s1EmailValues[i][0];
+            if (rowEmail && rowEmail.toLowerCase().trim() === userRecord.email.toLowerCase().trim()) {
+              s1RowIndex = i + 3;
+              break;
+            }
+          }
+        }
+
+        if (s1RowIndex > 0) {
+          await updateSheetValues(
+            `'Survey 1 - Farmer (Shambany)'!A${s1RowIndex}:AG${s1RowIndex}`,
+            [s1RowData],
+            id
+          );
+        } else {
+          await appendSheetValues(
+            "'Survey 1 - Farmer (Shambany)'!A:AG",
+            [s1RowData],
+            id
+          );
+        }
+      } catch (err) {
+        console.warn("Could not sync to Survey 1 tab:", err);
+      }
+    }
+
+    // --- 2. SYNC SURVEY 2 - FARM PROFILE ---
+    if (hasS2 || hasS1) {
+      const s2RowData = [
+        timestamp,
+        futureFarmId,
+        userRecord.name || "Farmer",
+        userRecord.email,
+        formatPhone(userRecord.phone),
+        userRecord.farmName || "",
+        cleanField(loc?.locationSearch),
+        cleanField(loc?.county),
+        cleanField(loc?.subcounty),
+        cleanField(loc?.ward),
+        cleanField(loc?.landmark),
+        formatCoordinates(loc?.latitude, loc?.longitude),
+        cleanField(char?.farmSize),
+        cleanField(char?.farmUnit || "Acres"),
+        cleanField(char?.cultivatedAcres),
+        cleanField(char?.grazingAcres),
+        cleanField(char?.landTenure),
+        cleanField(char?.waterSources),
+        cleanField(char?.soilTested),
+        cleanField(sys?.enterprises),
+        cleanField(sys?.cultivationMethod),
+        cleanField(sys?.mechanizationSetup),
+        cleanField(sys?.energySource),
+        cleanField(lab?.permanentWorkers),
+        cleanField(lab?.seasonalWorkers),
+        cleanField(lab?.managementStructure),
+        cleanField(lab?.fairEmploymentPractices),
+        cleanField(biz?.commercialYears),
+        cleanField(biz?.annualRevenueBracket),
+        cleanField(biz?.recordKeepingMethod),
+        cleanField(biz?.produceBuyers),
+        cleanField(goals?.goals),
+        cleanField(goals?.operationalBottleneck),
+        cleanField(goals?.advisoryMode),
+      ];
+
+      try {
+        const s2EmailValues = await getSheetValues("'Survey 2 - Farm Profile'!D3:D", id);
+        let s2RowIndex = -1;
+        if (s2EmailValues && s2EmailValues.length > 0) {
+          for (let i = 0; i < s2EmailValues.length; i++) {
+            const rowEmail = s2EmailValues[i][0];
+            if (rowEmail && rowEmail.toLowerCase().trim() === userRecord.email.toLowerCase().trim()) {
+              s2RowIndex = i + 3;
+              break;
+            }
+          }
+        }
+
+        if (s2RowIndex > 0) {
+          await updateSheetValues(
+            `'Survey 2 - Farm Profile'!A${s2RowIndex}:AH${s2RowIndex}`,
+            [s2RowData],
+            id
+          );
+        } else {
+          await appendSheetValues(
+            "'Survey 2 - Farm Profile'!A:AH",
+            [s2RowData],
+            id
+          );
+        }
+      } catch (err) {
+        console.warn("Could not sync to Survey 2 tab:", err);
+      }
+    }
+
+    // --- 3. SYNC MASTER CONSOLIDATED ---
+    const masterRowData = [
       timestamp,
+      futureFarmId,
       userRecord.name || "Farmer",
       userRecord.email,
       formatPhone(userRecord.phone),
       userRecord.farmName || "",
-      isComplete ? "Completed" : "In Progress",
+      status?.stage || "INITIAL_COMPLETED",
+      status?.profileApproved ? "Yes" : "No",
+
+      // S1 fields
       cleanField(fp?.jobTitle),
       cleanField(fp?.valueChain),
       cleanField(fp?.experienceYears),
@@ -246,38 +412,64 @@ export async function syncUserOnboardingToSheet(
       cleanField(dp?.recordKeeping),
       cleanField(dp?.physicalAudits),
       cleanField(dp?.additionalNotes),
+
+      // S2 fields
+      cleanField(loc?.locationSearch),
+      cleanField(loc?.county),
+      cleanField(loc?.subcounty),
+      cleanField(loc?.ward),
+      cleanField(loc?.landmark),
+      formatCoordinates(loc?.latitude, loc?.longitude),
+      cleanField(char?.farmSize),
+      cleanField(char?.farmUnit || "Acres"),
+      cleanField(char?.cultivatedAcres),
+      cleanField(char?.grazingAcres),
+      cleanField(char?.landTenure),
+      cleanField(char?.waterSources),
+      cleanField(char?.soilTested),
+      cleanField(sys?.enterprises),
+      cleanField(sys?.cultivationMethod),
+      cleanField(sys?.mechanizationSetup),
+      cleanField(sys?.energySource),
+      cleanField(lab?.permanentWorkers),
+      cleanField(lab?.seasonalWorkers),
+      cleanField(lab?.fairEmploymentPractices),
+      cleanField(biz?.commercialYears),
+      cleanField(biz?.annualRevenueBracket),
+      cleanField(biz?.recordKeepingMethod),
+      cleanField(biz?.produceBuyers),
+      cleanField(goals?.goals),
+      cleanField(goals?.operationalBottleneck),
     ];
 
-    // Check if user email is already in the sheet to avoid duplicates
-    const emailValues = await getSheetValues("Onboarding Responses!C3:C", id);
-    let existingRowIndex = -1;
-
-    if (emailValues && emailValues.length > 0) {
-      for (let i = 0; i < emailValues.length; i++) {
-        const rowEmail = emailValues[i][0];
-        if (rowEmail && rowEmail.toLowerCase().trim() === userRecord.email.toLowerCase().trim()) {
-          existingRowIndex = i + 3; // 1-indexed, starting from row 3
-          break;
+    try {
+      const masterEmailValues = await getSheetValues("'Master Consolidated'!D3:D", id);
+      let masterRowIndex = -1;
+      if (masterEmailValues && masterEmailValues.length > 0) {
+        for (let i = 0; i < masterEmailValues.length; i++) {
+          const rowEmail = masterEmailValues[i][0];
+          if (rowEmail && rowEmail.toLowerCase().trim() === userRecord.email.toLowerCase().trim()) {
+            masterRowIndex = i + 3;
+            break;
+          }
         }
       }
-    }
 
-    if (existingRowIndex > 0) {
-      // Update existing row
-      await updateSheetValues(
-        `Onboarding Responses!A${existingRowIndex}:AG${existingRowIndex}`,
-        [rowData],
-        id
-      );
-      console.log(`Updated user ${userRecord.email} in Google Sheet at row ${existingRowIndex}`);
-    } else {
-      // Append as new row
-      await appendSheetValues(
-        "Onboarding Responses!A:AG",
-        [rowData],
-        id
-      );
-      console.log(`Appended user ${userRecord.email} to Google Sheet`);
+      if (masterRowIndex > 0) {
+        await updateSheetValues(
+          `'Master Consolidated'!A${masterRowIndex}:BI${masterRowIndex}`,
+          [masterRowData],
+          id
+        );
+      } else {
+        await appendSheetValues(
+          "'Master Consolidated'!A:BI",
+          [masterRowData],
+          id
+        );
+      }
+    } catch (err) {
+      console.warn("Could not sync to Master Consolidated tab:", err);
     }
 
     return { success: true };
