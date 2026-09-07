@@ -24,14 +24,44 @@ export default function AssessmentStandardQuestionnaireView({
   const [currentCapIndex, setCurrentCapIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, "yes" | "no">>({});
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [cooldownStatus, setCooldownStatus] = useState<{
+    isCompleted: boolean;
+    canReassess: boolean;
+    nextEligibleDate?: string | null;
+    daysRemaining?: number;
+  }>({
+    isCompleted: false,
+    canReassess: true,
+    nextEligibleDate: null,
+    daysRemaining: 0,
+  });
 
-  // Load existing answers on mount
+  // Load existing answers and cooldown status on mount
   useEffect(() => {
     try {
+      const email = getActiveUserEmail();
+      fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.pillarStatus && data.pillarStatus[pillarId]) {
+            const pStatus = data.pillarStatus[pillarId];
+            setCooldownStatus({
+              isCompleted: Boolean(pStatus.isCompleted),
+              canReassess: pStatus.canReassess ?? true,
+              nextEligibleDate: pStatus.nextEligibleDate,
+              daysRemaining: pStatus.daysRemaining ?? 0,
+            });
+          }
+          if (data.answers && Object.keys(data.answers).length > 0) {
+            setAnswers((prev) => ({ ...data.answers, ...prev }));
+          }
+        })
+        .catch(console.error);
+
       const saved = localStorage.getItem("future_farms_assessment_answers");
       if (saved) {
         const parsed = JSON.parse(saved);
-        setAnswers(parsed);
+        setAnswers((prev) => ({ ...prev, ...parsed }));
       } else if (pillarId === 2) {
         // Seed default baseline for Pillar 2 to match mockup (14/25)
         setAnswers(DEFAULT_PILLAR_2_ANSWERS);
@@ -62,6 +92,13 @@ export default function AssessmentStandardQuestionnaireView({
   };
 
   const handleSaveProgress = () => {
+    if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) {
+      setToastMessage(
+        `Reassessment locked: 90-day cooldown active (${cooldownStatus.daysRemaining} days remaining). Responses cannot be altered.`
+      );
+      setTimeout(() => setToastMessage(null), 3500);
+      return;
+    }
     try {
       localStorage.setItem(
         "future_farms_assessment_answers",
@@ -84,6 +121,10 @@ export default function AssessmentStandardQuestionnaireView({
   };
 
   const handleSaveAndExit = () => {
+    if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) {
+      onExit();
+      return;
+    }
     try {
       localStorage.setItem(
         "future_farms_assessment_answers",
@@ -112,6 +153,11 @@ export default function AssessmentStandardQuestionnaireView({
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       // Completed all 5 capabilities in this pillar
+      if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) {
+        // In cooldown, skip API submission and view existing summary
+        onComplete(pillarId, answers);
+        return;
+      }
       try {
         localStorage.setItem(
           "future_farms_assessment_answers",
@@ -186,6 +232,39 @@ export default function AssessmentStandardQuestionnaireView({
             </button>
           </div>
         </div>
+
+        {/* Cooldown Alert Banner */}
+        {cooldownStatus.isCompleted && !cooldownStatus.canReassess && (
+          <div className="bg-amber-50/95 border-t border-b border-amber-200/80 px-6 py-3">
+            <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs md:text-sm text-amber-900">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-amber-600 text-lg">lock_clock</span>
+                <span>
+                  <strong>3-Month Cooldown Active:</strong> Completed on{" "}
+                  {cooldownStatus.nextEligibleDate
+                    ? new Date(
+                        new Date(cooldownStatus.nextEligibleDate).getTime() -
+                          90 * 24 * 60 * 60 * 1000
+                      ).toLocaleDateString()
+                    : "previous date"}
+                  . Reassessment unlocks in <strong>{cooldownStatus.daysRemaining} days</strong> (
+                  {cooldownStatus.nextEligibleDate
+                    ? new Date(cooldownStatus.nextEligibleDate).toLocaleDateString()
+                    : "in 3 months"}
+                  ). Questions are displayed in read-only mode.
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => onComplete(pillarId, answers)}
+                className="px-3.5 py-1.5 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-700 transition-colors shrink-0 text-xs flex items-center gap-1 shadow-xs cursor-pointer"
+              >
+                <span>View Summary & Report</span>
+                <span className="material-symbols-outlined text-xs">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* 5-Segment Progress Track for the 5 capabilities */}
         <div className="w-full bg-surface-container h-1.5 flex">

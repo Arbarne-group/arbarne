@@ -49,7 +49,14 @@ export async function GET(request: Request) {
       noCount: number;
       maturityLevel: string;
       capabilityScores: any;
+      completedAt: Date | null;
+      canReassess: boolean;
+      nextEligibleDate: string | null;
+      daysRemaining: number;
     }> = {};
+
+    const COOLDOWN_DAYS = 90;
+    const now = Date.now();
 
     assessment.pillarAssessments.forEach((pa) => {
       let parsedCapScores = {};
@@ -59,6 +66,18 @@ export async function GET(request: Request) {
         parsedCapScores = {};
       }
 
+      let canReassess = true;
+      let nextEligibleDate: string | null = null;
+      let daysRemaining = 0;
+
+      if (pa.isCompleted && pa.completedAt) {
+        const completedTime = new Date(pa.completedAt).getTime();
+        const eligibleTime = completedTime + COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+        canReassess = now >= eligibleTime;
+        nextEligibleDate = new Date(eligibleTime).toISOString();
+        daysRemaining = canReassess ? 0 : Math.ceil((eligibleTime - now) / (24 * 60 * 60 * 1000));
+      }
+
       pillarStatus[pa.pillarId] = {
         score: pa.score,
         isCompleted: pa.isCompleted,
@@ -66,8 +85,31 @@ export async function GET(request: Request) {
         noCount: pa.noCount,
         maturityLevel: pa.maturityLevel,
         capabilityScores: parsedCapScores,
+        completedAt: pa.completedAt,
+        canReassess,
+        nextEligibleDate,
+        daysRemaining,
       };
     });
+
+    // Overall assessment 90-day cooldown
+    const completedPillars = assessment.pillarAssessments.filter((pa) => pa.isCompleted);
+    const isFullAssessmentComplete = completedPillars.length === 8 || assessment.status === "COMPLETED";
+
+    let canReassessFull = true;
+    let nextEligibleDateFull: string | null = null;
+    let daysRemainingFull = 0;
+
+    if (isFullAssessmentComplete) {
+      const latestTime = Math.max(
+        ...completedPillars.map((p) => (p.completedAt ? new Date(p.completedAt).getTime() : 0)),
+        new Date(assessment.updatedAt).getTime()
+      );
+      const eligibleFullTime = latestTime + COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+      canReassessFull = now >= eligibleFullTime;
+      nextEligibleDateFull = new Date(eligibleFullTime).toISOString();
+      daysRemainingFull = canReassessFull ? 0 : Math.ceil((eligibleFullTime - now) / (24 * 60 * 60 * 1000));
+    }
 
     return NextResponse.json({
       success: true,
@@ -77,6 +119,11 @@ export async function GET(request: Request) {
       status: assessment.status,
       answers,
       pillarStatus,
+      isFullAssessmentComplete,
+      canReassessFull,
+      nextEligibleDateFull,
+      daysRemainingFull,
+      cooldownDays: COOLDOWN_DAYS,
       totalResponsesCount: assessment.assessmentResponses.length,
     });
   } catch (error: any) {

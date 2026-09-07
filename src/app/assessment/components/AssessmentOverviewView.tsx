@@ -3,9 +3,20 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ALL_PILLARS, AssessmentPillar } from "@/data/assessmentData";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
+
+interface PillarProgressItem {
+  completed: boolean;
+  score?: number;
+  answeredCount: number;
+  completedAt?: string | null;
+  canReassess?: boolean;
+  nextEligibleDate?: string | null;
+  daysRemaining?: number;
+}
 
 interface AssessmentOverviewViewProps {
-  onSelectPillar: (pillarId: number) => void;
+  onSelectPillar: (pillarId: number, isLockedByCooldown?: boolean) => void;
 }
 
 export default function AssessmentOverviewView({
@@ -13,21 +24,43 @@ export default function AssessmentOverviewView({
 }: AssessmentOverviewViewProps) {
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [pillarProgress, setPillarProgress] = useState<
-    Record<number, { completed: boolean; score?: number; answeredCount: number }>
+    Record<number, PillarProgressItem>
   >({});
+  const [fullCooldown, setFullCooldown] = useState<{
+    isFullAssessmentComplete: boolean;
+    canReassessFull: boolean;
+    nextEligibleDateFull: string | null;
+    daysRemainingFull: number;
+  }>({
+    isFullAssessmentComplete: false,
+    canReassessFull: true,
+    nextEligibleDateFull: null,
+    daysRemainingFull: 0,
+  });
 
   // Load progress from API and localStorage
   useEffect(() => {
     async function loadProgress() {
       let answers: Record<string, "yes" | "no"> = {};
+      const email = getActiveUserEmail();
+      let pillarApiStatus: Record<number, any> = {};
 
       try {
-        const res = await fetch("/api/assessment/responses");
+        const res = await fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`);
         if (res.ok) {
           const data = await res.json();
           if (data.answers && Object.keys(data.answers).length > 0) {
             answers = data.answers;
           }
+          if (data.pillarStatus) {
+            pillarApiStatus = data.pillarStatus;
+          }
+          setFullCooldown({
+            isFullAssessmentComplete: Boolean(data.isFullAssessmentComplete),
+            canReassessFull: data.canReassessFull ?? true,
+            nextEligibleDateFull: data.nextEligibleDateFull ?? null,
+            daysRemainingFull: data.daysRemainingFull ?? 0,
+          });
         }
       } catch (e) {
         console.error("Failed to load responses from API", e);
@@ -42,28 +75,30 @@ export default function AssessmentOverviewView({
         console.error(e);
       }
 
-      if (Object.keys(answers).length > 0) {
-        const progress: Record<
-          number,
-          { completed: boolean; score?: number; answeredCount: number }
-        > = {};
+      const progress: Record<number, PillarProgressItem> = {};
 
-        ALL_PILLARS.forEach((pillar) => {
-          const allPillarQuestionIds = pillar.capabilities.flatMap((c) =>
-            c.questions.map((q) => q.id)
-          );
-          const answered = allPillarQuestionIds.filter((id) => answers[id]);
-          const yesCount = allPillarQuestionIds.filter((id) => answers[id] === "yes").length;
+      ALL_PILLARS.forEach((pillar) => {
+        const allPillarQuestionIds = pillar.capabilities.flatMap((c) =>
+          c.questions.map((q) => q.id)
+        );
+        const answered = allPillarQuestionIds.filter((id) => answers[id]);
+        const yesCount = allPillarQuestionIds.filter((id) => answers[id] === "yes").length;
+        const apiP = pillarApiStatus[pillar.id];
 
-          progress[pillar.id] = {
-            completed: answered.length === allPillarQuestionIds.length && answered.length > 0,
-            score: answered.length > 0 ? Math.round((yesCount / allPillarQuestionIds.length) * 100) : undefined,
-            answeredCount: answered.length,
-          };
-        });
+        const isCompleted = apiP?.isCompleted || (answered.length === allPillarQuestionIds.length && answered.length > 0);
 
-        setPillarProgress(progress);
-      }
+        progress[pillar.id] = {
+          completed: Boolean(isCompleted),
+          score: answered.length > 0 ? Math.round((yesCount / allPillarQuestionIds.length) * 100) : (apiP?.score ?? undefined),
+          answeredCount: answered.length || (apiP ? 25 : 0),
+          completedAt: apiP?.completedAt || null,
+          canReassess: apiP?.canReassess ?? true,
+          nextEligibleDate: apiP?.nextEligibleDate || null,
+          daysRemaining: apiP?.daysRemaining || 0,
+        };
+      });
+
+      setPillarProgress(progress);
     }
 
     loadProgress();
@@ -192,22 +227,56 @@ export default function AssessmentOverviewView({
         </div>
 
         {/* 90-Day Reassessment Cycle Notice */}
-        <div className="p-4 rounded-2xl bg-surface-container-low border border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+        <div
+          className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${
+            fullCooldown.isFullAssessmentComplete
+              ? "bg-emerald-50/60 border-emerald-300/80"
+              : "bg-surface-container-low border-primary/20"
+          }`}
+        >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+            <div
+              className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                fullCooldown.isFullAssessmentComplete
+                  ? "bg-emerald-100 text-emerald-800"
+                  : "bg-primary/10 text-primary"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                {fullCooldown.isFullAssessmentComplete ? "verified" : "calendar_month"}
+              </span>
             </div>
             <div>
               <h4 className="text-xs md:text-sm font-bold text-on-surface">
-                Individual Pillar Assessments (~7 min per pillar)
+                {fullCooldown.isFullAssessmentComplete
+                  ? "Full 8-Pillar Farm Assessment Completed"
+                  : "Individual Pillar Assessments (~7 min per pillar)"}
               </h4>
               <p className="text-[11px] md:text-xs text-on-surface-variant">
-                Assess each pillar individually at your own pace. Once submitted, pillar assessments can only be repeated after <strong>3 months (90 days)</strong> to track genuine capability transition.
+                {fullCooldown.isFullAssessmentComplete
+                  ? fullCooldown.canReassessFull
+                    ? "Your 90-day cooldown cycle has elapsed! You may now retake the diagnostic to benchmark operational improvements."
+                    : `Next comprehensive reassessment unlocks in ${fullCooldown.daysRemainingFull} days (on ${new Date(
+                        fullCooldown.nextEligibleDateFull!
+                      ).toLocaleDateString("en-GB")}). You can download your official PDF report anytime.`
+                  : "Assess each pillar individually at your own pace. Once submitted, each pillar and the full assessment can only be repeated after 3 months (90 days) to track genuine capability transition."}
               </p>
             </div>
           </div>
-          <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0 self-start sm:self-auto">
-            3-Month Reassessment Rule
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 self-start sm:self-auto ${
+              fullCooldown.isFullAssessmentComplete
+                ? fullCooldown.canReassessFull
+                  ? "bg-emerald-100 text-emerald-800"
+                  : "bg-amber-100 text-amber-900 border border-amber-300"
+                : "bg-primary/10 text-primary"
+            }`}
+          >
+            {fullCooldown.isFullAssessmentComplete
+              ? fullCooldown.canReassessFull
+                ? "Reassessment Available"
+                : `Cooldown: ${fullCooldown.daysRemainingFull}d Left`
+              : "3-Month Reassessment Rule"}
           </span>
         </div>
 
@@ -239,6 +308,9 @@ export default function AssessmentOverviewView({
             {ALL_PILLARS.map((pillar) => {
               const status = pillarProgress[pillar.id];
               const score = status?.score;
+              const isLockedCooldown = status?.completed && status?.daysRemaining !== undefined && status.daysRemaining > 0;
+              const isReassessReady = status?.completed && status?.canReassess;
+
               const feedbackSnippet =
                 score !== undefined && score >= 75
                   ? pillar.feedback?.advanced
@@ -249,7 +321,7 @@ export default function AssessmentOverviewView({
               return (
                 <div
                   key={pillar.id}
-                  onClick={() => onSelectPillar(pillar.id)}
+                  onClick={() => onSelectPillar(pillar.id, isLockedCooldown)}
                   className="bg-surface rounded-2xl p-5 shadow-level-1 border border-outline-variant/50 hover:shadow-level-2 transition-all flex flex-col justify-between hover:-translate-y-1 cursor-pointer group h-full relative overflow-hidden"
                 >
                   <div className="flex justify-between items-start mb-3">
@@ -270,11 +342,21 @@ export default function AssessmentOverviewView({
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                      {status?.completed && (
+                      {isLockedCooldown ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                          <span className="material-symbols-outlined text-[13px]">lock_clock</span>
+                          <span>{status.daysRemaining}d Cooldown</span>
+                        </span>
+                      ) : isReassessReady ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                          <span className="material-symbols-outlined text-[13px]">lock_open</span>
+                          <span>Reassess</span>
+                        </span>
+                      ) : status?.completed ? (
                         <span className="material-symbols-outlined text-primary text-[18px]">
                           check_circle
                         </span>
-                      )}
+                      ) : null}
                       <span className="font-label-sm text-xs font-bold text-on-surface-variant bg-surface-variant px-2 py-0.5 rounded-full">
                         P{pillar.id}
                       </span>
@@ -311,7 +393,16 @@ export default function AssessmentOverviewView({
 
                     <div className="flex items-center justify-between text-xs text-on-surface-variant pt-2.5 border-t border-outline-variant/20 mt-auto">
                       <span className="font-mono text-[11px]">Cap. {pillar.id}.1–{pillar.id}.5</span>
-                      {status?.score !== undefined ? (
+                      {isLockedCooldown ? (
+                        <span className="font-semibold text-amber-800 text-[11px] flex items-center gap-1">
+                          <span>View Summary</span>
+                          <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                        </span>
+                      ) : isReassessReady ? (
+                        <span className="font-semibold text-emerald-700 text-[11px] group-hover:underline">
+                          Retake Assessment →
+                        </span>
+                      ) : status?.completed ? (
                         <span className="font-semibold text-primary text-[11px]">Completed</span>
                       ) : (
                         <span className="text-primary font-semibold text-[11px] group-hover:underline">Start Pillar →</span>

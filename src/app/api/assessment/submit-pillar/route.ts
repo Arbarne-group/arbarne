@@ -82,6 +82,39 @@ export async function POST(request: Request) {
       });
     }
 
+    // 2.5 Enforce 90-Day (3-Month) Reassessment Rule
+    const COOLDOWN_DAYS = 90;
+    const existingPillar = await prisma.pillarAssessment.findUnique({
+      where: {
+        assessmentId_pillarId: {
+          assessmentId: assessment.id,
+          pillarId: numPillarId,
+        },
+      },
+    });
+
+    if (existingPillar && existingPillar.isCompleted && existingPillar.completedAt) {
+      const completedTime = new Date(existingPillar.completedAt).getTime();
+      const nextEligibleTime = completedTime + COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
+      const now = Date.now();
+
+      if (now < nextEligibleTime && !body.forceReassess) {
+        const daysRemaining = Math.ceil((nextEligibleTime - now) / (24 * 60 * 60 * 1000));
+        const nextEligibleDate = new Date(nextEligibleTime);
+        return NextResponse.json(
+          {
+            error: "REASSESSMENT_LOCKED",
+            message: `Pillar ${numPillarId} assessment was already completed on ${new Date(existingPillar.completedAt).toLocaleDateString("en-GB")}. Reassessment is only permitted once every 90 days (3 months). Next reassessment eligible in ${daysRemaining} days (on ${nextEligibleDate.toLocaleDateString("en-GB")}).`,
+            completedAt: existingPillar.completedAt,
+            nextEligibleDate: nextEligibleDate.toISOString(),
+            daysRemaining,
+            cooldownDays: COOLDOWN_DAYS,
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     // 3. Upsert responses for all 25 questions of this pillar
     const pillarQuestions = pillarMeta.capabilities.flatMap((c) => c.questions);
     const responseUpsertPromises = pillarQuestions.map((q) => {

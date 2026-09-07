@@ -79,11 +79,16 @@ function AssessmentPageContent() {
 
   const activePillar = getPillarById(selectedPillarId);
 
-  // Navigate to Questionnaire
-  const handleSelectPillar = (pillarId: number) => {
+  // Navigate to Questionnaire or Summary
+  const handleSelectPillar = (pillarId: number, isLockedByCooldown?: boolean) => {
     setSelectedPillarId(pillarId);
-    setCurrentView("focus");
-    router.push(`/assessment?view=focus&pillar=${pillarId}`);
+    if (isLockedByCooldown) {
+      setCurrentView("summary");
+      router.push(`/assessment?view=summary&pillar=${pillarId}`);
+    } else {
+      setCurrentView("focus");
+      router.push(`/assessment?view=focus&pillar=${pillarId}`);
+    }
   };
 
   // Exit Questionnaire back to Hub

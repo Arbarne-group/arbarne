@@ -76,6 +76,39 @@ export async function POST(request: Request) {
       });
     }
 
+    // 2.5 Check 90-Day Reassessment Cooldown if pillarId specified
+    if (pillarId) {
+      const existingPillar = await prisma.pillarAssessment.findUnique({
+        where: {
+          assessmentId_pillarId: {
+            assessmentId: assessment.id,
+            pillarId: Number(pillarId),
+          },
+        },
+      });
+
+      if (existingPillar && existingPillar.isCompleted && existingPillar.completedAt) {
+        const completedTime = new Date(existingPillar.completedAt).getTime();
+        const nextEligibleTime = completedTime + 90 * 24 * 60 * 60 * 1000;
+        const now = Date.now();
+
+        if (now < nextEligibleTime && !body.forceReassess) {
+          const daysRemaining = Math.ceil((nextEligibleTime - now) / (24 * 60 * 60 * 1000));
+          const nextEligibleDate = new Date(nextEligibleTime);
+          return NextResponse.json(
+            {
+              error: "REASSESSMENT_LOCKED",
+              message: `Pillar ${pillarId} was completed on ${new Date(existingPillar.completedAt).toLocaleDateString("en-GB")}. Reassessment is locked for 90 days. Next reassessment eligible in ${daysRemaining} days (on ${nextEligibleDate.toLocaleDateString("en-GB")}).`,
+              completedAt: existingPillar.completedAt,
+              nextEligibleDate: nextEligibleDate.toISOString(),
+              daysRemaining,
+            },
+            { status: 403 }
+          );
+        }
+      }
+    }
+
     // 3. Upsert individual AssessmentResponse records for provided answers
     const questionEntries = Object.entries(answers as Record<string, "yes" | "no">);
     
