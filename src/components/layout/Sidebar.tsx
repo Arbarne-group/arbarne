@@ -58,13 +58,13 @@ export default function Sidebar({
           </div>
         ) : (
           <div className="w-full flex items-center justify-between gap-2">
-            <Link href="/dashboard" className="flex items-center pl-1 py-1">
+            <Link href="/dashboard" className="flex items-center pl-1">
               <Image
-                src="/logo-expanded.webp"
+                src="/logo.webp"
                 alt="Future Farms - An Initiative Of Arbarne Agriculture Group"
-                width={120}
-                height={114}
-                className="h-[70px] w-auto max-w-[175px] object-contain drop-shadow-xs"
+                width={190}
+                height={48}
+                className="h-10 w-auto max-w-[170px] object-contain"
                 priority
               />
             </Link>

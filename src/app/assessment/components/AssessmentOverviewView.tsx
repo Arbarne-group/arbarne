@@ -85,7 +85,7 @@ export default function AssessmentOverviewView({
       : "Not Started";
 
   return (
-    <main className="flex-1 p-margin-mobile md:p-margin-desktop bg-surface-container-low min-h-screen">
+    <div className="flex-1 p-margin-mobile md:p-margin-desktop bg-surface-container-low min-h-full">
       <div className="max-w-[1280px] mx-auto flex flex-col gap-8">
         {/* Page Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
@@ -336,6 +336,6 @@ export default function AssessmentOverviewView({
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }

@@ -129,7 +129,7 @@ export default function AssessmentSummaryView({
 
   if (!mounted) {
     return (
-      <main className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop flex items-center justify-center min-h-[60vh]">
+      <div className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
           <span className="material-symbols-outlined text-primary text-4xl animate-spin">
             progress_activity
@@ -138,12 +138,12 @@ export default function AssessmentSummaryView({
             Loading assessment summary...
           </span>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop">
+    <div className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop">
       <div className="max-w-[840px] mx-auto w-full flex flex-col items-center">
         {/* Download Report Top Action */}
         <div className="w-full flex justify-end mb-md">
@@ -484,6 +484,6 @@ export default function AssessmentSummaryView({
           </button>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
