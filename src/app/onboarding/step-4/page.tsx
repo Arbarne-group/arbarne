@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 export default function AspirationsPage() {
   const router = useRouter();
@@ -18,14 +19,7 @@ export default function AspirationsPage() {
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    let email = "keziah@futurefarms.africa";
-    const cached = localStorage.getItem("future_farms_user");
-    if (cached) {
-      try {
-        const u = JSON.parse(cached);
-        if (u.email) email = u.email;
-      } catch (e) {}
-    }
+    const email = getActiveUserEmail();
 
     fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
@@ -96,13 +90,14 @@ export default function AspirationsPage() {
   const handleSave = async (navigateNext = true) => {
     setSaving(true);
     setSaveFeedback(null);
+    const email = getActiveUserEmail();
     try {
       const res = await fetch("/api/onboarding/step", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           step: 4,
-          email: "keziah@futurefarms.africa",
+          email,
           data: {
             twelveMonthSuccess,
             greatestImpactSupport,

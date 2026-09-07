@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 
-import { computeOnboardingStageFromUser } from "@/lib/onboardingGuard";
+import { computeOnboardingStageFromUser, getActiveUserEmail } from "@/lib/onboardingGuard";
 
 export default function OnboardingOverviewPage() {
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function OnboardingOverviewPage() {
   const profileApproved = Boolean(user?.onboardingStatus?.profileApproved);
 
   const fetchStatus = () => {
-    let email = "keziah@futurefarms.africa";
+    let email = getActiveUserEmail();
     const cached = localStorage.getItem("future_farms_user");
     if (cached) {
       try {
@@ -78,8 +78,9 @@ export default function OnboardingOverviewPage() {
     if (!confirm("Are you sure you want to reset all onboarding responses to test the flow from scratch?")) return;
     setResetting(true);
     try {
+      const email = getActiveUserEmail();
       localStorage.removeItem("future_farms_user");
-      await fetch("/api/onboarding/step?email=keziah@futurefarms.africa", {
+      await fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`, {
         method: "DELETE",
       });
       setUser(null);

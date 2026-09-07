@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 export default function FarmingSystemPage() {
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   // State
   const [enterprises, setEnterprises] = useState<string[]>([
@@ -21,9 +23,13 @@ export default function FarmingSystemPage() {
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    const email = getActiveUserEmail();
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
+        if (data.user) {
+          setCurrentUser(data.user);
+        }
         if (data.user?.farmingSystem) {
           const sys = data.user.farmingSystem;
           if (sys.cultivationMethod) setCultivationMethod(sys.cultivationMethod);
@@ -51,12 +57,13 @@ export default function FarmingSystemPage() {
     setSaving(true);
     setSaveFeedback(null);
     try {
+      const email = getActiveUserEmail();
       const res = await fetch("/api/onboarding/step", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           step: "farming-system",
-          email: "keziah@futurefarms.africa",
+          email,
           data: {
             enterprises,
             cultivationMethod,
@@ -86,7 +93,7 @@ export default function FarmingSystemPage() {
   };
 
   return (
-    <AppShell userName="Keziah Wanjiku" userRole="Farm Owner">
+    <AppShell userName={currentUser?.name || "Keziah Wanjiku"} userRole={currentUser?.farmerProfile?.jobTitle || "Farm Owner"}>
       <div className="w-full pt-4 pb-28 px-4 md:px-8 max-w-5xl mx-auto space-y-6">
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between">

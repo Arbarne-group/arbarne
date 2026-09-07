@@ -338,7 +338,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\HP PC\\Desktop\\ARBANE\\ARNARNE\\arbarne\\src\\generated\\client",
+      "value": "C:\\Users\\user\\Desktop\\Projects\\future-farms\\src\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -352,7 +352,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\HP PC\\Desktop\\ARBANE\\ARNARNE\\arbarne\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\user\\Desktop\\Projects\\future-farms\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

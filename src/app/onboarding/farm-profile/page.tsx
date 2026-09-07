@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 export default function FarmProfileReviewPage() {
   const router = useRouter();
@@ -11,7 +12,8 @@ export default function FarmProfileReviewPage() {
   const [approving, setApproving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    const email = getActiveUserEmail();
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user) {
@@ -24,12 +26,13 @@ export default function FarmProfileReviewPage() {
   const handleApprove = async () => {
     setApproving(true);
     try {
+      const email = getActiveUserEmail();
       const res = await fetch("/api/onboarding/step", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           step: "confirm-profile",
-          email: "keziah@futurefarms.africa",
+          email,
           data: {},
         }),
       });

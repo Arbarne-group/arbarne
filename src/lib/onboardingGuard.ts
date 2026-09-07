@@ -121,3 +121,19 @@ export function getRouteAccess(
   // 3. Stage 4: Fully completed -> All routes unlocked
   return { allowed: true };
 }
+
+/**
+ * Returns the currently active logged in user's email, defaulting to demo user.
+ */
+export function getActiveUserEmail(): string {
+  if (typeof window === "undefined") return "keziah@futurefarms.africa";
+  try {
+    const cached = localStorage.getItem("future_farms_user");
+    if (cached) {
+      const u = JSON.parse(cached);
+      if (u?.email) return u.email;
+    }
+  } catch (e) {}
+  return "keziah@futurefarms.africa";
+}
+

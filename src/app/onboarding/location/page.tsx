@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 export default function FarmLocationPage() {
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   // State
   const [locationSearch, setLocationSearch] = useState("Mai Mahiu, Naivasha, Nakuru County");
@@ -21,9 +23,13 @@ export default function FarmLocationPage() {
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
+    const email = getActiveUserEmail();
+    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
+        if (data.user) {
+          setCurrentUser(data.user);
+        }
         if (data.user?.farmLocation) {
           const loc = data.user.farmLocation;
           if (loc.locationSearch) setLocationSearch(loc.locationSearch);
@@ -50,12 +56,13 @@ export default function FarmLocationPage() {
     setSaving(true);
     setSaveFeedback(null);
     try {
+      const email = getActiveUserEmail();
       const res = await fetch("/api/onboarding/step", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           step: "location",
-          email: "keziah@futurefarms.africa",
+          email,
           data: {
             locationSearch,
             county,
@@ -88,7 +95,7 @@ export default function FarmLocationPage() {
   };
 
   return (
-    <AppShell userName="Keziah Wanjiku" userRole="Farm Owner">
+    <AppShell userName={currentUser?.name || "Keziah Wanjiku"} userRole={currentUser?.farmerProfile?.jobTitle || "Farm Owner"}>
       <div className="w-full pt-4 pb-28 px-4 md:px-8 max-w-5xl mx-auto">
         {/* Navigation Breadcrumb */}
         <div className="mb-6 flex items-center justify-between">
