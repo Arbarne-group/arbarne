@@ -154,13 +154,14 @@ function AssessmentReportContent() {
             width: 100% !important;
             max-width: 100% !important;
             border-radius: 0 !important;
-            padding: 12mm 14mm 10mm 14mm !important;
+            padding: 10mm 14mm 8mm 14mm !important;
             background: #ffffff !important;
           }
           .print-page-break {
             break-before: page !important;
             page-break-before: always !important;
-            padding-top: 10mm !important;
+            margin-top: 0 !important;
+            padding-top: 6mm !important;
           }
           .print-break-inside-avoid {
             break-inside: avoid !important;
@@ -285,12 +286,15 @@ function AssessmentReportContent() {
           /* TEMPLATE 2: COMPREHENSIVE 8-PILLAR ASSESSMENT REPORT                      */
           /* Criteria-based scoring (No percentages or progress bars)                  */
           /* ========================================================================= */
-          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden relative p-6 sm:p-10 space-y-8">
+          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden relative p-6 sm:p-10 space-y-6 print:space-y-0">
             {/* Top Decorative Gradient Accent Bar */}
             <div className="h-2.5 w-full bg-gradient-to-r from-emerald-700 via-emerald-500 to-amber-500 absolute top-0 left-0" />
 
+            {/* ══════════════════════════════════════════════════════════════════════
+                PAGE 1: EXECUTIVE SYNTHESIS & MATURITY DIAGNOSTIC
+                ══════════════════════════════════════════════════════════════════════ */}
             {/* Document Header & Farm Metadata */}
-            <section className="border-b border-slate-200 pb-6 pt-2">
+            <section className="border-b border-slate-200 pb-5 pt-1 print-break-inside-avoid">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                 {/* Brand Identity */}
                 <div className="flex items-center space-x-4">
@@ -330,7 +334,7 @@ function AssessmentReportContent() {
               </div>
 
               {/* Meta Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-100 text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5 pt-4 border-t border-slate-100 text-xs">
                 <div>
                   <span className="text-slate-400 uppercase tracking-wider font-semibold block text-[10px]">
                     Farm Enterprise
@@ -340,7 +344,7 @@ function AssessmentReportContent() {
                 </div>
                 <div>
                   <span className="text-slate-400 uppercase tracking-wider font-semibold block text-[10px]">
-                    Location & Zone
+                    Location &amp; Zone
                   </span>
                   <p className="font-bold text-slate-900 mt-0.5 text-sm">{locationSubCounty}</p>
                   <p className="text-slate-500">{locationCounty}, {locationCountry} ({acreage} Ac)</p>
@@ -366,13 +370,13 @@ function AssessmentReportContent() {
             </section>
 
             {/* Composite Maturity Hero (Criteria-Based, No Percentages or Radial Bars) */}
-            <section className="bg-gradient-to-br from-slate-50 to-emerald-50/40 rounded-xl p-5 sm:p-6 border border-emerald-100">
-              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <section className="bg-gradient-to-br from-slate-50 to-emerald-50/40 rounded-xl p-4 sm:p-5 border border-emerald-100 print-break-inside-avoid">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
                 <div className="space-y-2 text-left">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-800">
                     Composite Farm Capability Assessment
                   </span>
-                  <h2 className="text-2xl font-bold text-slate-900">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
                     Future Farm Maturity Index (FFMI)
                   </h2>
                   <p className="text-xs text-slate-600 max-w-xl leading-relaxed">
@@ -381,7 +385,7 @@ function AssessmentReportContent() {
                   </p>
 
                   {/* Maturity Steps Indicator */}
-                  <div className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-slate-500 pt-2">
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-slate-500 pt-1">
                     <span className="text-slate-400">Level 1: Baseline</span>
                     <span>→</span>
                     <span className="text-slate-400">Level 2: Emerging</span>
@@ -396,28 +400,28 @@ function AssessmentReportContent() {
                 </div>
 
                 {/* Aggregate Criteria Metrics Card (No Percentages) */}
-                <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-xs shrink-0 min-w-[260px] space-y-3">
+                <div className="bg-white border border-slate-200 rounded-xl p-3.5 sm:p-4 shadow-xs shrink-0 min-w-[250px] space-y-2.5">
                   <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
                     Assessment Evaluation Criteria
                   </span>
                   <div className="border-b border-slate-100 pb-2">
-                    <span className="text-xs text-slate-500 block">Verified Capabilities:</span>
-                    <span className="text-xl font-black text-emerald-700">
+                    <span className="text-[11px] text-slate-500 block">Verified Capabilities:</span>
+                    <span className="text-lg font-black text-emerald-700">
                       {reportData?.executiveSummary?.totalVerified || 28} / 40 Core Capabilities
                     </span>
-                    <span className="text-[11px] block font-medium text-slate-600 mt-0.5">
+                    <span className="text-[10px] block font-medium text-slate-600 mt-0.5">
                       Systematically Verified In Place
                     </span>
                   </div>
                   <div>
-                    <span className="text-xs text-slate-500 block">Identified Action Gaps:</span>
-                    <span className="text-lg font-bold text-amber-700">
+                    <span className="text-[11px] text-slate-500 block">Identified Action Gaps:</span>
+                    <span className="text-base font-bold text-amber-700">
                       {reportData?.executiveSummary?.totalActionableGaps || 12} Priority Intervention Areas
                     </span>
                   </div>
                   <div className="pt-2 border-t border-slate-100">
-                    <span className="text-xs text-slate-500 block">Estimated Monthly Value Gap:</span>
-                    <span className="text-base font-bold text-emerald-800 font-mono">
+                    <span className="text-[11px] text-slate-500 block">Estimated Monthly Value Gap:</span>
+                    <span className="text-sm font-bold text-emerald-800 font-mono">
                       KES 64,500 / month
                     </span>
                   </div>
@@ -426,14 +430,14 @@ function AssessmentReportContent() {
             </section>
 
             {/* Section 1: Executive Synthesis & Farm Diagnostic */}
-            <section className="space-y-3 print-break-inside-avoid">
+            <section className="space-y-2.5 pt-1 print-break-inside-avoid">
               <div className="flex items-center space-x-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
                 <h3 className="text-xs font-bold tracking-wider uppercase text-slate-600">
-                  1. Executive Synthesis & Farm Diagnostic
+                  1. Executive Synthesis &amp; Enterprise Performance Diagnostic
                 </h3>
               </div>
-              <div className="bg-slate-50/80 border border-slate-200 rounded-xl p-4 sm:p-5 text-xs leading-relaxed space-y-2.5 text-slate-700">
+              <div className="bg-slate-50/80 border border-slate-200 rounded-xl p-4 text-xs leading-relaxed space-y-2 text-slate-700">
                 <p>
                   <strong className="text-slate-900">{farmName}</strong> exhibits consistent operational discipline,
                   positioning the enterprise at the{" "}
@@ -454,9 +458,27 @@ function AssessmentReportContent() {
                   formal GlobalG.A.P. social risk audits.
                 </p>
               </div>
+
+              {/* Page 1 Bottom Strategic Callout */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
+                <div className="p-2.5 bg-emerald-50/50 border border-emerald-200/80 rounded-lg">
+                  <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wide block">Current Standing</span>
+                  <p className="font-bold text-slate-800 text-xs mt-0.5">Level 3: Structured Agribusiness</p>
+                </div>
+                <div className="p-2.5 bg-amber-50/50 border border-amber-200/80 rounded-lg">
+                  <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wide block">Priority Constraint</span>
+                  <p className="font-bold text-slate-800 text-xs mt-0.5">Commercial Financial Ledgers</p>
+                </div>
+                <div className="p-2.5 bg-blue-50/50 border border-blue-200/80 rounded-lg">
+                  <span className="text-[10px] font-bold text-blue-800 uppercase tracking-wide block">Value Realization Gap</span>
+                  <p className="font-bold text-slate-800 text-xs mt-0.5">KES 64,500 Monthly Recovery</p>
+                </div>
+              </div>
             </section>
 
-            {/* Section 2: 8-Pillar Capability Performance Matrix (Criteria-Based, No Progress Bars, No %) */}
+            {/* ══════════════════════════════════════════════════════════════════════
+                PAGE 2: 8-PILLAR CAPABILITY PERFORMANCE MATRIX
+                ══════════════════════════════════════════════════════════════════════ */}
             <section className="space-y-3 print-page-break print-break-inside-avoid">
               {/* Print Mini-Header for Page 2 */}
               <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
@@ -494,11 +516,11 @@ function AssessmentReportContent() {
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
-                      <th className="py-3 px-4 w-12 text-center">Pillar</th>
-                      <th className="py-3 px-4">Evaluation Pillar Focus</th>
-                      <th className="py-3 px-4 text-center">Criteria Evaluation</th>
-                      <th className="py-3 px-4 text-center">Maturity Classification</th>
-                      <th className="py-3 px-4 text-center">Action Priority</th>
+                      <th className="py-2.5 px-4 w-12 text-center">Pillar</th>
+                      <th className="py-2.5 px-4">Evaluation Pillar Focus</th>
+                      <th className="py-2.5 px-4 text-center">Criteria Evaluation</th>
+                      <th className="py-2.5 px-4 text-center">Maturity Classification</th>
+                      <th className="py-2.5 px-4 text-center">Action Priority</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200 text-slate-700">
@@ -522,20 +544,20 @@ function AssessmentReportContent() {
                             isLeading ? "bg-emerald-50/30" : isCritical ? "bg-amber-50/20" : ""
                           }`}
                         >
-                          <td className="py-2.5 px-4 font-mono font-bold text-center text-slate-600">
+                          <td className="py-2 px-4 font-mono font-bold text-center text-slate-600">
                             P{row.pillarId}
                           </td>
-                          <td className="py-2.5 px-4 font-semibold text-slate-900">
+                          <td className="py-2 px-4 font-semibold text-slate-900">
                             {row.name}
                           </td>
-                          <td className="py-2.5 px-4 text-center font-mono font-medium">
+                          <td className="py-2 px-4 text-center font-mono font-medium">
                             <span className="text-emerald-800 font-bold">{row.verifiedCount} Verified</span>
                             <span className="text-slate-400 mx-1">•</span>
                             <span className={row.gapCount > 0 ? "text-amber-700 font-semibold" : "text-slate-400"}>
                               {row.gapCount} Action {row.gapCount === 1 ? "Gap" : "Gaps"}
                             </span>
                           </td>
-                          <td className="py-2.5 px-4 text-center">
+                          <td className="py-2 px-4 text-center">
                             <span
                               className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                                 isLeading
@@ -548,7 +570,7 @@ function AssessmentReportContent() {
                               {row.maturityStage || (isLeading ? "Benchmark" : isCritical ? "Priority Focus" : "Established")}
                             </span>
                           </td>
-                          <td className="py-2.5 px-4 text-center font-semibold text-[11px]">
+                          <td className="py-2 px-4 text-center font-semibold text-[11px]">
                             {isCritical ? (
                               <span className="text-amber-800 font-bold">High Priority Intervention</span>
                             ) : isLeading ? (
@@ -565,7 +587,7 @@ function AssessmentReportContent() {
               </div>
 
               {/* Strategic Pillar Maturity Summary & Key Benchmark Observations */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-xs">
                 <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl">
                   <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">
                     Benchmark Capabilities
@@ -596,8 +618,10 @@ function AssessmentReportContent() {
               </div>
             </section>
 
-            {/* Section 3: Priority Actionable Interventions for Gaps Answered "NO" */}
-            <section className="space-y-3.5 print-page-break print-break-inside-avoid">
+            {/* ══════════════════════════════════════════════════════════════════════
+                PAGE 3: PRIORITY ACTIONABLE INTERVENTIONS
+                ══════════════════════════════════════════════════════════════════════ */}
+            <section className="space-y-3 print-page-break print-break-inside-avoid">
               {/* Print Mini-Header for Page 3 */}
               <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
                 <div className="flex items-center space-x-2">
@@ -611,7 +635,7 @@ function AssessmentReportContent() {
                     className="h-4 w-auto object-contain"
                   />
                   <span className="text-slate-300">|</span>
-                  <span className="font-semibold text-slate-700">Action Roadmap &amp; Verification • All 8 Pillars</span>
+                  <span className="font-semibold text-slate-700">Strategic Action Plan • Priority Interventions</span>
                 </div>
                 <div className="font-mono text-[9px] text-slate-500">
                   Doc Ref: <span className="font-bold text-slate-800">{docRef}</span>
@@ -626,27 +650,27 @@ function AssessmentReportContent() {
                   </h3>
                 </div>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-200">
-                  Targeted Interventions
+                  5 Core Action Priorities
                 </span>
               </div>
 
-              <div className="space-y-3 text-xs">
+              <div className="space-y-2.5 text-xs">
                 {/* Intervention 1: Business Performance */}
-                <div className="p-4 border border-amber-200 bg-amber-50/30 rounded-xl flex flex-col md:flex-row items-start justify-between gap-3 shadow-xs">
-                  <div className="flex items-start space-x-3">
-                    <span className="w-7 h-7 rounded-lg bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
+                <div className="p-3 border border-amber-200 bg-amber-50/30 rounded-xl flex items-start justify-between gap-3 shadow-xs">
+                  <div className="flex items-start space-x-2.5">
+                    <span className="w-6 h-6 rounded-lg bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
                       P5
                     </span>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">
-                        Gap 1: Digital Enterprise Cash Flow & Account Segregation
+                      <h4 className="font-bold text-slate-900 text-xs">
+                        Gap 1: Digital Enterprise Cash Flow &amp; Account Segregation
                       </h4>
-                      <p className="text-slate-600 mt-1 leading-relaxed">
+                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
                         Transition from manual notebooks to a verified mobile/cloud ledger. Separating household living costs
                         from farm production inputs immediately unlocks credit appraisal qualification for up to{" "}
                         <strong className="text-slate-800">KES 350,000 seasonal facility</strong> with partner ag-lenders.
                       </p>
-                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px]">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
                         <span className="font-semibold text-emerald-800 bg-emerald-100/70 px-2 py-0.5 rounded border border-emerald-200">
                           Direct Impact: Est. Savings KES 22,000 / month
                         </span>
@@ -654,26 +678,26 @@ function AssessmentReportContent() {
                       </div>
                     </div>
                   </div>
-                  <span className="px-2 py-1 rounded text-[10px] font-bold uppercase bg-amber-100 text-amber-800 border border-amber-200 shrink-0">
+                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-amber-100 text-amber-800 border border-amber-200 shrink-0">
                     High Impact
                   </span>
                 </div>
 
                 {/* Intervention 2: Renewable Energy */}
-                <div className="p-4 border border-slate-200 rounded-xl flex flex-col md:flex-row items-start justify-between gap-3 bg-white shadow-xs">
-                  <div className="flex items-start space-x-3">
-                    <span className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
+                <div className="p-3 border border-slate-200 rounded-xl flex items-start justify-between gap-3 bg-white shadow-xs">
+                  <div className="flex items-start space-x-2.5">
+                    <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
                       P2
                     </span>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">
-                        Gap 2: Cold-Chain Continuity & Pay-As-You-Go Solar Chilling Buffer
+                      <h4 className="font-bold text-slate-900 text-xs">
+                        Gap 2: Cold-Chain Continuity &amp; Pay-As-You-Go Solar Chilling Buffer
                       </h4>
-                      <p className="text-slate-600 mt-1 leading-relaxed">
+                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
                         Deploy modular Pay-As-You-Go (PAYG) walk-in solar cold storage to eliminate harvest field heat for French beans
                         and horticultural greens, curbing post-harvest spoilage by an estimated 22%.
                       </p>
-                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px]">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
                         <span className="text-emerald-800 bg-emerald-50 border border-emerald-200 font-semibold px-2 py-0.5 rounded">
                           Service Desk Partner: SunCulture Commercial Cold Facility
                         </span>
@@ -681,26 +705,26 @@ function AssessmentReportContent() {
                       </div>
                     </div>
                   </div>
-                  <span className="px-2 py-1 rounded text-[10px] font-bold uppercase bg-blue-50 text-blue-800 border border-blue-200 shrink-0">
+                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-blue-50 text-blue-800 border border-blue-200 shrink-0">
                     Asset Finance
                   </span>
                 </div>
 
                 {/* Intervention 3: Food Safety & Traceability */}
-                <div className="p-4 border border-slate-200 rounded-xl flex flex-col md:flex-row items-start justify-between gap-3 bg-white shadow-xs">
-                  <div className="flex items-start space-x-3">
-                    <span className="w-7 h-7 rounded-lg bg-slate-100 text-slate-800 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
+                <div className="p-3 border border-slate-200 rounded-xl flex items-start justify-between gap-3 bg-white shadow-xs">
+                  <div className="flex items-start space-x-2.5">
+                    <span className="w-6 h-6 rounded-lg bg-slate-100 text-slate-800 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
                       P3
                     </span>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">
-                        Gap 3: GlobalG.A.P. MRL Chemical Spray Registers & Batch Traceability
+                      <h4 className="font-bold text-slate-900 text-xs">
+                        Gap 3: GlobalG.A.P. MRL Chemical Spray Registers &amp; Batch Traceability
                       </h4>
-                      <p className="text-slate-600 mt-1 leading-relaxed">
+                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
                         Formalize maximum residue limit (MRL) spray logs with batch QR codes to prevent cargo rejection risks
                         at European and regional fresh produce export terminals.
                       </p>
-                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px]">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
                         <span className="text-emerald-800 bg-emerald-50 border border-emerald-200 font-semibold px-2 py-0.5 rounded">
                           Compliance Readiness: Meets Exporter Supplier Standards
                         </span>
@@ -708,26 +732,26 @@ function AssessmentReportContent() {
                       </div>
                     </div>
                   </div>
-                  <span className="px-2 py-1 rounded text-[10px] font-bold uppercase bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
+                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
                     Compliance
                   </span>
                 </div>
 
                 {/* Intervention 4: Human Capital & Operations */}
-                <div className="p-4 border border-slate-200 rounded-xl flex flex-col md:flex-row items-start justify-between gap-3 bg-white shadow-xs">
-                  <div className="flex items-start space-x-3">
-                    <span className="w-7 h-7 rounded-lg bg-slate-100 text-slate-800 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
+                <div className="p-3 border border-slate-200 rounded-xl flex items-start justify-between gap-3 bg-white shadow-xs">
+                  <div className="flex items-start space-x-2.5">
+                    <span className="w-6 h-6 rounded-lg bg-slate-100 text-slate-800 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
                       P6
                     </span>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">
-                        Gap 4: Formalized Seasonal Worker Safety SOPs & Standard Contracts
+                      <h4 className="font-bold text-slate-900 text-xs">
+                        Gap 4: Formalized Seasonal Worker Safety SOPs &amp; Standard Contracts
                       </h4>
-                      <p className="text-slate-600 mt-1 leading-relaxed">
+                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
                         Execute standard bi-lingual casual labor contracts and provide certified chemical handler PPE gear
                         to fulfill export buyer ethical audit guidelines.
                       </p>
-                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px]">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
                         <span className="text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
                           Digital Templates Available on Future Farms Library
                         </span>
@@ -735,131 +759,181 @@ function AssessmentReportContent() {
                       </div>
                     </div>
                   </div>
-                  <span className="px-2 py-1 rounded text-[10px] font-bold uppercase bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
+                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
                     Operational
                   </span>
                 </div>
 
                 {/* Intervention 5: Investment Readiness */}
-                <div className="p-4 border border-emerald-200 bg-emerald-50/20 rounded-xl flex flex-col md:flex-row items-start justify-between gap-3 shadow-xs">
-                  <div className="flex items-start space-x-3">
-                    <span className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
+                <div className="p-3 border border-emerald-200 bg-emerald-50/20 rounded-xl flex items-start justify-between gap-3 shadow-xs">
+                  <div className="flex items-start space-x-2.5">
+                    <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
                       P8
                     </span>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">
-                        Gap 5: Bankable Enterprise Expansion Dossier & Unit Economics
+                      <h4 className="font-bold text-slate-900 text-xs">
+                        Gap 5: Bankable Enterprise Expansion Dossier &amp; Unit Economics
                       </h4>
-                      <p className="text-slate-600 mt-1 leading-relaxed">
+                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
                         Compile 3-year historical yield curves and cost-of-production metrics into an investor-ready pitch dossier
                         for the regional Agri-Investment Acceleration Window.
                       </p>
-                      <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px]">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
                         <span className="text-emerald-900 font-semibold bg-emerald-100/60 px-2 py-0.5 rounded">
                           Eligible Facility: KES 1.5M Subsidized Matching Grant Window
                         </span>
                       </div>
                     </div>
                   </div>
-                  <span className="px-2 py-1 rounded text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0">
+                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0">
                     Investment
                   </span>
                 </div>
               </div>
             </section>
 
-            {/* Section 4: 12-Month Farm Transformation Roadmap */}
-            <section className="space-y-3 pt-2 print-break-inside-avoid">
-              <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
-                <h3 className="text-xs font-bold tracking-wider uppercase text-slate-600">
-                  4. 12-Month Farm Transformation Roadmap
-                </h3>
+            {/* ══════════════════════════════════════════════════════════════════════
+                PAGE 4: TRANSFORMATION ROADMAP & OFFICIAL VERIFICATION
+                ══════════════════════════════════════════════════════════════════════ */}
+            <section className="space-y-3.5 print-page-break print-break-inside-avoid">
+              {/* Print Mini-Header for Page 4 */}
+              <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
+                <div className="flex items-center space-x-2">
+                  <Image
+                    src="/logo.webp"
+                    alt="Future Farms"
+                    width={100}
+                    height={25}
+                    priority
+                    unoptimized
+                    className="h-4 w-auto object-contain"
+                  />
+                  <span className="text-slate-300">|</span>
+                  <span className="font-semibold text-slate-700">Transformation Roadmap &amp; Official Verification Ledger</span>
+                </div>
+                <div className="font-mono text-[9px] text-slate-500">
+                  Doc Ref: <span className="font-bold text-slate-800">{docRef}</span>
+                </div>
               </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
+                  <h3 className="text-xs font-bold tracking-wider uppercase text-slate-600">
+                    4. 12-Month Farm Transformation Roadmap
+                  </h3>
+                </div>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  Phased Milestones
+                </span>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                <div className="border border-emerald-200 bg-emerald-50/30 rounded-xl p-4 space-y-1.5 shadow-xs">
+                <div className="border border-emerald-200 bg-emerald-50/30 rounded-xl p-3.5 space-y-1 shadow-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-[10px] font-bold text-emerald-800 uppercase tracking-wide">
                       Phase 1 (Days 1–30)
                     </span>
                     <span className="w-2 h-2 rounded-full bg-emerald-600" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-sm">Foundations &amp; Operational Records</h4>
+                  <h4 className="font-bold text-slate-900 text-xs">Foundations &amp; Operational Records</h4>
                   <p className="text-slate-600 text-[11px] leading-relaxed">
                     Deploy mobile farm bookkeeping app, register casual workers with formal agreements, and configure chemical safety logs.
                   </p>
                 </div>
 
-                <div className="border border-slate-200 rounded-xl p-4 space-y-1.5 bg-white shadow-xs">
+                <div className="border border-slate-200 rounded-xl p-3.5 space-y-1 bg-white shadow-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                       Phase 2 (Days 31–90)
                     </span>
                     <span className="w-2 h-2 rounded-full bg-amber-400" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-sm">Productive Solar Cold Chain</h4>
+                  <h4 className="font-bold text-slate-900 text-xs">Productive Solar Cold Chain</h4>
                   <p className="text-slate-600 text-[11px] leading-relaxed">
                     Install modular PAYG solar precooling unit through SunCulture equipment matching facility; submit energy logbook for clean energy subsidy.
                   </p>
                 </div>
 
-                <div className="border border-slate-200 rounded-xl p-4 space-y-1.5 bg-white shadow-xs">
+                <div className="border border-slate-200 rounded-xl p-3.5 space-y-1 bg-white shadow-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                       Phase 3 (Days 91–180+)
                     </span>
                     <span className="w-2 h-2 rounded-full bg-slate-300" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-sm">Certification &amp; Level 4 Capital</h4>
+                  <h4 className="font-bold text-slate-900 text-xs">Certification &amp; Level 4 Capital</h4>
                   <p className="text-slate-600 text-[11px] leading-relaxed">
                     Complete external GlobalG.A.P. verification and present validated enterprise dossier to regional ag-equity and debt investors.
                   </p>
                 </div>
               </div>
+
+              {/* Advisory Service Desk Support Window Box */}
+              <div className="bg-emerald-50/40 border border-emerald-200/70 rounded-xl p-3.5 text-xs">
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                  <div className="space-y-1 flex-1">
+                    <span className="text-[10px] uppercase font-bold text-emerald-800 tracking-wider block">
+                      Future Farms Service Desk Support Window
+                    </span>
+                    <h4 className="font-bold text-slate-900 text-xs">
+                      Pre-Qualified Capital &amp; Technology Facilities
+                    </h4>
+                    <p className="text-slate-600 text-[11px] leading-relaxed">
+                      Based on this verified diagnostic, <strong className="text-slate-900">{farmName}</strong> is pre-qualified for the SunCulture Productive Equipment Facility and the Regional Agribusiness Matching Grant. Access technical support and onboarding assistance through your assigned account manager.
+                    </p>
+                  </div>
+                  <div className="sm:w-52 bg-white border border-emerald-200 rounded-lg p-2.5 shrink-0 text-center shadow-xs">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Advisory Desk Channel</span>
+                    <span className="text-xs font-bold text-emerald-800 block mt-0.5">advisory@futurefarms.africa</span>
+                    <span className="text-[10px] text-slate-500 block mt-0.5">Direct Line: +254 700 000 000</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Document Footer: Tamper-Proof Seals & QR Code */}
+              <footer className="border-t border-slate-200 pt-4 mt-2 text-[11px] text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4 print-break-inside-avoid">
+                <div className="flex items-center space-x-3.5">
+                  <div className="p-1.5 bg-white border border-slate-300 rounded-lg shadow-xs">
+                    {/* SVG QR Code */}
+                    <svg className="w-11 h-11 text-slate-900" fill="currentColor" viewBox="0 0 100 100">
+                      <rect x="0" y="0" width="30" height="30" />
+                      <rect x="5" y="5" width="20" height="20" fill="white" />
+                      <rect x="9" y="9" width="12" height="12" />
+                      <rect x="70" y="0" width="30" height="30" />
+                      <rect x="75" y="5" width="20" height="20" fill="white" />
+                      <rect x="79" y="9" width="12" height="12" />
+                      <rect x="0" y="70" width="30" height="30" />
+                      <rect x="5" y="75" width="20" height="20" fill="white" />
+                      <rect x="9" y="79" width="12" height="12" />
+                      <rect x="40" y="10" width="15" height="10" />
+                      <rect x="40" y="30" width="20" height="10" />
+                      <rect x="10" y="40" width="20" height="10" />
+                      <rect x="65" y="45" width="25" height="10" />
+                      <rect x="35" y="60" width="15" height="25" />
+                      <rect x="60" y="65" width="15" height="10" />
+                      <rect x="80" y="60" width="10" height="25" />
+                    </svg>
+                  </div>
+                  <div className="font-mono text-[10px] space-y-0.5">
+                    <span className="font-bold text-slate-800 uppercase block tracking-wider text-[11px]">
+                      Tamper-Proof Verification
+                    </span>
+                    <span>Hash: e82a-992d-ffa1-8294-ce88-b710</span>
+                    <br />
+                    <span>Ledger: Future Farms AgTech Registry #812</span>
+                  </div>
+                </div>
+
+                <div className="text-left md:text-right text-xs">
+                  <p className="font-bold text-slate-800">Future Farms Advisory Framework • Kenya AgHub</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">Issued under Guidelines v2.4 (2025)</p>
+                  <p className="text-[10px] text-slate-400 mt-1 italic">
+                    Strictly Confidential • {farmName} Verified Diagnostic Record
+                  </p>
+                </div>
+              </footer>
             </section>
-
-            {/* Document Footer: Tamper-Proof Seals & QR Code */}
-            <footer className="border-t border-slate-200 pt-5 mt-6 text-[11px] text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4 print-break-inside-avoid">
-              <div className="flex items-center space-x-3.5">
-                <div className="p-1.5 bg-white border border-slate-300 rounded-lg shadow-xs">
-                  {/* SVG QR Code */}
-                  <svg className="w-12 h-12 text-slate-900" fill="currentColor" viewBox="0 0 100 100">
-                    <rect x="0" y="0" width="30" height="30" />
-                    <rect x="5" y="5" width="20" height="20" fill="white" />
-                    <rect x="9" y="9" width="12" height="12" />
-                    <rect x="70" y="0" width="30" height="30" />
-                    <rect x="75" y="5" width="20" height="20" fill="white" />
-                    <rect x="79" y="9" width="12" height="12" />
-                    <rect x="0" y="70" width="30" height="30" />
-                    <rect x="5" y="75" width="20" height="20" fill="white" />
-                    <rect x="9" y="79" width="12" height="12" />
-                    <rect x="40" y="10" width="15" height="10" />
-                    <rect x="40" y="30" width="20" height="10" />
-                    <rect x="10" y="40" width="20" height="10" />
-                    <rect x="65" y="45" width="25" height="10" />
-                    <rect x="35" y="60" width="15" height="25" />
-                    <rect x="60" y="65" width="15" height="10" />
-                    <rect x="80" y="60" width="10" height="25" />
-                  </svg>
-                </div>
-                <div className="font-mono text-[10px] space-y-0.5">
-                  <span className="font-bold text-slate-800 uppercase block tracking-wider text-[11px]">
-                    Tamper-Proof Verification
-                  </span>
-                  <span>Hash: e82a-992d-ffa1-8294-ce88-b710</span>
-                  <br />
-                  <span>Ledger: Future Farms AgTech Registry #812</span>
-                </div>
-              </div>
-
-              <div className="text-left md:text-right text-xs">
-                <p className="font-bold text-slate-800">Future Farms Advisory Framework • Kenya AgHub</p>
-                <p className="text-[11px] text-slate-500 mt-0.5">Issued under Guidelines v2.4 (2025)</p>
-                <p className="text-[10px] text-slate-400 mt-1 italic">
-                  Strictly Confidential • {farmName} Verified Diagnostic Record
-                </p>
-              </div>
-            </footer>
           </article>
         ) : (
           /* ========================================================================= */
