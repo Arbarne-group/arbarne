@@ -52,7 +52,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen bg-background text-on-background">
       {/* Left Side: Brand Imagery & Message */}
-      <div className="relative hidden w-0 flex-1 lg:block">
+      <div className="relative hidden w-0 flex-1 lg:block lg:h-screen lg:sticky lg:top-0 overflow-hidden">
         <div
           className="absolute inset-0 h-full w-full bg-cover bg-center"
           style={{
@@ -85,46 +85,46 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side: Login Form */}
-      <div className="flex flex-1 flex-col justify-center px-6 py-12 sm:px-10 lg:flex-none lg:px-20 xl:px-24 bg-surface-container-lowest">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
+      <div className="flex flex-1 flex-col justify-start min-h-screen lg:h-screen lg:overflow-y-auto px-6 py-6 sm:px-10 lg:px-16 xl:px-20 bg-surface-container-lowest">
+        <div className="mx-auto w-full max-w-sm lg:w-96 my-auto py-4 sm:py-6">
           {/* Logo & Header */}
           <div>
-            <div className="flex items-center mb-6">
+            <div className="flex items-center mb-3">
               <Link href="/" className="flex items-center">
                 <Image
                   src="/logo.webp"
                   alt="Future Farms"
-                  width={300}
-                  height={75}
-                  className="w-full max-w-[280px] h-auto object-contain"
+                  width={220}
+                  height={55}
+                  className="w-full max-w-[210px] h-auto object-contain"
                   priority
                 />
               </Link>
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold mb-1.5">
               <span>Sign-In</span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
+            <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight">
               Build Your Farm&apos;s Capabilities.
             </h1>
-            <p className="mt-2 text-xs md:text-sm text-on-surface-variant leading-relaxed">
+            <p className="mt-1 text-xs text-on-surface-variant leading-relaxed">
               Assess your farm, strengthen its capabilities, verify your progress, and build the credibility to access finance, markets, and investment opportunities.
             </p>
           </div>
 
           {error && (
-            <div className="mt-6 p-3 rounded-xl bg-error-container text-on-error-container text-sm flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">error</span>
+            <div className="mt-3 p-2.5 rounded-xl bg-error-container text-on-error-container text-xs flex items-center gap-2">
+              <span className="material-symbols-outlined text-[16px]">error</span>
               <span>{error}</span>
             </div>
           )}
 
-          <div className="mt-8">
-            <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="mt-4">
+            <form onSubmit={handleSubmit} className="space-y-3.5">
               {/* Email Field */}
               <div>
                 <label
-                  className="block text-xs font-semibold text-on-surface mb-1.5"
+                  className="block text-xs font-semibold text-on-surface mb-1"
                   htmlFor="email"
                 >
                   Email Address
@@ -136,14 +136,14 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="block w-full px-3.5 py-2.5 bg-surface rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors text-sm text-on-surface placeholder:text-on-surface-variant/40"
+                  className="block w-full px-3 py-2 bg-surface rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors text-sm text-on-surface placeholder:text-on-surface-variant/40"
                 />
               </div>
 
               {/* Password Field */}
               <div>
                 <label
-                  className="block text-xs font-semibold text-on-surface mb-1.5"
+                  className="block text-xs font-semibold text-on-surface mb-1"
                   htmlFor="password"
                 >
                   Password
@@ -156,14 +156,14 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="block w-full pl-3.5 pr-10 py-2.5 bg-surface rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors text-sm text-on-surface placeholder:text-on-surface-variant/40"
+                    className="block w-full pl-3 pr-10 py-2 bg-surface rounded-xl border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors text-sm text-on-surface placeholder:text-on-surface-variant/40"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
                   >
-                    <span className="material-symbols-outlined text-[20px]">
+                    <span className="material-symbols-outlined text-[18px]">
                       {showPassword ? "visibility" : "visibility_off"}
                     </span>
                   </button>
@@ -178,11 +178,11 @@ export default function LoginPage() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary bg-surface-bright cursor-pointer"
+                    className="h-3.5 w-3.5 rounded border-outline-variant text-primary focus:ring-primary bg-surface-bright cursor-pointer"
                   />
                   <label
                     htmlFor="remember-me"
-                    className="ml-2.5 block text-xs text-on-surface-variant cursor-pointer"
+                    className="ml-2 block text-xs text-on-surface-variant cursor-pointer"
                   >
                     Remember me
                   </label>
@@ -202,7 +202,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex w-full justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-on-primary shadow-sm hover-lift btn-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary transition-all items-center gap-2 cursor-pointer disabled:opacity-70"
+                  className="flex w-full justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary shadow-sm hover-lift btn-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary transition-all items-center gap-2 cursor-pointer disabled:opacity-70"
                 >
                   {loading ? (
                     <span>Signing In...</span>
@@ -221,20 +221,20 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={handleQuickDemo}
-                className="w-full text-xs text-primary font-semibold py-2.5 px-3 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full text-xs text-primary font-semibold py-2 px-3 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[16px]">bolt</span>
+                <span className="material-symbols-outlined text-[15px]">bolt</span>
                 Quick Demo Login (Keziah - Farm Owner)
               </button>
             </form>
 
             {/* Divider */}
-            <div className="my-6 relative">
+            <div className="my-3.5 relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-outline-variant/40" />
               </div>
               <div className="relative flex justify-center">
-                <span className="px-3 bg-surface-container-lowest text-on-surface-variant text-xs font-medium">
+                <span className="px-3 bg-surface-container-lowest text-on-surface-variant text-[11px] font-medium">
                   Or continue with
                 </span>
               </div>
@@ -245,7 +245,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={handleQuickDemo}
-                className="w-full flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xl border border-outline-variant bg-surface hover:bg-surface-container-low text-on-surface font-semibold text-sm transition-colors shadow-sm cursor-pointer"
+                className="w-full flex items-center justify-center gap-2.5 py-2 px-4 rounded-xl border border-outline-variant bg-surface hover:bg-surface-container-low text-on-surface font-semibold text-xs transition-colors shadow-sm cursor-pointer"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24">
                   <path
@@ -270,8 +270,8 @@ export default function LoginPage() {
             </div>
 
             {/* Footer Sign Up Link */}
-            <div className="mt-8 text-center">
-              <p className="text-sm text-on-surface-variant">
+            <div className="mt-4 text-center">
+              <p className="text-xs text-on-surface-variant">
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/signup"

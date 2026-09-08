@@ -70,7 +70,7 @@ export default function SignupPage() {
   return (
     <div className="flex min-h-screen bg-background text-on-background">
       {/* Left Side: Brand Imagery & Message */}
-      <div className="relative hidden w-0 flex-1 lg:block">
+      <div className="relative hidden w-0 flex-1 lg:block lg:h-screen lg:sticky lg:top-0 overflow-hidden">
         <div
           className="absolute inset-0 h-full w-full bg-cover bg-center"
           style={{
@@ -82,14 +82,14 @@ export default function SignupPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
           {/* Hero text */}
-          <div className="absolute bottom-0 left-0 p-12 w-full max-w-2xl text-white">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-4 drop-shadow-lg leading-tight">
+          <div className="absolute bottom-0 left-0 p-8 xl:p-12 w-full max-w-2xl text-white">
+            <h2 className="text-3xl xl:text-5xl font-bold mb-3 drop-shadow-lg leading-tight">
               Our Farms. Our Future.
             </h2>
-            <p className="text-base lg:text-lg text-white/90 max-w-lg leading-relaxed drop-shadow-md mb-6">
+            <p className="text-sm xl:text-base text-white/90 max-w-lg leading-relaxed drop-shadow-md mb-4">
               Join the future of farming and become part of a continent-wide effort to redesign Africa&apos;s agricultural systems for climate resilience and food security.
             </p>
-            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 max-w-lg">
+            <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/20 max-w-lg">
               <h3 className="text-xs font-bold uppercase tracking-wider text-secondary-fixed mb-1 flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px]">verified</span>
                 Future Farms Framework
@@ -103,45 +103,45 @@ export default function SignupPage() {
       </div>
 
       {/* Right Side: Signup Form */}
-      <div className="flex flex-1 flex-col justify-center px-6 py-12 sm:px-10 lg:flex-none lg:px-20 xl:px-24 bg-surface-container-lowest">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
+      <div className="flex flex-1 flex-col justify-start min-h-screen lg:h-screen lg:overflow-y-auto px-6 py-6 sm:px-10 lg:px-16 xl:px-20 bg-surface-container-lowest">
+        <div className="mx-auto w-full max-w-sm lg:w-96 my-auto py-4 sm:py-6">
           {/* Logo & Header */}
           <div>
-            <div className="flex items-center mb-6">
+            <div className="flex items-center mb-3">
               <Link href="/" className="flex items-center">
                 <Image
                   src="/logo.webp"
                   alt="Future Farms"
-                  width={300}
-                  height={75}
-                  className="w-full max-w-[280px] h-auto object-contain"
+                  width={220}
+                  height={55}
+                  className="w-full max-w-[210px] h-auto object-contain"
                   priority
                 />
               </Link>
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold mb-1.5">
               <span>Sign-Up</span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
+            <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight">
               Our Farms. Our Future.
             </h1>
-            <p className="mt-2 text-xs md:text-sm text-on-surface-variant leading-relaxed">
-              Join the future of farming and become part of a continent-wide effort to redesign Africa&apos;s agricultural systems for climate resilience and food security.
+            <p className="mt-1 text-xs text-on-surface-variant leading-relaxed">
+              Join the future of farming and become part of a continent-wide effort to redesign Africa&apos;s agricultural systems.
             </p>
           </div>
 
           {error && (
-            <div className="mt-6 p-3 rounded-xl bg-error-container text-on-error-container text-sm flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">error</span>
+            <div className="mt-3 p-2.5 rounded-xl bg-error-container text-on-error-container text-xs flex items-center gap-2">
+              <span className="material-symbols-outlined text-[16px]">error</span>
               <span>{error}</span>
             </div>
           )}
 
-          <div className="mt-8">
-            <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="mt-4">
+            <form onSubmit={handleSubmit} className="space-y-3.5">
               {/* Full Name */}
               <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1.5" htmlFor="name">
+                <label className="block text-xs font-semibold text-on-surface mb-1" htmlFor="name">
                   Full Name
                 </label>
                 <input
@@ -151,13 +151,13 @@ export default function SignupPage() {
                   placeholder="e.g. John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="block w-full rounded-xl border border-outline-variant px-3.5 py-2.5 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-sm bg-surface-bright transition-colors"
+                  className="block w-full rounded-xl border border-outline-variant px-3 py-2 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-sm bg-surface-bright transition-colors"
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1.5" htmlFor="email">
+                <label className="block text-xs font-semibold text-on-surface mb-1" htmlFor="email">
                   Email Address
                 </label>
                 <input
@@ -167,18 +167,18 @@ export default function SignupPage() {
                   placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="block w-full rounded-xl border border-outline-variant px-3.5 py-2.5 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-sm bg-surface-bright transition-colors"
+                  className="block w-full rounded-xl border border-outline-variant px-3 py-2 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-sm bg-surface-bright transition-colors"
                 />
               </div>
 
               {/* Phone Number (with Kenya Country Code) */}
               <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1.5" htmlFor="phone">
+                <label className="block text-xs font-semibold text-on-surface mb-1" htmlFor="phone">
                   Phone Number
                 </label>
                 <div className="relative flex rounded-xl border border-outline-variant focus-within:ring-1 focus-within:ring-primary focus-within:border-primary bg-surface-bright overflow-hidden">
-                  <span className="inline-flex items-center border-r border-outline-variant bg-surface-container-low px-3 text-on-surface-variant text-sm font-medium">
-                    <span className="mr-1.5">🇰🇪</span> +254
+                  <span className="inline-flex items-center border-r border-outline-variant bg-surface-container-low px-2.5 text-on-surface-variant text-xs font-medium">
+                    <span className="mr-1">🇰🇪</span> +254
                   </span>
                   <input
                     id="phone"
@@ -186,14 +186,14 @@ export default function SignupPage() {
                     placeholder="700 000 000"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="block w-full min-w-0 flex-1 border-0 px-3.5 py-2.5 text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0 text-sm bg-transparent"
+                    className="block w-full min-w-0 flex-1 border-0 px-3 py-2 text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0 text-sm bg-transparent"
                   />
                 </div>
               </div>
 
               {/* Farm Name (Optional) */}
               <div>
-                <label className="flex justify-between text-xs font-semibold text-on-surface mb-1.5" htmlFor="farmName">
+                <label className="flex justify-between text-xs font-semibold text-on-surface mb-1" htmlFor="farmName">
                   <span>Farm Name</span>
                   <span className="text-on-surface-variant/70 font-normal">Optional</span>
                 </label>
@@ -203,13 +203,13 @@ export default function SignupPage() {
                   placeholder="e.g. Highland Greens Farm"
                   value={formData.farmName}
                   onChange={(e) => setFormData({ ...formData, farmName: e.target.value })}
-                  className="block w-full rounded-xl border border-outline-variant px-3.5 py-2.5 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-sm bg-surface-bright transition-colors"
+                  className="block w-full rounded-xl border border-outline-variant px-3 py-2 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-sm bg-surface-bright transition-colors"
                 />
               </div>
 
               {/* Password */}
               <div>
-                <label className="block text-xs font-semibold text-on-surface mb-1.5" htmlFor="password">
+                <label className="block text-xs font-semibold text-on-surface mb-1" htmlFor="password">
                   Password
                 </label>
                 <div className="relative">
@@ -220,21 +220,21 @@ export default function SignupPage() {
                     placeholder="••••••••"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="block w-full rounded-xl border border-outline-variant px-3.5 py-2.5 pr-10 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-sm bg-surface-bright transition-colors"
+                    className="block w-full rounded-xl border border-outline-variant px-3 py-2 pr-10 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary text-sm bg-surface-bright transition-colors"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant hover:text-primary transition-colors"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
                   >
-                    <span className="material-symbols-outlined text-[20px]">
+                    <span className="material-symbols-outlined text-[18px]">
                       {showPassword ? "visibility" : "visibility_off"}
                     </span>
                   </button>
                 </div>
 
                 {/* Password Strength Indicator */}
-                <div className="mt-2 flex gap-1 h-1.5 w-full rounded-full overflow-hidden bg-surface-variant">
+                <div className="mt-1.5 flex gap-1 h-1 w-full rounded-full overflow-hidden bg-surface-variant">
                   <div
                     className={`h-full w-1/3 transition-colors duration-300 ${
                       strength.level >= 1
@@ -261,23 +261,25 @@ export default function SignupPage() {
                     }`}
                   />
                 </div>
-                <p className={`mt-1 text-xs font-medium h-4 ${strength.colorClass}`}>
-                  {strength.text}
-                </p>
+                {strength.text && (
+                  <p className={`mt-0.5 text-[11px] font-medium ${strength.colorClass}`}>
+                    {strength.text}
+                  </p>
+                )}
               </div>
 
               {/* Terms Checkbox */}
-              <div className="flex items-start">
+              <div className="flex items-start pt-0.5">
                 <div className="flex h-5 items-center">
                   <input
                     id="terms"
                     type="checkbox"
                     checked={formData.terms}
                     onChange={(e) => setFormData({ ...formData, terms: e.target.checked })}
-                    className="h-4 w-4 rounded border-outline-variant text-primary focus:ring-primary bg-surface-bright cursor-pointer"
+                    className="h-3.5 w-3.5 rounded border-outline-variant text-primary focus:ring-primary bg-surface-bright cursor-pointer"
                   />
                 </div>
-                <div className="ml-3 text-xs leading-relaxed text-on-surface-variant">
+                <div className="ml-2.5 text-[11px] leading-relaxed text-on-surface-variant">
                   <label htmlFor="terms" className="cursor-pointer">
                     I agree to the{" "}
                     <Link href="#" className="font-medium text-primary hover:underline">
@@ -293,11 +295,11 @@ export default function SignupPage() {
               </div>
 
               {/* Submit Button */}
-              <div>
+              <div className="pt-1">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex w-full justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-on-primary shadow-sm hover-lift btn-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary transition-all items-center gap-2 cursor-pointer disabled:opacity-70"
+                  className="flex w-full justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary shadow-sm hover-lift btn-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary transition-all items-center gap-2 cursor-pointer disabled:opacity-70"
                 >
                   {loading ? (
                     <span>Creating Account...</span>
@@ -314,8 +316,8 @@ export default function SignupPage() {
             </form>
 
             {/* Login Link */}
-            <div className="mt-8 text-center">
-              <p className="text-sm text-on-surface-variant">
+            <div className="mt-4 text-center">
+              <p className="text-xs sm:text-sm text-on-surface-variant">
                 Already have an account?{" "}
                 <Link
                   href="/login"
