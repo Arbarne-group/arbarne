@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "postinstall": "prisma generate",
-    "build": "prisma db push --accept-data-loss && prisma generate && next build",
+    "build": "node scripts/vercel-build.js",
     "start": "next start",
     "lint": "eslint",
     "db:seed": "tsx prisma/seed.ts"
