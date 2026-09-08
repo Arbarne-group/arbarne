@@ -3,15 +3,18 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 import AssessmentNavShell from "./components/AssessmentNavShell";
 import AssessmentOverviewView from "./components/AssessmentOverviewView";
 import AssessmentStandardQuestionnaireView from "./components/AssessmentStandardQuestionnaireView";
 import AssessmentSummaryView from "./components/AssessmentSummaryView";
 import { getPillarById } from "@/data/assessmentData";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 function AssessmentPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user: clerkUser } = useUser();
 
   const initialView = searchParams.get("view") || "overview";
   const initialPillar = Number(searchParams.get("pillar")) || 2; // Default to Pillar 2 as highlighted in mockups
@@ -26,12 +29,11 @@ function AssessmentPageContent() {
   const [onboardingStage, setOnboardingStage] = useState<string>("FULLY_COMPLETED");
 
   useEffect(() => {
-    let email = "keziah@futurefarms.africa";
+    const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
     const cached = localStorage.getItem("future_farms_user");
     if (cached) {
       try {
         const u = JSON.parse(cached);
-        if (u.email) email = u.email;
         if (u.stage) {
           setOnboardingStage(u.stage);
           if (u.stage === "INITIAL_IN_PROGRESS") {
@@ -45,21 +47,25 @@ function AssessmentPageContent() {
       } catch (e) {}
     }
 
-    fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.stage) {
-          setOnboardingStage(data.stage);
-          if (data.stage === "INITIAL_IN_PROGRESS") {
-            router.replace("/onboarding/step-1");
-          } else if (data.stage === "INITIAL_COMPLETED" || data.stage === "ADDITIONAL_COMPLETED") {
-            router.replace("/onboarding");
+    if (email) {
+      fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.stage) {
+            setOnboardingStage(data.stage);
+            if (data.stage === "INITIAL_IN_PROGRESS") {
+              router.replace("/onboarding/step-1");
+            } else if (data.stage === "INITIAL_COMPLETED" || data.stage === "ADDITIONAL_COMPLETED") {
+              router.replace("/onboarding");
+            }
           }
-        }
-      })
-      .catch(console.error)
-      .finally(() => setOnboardingLoaded(true));
-  }, [router]);
+        })
+        .catch(console.error)
+        .finally(() => setOnboardingLoaded(true));
+    } else {
+      setOnboardingLoaded(true);
+    }
+  }, [router, clerkUser]);
 
   // Sync state with URL search params
   useEffect(() => {

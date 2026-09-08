@@ -1,32 +1,48 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 import AppShell from "@/components/layout/AppShell";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 export default function SettingsPage() {
-  const [fullName, setFullName] = useState("Keziah Wanjiku Kariuki");
-  const [preferredName, setPreferredName] = useState("Keziah");
-  const [phoneNumber, setPhoneNumber] = useState("712 345 678");
-  const [emailInput, setEmailInput] = useState("keziah@futurefarms.africa");
+  const { user: clerkUser } = useUser();
+  const [fullName, setFullName] = useState("");
+  const [preferredName, setPreferredName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [emailInput, setEmailInput] = useState("");
   const [gender, setGender] = useState("female");
   const [ageBracket, setAgeBracket] = useState("30-45");
-  const [advisoryLanguage, setAdvisoryLanguage] = useState("kiswahili");
+  const [advisoryLanguage, setAdvisoryLanguage] = useState("english");
 
   const [saving, setSaving] = useState(false);
   const [saveToast, setSaveToast] = useState(false);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.user) {
-          if (data.user.name) setFullName(data.user.name);
-          if (data.user.phone) setPhoneNumber(data.user.phone.replace("+254", "").trim());
-          if (data.user.email) setEmailInput(data.user.email);
-        }
-      })
-      .catch(console.error);
-  }, []);
+    const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+    if (clerkUser) {
+      if (clerkUser.fullName) setFullName(clerkUser.fullName);
+      if (clerkUser.firstName) setPreferredName(clerkUser.firstName);
+      if (clerkUser.primaryEmailAddress?.emailAddress) {
+        setEmailInput(clerkUser.primaryEmailAddress.emailAddress);
+      }
+    }
+
+    if (email) {
+      fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) {
+            if (data.user.name && !clerkUser?.fullName) setFullName(data.user.name);
+            if (data.user.phone) setPhoneNumber(data.user.phone.replace("+254", "").trim());
+            if (data.user.email && !clerkUser?.primaryEmailAddress?.emailAddress) {
+              setEmailInput(data.user.email);
+            }
+          }
+        })
+        .catch(console.error);
+    }
+  }, [clerkUser]);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();

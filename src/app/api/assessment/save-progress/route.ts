@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { computeAssessmentResults, getMaturityTier } from "@/lib/assessmentScoring";
 import { syncUserAssessmentToSheet } from "@/lib/googleSheets";
@@ -38,22 +39,16 @@ ALL_PILLARS.forEach((p) => {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email = "keziah@futurefarms.africa", answers = {}, pillarId } = body;
+    const { email, answers = {}, pillarId } = body;
 
-    // 1. Get or create user
-    let user = await prisma.user.findUnique({
-      where: { email },
-    });
+    // 1. Get or create authenticated user
+    const user = await getOrCreateCurrentUser(email || undefined);
 
     if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email,
-          name: "Keziah Mwangi",
-          passwordHash: "demo_hash",
-          farmName: "Green Horizon Agri-Farm",
-        },
-      });
+      return NextResponse.json(
+        { error: "User not authenticated or not found." },
+        { status: 401 }
+      );
     }
 
     // 2. Get or create active Assessment record

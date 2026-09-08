@@ -3,15 +3,18 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 function CheckoutContent() {
   const router = useRouter();
+  const { user: clerkUser } = useUser();
   const searchParams = useSearchParams();
   const plan = searchParams.get("plan") || "FULL_ASSESSMENT";
   const amount = searchParams.get("amount") || "10.00";
 
   const [paymentMethod, setPaymentMethod] = useState<"mpesa" | "card">("mpesa");
-  const [phoneNumber, setPhoneNumber] = useState("712 345 678");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
@@ -24,15 +27,17 @@ function CheckoutContent() {
     setProcessing(true);
     setError(null);
 
+    const userEmail = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: "keziah@futurefarms.africa",
+          email: userEmail,
           planType: plan,
           paymentMethod: paymentMethod.toUpperCase(),
-          phoneNumber: paymentMethod === "mpesa" ? `+254 ${phoneNumber}` : null,
+          phoneNumber: paymentMethod === "mpesa" ? `+254 ${phoneNumber.trim()}` : null,
           amount: parseFloat(amount),
         }),
       });

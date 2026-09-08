@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 import { ALL_PILLARS, AssessmentPillar } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
@@ -22,6 +23,7 @@ interface AssessmentOverviewViewProps {
 export default function AssessmentOverviewView({
   onSelectPillar,
 }: AssessmentOverviewViewProps) {
+  const { user } = useUser();
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [pillarProgress, setPillarProgress] = useState<
     Record<number, PillarProgressItem>
@@ -42,7 +44,7 @@ export default function AssessmentOverviewView({
   useEffect(() => {
     async function loadProgress() {
       let answers: Record<string, "yes" | "no"> = {};
-      const email = getActiveUserEmail();
+      const email = user?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
       let pillarApiStatus: Record<number, any> = {};
 
       try {

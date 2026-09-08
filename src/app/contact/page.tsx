@@ -1,17 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 import AppShell from "@/components/layout/AppShell";
 
 export default function ContactUsPage() {
+  const { user } = useUser();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
-    name: "Keziah Wanjiku",
-    email: "keziah@futurefarms.africa",
-    phone: "+254 712 345 678",
+    name: "",
+    email: "",
+    phone: "",
     topic: "Assessment & Advisory",
     message: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        name: user.fullName || prev.name,
+        email: user.primaryEmailAddress?.emailAddress || prev.email,
+        phone: user.phoneNumbers?.[0]?.phoneNumber || prev.phone,
+      }));
+    }
+  }, [user]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

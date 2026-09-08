@@ -1,22 +1,21 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getOrCreateCurrentUser } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
     const {
-      email = "keziah@futurefarms.africa",
+      email,
       planType = "FULL_ASSESSMENT",
       paymentMethod = "MPESA",
       phoneNumber,
       amount = 10.0,
     } = await request.json();
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await getOrCreateCurrentUser(email || undefined);
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "User not found or unauthenticated" }, { status: 401 });
     }
 
     // Create Order record

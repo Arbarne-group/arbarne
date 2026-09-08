@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { PILLAR_BRANDS } from "@/data/brandColors";
 import { getMaturityTier } from "@/lib/assessmentScoring";
@@ -9,19 +10,13 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email") || "keziah@futurefarms.africa";
+    const emailParam = searchParams.get("email");
     const pillarParam = searchParams.get("pillarId");
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: {
-        farmerProfile: true,
-        farmManagement: true,
-      },
-    });
+    const user = await getOrCreateCurrentUser(emailParam || undefined);
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "User not found or unauthenticated" }, { status: 401 });
     }
 
     const assessment = await prisma.assessment.findFirst({

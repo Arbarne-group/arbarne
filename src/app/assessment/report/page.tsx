@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useState, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
 import { ALL_PILLARS, PillarData, AssessmentQuestion } from "@/data/allPillarsData";
 import { getMaturityTier } from "@/lib/assessmentScoring";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
@@ -29,6 +30,7 @@ function AssessmentReportContent() {
   const isAllPillars = pillarParam === "all";
   const pillarId = isAllPillars ? null : Math.max(1, Math.min(8, Number(pillarParam) || 1));
 
+  const { user: clerkUser } = useUser();
   const [loading, setLoading] = useState(true);
   const [reportData, setReportData] = useState<any>(null);
   const [activeEmail, setActiveEmail] = useState<string>("");
@@ -36,7 +38,11 @@ function AssessmentReportContent() {
 
   // Load user profile & assessment report
   useEffect(() => {
-    const email = emailParam || getActiveUserEmail();
+    const email = emailParam || clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+    if (!email) {
+      setLoading(false);
+      return;
+    }
     setActiveEmail(email);
 
     // Fetch user onboarding profile

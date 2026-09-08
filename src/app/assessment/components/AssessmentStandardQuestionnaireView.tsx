@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 import {
   getPillarById,
   AssessmentPillar,
   AssessmentCapability,
-  DEFAULT_PILLAR_2_ANSWERS,
 } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
@@ -20,6 +20,7 @@ export default function AssessmentStandardQuestionnaireView({
   onExit,
   onComplete,
 }: AssessmentStandardQuestionnaireViewProps) {
+  const { user } = useUser();
   const pillar = getPillarById(pillarId);
   const [currentCapIndex, setCurrentCapIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, "yes" | "no">>({});
@@ -36,10 +37,14 @@ export default function AssessmentStandardQuestionnaireView({
     daysRemaining: 0,
   });
 
+  const activeEmail = user?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+
   // Load existing answers and cooldown status on mount
   useEffect(() => {
     try {
-      const email = getActiveUserEmail();
+      const email = activeEmail;
+      if (!email) return;
+
       fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
         .then((res) => res.json())
         .then((data) => {
@@ -62,13 +67,6 @@ export default function AssessmentStandardQuestionnaireView({
       if (saved) {
         const parsed = JSON.parse(saved);
         setAnswers((prev) => ({ ...prev, ...parsed }));
-      } else if (pillarId === 2) {
-        // Seed default baseline for Pillar 2 to match mockup (14/25)
-        setAnswers(DEFAULT_PILLAR_2_ANSWERS);
-        localStorage.setItem(
-          "future_farms_assessment_answers",
-          JSON.stringify(DEFAULT_PILLAR_2_ANSWERS)
-        );
       }
     } catch (e) {
       console.error(e);
@@ -104,7 +102,7 @@ export default function AssessmentStandardQuestionnaireView({
         "future_farms_assessment_answers",
         JSON.stringify(answers)
       );
-      const email = getActiveUserEmail();
+      const email = activeEmail;
       fetch("/api/assessment/save-progress", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -130,7 +128,7 @@ export default function AssessmentStandardQuestionnaireView({
         "future_farms_assessment_answers",
         JSON.stringify(answers)
       );
-      const email = getActiveUserEmail();
+      const email = activeEmail;
       fetch("/api/assessment/save-progress", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -163,7 +161,7 @@ export default function AssessmentStandardQuestionnaireView({
           "future_farms_assessment_answers",
           JSON.stringify(answers)
         );
-        const email = getActiveUserEmail();
+        const email = activeEmail;
         fetch("/api/assessment/submit-pillar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

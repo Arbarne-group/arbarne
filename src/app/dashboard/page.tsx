@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import AppShell from "@/components/layout/AppShell";
 import RadarChart from "@/components/dashboard/RadarChart";
 import { ALL_PILLARS } from "@/data/allPillarsData";
@@ -11,6 +12,7 @@ import {
   getMaturityTier,
   OverallAssessmentResult,
 } from "@/lib/assessmentScoring";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 interface ActionItem {
   id: string;
@@ -21,6 +23,7 @@ interface ActionItem {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { user: clerkUser } = useUser();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [assessmentResult, setAssessmentResult] = useState<OverallAssessmentResult | null>(null);
@@ -33,7 +36,7 @@ export default function DashboardPage() {
   const [newActionText, setNewActionText] = useState("");
   const [showAddAction, setShowAddAction] = useState(false);
 
-  // 5 Top Recommendations (Question-level tasks)
+  // Recommendations / Action Items
   const [actions, setActions] = useState<ActionItem[]>([
     { id: "act-1", text: "[P1.1.1] List top production challenges and explore technology solutions with an advisor", completed: true, category: "Pillar 1" },
     { id: "act-2", text: "[P2.3.1] Install energy sub-meters on high-consumption solar & grid irrigation pumps", completed: false, category: "Pillar 2" },
@@ -43,26 +46,45 @@ export default function DashboardPage() {
   ]);
 
   useEffect(() => {
-    fetch("/api/onboarding/step?email=keziah@futurefarms.africa")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.user) {
-          setUser(data.user);
-        }
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
 
-    // Load answers from localStorage or DB
+    if (email) {
+      fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) {
+            setUser(data.user);
+          }
+        })
+        .catch(console.error)
+        .finally(() => setLoading(false));
+
+      fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.answers && Object.keys(data.answers).length > 0) {
+            setAssessmentResult(computeAssessmentResults(data.answers));
+          } else {
+            // Fallback to local storage if available
+            try {
+              const saved = localStorage.getItem("future_farms_all_answers");
+              if (saved) {
+                const answers = JSON.parse(saved);
+                setAssessmentResult(computeAssessmentResults(answers));
+              } else {
+                setAssessmentResult(computeAssessmentResults({}));
+              }
+            } catch (e) {}
+          }
+        })
+        .catch(() => {
+          setAssessmentResult(computeAssessmentResults({}));
+        });
+    } else {
+      setLoading(false);
+    }
+
     try {
-      const saved = localStorage.getItem("future_farms_all_answers");
-      if (saved) {
-        const answers = JSON.parse(saved);
-        setAssessmentResult(computeAssessmentResults(answers));
-      } else {
-        setAssessmentResult(computeAssessmentResults({}));
-      }
-
       const savedActions = localStorage.getItem("future_farms_dashboard_actions");
       if (savedActions) {
         setActions(JSON.parse(savedActions));
@@ -70,7 +92,7 @@ export default function DashboardPage() {
     } catch (e) {
       console.error(e);
     }
-  }, []);
+  }, [clerkUser]);
 
   const handleToggleAction = (id: string) => {
     const updated = actions.map((act) =>
@@ -153,9 +175,17 @@ export default function DashboardPage() {
     },
   ];
 
+  const verifiedPillarsCount = assessmentResult?.pillarScores
+    ? assessmentResult.pillarScores.filter((s) => s.score > 0 || s.answeredCount > 0).length
+    : 0;
+
+  const farmIdentifier = user?.id
+    ? `FFF-KE-${user.id.slice(-6).toUpperCase()}`
+    : "FFF-KE-PROD";
+
   return (
     <AppShell
-      userName={user?.name || "Keziah Wanjiku"}
+      userName={user?.name || clerkUser?.fullName || "Farmer"}
       userRole={user?.farmerProfile?.jobTitle === "owner" ? "Farm Owner" : "Farm Operator"}
     >
       <div className="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-background">
@@ -173,10 +203,10 @@ export default function DashboardPage() {
             </div>
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed text-xs font-mono font-bold">
-                ID: FFF-KE-000-001
+                ID: {farmIdentifier}
               </span>
               <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                3/8 Pillars Verified
+                {verifiedPillarsCount}/8 Pillars Verified
               </span>
             </div>
           </div>

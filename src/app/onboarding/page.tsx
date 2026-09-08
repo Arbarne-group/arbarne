@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import AppShell from "@/components/layout/AppShell";
 
 import { computeOnboardingStageFromUser, getActiveUserEmail } from "@/lib/onboardingGuard";
 
 export default function OnboardingOverviewPage() {
   const router = useRouter();
+  const { user: clerkUser } = useUser();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [onboardingStage, setOnboardingStage] = useState<string>("INITIAL_IN_PROGRESS");
@@ -37,12 +39,12 @@ export default function OnboardingOverviewPage() {
   const profileApproved = Boolean(user?.onboardingStatus?.profileApproved);
 
   const fetchStatus = () => {
-    let email = getActiveUserEmail();
+    let email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
     const cached = localStorage.getItem("future_farms_user");
     if (cached) {
       try {
         const u = JSON.parse(cached);
-        if (u.email) email = u.email;
+        if (u.email && !email) email = u.email;
         setUser(u);
         const st = computeOnboardingStageFromUser(u);
         setOnboardingStage(st.stage);
@@ -51,6 +53,11 @@ export default function OnboardingOverviewPage() {
           return;
         }
       } catch (e) {}
+    }
+
+    if (!email) {
+      setLoading(false);
+      return;
     }
 
     fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
@@ -72,7 +79,7 @@ export default function OnboardingOverviewPage() {
 
   useEffect(() => {
     fetchStatus();
-  }, []);
+  }, [clerkUser]);
 
   const handleResetOnboarding = async () => {
     if (!confirm("Are you sure you want to reset all onboarding responses to test the flow from scratch?")) return;

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getOrCreateCurrentUser } from "@/lib/auth";
 import { syncUserOnboardingToSheet } from "@/lib/googleSheets";
 
 export const dynamic = "force-dynamic";
@@ -47,28 +48,12 @@ function computeOnboardingStage(user: any) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email") || "keziah@futurefarms.africa";
+    const emailParam = searchParams.get("email");
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: {
-        farmerProfile: true,
-        farmManagement: true,
-        operatingStyle: true,
-        digitalPlatform: true,
-        aspiration: true,
-        farmLocation: true,
-        farmCharacteristics: true,
-        farmingSystem: true,
-        businessExperience: true,
-        goalsPriorities: true,
-        householdLabour: true,
-        onboardingStatus: true,
-      },
-    });
+    const user = await getOrCreateCurrentUser(emailParam || undefined);
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "User not found or unauthenticated" }, { status: 401 });
     }
 
     const stageInfo = computeOnboardingStage(user);
@@ -87,14 +72,12 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email = "keziah@futurefarms.africa", step, data } = body;
+    const { email: bodyEmail, step, data } = body;
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await getOrCreateCurrentUser(bodyEmail || undefined);
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "User not found or unauthenticated" }, { status: 401 });
     }
 
     switch (step) {
@@ -500,14 +483,12 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email") || "keziah@futurefarms.africa";
+    const emailParam = searchParams.get("email");
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await getOrCreateCurrentUser(emailParam || undefined);
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "User not found or unauthenticated" }, { status: 401 });
     }
 
     await prisma.$transaction([

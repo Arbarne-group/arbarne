@@ -123,10 +123,10 @@ export function getRouteAccess(
 }
 
 /**
- * Returns the currently active logged in user's email, defaulting to demo user.
+ * Returns the currently active logged in user's email from localStorage, or empty string if not found.
  */
 export function getActiveUserEmail(): string {
-  if (typeof window === "undefined") return "keziah@futurefarms.africa";
+  if (typeof window === "undefined") return "";
   try {
     const cached = localStorage.getItem("future_farms_user");
     if (cached) {
@@ -134,6 +134,18 @@ export function getActiveUserEmail(): string {
       if (u?.email) return u.email;
     }
   } catch (e) {}
-  return "keziah@futurefarms.africa";
+  return "";
+}
+
+/**
+ * Saves active user info into client-side cache.
+ */
+export function setActiveUserSession(user: any) {
+  if (typeof window === "undefined" || !user) return;
+  try {
+    localStorage.setItem("future_farms_user", JSON.stringify(user));
+  } catch (e) {
+    console.error("Error saving active user session:", e);
+  }
 }
 

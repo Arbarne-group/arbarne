@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import MobileNav from "./MobileNav";
@@ -19,15 +20,22 @@ interface AppShellProps {
 
 export default function AppShell({
   children,
-  userName = "Keziah Wanjiku",
+  userName,
   userRole = "Farm Owner",
 }: AppShellProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { user, isLoaded } = useUser();
   const [collapsed, setCollapsed] = useState(false);
   const [onboardingStage, setOnboardingStage] = useState<OnboardingStage>("FULLY_COMPLETED");
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
+
+  const effectiveUserName =
+    userName ||
+    user?.fullName ||
+    (user?.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : "") ||
+    "Farmer";
 
   useEffect(() => {
     try {
@@ -39,17 +47,28 @@ export default function AppShell({
       // Ignore localStorage errors in restricted environments
     }
 
-    // Read cached user stage
-    let email = "keziah@futurefarms.africa";
-    const cached = localStorage.getItem("future_farms_user");
-    if (cached) {
-      try {
-        const u = JSON.parse(cached);
-        if (u.email) email = u.email;
-        const status = computeOnboardingStageFromUser(u);
-        setOnboardingStage(status.stage);
+    // Determine user email from Clerk or cached session
+    let email = "";
+    if (user?.primaryEmailAddress?.emailAddress) {
+      email = user.primaryEmailAddress.emailAddress;
+    } else {
+      const cached = localStorage.getItem("future_farms_user");
+      if (cached) {
+        try {
+          const u = JSON.parse(cached);
+          if (u.email) email = u.email;
+          const status = computeOnboardingStageFromUser(u);
+          setOnboardingStage(status.stage);
+          setStatusLoaded(true);
+        } catch (e) {}
+      }
+    }
+
+    if (!email) {
+      if (isLoaded) {
         setStatusLoaded(true);
-      } catch (e) {}
+      }
+      return;
     }
 
     // Refresh stage from API to keep in sync with database
@@ -86,7 +105,7 @@ export default function AppShell({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [user, isLoaded]);
 
   // Navigation Guardrail: Enforce flow according to onboarding status
   useEffect(() => {
@@ -99,7 +118,7 @@ export default function AppShell({
 
       const timer = setTimeout(() => {
         setRedirectNotice(null);
-      }, 4000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [pathname, onboardingStage, statusLoaded, router]);
@@ -118,7 +137,7 @@ export default function AppShell({
     <div className="flex h-screen bg-background text-on-background overflow-hidden">
       {/* Desktop Persistent Sidebar with Expand/Collapse & Stage Locks */}
       <Sidebar
-        userName={userName}
+        userName={effectiveUserName}
         collapsed={collapsed}
         onToggleCollapse={handleToggleCollapse}
         onboardingStage={onboardingStage}
@@ -131,7 +150,7 @@ export default function AppShell({
         }`}
       >
         <Header
-          userName={userName}
+          userName={effectiveUserName}
           userRole={userRole}
           collapsed={collapsed}
           onToggleCollapse={handleToggleCollapse}

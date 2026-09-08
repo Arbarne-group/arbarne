@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
 import { OnboardingStage } from "@/lib/onboardingGuard";
 
 interface SidebarProps {
@@ -13,13 +14,14 @@ interface SidebarProps {
 }
 
 export default function Sidebar({
-  userName = "Keziah",
+  userName = "Farmer",
   collapsed = false,
   onToggleCollapse,
   onboardingStage = "FULLY_COMPLETED",
 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { signOut } = useClerk();
 
   const isSurvey1 = onboardingStage === "INITIAL_IN_PROGRESS";
   const isSurvey2 = onboardingStage === "INITIAL_COMPLETED" || onboardingStage === "ADDITIONAL_COMPLETED";
@@ -239,10 +241,11 @@ export default function Sidebar({
         })}
 
         {/* Logout */}
-        <Link
-          href="/login"
-          title={collapsed ? "Logout" : undefined}
-          className={`text-error font-medium rounded-xl hover:bg-error-container/20 transition-colors flex items-center text-sm relative group ${
+        <button
+          type="button"
+          onClick={() => signOut(() => router.push("/"))}
+          title={collapsed ? "Sign Out" : undefined}
+          className={`text-error font-medium rounded-xl hover:bg-error-container/20 transition-colors flex items-center text-sm relative group cursor-pointer text-left ${
             collapsed
               ? "w-12 h-10 mx-auto justify-center"
               : "px-4 py-2.5 gap-3 mt-1"
@@ -251,15 +254,15 @@ export default function Sidebar({
           <span className="material-symbols-outlined text-[20px] text-error shrink-0">
             logout
           </span>
-          {!collapsed && <span>Logout</span>}
+          {!collapsed && <span>Sign Out</span>}
 
           {/* Tooltip on hover when collapsed */}
           {collapsed && (
             <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-inverse-surface text-inverse-on-surface text-xs font-semibold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg">
-              Logout
+              Sign Out
             </div>
           )}
-        </Link>
+        </button>
 
         {/* Expand toggle at bottom when collapsed */}
         {collapsed && onToggleCollapse && (

@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getOrCreateCurrentUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email") || "keziah@futurefarms.africa";
+    const emailParam = searchParams.get("email");
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await getOrCreateCurrentUser(emailParam || undefined);
 
     if (!user) {
       return NextResponse.json({

@@ -1,6 +1,45 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-export default clerkMiddleware();
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/login(.*)",
+  "/signup(.*)",
+  "/pricing(.*)",
+  "/help(.*)",
+  "/contact(.*)",
+  "/api/webhook(.*)",
+  "/api/auth(.*)",
+]);
+
+export default clerkMiddleware(
+  async (auth, req) => {
+    const { pathname } = req.nextUrl;
+
+    // Direct legacy /login and /signup routes to Clerk's canonical routes
+    if (pathname === "/login") {
+      return NextResponse.redirect(new URL("/sign-in", req.url));
+    }
+    if (pathname === "/signup") {
+      return NextResponse.redirect(new URL("/sign-up", req.url));
+    }
+
+    // Enforce authentication on all private routes
+    if (!isPublicRoute(req)) {
+      await auth.protect();
+    }
+  },
+  {
+    authorizedParties: [
+      "https://app.futurefarms.africa",
+      "https://futurefarms.africa",
+      "http://localhost:3000",
+      "http://localhost:3001",
+    ],
+  }
+);
 
 export const config = {
   matcher: [

@@ -6,7 +6,6 @@ import Image from "next/image";
 import {
   getPillarById,
   ALL_PILLARS,
-  DEFAULT_PILLAR_2_ANSWERS,
 } from "@/data/assessmentData";
 import { ALL_PILLARS as CANONICAL_PILLARS } from "@/data/allPillarsData";
 import {
@@ -88,33 +87,17 @@ export default function AssessmentSummaryView({
       } catch (e) {
         console.error(e);
       }
-      if (Object.keys(loadedAnswers).length === 0 && pillarId === 2) {
-        loadedAnswers = DEFAULT_PILLAR_2_ANSWERS;
-      }
     }
     setAnswers(loadedAnswers);
 
-    // Initial mock claim statuses for demo
+    // Initial claim statuses
     const initialStatuses: Record<string, FFVClaimStatus> = {};
     const initialMethods: Record<string, string> = {};
-    let count = 0;
     pillar.capabilities.forEach((c) => {
       c.questions.forEach((q) => {
         if (loadedAnswers[q.id] === "yes") {
-          count++;
-          if (count === 1) {
-            initialStatuses[q.id] = "verified";
-            initialMethods[q.id] = "DIG";
-          } else if (count === 2) {
-            initialStatuses[q.id] = "submitted";
-            initialMethods[q.id] = "DEM";
-          } else if (count === 3) {
-            initialStatuses[q.id] = "needs_review";
-            initialMethods[q.id] = "DOC";
-          } else {
-            initialStatuses[q.id] = "not_submitted";
-            initialMethods[q.id] = "DIG";
-          }
+          initialStatuses[q.id] = "not_submitted";
+          initialMethods[q.id] = "DIG";
         }
       });
     });
