@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
@@ -43,7 +44,9 @@ export default function RootLayout({
         className="h-full bg-background font-sans text-on-background selection:bg-primary-container selection:text-on-primary-container flex flex-col"
         suppressHydrationWarning
       >
-        {children}
+        <ClerkProvider>
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );

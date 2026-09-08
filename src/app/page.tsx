@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 
 export default function Home() {
   return (
@@ -17,18 +18,27 @@ export default function Home() {
           />
         </Link>
         <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="px-4 py-2 text-sm font-semibold text-on-surface hover:text-primary transition-colors"
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/signup"
-            className="px-5 py-2.5 text-sm font-semibold bg-primary hover:bg-primary/90 text-on-primary rounded-xl shadow-sm hover-lift transition-all"
-          >
-            Get Started
-          </Link>
+          <Show when="signed-out">
+            <SignInButton mode="modal">
+              <button className="px-4 py-2 text-sm font-semibold text-on-surface hover:text-primary transition-colors cursor-pointer">
+                Sign In
+              </button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <button className="px-5 py-2.5 text-sm font-semibold bg-primary hover:bg-primary/90 text-on-primary rounded-xl shadow-sm hover-lift transition-all cursor-pointer">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </Show>
+          <Show when="signed-in">
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 text-sm font-semibold text-primary hover:bg-primary-container/20 rounded-xl transition-colors"
+            >
+              Dashboard
+            </Link>
+            <UserButton />
+          </Show>
         </div>
       </header>
 

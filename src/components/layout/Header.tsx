@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { UserButton, Show, SignInButton } from "@clerk/nextjs";
 
 import { OnboardingStage } from "@/lib/onboardingGuard";
 
@@ -223,6 +224,18 @@ export default function Header({
               </div>
             )}
           </div>
+
+          {/* Clerk Auth Controls */}
+          <Show when="signed-in">
+            <UserButton />
+          </Show>
+          <Show when="signed-out">
+            <SignInButton mode="modal">
+              <button className="px-3.5 py-1.5 text-xs font-semibold bg-primary text-on-primary rounded-xl shadow-xs hover:bg-primary/90 transition-colors cursor-pointer">
+                Sign In
+              </button>
+            </SignInButton>
+          </Show>
 
           {/* Profile Badge & Dropdown */}
           <div className="relative">
