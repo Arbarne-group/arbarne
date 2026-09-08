@@ -62,3 +62,4 @@ scratch/
 # Misc & OS
 .DS_Store
 *.pem
+src/generated/

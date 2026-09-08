@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { syncUserOnboardingToSheet } from "@/lib/googleSheets";
 
+export const dynamic = "force-dynamic";
+
 function computeOnboardingStage(user: any) {
   const isStep1Done = Boolean(user.farmerProfile?.jobTitle);
   const isStep2Done = Boolean(user.farmManagement?.mgmtAbility);

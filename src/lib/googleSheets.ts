@@ -21,9 +21,21 @@ function base64UrlEncode(str: string): string {
 }
 
 function getServiceAccount(): ServiceAccountCredentials {
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+    try {
+      const trimmed = process.env.GOOGLE_SERVICE_ACCOUNT_KEY.trim();
+      const decoded = trimmed.startsWith("{")
+        ? trimmed
+        : Buffer.from(trimmed, "base64").toString("utf-8");
+      return JSON.parse(decoded);
+    } catch (e) {
+      console.error("Failed to parse GOOGLE_SERVICE_ACCOUNT_KEY env var:", e);
+    }
+  }
+
   const credentialsPath =
     process.env.GOOGLE_APPLICATION_CREDENTIALS || "./google-service-account.json";
-  const resolvedPath = path.resolve(process.cwd(), credentialsPath);
+  const resolvedPath = path.resolve(/*turbopackIgnore: true*/ process.cwd(), credentialsPath);
 
   if (!fs.existsSync(resolvedPath)) {
     throw new Error(`Google service account credentials not found at ${resolvedPath}`);
