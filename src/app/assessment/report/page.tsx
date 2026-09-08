@@ -120,29 +120,64 @@ function AssessmentReportContent() {
   return (
     <div className="bg-slate-100 text-slate-800 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900 min-h-screen pb-16">
       {/* ─────────────────────────────────────────────────────────────
-          PRINT STYLES: Standard A4 PDF Output Rules
+          PRINT STYLES: Publication-Grade A4 Output (No URL / Header Clutter)
           ───────────────────────────────────────────────────────────── */}
       <style jsx global>{`
+        @page {
+          size: A4 portrait;
+          margin: 0; /* Suppresses browser-generated headers (URL, title) and footers (date, URL) */
+        }
         @media print {
-          body {
-            background-color: #ffffff !important;
+          html, body {
+            margin: 0 !important;
             padding: 0 !important;
+            background-color: #ffffff !important;
             color: #0f172a !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
           }
           .no-print {
             display: none !important;
           }
+          /* Strip URL href display */
+          a[href]:after {
+            content: none !important;
+          }
+          a {
+            text-decoration: none !important;
+            color: inherit !important;
+          }
           .report-sheet-container {
             box-shadow: none !important;
             border: none !important;
-            margin: 0 !important;
+            margin: 0 auto !important;
             width: 100% !important;
             max-width: 100% !important;
             border-radius: 0 !important;
-            padding: 18mm 14mm !important;
+            padding: 12mm 14mm 10mm 14mm !important;
+            background: #ffffff !important;
           }
-          .page-break {
-            page-break-before: always;
+          .print-page-break {
+            break-before: page !important;
+            page-break-before: always !important;
+            padding-top: 10mm !important;
+          }
+          .print-break-inside-avoid {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+          table {
+            page-break-inside: auto !important;
+          }
+          tr {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+          thead {
+            display: table-header-group !important;
+          }
+          tfoot {
+            display: table-footer-group !important;
           }
         }
       `}</style>
@@ -391,7 +426,7 @@ function AssessmentReportContent() {
             </section>
 
             {/* Section 1: Executive Synthesis & Farm Diagnostic */}
-            <section className="space-y-3">
+            <section className="space-y-3 print-break-inside-avoid">
               <div className="flex items-center space-x-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
                 <h3 className="text-xs font-bold tracking-wider uppercase text-slate-600">
@@ -422,7 +457,27 @@ function AssessmentReportContent() {
             </section>
 
             {/* Section 2: 8-Pillar Capability Performance Matrix (Criteria-Based, No Progress Bars, No %) */}
-            <section className="space-y-3">
+            <section className="space-y-3 print-page-break print-break-inside-avoid">
+              {/* Print Mini-Header for Page 2 */}
+              <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
+                <div className="flex items-center space-x-2">
+                  <Image
+                    src="/logo.webp"
+                    alt="Future Farms"
+                    width={100}
+                    height={25}
+                    priority
+                    unoptimized
+                    className="h-4 w-auto object-contain"
+                  />
+                  <span className="text-slate-300">|</span>
+                  <span className="font-semibold text-slate-700">Official Assessment Report • All 8 Pillars</span>
+                </div>
+                <div className="font-mono text-[9px] text-slate-500">
+                  Doc Ref: <span className="font-bold text-slate-800">{docRef}</span>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
@@ -508,10 +563,61 @@ function AssessmentReportContent() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Strategic Pillar Maturity Summary & Key Benchmark Observations */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
+                <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl">
+                  <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">
+                    Benchmark Capabilities
+                  </span>
+                  <p className="font-bold text-slate-800 mt-0.5">3 Pillars Verified In Place</p>
+                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                    P4 (Climate Resilience), P2 (Renewable Energy), and P3 (Compliance) satisfy core verification requirements.
+                  </p>
+                </div>
+                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block">
+                    Established Operations
+                  </span>
+                  <p className="font-bold text-slate-800 mt-0.5">3 Pillars In Active Progress</p>
+                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                    P1 (Digital AgTech), P6 (Leadership &amp; Operations), and P7 (Market Access) require formal standard operating records.
+                  </p>
+                </div>
+                <div className="p-3 bg-amber-50/60 border border-amber-200 rounded-xl">
+                  <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block">
+                    Priority Interventions
+                  </span>
+                  <p className="font-bold text-slate-800 mt-0.5">2 Pillars Transformation Focus</p>
+                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                    P5 (Commercial Finance) and P8 (Investment Dossier) represent the primary constraints to commercial credit.
+                  </p>
+                </div>
+              </div>
             </section>
 
             {/* Section 3: Priority Actionable Interventions for Gaps Answered "NO" */}
-            <section className="space-y-3.5">
+            <section className="space-y-3.5 print-page-break print-break-inside-avoid">
+              {/* Print Mini-Header for Page 3 */}
+              <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
+                <div className="flex items-center space-x-2">
+                  <Image
+                    src="/logo.webp"
+                    alt="Future Farms"
+                    width={100}
+                    height={25}
+                    priority
+                    unoptimized
+                    className="h-4 w-auto object-contain"
+                  />
+                  <span className="text-slate-300">|</span>
+                  <span className="font-semibold text-slate-700">Action Roadmap &amp; Verification • All 8 Pillars</span>
+                </div>
+                <div className="font-mono text-[9px] text-slate-500">
+                  Doc Ref: <span className="font-bold text-slate-800">{docRef}</span>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
@@ -663,7 +769,7 @@ function AssessmentReportContent() {
             </section>
 
             {/* Section 4: 12-Month Farm Transformation Roadmap */}
-            <section className="space-y-3 pt-2">
+            <section className="space-y-3 pt-2 print-break-inside-avoid">
               <div className="flex items-center space-x-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
                 <h3 className="text-xs font-bold tracking-wider uppercase text-slate-600">
@@ -678,7 +784,7 @@ function AssessmentReportContent() {
                     </span>
                     <span className="w-2 h-2 rounded-full bg-emerald-600" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-sm">Foundations & Operational Records</h4>
+                  <h4 className="font-bold text-slate-900 text-sm">Foundations &amp; Operational Records</h4>
                   <p className="text-slate-600 text-[11px] leading-relaxed">
                     Deploy mobile farm bookkeeping app, register casual workers with formal agreements, and configure chemical safety logs.
                   </p>
@@ -704,7 +810,7 @@ function AssessmentReportContent() {
                     </span>
                     <span className="w-2 h-2 rounded-full bg-slate-300" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-sm">Certification & Level 4 Capital</h4>
+                  <h4 className="font-bold text-slate-900 text-sm">Certification &amp; Level 4 Capital</h4>
                   <p className="text-slate-600 text-[11px] leading-relaxed">
                     Complete external GlobalG.A.P. verification and present validated enterprise dossier to regional ag-equity and debt investors.
                   </p>
@@ -713,7 +819,7 @@ function AssessmentReportContent() {
             </section>
 
             {/* Document Footer: Tamper-Proof Seals & QR Code */}
-            <footer className="border-t border-slate-200 pt-6 mt-8 text-[11px] text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4">
+            <footer className="border-t border-slate-200 pt-5 mt-6 text-[11px] text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4 print-break-inside-avoid">
               <div className="flex items-center space-x-3.5">
                 <div className="p-1.5 bg-white border border-slate-300 rounded-lg shadow-xs">
                   {/* SVG QR Code */}
@@ -765,7 +871,7 @@ function AssessmentReportContent() {
             <div className="w-full h-2.5 bg-gradient-to-r from-emerald-700 via-emerald-500 to-amber-500 absolute top-0 left-0" />
 
             {/* Document Header */}
-            <header className="border-b border-slate-200 pb-6 pt-2">
+            <header className="border-b border-slate-200 pb-6 pt-2 print-break-inside-avoid">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 {/* Brand Identity */}
                 <div className="flex items-center space-x-4">
@@ -841,7 +947,7 @@ function AssessmentReportContent() {
                   <span className="text-slate-500 block text-[11px]">{farmerName}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block uppercase text-[9px] font-bold">Location & Zone</span>
+                  <span className="text-slate-400 block uppercase text-[9px] font-bold">Location &amp; Zone</span>
                   <span className="font-semibold text-slate-800">{locationSubCounty}</span>
                   <span className="text-slate-500 block text-[11px]">{locationCounty}, {locationCountry}</span>
                 </div>
@@ -862,7 +968,7 @@ function AssessmentReportContent() {
             </header>
 
             {/* Section 1: Executive Assessment Verdict */}
-            <section data-purpose="executive-summary">
+            <section data-purpose="executive-summary" className="print-break-inside-avoid">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center">
                 <span className="w-2 h-2 rounded-full bg-emerald-700 mr-2" />
                 1. Executive Assessment Verdict
@@ -903,11 +1009,31 @@ function AssessmentReportContent() {
             </section>
 
             {/* Section 2: Capability Checklist & Question Breakdown Table (Criteria-Based, No Percentages) */}
-            <section data-purpose="capability-questions-breakdown">
-              <div className="flex items-center justify-between mb-2.5">
+            <section data-purpose="capability-questions-breakdown" className="space-y-3 print-page-break print-break-inside-avoid">
+              {/* Print Mini-Header for Page 2 */}
+              <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
+                <div className="flex items-center space-x-2">
+                  <Image
+                    src="/logo.webp"
+                    alt="Future Farms"
+                    width={100}
+                    height={25}
+                    priority
+                    unoptimized
+                    className="h-4 w-auto object-contain"
+                  />
+                  <span className="text-slate-300">|</span>
+                  <span className="font-semibold text-slate-700">Pillar 0{pillarId} Capability Checklist &amp; Evidence Matrix</span>
+                </div>
+                <div className="font-mono text-[9px] text-slate-500">
+                  Doc Ref: <span className="font-bold text-slate-800">{docRef}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mb-1">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center">
                   <span className="w-2 h-2 rounded-full bg-emerald-700 mr-2" />
-                  2. Capability Checklist & Question Evaluation
+                  2. Capability Checklist &amp; Question Evaluation
                 </h3>
                 <span className="text-[11px] font-semibold text-slate-500">
                   {reportData?.pillar?.verifiedCount || 18} Verified Yes • {reportData?.pillar?.gapCount || 7} Action Gaps
@@ -919,7 +1045,7 @@ function AssessmentReportContent() {
                   <thead className="bg-slate-50 text-[11px] uppercase font-bold text-slate-500 tracking-wider">
                     <tr>
                       <th className="py-2.5 px-4 w-12 text-center" scope="col">No</th>
-                      <th className="py-2.5 px-4" scope="col">Evaluation Metric & Practice</th>
+                      <th className="py-2.5 px-4" scope="col">Evaluation Metric &amp; Practice</th>
                       <th className="py-2.5 px-4 w-40 text-center" scope="col">Assessment Finding</th>
                       <th className="py-2.5 px-4 w-32 text-center" scope="col">Criteria Impact</th>
                     </tr>
@@ -944,14 +1070,14 @@ function AssessmentReportContent() {
                             !isYes ? "bg-amber-50/20" : ""
                           }`}
                         >
-                          <td className="py-3 px-4 text-center font-mono text-slate-400 font-semibold">
+                          <td className="py-2.5 px-4 text-center font-mono text-slate-400 font-semibold">
                             Q{idx + 1}
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-2.5 px-4">
                             <p className="font-semibold text-slate-900">{item.questionId}</p>
                             <p className="text-slate-500 text-[11px] mt-0.5">{item.question}</p>
                           </td>
-                          <td className="py-3 px-4 text-center">
+                          <td className="py-2.5 px-4 text-center">
                             {isYes ? (
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
                                 <span className="material-symbols-outlined text-[12px] mr-1 text-emerald-600">check</span>
@@ -964,7 +1090,7 @@ function AssessmentReportContent() {
                               </span>
                             )}
                           </td>
-                          <td className="py-3 px-4 text-center font-medium text-[11px]">
+                          <td className="py-2.5 px-4 text-center font-medium text-[11px]">
                             {isYes ? (
                               <span className="text-emerald-700 font-semibold">Verified Practice</span>
                             ) : (
@@ -977,14 +1103,60 @@ function AssessmentReportContent() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Proportioned Capability Benchmark Summary Box */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs">
+                <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl">
+                  <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">
+                    Verified Capabilities In Practice
+                  </span>
+                  <p className="font-bold text-slate-800 mt-0.5">
+                    {reportData?.pillar?.verifiedCount || 18} Standards Compliant &amp; Active
+                  </p>
+                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                    Evaluated procedures meet criteria for sustainable operational efficiency and environmental compliance.
+                  </p>
+                </div>
+                <div className="p-3 bg-amber-50/60 border border-amber-200 rounded-xl">
+                  <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block">
+                    Identified Operational Action Gaps
+                  </span>
+                  <p className="font-bold text-slate-800 mt-0.5">
+                    {reportData?.pillar?.gapCount || 7} Practice Improvement Points
+                  </p>
+                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                    Prioritize the actionable interventions outlined on Page 3 to achieve complete capability maturity.
+                  </p>
+                </div>
+              </div>
             </section>
 
             {/* Section 3: Actionable Recommendations for Identified Gaps */}
-            <section data-purpose="identified-gap-recommendations">
-              <div className="flex items-center justify-between mb-2.5">
+            <section data-purpose="identified-gap-recommendations" className="space-y-3 print-page-break print-break-inside-avoid">
+              {/* Print Mini-Header for Page 3 */}
+              <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
+                <div className="flex items-center space-x-2">
+                  <Image
+                    src="/logo.webp"
+                    alt="Future Farms"
+                    width={100}
+                    height={25}
+                    priority
+                    unoptimized
+                    className="h-4 w-auto object-contain"
+                  />
+                  <span className="text-slate-300">|</span>
+                  <span className="font-semibold text-slate-700">Pillar 0{pillarId} Priority Action Plan &amp; Recommendations</span>
+                </div>
+                <div className="font-mono text-[9px] text-slate-500">
+                  Doc Ref: <span className="font-bold text-slate-800">{docRef}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mb-1">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center">
                   <span className="w-2 h-2 rounded-full bg-amber-500 mr-2" />
-                  3. Actionable Recommendations for Identified Gaps (Questions Answered "No")
+                  3. Actionable Recommendations for Identified Gaps (Questions Answered &quot;No&quot;)
                 </h3>
                 <span className="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded border border-emerald-200">
                   Priority Interventions
@@ -1001,7 +1173,7 @@ function AssessmentReportContent() {
                       </div>
                       <div>
                         <h4 className="text-xs font-bold text-slate-900">
-                          Gap 1: Operational Expenditure Tracking & Energy Baseline Log
+                          Gap 1: Operational Expenditure Tracking &amp; Energy Baseline Log
                         </h4>
                         <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
                           Implement a simple digital or logbook operational audit. Tracking daily fuel and utility costs validates
@@ -1030,7 +1202,7 @@ function AssessmentReportContent() {
                       </div>
                       <div>
                         <h4 className="text-xs font-bold text-slate-900">
-                          Gap 2: Cold Chain Continuity & Backup Battery Systems
+                          Gap 2: Cold Chain Continuity &amp; Backup Battery Systems
                         </h4>
                         <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
                           Explore Pay-As-You-Go (PAYG) battery storage packages or commercial chilling facilities from accredited framework partners
@@ -1062,7 +1234,7 @@ function AssessmentReportContent() {
                           Gap 3: Productive Use Equipment Matching Grant
                         </h4>
                         <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
-                          {farmName} meets the eligibility threshold for the Agri-Equipment & Productive Transition Match Facility.
+                          {farmName} meets the eligibility threshold for the Agri-Equipment &amp; Productive Transition Match Facility.
                           Apply through your Opportunity Desk pipeline where this enterprise holds an active pre-qualification rating.
                         </p>
                         <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px]">
@@ -1082,7 +1254,7 @@ function AssessmentReportContent() {
             </section>
 
             {/* Section 4: Transformation Roadmap */}
-            <section data-purpose="transformation-roadmap">
+            <section data-purpose="transformation-roadmap" className="print-break-inside-avoid">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center">
                 <span className="w-2 h-2 rounded-full bg-emerald-700 mr-2" />
                 4. Roadmap to 100% Future-Ready Pillar {pillarId} Capability
@@ -1119,7 +1291,7 @@ function AssessmentReportContent() {
             </section>
 
             {/* Document Footer */}
-            <footer className="pt-5 border-t border-slate-200 mt-6 text-[10px] text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <footer className="pt-5 border-t border-slate-200 mt-6 text-[10px] text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-4 print-break-inside-avoid">
               <div className="flex items-center space-x-3 text-left">
                 <div className="w-12 h-12 bg-slate-900 rounded-lg p-1 flex items-center justify-center shrink-0">
                   <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
