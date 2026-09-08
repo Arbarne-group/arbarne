@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   getPillarById,
   ALL_PILLARS,
@@ -1246,16 +1247,27 @@ export default function AssessmentSummaryView({
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
           <div className="bg-surface rounded-3xl max-w-3xl w-full border border-surface-container-high shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
             <div className="p-5 sm:p-6 border-b border-surface-container-high bg-surface-container-lowest flex items-center justify-between">
-              <div>
-                <span className="text-xs font-bold text-primary uppercase tracking-wider">
-                  Assessment-Based
-                </span>
-                <h2 className="text-lg sm:text-xl font-bold text-on-surface m-0">
-                  Future Farms Transformation Report
-                </h2>
-                <p className="text-xs text-on-surface-variant m-0 mt-0.5">
-                  Report ID: FFF-REP-2026-0881 • Farm ID: FFF-KE-000-001
-                </p>
+              <div className="flex items-center gap-3.5">
+                <Image
+                  src="/logo.webp"
+                  alt="Future Farms"
+                  width={160}
+                  height={40}
+                  priority
+                  unoptimized
+                  className="h-8 w-auto object-contain shrink-0"
+                />
+                <div className="border-l border-surface-container-high pl-3">
+                  <span className="text-xs font-bold text-primary uppercase tracking-wider">
+                    Assessment-Based
+                  </span>
+                  <h2 className="text-lg sm:text-xl font-bold text-on-surface m-0">
+                    Future Farms Transformation Report
+                  </h2>
+                  <p className="text-xs text-on-surface-variant m-0 mt-0.5">
+                    Report ID: FFF-REP-2026-0881 • Farm ID: FFF-KE-000-001
+                  </p>
+                </div>
               </div>
               <button
                 type="button"

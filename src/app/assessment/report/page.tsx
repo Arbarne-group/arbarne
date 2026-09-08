@@ -3,6 +3,7 @@
 import React, { Suspense, useEffect, useState, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ALL_PILLARS, PillarData, AssessmentQuestion } from "@/data/allPillarsData";
 import { getMaturityTier } from "@/lib/assessmentScoring";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
@@ -163,6 +164,16 @@ function AssessmentReportContent() {
               {isAllPillars ? "Back to Assessment Hub" : `Back to Pillar ${pillarId} Summary`}
             </Link>
             <span className="text-slate-300">|</span>
+            <Image
+              src="/logo.webp"
+              alt="Future Farms"
+              width={140}
+              height={35}
+              priority
+              unoptimized
+              className="h-6 w-auto object-contain hidden sm:block"
+            />
+            <span className="text-slate-300 hidden sm:inline">|</span>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse" />
               {isAllPillars ? "Comprehensive Report • All 8 Pillars" : `Official Report • Pillar ${pillarId}`}
@@ -247,21 +258,22 @@ function AssessmentReportContent() {
             <section className="border-b border-slate-200 pb-6 pt-2">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                 {/* Brand Identity */}
-                <div className="flex items-start space-x-3.5">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 shadow-xs shrink-0">
-                    <span className="material-symbols-outlined text-[28px]">agriculture</span>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h1 className="text-xl font-extrabold tracking-tight text-slate-900">
-                        FUTURE <span className="text-emerald-700">FARMS</span>
-                      </h1>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                        FRAMEWORK
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      Agricultural Capability & Investment Readiness Verification
+                <div className="flex items-center space-x-4">
+                  <Image
+                    src="/logo.webp"
+                    alt="Future Farms"
+                    width={220}
+                    height={55}
+                    priority
+                    unoptimized
+                    className="h-10 sm:h-12 w-auto object-contain shrink-0"
+                  />
+                  <div className="border-l border-slate-200 pl-3.5 hidden sm:block">
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                      FRAMEWORK
+                    </span>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Agricultural Capability &amp; Investment Readiness Verification
                     </p>
                   </div>
                 </div>
@@ -756,21 +768,22 @@ function AssessmentReportContent() {
             <header className="border-b border-slate-200 pb-6 pt-2">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 {/* Brand Identity */}
-                <div className="flex items-center space-x-3.5">
-                  <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 shadow-xs">
-                    <span className="material-symbols-outlined text-[28px]">energy_savings_leaf</span>
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-xl font-extrabold tracking-tight text-slate-900">
-                        FUTURE <span className="text-emerald-700">FARMS</span>
-                      </span>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                        Framework
-                      </span>
-                    </div>
-                    <p className="text-xs font-medium text-slate-500 mt-0.5">
-                      Agricultural Capability & Investment Readiness Verification
+                <div className="flex items-center space-x-4">
+                  <Image
+                    src="/logo.webp"
+                    alt="Future Farms"
+                    width={220}
+                    height={55}
+                    priority
+                    unoptimized
+                    className="h-10 sm:h-12 w-auto object-contain shrink-0"
+                  />
+                  <div className="border-l border-slate-200 pl-3.5 hidden sm:block">
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                      Framework • Pillar 0{pillarId}
+                    </span>
+                    <p className="text-xs font-medium text-slate-500 mt-1">
+                      Agricultural Capability &amp; Investment Readiness Verification
                     </p>
                   </div>
                 </div>
