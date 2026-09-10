@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import {
   getPillarById,
-  AssessmentPillar,
   AssessmentCapability,
 } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
@@ -23,7 +22,19 @@ export default function AssessmentStandardQuestionnaireView({
   const { user } = useUser();
   const pillar = getPillarById(pillarId);
   const [currentCapIndex, setCurrentCapIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, "yes" | "no">>({});
+  const [answers, setAnswers] = useState<Record<string, "yes" | "no">>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("future_farms_assessment_answers");
+        if (saved) {
+          return JSON.parse(saved);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    return {};
+  });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [cooldownStatus, setCooldownStatus] = useState<{
     isCompleted: boolean;
@@ -62,23 +73,27 @@ export default function AssessmentStandardQuestionnaireView({
           }
         })
         .catch(console.error);
-
-      const saved = localStorage.getItem("future_farms_assessment_answers");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setAnswers((prev) => ({ ...prev, ...parsed }));
-      }
     } catch (e) {
       console.error(e);
     }
-  }, [pillarId]);
+  }, [pillarId, activeEmail]);
 
   const currentCapability: AssessmentCapability =
     pillar.capabilities[currentCapIndex] || pillar.capabilities[0];
 
+  const unansweredQuestions = currentCapability.questions.filter((q) => !answers[q.id]);
+  const isCurrentPageComplete = unansweredQuestions.length === 0;
+  const [validationError, setValidationError] = useState<string | null>(null);
+
   const handleAnswer = (questionId: string, value: "yes" | "no") => {
     const updated = { ...answers, [questionId]: value };
     setAnswers(updated);
+    if (validationError) {
+      const remaining = currentCapability.questions.filter((q) => !updated[q.id]);
+      if (remaining.length === 0) {
+        setValidationError(null);
+      }
+    }
     try {
       localStorage.setItem(
         "future_farms_assessment_answers",
@@ -118,34 +133,25 @@ export default function AssessmentStandardQuestionnaireView({
     }
   };
 
-  const handleSaveAndExit = () => {
-    if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) {
-      onExit();
+  const handleNext = () => {
+    if (!isCurrentPageComplete) {
+      setValidationError(
+        `Please answer all questions on this page before proceeding (${unansweredQuestions.length} question${
+          unansweredQuestions.length > 1 ? "s" : ""
+        } remaining).`
+      );
+      setToastMessage(`Please answer all ${unansweredQuestions.length} remaining question(s) on this page.`);
+      setTimeout(() => setToastMessage(null), 3500);
+      const firstUnansweredId = unansweredQuestions[0]?.id;
+      if (firstUnansweredId) {
+        const el = document.getElementById(`question-${firstUnansweredId}`);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
       return;
     }
-    try {
-      localStorage.setItem(
-        "future_farms_assessment_answers",
-        JSON.stringify(answers)
-      );
-      const email = activeEmail;
-      fetch("/api/assessment/save-progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, pillarId, answers }),
-      }).catch((e) => console.error("Error saving progress to API:", e));
 
-      setToastMessage("Progress saved successfully!");
-      setTimeout(() => {
-        onExit();
-      }, 500);
-    } catch (e) {
-      console.error(e);
-      onExit();
-    }
-  };
+    setValidationError(null);
 
-  const handleNext = () => {
     if (currentCapIndex < pillar.capabilities.length - 1) {
       setCurrentCapIndex((prev) => prev + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -306,22 +312,41 @@ export default function AssessmentStandardQuestionnaireView({
             </p>
           </div>
 
-          <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
+          {validationError && (
+            <div className="mb-8 p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn">
+              <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
+              <span className="font-medium">{validationError}</span>
+            </div>
+          )}
+
+          <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
             {currentCapability.questions.map((q, idx) => {
               const currentVal = answers[q.id];
+              const isMissing = Boolean(validationError && !currentVal);
 
               return (
                 <div
                   key={q.id}
-                  className={`pb-8 ${
-                    idx < currentCapability.questions.length - 1
-                      ? "border-b border-outline-variant/20"
+                  id={`question-${q.id}`}
+                  className={`p-5 rounded-2xl transition-all duration-200 ${
+                    isMissing
+                      ? "bg-red-50/60 dark:bg-red-950/30 border-2 border-red-400 shadow-xs"
+                      : idx < currentCapability.questions.length - 1
+                      ? "border-b border-outline-variant/20 pb-8"
                       : ""
                   }`}
                 >
-                  <h3 className="font-title-md text-title-md text-on-surface font-medium mb-5">
-                    {idx + 1}. {q.question_text}
-                  </h3>
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <h3 className="font-title-md text-title-md text-on-surface font-medium">
+                      {idx + 1}. {q.question_text}
+                    </h3>
+                    {isMissing && (
+                      <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                        <span className="material-symbols-outlined text-[14px]">warning</span>
+                        Required
+                      </span>
+                    )}
+                  </div>
 
                   <div className="flex gap-6">
                     {/* Yes Radio Option */}
@@ -375,11 +400,19 @@ export default function AssessmentStandardQuestionnaireView({
             <button
               type="button"
               onClick={handleNext}
-              className="flex items-center gap-2 px-8 py-3 bg-[#009924] hover:bg-primary-container text-white font-label-sm text-label-sm font-medium rounded-xl shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer"
+              className={`flex items-center gap-2 px-8 py-3 font-label-sm text-label-sm font-semibold rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer ${
+                isCurrentPageComplete
+                  ? "bg-[#009924] hover:bg-primary-container text-white hover:shadow-md"
+                  : "bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80 border border-outline-variant"
+              }`}
             >
-              {currentCapIndex === pillar.capabilities.length - 1
-                ? `Submit Pillar 0${pillar.id} Assessment`
-                : "Next"}
+              <span>
+                {currentCapIndex === pillar.capabilities.length - 1
+                  ? `Submit Pillar 0${pillar.id} Assessment`
+                  : isCurrentPageComplete
+                  ? "Next"
+                  : `Next (${unansweredQuestions.length} remaining)`}
+              </span>
               <span className="material-symbols-outlined text-[20px]">
                 {currentCapIndex === pillar.capabilities.length - 1 ? "send" : "chevron_right"}
               </span>

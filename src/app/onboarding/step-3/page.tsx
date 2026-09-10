@@ -17,6 +17,7 @@ export default function OperatingStylePage() {
   const [updatePreferences, setUpdatePreferences] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const email = getActiveUserEmail();
@@ -50,7 +51,7 @@ export default function OperatingStylePage() {
             try {
               const parsed = JSON.parse(os.obstacles);
               if (Array.isArray(parsed) && parsed.length > 0) setObstacles(parsed);
-            } catch (e) {}
+            } catch {}
           }
           if (os.otherObstacle) setOtherObstacle(os.otherObstacle);
           if (os.guidancePreference) setGuidancePreference(os.guidancePreference);
@@ -64,14 +65,42 @@ export default function OperatingStylePage() {
   }, []);
 
   const toggleObstacle = (item: string) => {
+    let next: string[];
     if (obstacles.includes(item)) {
-      setObstacles(obstacles.filter((o) => o !== item));
+      next = obstacles.filter((o) => o !== item);
     } else if (obstacles.length < 3) {
-      setObstacles([...obstacles, item]);
+      next = [...obstacles, item];
+    } else {
+      return;
+    }
+    setObstacles(next);
+    if (next.length > 0) {
+      setValidationErrors((prev) => prev.filter((f) => f !== "obstacles"));
     }
   };
 
   const handleSave = async (navigateNext = true) => {
+    if (navigateNext) {
+      const missing: string[] = [];
+      if (!decisionStyle) missing.push("decisionStyle");
+      if (!failureResponse) missing.push("failureResponse");
+      if (obstacles.length === 0) missing.push("obstacles");
+      if (obstacles.includes("Other") && !otherObstacle.trim()) missing.push("otherObstacle");
+      if (!guidancePreference) missing.push("guidancePreference");
+      if (!trackingFrequency) missing.push("trackingFrequency");
+      if (!updatePreferences) missing.push("updatePreferences");
+
+      if (missing.length > 0) {
+        setValidationErrors(missing);
+        const firstMissing = missing[0];
+        const el = document.getElementById(`q-${firstMissing}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
+    }
+
     setSaving(true);
     setSaveFeedback(null);
     const email = getActiveUserEmail();
@@ -227,12 +256,36 @@ export default function OperatingStylePage() {
           </p>
         </div>
 
+        {validationErrors.length > 0 && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+            <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
+            <span className="font-semibold">
+              Please complete all questions on this page before continuing ({validationErrors.length} required question{validationErrors.length > 1 ? "s" : ""} remaining).
+            </span>
+          </div>
+        )}
+
         <div className="space-y-8">
           {/* Question 9: Decision Making */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-1">
-              9. When facing an important business decision, what do you typically do first?
-            </h3>
+          <section
+            id="q-decisionStyle"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all ${
+              validationErrors.includes("decisionStyle")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-base font-semibold text-on-surface">
+                9. When facing an important business decision, what do you typically do first?
+              </h3>
+              {validationErrors.includes("decisionStyle") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Select the option that best reflects your initial approach.
             </p>
@@ -244,7 +297,10 @@ export default function OperatingStylePage() {
                   <button
                     key={opt.title}
                     type="button"
-                    onClick={() => setDecisionStyle(opt.title)}
+                    onClick={() => {
+                      setDecisionStyle(opt.title);
+                      setValidationErrors((prev) => prev.filter((f) => f !== "decisionStyle"));
+                    }}
                     className={`w-full text-left rounded-2xl border p-4 sm:p-5 flex items-center justify-between gap-4 transition-all hover:bg-surface-container-low cursor-pointer ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -287,10 +343,25 @@ export default function OperatingStylePage() {
           </section>
 
           {/* Question 10: Response to Failure */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-1">
-              10. How do you usually respond when a plan is not working?
-            </h3>
+          <section
+            id="q-failureResponse"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all ${
+              validationErrors.includes("failureResponse")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-base font-semibold text-on-surface">
+                10. How do you usually respond when a plan is not working?
+              </h3>
+              {validationErrors.includes("failureResponse") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Choose the response that best describes your reaction to setbacks.
             </p>
@@ -302,7 +373,10 @@ export default function OperatingStylePage() {
                   <button
                     key={opt.title}
                     type="button"
-                    onClick={() => setFailureResponse(opt.title)}
+                    onClick={() => {
+                      setFailureResponse(opt.title);
+                      setValidationErrors((prev) => prev.filter((f) => f !== "failureResponse"));
+                    }}
                     className={`w-full text-left rounded-2xl border p-4 sm:p-5 flex items-center justify-between gap-4 transition-all hover:bg-surface-container-low cursor-pointer ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -345,11 +419,26 @@ export default function OperatingStylePage() {
           </section>
 
           {/* Question 11: Obstacles (Select up to three) */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
+          <section
+            id="q-obstacles"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all ${
+              validationErrors.includes("obstacles") || validationErrors.includes("otherObstacle")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-surface-variant/40"
+            }`}
+          >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1">
-              <h3 className="text-base font-semibold text-on-surface">
-                11. What is currently the biggest obstacle to growing your farm business?
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-semibold text-on-surface">
+                  11. What is currently the biggest obstacle to growing your farm business?
+                </h3>
+                {(validationErrors.includes("obstacles") || validationErrors.includes("otherObstacle")) && (
+                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="material-symbols-outlined text-[14px]">warning</span>
+                    Required
+                  </span>
+                )}
+              </div>
               <span className="text-xs font-bold bg-primary/10 text-primary px-3 py-1 rounded-full shrink-0 self-start sm:self-auto">
                 Select up to three ({obstacles.length}/3)
               </span>
@@ -400,23 +489,47 @@ export default function OperatingStylePage() {
             </div>
 
             {obstacles.includes("Other") && (
-              <div className="pt-2">
+              <div id="q-otherObstacle" className="pt-2">
                 <input
                   type="text"
                   placeholder="Please specify your other obstacle..."
                   value={otherObstacle}
-                  onChange={(e) => setOtherObstacle(e.target.value)}
-                  className="w-full rounded-xl border border-outline-variant px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface"
+                  onChange={(e) => {
+                    setOtherObstacle(e.target.value);
+                    if (e.target.value.trim()) {
+                      setValidationErrors((prev) => prev.filter((f) => f !== "otherObstacle"));
+                    }
+                  }}
+                  className={`w-full rounded-xl border px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface ${
+                    validationErrors.includes("otherObstacle")
+                      ? "border-red-400 ring-2 ring-red-300"
+                      : "border-outline-variant"
+                  }`}
                 />
               </div>
             )}
           </section>
 
           {/* Question 12: Guidance Preference */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-1">
-              12. How do you prefer to receive professional guidance and feedback?
-            </h3>
+          <section
+            id="q-guidancePreference"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all ${
+              validationErrors.includes("guidancePreference")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-base font-semibold text-on-surface">
+                12. How do you prefer to receive professional guidance and feedback?
+              </h3>
+              {validationErrors.includes("guidancePreference") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Tell us how our agronomists and platform advisors should communicate with you.
             </p>
@@ -428,7 +541,10 @@ export default function OperatingStylePage() {
                   <button
                     key={opt}
                     type="button"
-                    onClick={() => setGuidancePreference(opt)}
+                    onClick={() => {
+                      setGuidancePreference(opt);
+                      setValidationErrors((prev) => prev.filter((f) => f !== "guidancePreference"));
+                    }}
                     className={`w-full text-left rounded-2xl border p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer transition-all ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -458,10 +574,25 @@ export default function OperatingStylePage() {
           </section>
 
           {/* Question 13: Performance Tracking Frequency */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-1">
-              13. How often do you currently review or track your farm&apos;s business performance?
-            </h3>
+          <section
+            id="q-trackingFrequency"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all ${
+              validationErrors.includes("trackingFrequency")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-base font-semibold text-on-surface">
+                13. How often do you currently review or track your farm&apos;s business performance?
+              </h3>
+              {validationErrors.includes("trackingFrequency") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Select your typical cadence for reviewing farm metrics, costs, and revenues.
             </p>
@@ -473,7 +604,10 @@ export default function OperatingStylePage() {
                   <button
                     key={opt}
                     type="button"
-                    onClick={() => setTrackingFrequency(opt)}
+                    onClick={() => {
+                      setTrackingFrequency(opt);
+                      setValidationErrors((prev) => prev.filter((f) => f !== "trackingFrequency"));
+                    }}
                     className={`border rounded-2xl p-4 flex items-center justify-between text-left cursor-pointer transition-all ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -503,10 +637,25 @@ export default function OperatingStylePage() {
           </section>
 
           {/* Question 14: Preferred Update Format */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-1">
-              14. How would you prefer to receive updates about your farm?
-            </h3>
+          <section
+            id="q-updatePreferences"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all ${
+              validationErrors.includes("updatePreferences")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-base font-semibold text-on-surface">
+                14. How would you prefer to receive updates about your farm?
+              </h3>
+              {validationErrors.includes("updatePreferences") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Select your preferred channel and format for routine farm operations digests.
             </p>
@@ -518,7 +667,10 @@ export default function OperatingStylePage() {
                   <button
                     key={opt}
                     type="button"
-                    onClick={() => setUpdatePreferences(opt)}
+                    onClick={() => {
+                      setUpdatePreferences(opt);
+                      setValidationErrors((prev) => prev.filter((f) => f !== "updatePreferences"));
+                    }}
                     className={`w-full text-left rounded-2xl border p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer transition-all ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"

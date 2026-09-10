@@ -34,6 +34,7 @@ model User {
   onboardingStatus    OnboardingStatus?
 
   orders          Order[]
+  subscriptions   Subscription[]
   assessments     Assessment[]
 }
 
@@ -192,16 +193,54 @@ model OnboardingStatus {
 }
 
 model Order {
-  id            String   @id @default(cuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planType      String
-  amount        Float
-  currency      String   @default("USD")
-  paymentMethod String
-  phoneNumber   String?
-  status        String   @default("COMPLETED")
-  createdAt     DateTime @default(now())
+  id                    String        @id @default(cuid())
+  userId                String
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planType              String
+  amount                Float
+  currency              String        @default("KES")
+  paymentMethod         String
+  phoneNumber           String?
+  status                String        @default("COMPLETED")
+  checkoutRequestId     String?
+  merchantRequestId     String?
+  mpesaReceiptNumber    String?
+  paystackReference     String?       @unique
+  paystackTransactionId String?
+  planCode              String?
+  subscriptionId        String?
+  subscription          Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime?     @updatedAt
+}
+
+model Subscription {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId            String
+  planCode          String?
+  subscriptionCode  String?   @unique
+  emailToken        String?
+  customerCode      String?
+  status            String    @default("ACTIVE")
+  amount            Float
+  currency          String    @default("KES")
+  interval          String    @default("monthly")
+  currentPeriodStart DateTime @default(now())
+  currentPeriodEnd   DateTime?
+  nextPaymentDate    DateTime?
+  authorizationCode String?
+  cardLast4         String?
+  cardBrand         String?
+  cardExpMonth      String?
+  cardExpYear       String?
+  orders            Order[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
 }
 
 model Assessment {

@@ -6,9 +6,22 @@ import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
+interface OnboardingUser {
+  name?: string;
+  farmerProfile?: {
+    jobTitle?: string;
+  };
+  farmingSystem?: {
+    enterprises?: string;
+    cultivationMethod?: string;
+    mechanizationSetup?: string;
+    energySource?: string;
+  };
+}
+
 export default function FarmingSystemPage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
   const [enterprises, setEnterprises] = useState<string[]>([
@@ -21,6 +34,7 @@ export default function FarmingSystemPage() {
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const email = getActiveUserEmail();
@@ -48,12 +62,34 @@ export default function FarmingSystemPage() {
   }, []);
 
   const toggleEnterprise = (id: string) => {
-    setEnterprises((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    setEnterprises((prev) => {
+      const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
+      if (next.length > 0) {
+        setValidationErrors((v) => v.filter((f) => f !== "enterprises"));
+      }
+      return next;
+    });
   };
 
   const handleSave = async (navigateNext: boolean = true) => {
+    if (navigateNext) {
+      const missing: string[] = [];
+      if (enterprises.length === 0) missing.push("enterprises");
+      if (!cultivationMethod) missing.push("cultivationMethod");
+      if (!mechanizationSetup) missing.push("mechanizationSetup");
+      if (!energySource) missing.push("energySource");
+
+      if (missing.length > 0) {
+        setValidationErrors(missing);
+        const firstMissing = missing[0];
+        const el = document.getElementById(`q-${firstMissing}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
+    }
+
     setSaving(true);
     setSaveFeedback(null);
     try {
@@ -158,17 +194,41 @@ export default function FarmingSystemPage() {
           </div>
         </div>
 
+        {validationErrors.length > 0 && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+            <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
+            <span className="font-semibold">
+              Please complete all required fields on this page before continuing ({validationErrors.length} required field{validationErrors.length > 1 ? "s" : ""} remaining).
+            </span>
+          </div>
+        )}
+
         {/* Section 1: What do you grow and raise on your farm? */}
-        <div className="bg-surface-container-lowest rounded-3xl border border-surface-container-high/60 shadow-sm p-6 md:p-8 space-y-4">
+        <div
+          id="q-enterprises"
+          className={`bg-surface-container-lowest rounded-3xl border shadow-sm p-6 md:p-8 space-y-4 transition-all ${
+            validationErrors.includes("enterprises")
+              ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+              : "border-surface-container-high/60"
+          }`}
+        >
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-            <div>
-              <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
-                1. What do you grow and raise on your farm?
-                <span className="text-error text-sm">*</span>
-              </h3>
-              <p className="text-xs text-on-surface-variant mt-0.5">
-                Choose all crops and animals raised for market or household consumption.
-              </p>
+            <div className="flex items-center gap-2">
+              <div>
+                <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
+                  1. What do you grow and raise on your farm?
+                  <span className="text-error text-sm">*</span>
+                </h3>
+                <p className="text-xs text-on-surface-variant mt-0.5">
+                  Choose all crops and animals raised for market or household consumption.
+                </p>
+              </div>
+              {validationErrors.includes("enterprises") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
             </div>
             <span className="text-xs font-semibold text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full w-fit">
               Select all that apply
@@ -247,15 +307,30 @@ export default function FarmingSystemPage() {
         </div>
 
         {/* Section 2: Primary Cultivation & Production Methods */}
-        <div className="bg-surface-container-lowest rounded-3xl border border-surface-container-high/60 shadow-sm p-6 md:p-8 space-y-4">
-          <div>
-            <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
-              2. Primary Cultivation &amp; Production Methods
-              <span className="text-error text-sm">*</span>
-            </h3>
-            <p className="text-xs text-on-surface-variant mt-0.5">
-              Select the primary method used to cultivate your plots.
-            </p>
+        <div
+          id="q-cultivationMethod"
+          className={`bg-surface-container-lowest rounded-3xl border shadow-sm p-6 md:p-8 space-y-4 transition-all ${
+            validationErrors.includes("cultivationMethod")
+              ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+              : "border-surface-container-high/60"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
+                2. Primary Cultivation &amp; Production Methods
+                <span className="text-error text-sm">*</span>
+              </h3>
+              <p className="text-xs text-on-surface-variant mt-0.5">
+                Select the primary method used to cultivate your plots.
+              </p>
+            </div>
+            {validationErrors.includes("cultivationMethod") && (
+              <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                <span className="material-symbols-outlined text-[14px]">warning</span>
+                Required
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
@@ -289,7 +364,10 @@ export default function FarmingSystemPage() {
               return (
                 <label
                   key={item.id}
-                  onClick={() => setCultivationMethod(item.id)}
+                  onClick={() => {
+                    setCultivationMethod(item.id);
+                    setValidationErrors((prev) => prev.filter((f) => f !== "cultivationMethod"));
+                  }}
                   className={`p-4 rounded-2xl cursor-pointer shadow-xs transition-all flex items-center justify-between border ${
                     isSelected
                       ? "border-primary bg-primary/5"
@@ -315,7 +393,10 @@ export default function FarmingSystemPage() {
                     type="radio"
                     name="cultivation_method"
                     checked={isSelected}
-                    onChange={() => setCultivationMethod(item.id)}
+                    onChange={() => {
+                      setCultivationMethod(item.id);
+                      setValidationErrors((prev) => prev.filter((f) => f !== "cultivationMethod"));
+                    }}
                     className="w-4 h-4 text-primary accent-primary cursor-pointer"
                   />
                 </label>
@@ -325,15 +406,30 @@ export default function FarmingSystemPage() {
         </div>
 
         {/* Section 3: Farm Mechanization & Tools */}
-        <div className="bg-surface-container-lowest rounded-3xl border border-surface-container-high/60 shadow-sm p-6 md:p-8 space-y-4">
-          <div>
-            <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
-              3. Farm Mechanization &amp; Tools
-              <span className="text-error text-sm">*</span>
-            </h3>
-            <p className="text-xs text-on-surface-variant mt-0.5">
-              Indicate your predominant equipment setup for tillage, planting, and harvesting.
-            </p>
+        <div
+          id="q-mechanizationSetup"
+          className={`bg-surface-container-lowest rounded-3xl border shadow-sm p-6 md:p-8 space-y-4 transition-all ${
+            validationErrors.includes("mechanizationSetup")
+              ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+              : "border-surface-container-high/60"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
+                3. Farm Mechanization &amp; Tools
+                <span className="text-error text-sm">*</span>
+              </h3>
+              <p className="text-xs text-on-surface-variant mt-0.5">
+                Indicate your predominant equipment setup for tillage, planting, and harvesting.
+              </p>
+            </div>
+            {validationErrors.includes("mechanizationSetup") && (
+              <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                <span className="material-symbols-outlined text-[14px]">warning</span>
+                Required
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
@@ -368,7 +464,10 @@ export default function FarmingSystemPage() {
               return (
                 <label
                   key={item.id}
-                  onClick={() => setMechanizationSetup(item.id)}
+                  onClick={() => {
+                    setMechanizationSetup(item.id);
+                    setValidationErrors((prev) => prev.filter((f) => f !== "mechanizationSetup"));
+                  }}
                   className={`p-4 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 border ${
                     isSelected
                       ? "border-primary bg-primary/5 shadow-xs"
@@ -379,7 +478,10 @@ export default function FarmingSystemPage() {
                     type="radio"
                     name="mechanization_setup"
                     checked={isSelected}
-                    onChange={() => setMechanizationSetup(item.id)}
+                    onChange={() => {
+                      setMechanizationSetup(item.id);
+                      setValidationErrors((prev) => prev.filter((f) => f !== "mechanizationSetup"));
+                    }}
                     className="mt-1 w-4 h-4 text-primary accent-primary cursor-pointer"
                   />
                   <div className="flex-1 min-w-0">
@@ -405,15 +507,30 @@ export default function FarmingSystemPage() {
         </div>
 
         {/* Section 4: Energy & Pumping Source */}
-        <div className="bg-surface-container-lowest rounded-3xl border border-surface-container-high/60 shadow-sm p-6 md:p-8 space-y-4">
-          <div>
-            <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
-              4. Energy &amp; Pumping Source for Farm Operations
-              <span className="text-error text-sm">*</span>
-            </h3>
-            <p className="text-xs text-on-surface-variant mt-0.5">
-              Determine operational costs and evaluate renewable energy subsidy grants.
-            </p>
+        <div
+          id="q-energySource"
+          className={`bg-surface-container-lowest rounded-3xl border shadow-sm p-6 md:p-8 space-y-4 transition-all ${
+            validationErrors.includes("energySource")
+              ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+              : "border-surface-container-high/60"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
+                4. Energy &amp; Pumping Source for Farm Operations
+                <span className="text-error text-sm">*</span>
+              </h3>
+              <p className="text-xs text-on-surface-variant mt-0.5">
+                Determine operational costs and evaluate renewable energy subsidy grants.
+              </p>
+            </div>
+            {validationErrors.includes("energySource") && (
+              <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                <span className="material-symbols-outlined text-[14px]">warning</span>
+                Required
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
@@ -448,7 +565,10 @@ export default function FarmingSystemPage() {
               return (
                 <label
                   key={item.id}
-                  onClick={() => setEnergySource(item.id)}
+                  onClick={() => {
+                    setEnergySource(item.id);
+                    setValidationErrors((prev) => prev.filter((f) => f !== "energySource"));
+                  }}
                   className={`p-4 rounded-2xl cursor-pointer shadow-xs transition-all flex items-start justify-between gap-3 border ${
                     isSelected
                       ? "border-primary bg-primary/5"
@@ -478,7 +598,10 @@ export default function FarmingSystemPage() {
                     type="radio"
                     name="energy_source"
                     checked={isSelected}
-                    onChange={() => setEnergySource(item.id)}
+                    onChange={() => {
+                      setEnergySource(item.id);
+                      setValidationErrors((prev) => prev.filter((f) => f !== "energySource"));
+                    }}
                     className="mt-1 w-4 h-4 text-primary accent-primary cursor-pointer"
                   />
                 </label>

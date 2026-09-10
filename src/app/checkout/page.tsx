@@ -10,8 +10,19 @@ function CheckoutContent() {
   const router = useRouter();
   const { user: clerkUser } = useUser();
   const searchParams = useSearchParams();
-  const plan = searchParams.get("plan") || "FULL_ASSESSMENT";
-  const amount = searchParams.get("amount") || "10.00";
+  const planParam = searchParams.get("plan") || "FULL_ASSESSMENT";
+  const plan =
+    planParam === "1_PILLAR" || planParam === "4_PILLARS" || planParam === "FULL_ASSESSMENT"
+      ? planParam
+      : "FULL_ASSESSMENT";
+
+  const defaultAmount =
+    plan === "1_PILLAR" ? "100" : plan === "4_PILLARS" ? "500" : "1000";
+  const rawAmount = searchParams.get("amount");
+  const amount =
+    rawAmount === "100" || rawAmount === "500" || rawAmount === "1000"
+      ? rawAmount
+      : defaultAmount;
 
   const [paymentMethod, setPaymentMethod] = useState<"mpesa" | "card">("mpesa");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -30,21 +41,30 @@ function CheckoutContent() {
     const userEmail = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
 
     try {
-      const res = await fetch("/api/checkout", {
+      const res = await fetch("/api/billing/initialize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: userEmail,
-          planType: plan,
-          paymentMethod: paymentMethod.toUpperCase(),
-          phoneNumber: paymentMethod === "mpesa" ? `+254 ${phoneNumber.trim()}` : null,
-          amount: parseFloat(amount),
+          planId: plan,
+          isSubscription: true,
+          channels: paymentMethod === "mpesa" ? ["mobile_money", "card"] : ["card", "mobile_money"],
+          callbackUrl: `${window.location.origin}/checkout/verify`,
         }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Payment failed.");
+        throw new Error(data.error || "Payment initialization failed.");
+      }
+
+      if (data.authorizationUrl) {
+        if (data.authorizationUrl.startsWith("/")) {
+          router.push(data.authorizationUrl);
+        } else {
+          window.location.href = data.authorizationUrl;
+        }
+        return;
       }
 
       setPaymentSuccess(true);
@@ -52,7 +72,7 @@ function CheckoutContent() {
         router.push("/dashboard");
       }, 1500);
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+      setError(err.message || "An unexpected error occurred during payment.");
       setProcessing(false);
     }
   };
@@ -303,16 +323,21 @@ function CheckoutContent() {
                   </div>
                 </div>
                 <span className="text-sm font-bold text-on-background whitespace-nowrap">
-                  ${amount}
+                  KES {Number(amount).toLocaleString()}
                 </span>
               </div>
 
-              <div className="flex justify-between items-center mb-8">
-                <span className="text-sm font-semibold text-on-background">
-                  Total
-                </span>
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <span className="text-sm font-semibold text-on-background block">
+                    Total Due Today
+                  </span>
+                  <span className="text-xs text-on-surface-variant">
+                    Monthly recurring • Cancel anytime
+                  </span>
+                </div>
                 <span className="text-2xl font-extrabold text-primary">
-                  ${amount}
+                  KES {Number(amount).toLocaleString()}
                 </span>
               </div>
 

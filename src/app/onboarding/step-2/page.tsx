@@ -14,6 +14,7 @@ export default function FarmManagementPage() {
   const [desiredInvolvement, setDesiredInvolvement] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const email = getActiveUserEmail();
@@ -32,7 +33,7 @@ export default function FarmManagementPage() {
               if (Array.isArray(parsed) && parsed.length > 0) {
                 setOperationsResponsible(parsed[0]);
               }
-            } catch (e) {}
+            } catch {}
           }
           if (fm.otherOperator) setOtherOperator(fm.otherOperator);
           if (fm.desiredInvolvement) {
@@ -44,8 +45,25 @@ export default function FarmManagementPage() {
   }, []);
 
   const handleSave = async (navigateNext = true) => {
-    setSaving(true);
     setSaveFeedback(null);
+
+    // Enforce completing all questions on this page before continuing
+    if (navigateNext) {
+      const missing: string[] = [];
+      if (!mgmtAbility) missing.push("mgmtAbility");
+      if (!operationsResponsible && !otherOperator.trim()) missing.push("operationsResponsible");
+      if (!desiredInvolvement) missing.push("desiredInvolvement");
+
+      if (missing.length > 0) {
+        setValidationErrors(missing);
+        const el = document.getElementById(`q-${missing[0]}`);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+    }
+
+    setValidationErrors([]);
+    setSaving(true);
     const email = getActiveUserEmail();
     try {
       const res = await fetch("/api/onboarding/step", {
@@ -171,12 +189,37 @@ export default function FarmManagementPage() {
           </p>
         </div>
 
+        {/* Validation Warning Banner */}
+        {validationErrors.length > 0 && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+            <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
+            <span className="font-semibold">
+              Please complete all questions on this page before continuing ({validationErrors.length} required question{validationErrors.length > 1 ? "s" : ""} remaining).
+            </span>
+          </div>
+        )}
+
         <div className="space-y-8">
           {/* Question 6: Ability Level */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-1">
-              6. Which statement best describes your current farm management ability?
-            </h3>
+          <section
+            id="q-mgmtAbility"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all duration-200 ${
+              validationErrors.includes("mgmtAbility")
+                ? "border-2 border-red-400 bg-red-50/20"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4 mb-1">
+              <h3 className="text-base font-semibold text-on-surface">
+                6. Which statement best describes your current farm management ability?
+              </h3>
+              {validationErrors.includes("mgmtAbility") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Select the statement that best aligns with your day-to-day management level.
             </p>
@@ -188,7 +231,10 @@ export default function FarmManagementPage() {
                   <button
                     key={opt.title}
                     type="button"
-                    onClick={() => setMgmtAbility(opt.title)}
+                    onClick={() => {
+                      setMgmtAbility(opt.title);
+                      setValidationErrors((prev) => prev.filter((e) => e !== "mgmtAbility"));
+                    }}
                     className={`w-full text-left rounded-2xl border p-5 flex items-start justify-between gap-4 transition-all hover:bg-surface-container-low cursor-pointer ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -232,10 +278,25 @@ export default function FarmManagementPage() {
           </section>
 
           {/* Question 7: Operators */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-1">
-              7. Who is currently responsible for day-to-day farm operations?
-            </h3>
+          <section
+            id="q-operationsResponsible"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all duration-200 ${
+              validationErrors.includes("operationsResponsible")
+                ? "border-2 border-red-400 bg-red-50/20"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4 mb-1">
+              <h3 className="text-base font-semibold text-on-surface">
+                7. Who is currently responsible for day-to-day farm operations?
+              </h3>
+              {validationErrors.includes("operationsResponsible") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Select the primary person or group managing operational execution.
             </p>
@@ -247,7 +308,10 @@ export default function FarmManagementPage() {
                   <button
                     key={opt}
                     type="button"
-                    onClick={() => setOperationsResponsible(opt)}
+                    onClick={() => {
+                      setOperationsResponsible(opt);
+                      setValidationErrors((prev) => prev.filter((e) => e !== "operationsResponsible"));
+                    }}
                     className={`flex items-center justify-between p-4 rounded-2xl border text-left cursor-pointer transition-all ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -281,17 +345,37 @@ export default function FarmManagementPage() {
                 type="text"
                 placeholder="Other arrangement (Please specify)..."
                 value={otherOperator}
-                onChange={(e) => setOtherOperator(e.target.value)}
+                onChange={(e) => {
+                  setOtherOperator(e.target.value);
+                  if (e.target.value.trim()) {
+                    setValidationErrors((prev) => prev.filter((err) => err !== "operationsResponsible"));
+                  }
+                }}
                 className="w-full rounded-xl border border-outline-variant px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface"
               />
             </div>
           </section>
 
           {/* Question 8: Desired Involvement */}
-          <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h3 className="text-base font-semibold text-on-surface mb-1">
-              8. How involved would you like to be in the day-to-day management of your farm?
-            </h3>
+          <section
+            id="q-desiredInvolvement"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all duration-200 ${
+              validationErrors.includes("desiredInvolvement")
+                ? "border-2 border-red-400 bg-red-50/20"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4 mb-1">
+              <h3 className="text-base font-semibold text-on-surface">
+                8. How involved would you like to be in the day-to-day management of your farm?
+              </h3>
+              {validationErrors.includes("desiredInvolvement") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Define your ideal future balance between operations and oversight.
             </p>
@@ -303,7 +387,10 @@ export default function FarmManagementPage() {
                   <button
                     key={opt.title}
                     type="button"
-                    onClick={() => setDesiredInvolvement(opt.title)}
+                    onClick={() => {
+                      setDesiredInvolvement(opt.title);
+                      setValidationErrors((prev) => prev.filter((e) => e !== "desiredInvolvement"));
+                    }}
                     className={`cursor-pointer rounded-2xl border p-5 flex items-center justify-between text-left gap-4 transition-all hover:bg-surface-container-low ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"

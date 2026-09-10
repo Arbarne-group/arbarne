@@ -33,9 +33,14 @@ export default function PricingPage() {
 
         {/* Pricing Options Column */}
         <div className="w-full space-y-8">
-          <h2 className="text-xl md:text-2xl font-bold text-center text-on-surface">
-            Choose Your Assessment Option
-          </h2>
+          <div className="text-center space-y-2">
+            <h2 className="text-xl md:text-2xl font-bold text-on-surface">
+              Choose Your Assessment Option
+            </h2>
+            <p className="text-xs md:text-sm text-on-surface-variant">
+              Powered by Paystack recurring billing. Cancel or switch plans anytime.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1024px] mx-auto items-stretch">
             {/* Card 1: 1 Pillar Assessment */}
@@ -57,9 +62,9 @@ export default function PricingPage() {
               </div>
 
               <div className="mb-6">
-                <span className="text-4xl font-bold text-on-surface">$1</span>
+                <span className="text-3xl lg:text-4xl font-bold text-on-surface">KES 100</span>
                 <span className="text-xs text-on-surface-variant ml-1.5 font-medium">
-                  Per Pillar
+                  / month
                 </span>
               </div>
 
@@ -127,10 +132,10 @@ export default function PricingPage() {
               </div>
 
               <Link
-                href="/checkout?plan=1_PILLAR&amount=1"
+                href="/checkout?plan=1_PILLAR&amount=100"
                 className="w-full mt-6 bg-surface-container-high hover:bg-surface-dim text-on-surface font-bold py-3 px-4 rounded-xl transition-all shadow-level-1 hover:shadow-md text-sm text-center block"
               >
-                Assess 1 Pillar - $1
+                Assess 1 Pillar - KES 100
               </Link>
             </div>
 
@@ -153,9 +158,9 @@ export default function PricingPage() {
               </div>
 
               <div className="mb-6">
-                <span className="text-4xl font-bold text-on-surface">$3</span>
+                <span className="text-3xl lg:text-4xl font-bold text-on-surface">KES 500</span>
                 <span className="text-xs text-on-surface-variant ml-1.5 font-medium">
-                  One-time Payment
+                  / month
                 </span>
               </div>
 
@@ -234,10 +239,10 @@ export default function PricingPage() {
               </div>
 
               <Link
-                href="/checkout?plan=4_PILLARS&amount=3"
+                href="/checkout?plan=4_PILLARS&amount=500"
                 className="w-full mt-6 bg-surface-container-high hover:bg-surface-dim text-on-surface font-bold py-3 px-4 rounded-xl transition-all shadow-level-1 hover:shadow-md text-sm text-center block"
               >
-                Assess 4 Pillars - $3
+                Assess 4 Pillars - KES 500
               </Link>
             </div>
 
@@ -264,9 +269,9 @@ export default function PricingPage() {
               </div>
 
               <div className="mb-6">
-                <span className="text-4xl font-bold text-primary">$10</span>
+                <span className="text-3xl lg:text-4xl font-bold text-primary">KES 1,000</span>
                 <span className="text-xs text-on-surface-variant ml-1.5 font-medium">
-                  One-time Payment
+                  / month
                 </span>
               </div>
 
@@ -353,20 +358,29 @@ export default function PricingPage() {
               </div>
 
               <Link
-                href="/checkout?plan=FULL_ASSESSMENT&amount=10"
+                href="/checkout?plan=FULL_ASSESSMENT&amount=1000"
                 className="w-full mt-6 bg-primary hover:bg-primary/90 text-on-primary font-bold py-3 px-4 rounded-xl transition-all shadow-level-1 hover:shadow-md text-sm text-center block"
               >
-                Unlock Full Assessment - $10
+                Unlock Full Assessment - KES 1,000
               </Link>
             </div>
           </div>
 
-          {/* Secure Notice */}
-          <div className="mt-8 flex items-center justify-center gap-2 text-sm text-on-surface-variant">
-            <span className="material-symbols-outlined text-primary text-[20px]">
-              lock
-            </span>
-            <span>Payments are secure and encrypted. Upgrade anytime.</span>
+          {/* Secure Notice & Billing Portal link */}
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-surface-variant text-xs text-on-surface-variant">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary text-[18px]">
+                lock
+              </span>
+              <span>Encrypted checkout via Paystack. Card &amp; M-Pesa supported.</span>
+            </div>
+            <Link
+              href="/billing"
+              className="font-bold text-primary hover:underline flex items-center gap-1"
+            >
+              <span>Already a subscriber? Access Billing Portal</span>
+              <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+            </Link>
           </div>
         </div>
       </div>

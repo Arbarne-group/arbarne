@@ -6,9 +6,25 @@ import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
+interface OnboardingUser {
+  name?: string;
+  farmerProfile?: {
+    jobTitle?: string;
+  };
+  farmCharacteristics?: {
+    farmSize?: number;
+    farmUnit?: "Acres" | "Hectares";
+    cultivatedAcres?: number;
+    grazingAcres?: number;
+    landTenure?: string;
+    waterSources?: string;
+    soilTested?: string;
+  };
+}
+
 export default function FarmCharacteristicsPage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
   const [farmSize, setFarmSize] = useState<number>(12.5);
@@ -24,6 +40,7 @@ export default function FarmCharacteristicsPage() {
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const email = getActiveUserEmail();
@@ -36,7 +53,7 @@ export default function FarmCharacteristicsPage() {
         if (data.user?.farmCharacteristics) {
           const char = data.user.farmCharacteristics;
           if (char.farmSize) setFarmSize(char.farmSize);
-          if (char.farmUnit) setFarmUnit(char.farmUnit as any);
+          if (char.farmUnit === "Acres" || char.farmUnit === "Hectares") setFarmUnit(char.farmUnit);
           if (char.cultivatedAcres) setCultivatedAcres(char.cultivatedAcres);
           if (char.grazingAcres) setGrazingAcres(char.grazingAcres);
           if (char.landTenure) setLandTenure(char.landTenure);
@@ -54,12 +71,33 @@ export default function FarmCharacteristicsPage() {
   }, []);
 
   const toggleWaterSource = (id: string) => {
-    setWaterSources((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    setWaterSources((prev) => {
+      const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
+      if (next.length > 0) {
+        setValidationErrors((v) => v.filter((f) => f !== "waterSources"));
+      }
+      return next;
+    });
   };
 
   const handleSave = async (navigateNext: boolean = true) => {
+    if (navigateNext) {
+      const missing: string[] = [];
+      if (!farmSize || farmSize <= 0) missing.push("farmSize");
+      if (waterSources.length === 0) missing.push("waterSources");
+      if (!soilTested) missing.push("soilTested");
+
+      if (missing.length > 0) {
+        setValidationErrors(missing);
+        const firstMissing = missing[0];
+        const el = document.getElementById(`q-${firstMissing}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
+    }
+
     setSaving(true);
     setSaveFeedback(null);
     try {
@@ -178,17 +216,37 @@ export default function FarmCharacteristicsPage() {
           </div>
         </div>
 
+        {validationErrors.length > 0 && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+            <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
+            <span className="font-semibold">
+              Please complete all required fields on this page before continuing ({validationErrors.length} required field{validationErrors.length > 1 ? "s" : ""} remaining).
+            </span>
+          </div>
+        )}
+
         {/* Main Form Container */}
         <div className="bg-surface-container-lowest rounded-3xl shadow-sm border border-surface-container-high/60 p-6 md:p-8 space-y-8">
           {/* Farm Size & Land Use */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Farm Size Input */}
-            <div className="lg:col-span-5 space-y-4">
+            <div
+              id="q-farmSize"
+              className={`lg:col-span-5 space-y-4 p-4 rounded-2xl border transition-all ${
+                validationErrors.includes("farmSize")
+                  ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                  : "border-transparent"
+              }`}
+            >
               <div className="flex items-center justify-between">
                 <label className="text-base font-bold text-on-surface flex items-center gap-2">
                   <span>How big is your farm?</span>
                 </label>
-                <span className="text-xs text-primary font-semibold">Total Farm Size</span>
+                {validationErrors.includes("farmSize") ? (
+                  <span className="text-xs font-semibold text-red-600">Enter valid size &gt; 0</span>
+                ) : (
+                  <span className="text-xs text-primary font-semibold">Total Farm Size</span>
+                )}
               </div>
 
               <div className="flex items-stretch gap-2">
@@ -200,8 +258,16 @@ export default function FarmCharacteristicsPage() {
                     type="number"
                     step="0.1"
                     value={farmSize}
-                    onChange={(e) => setFarmSize(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-11 pr-4 py-3 bg-surface-container-low rounded-xl text-on-surface text-xl font-bold outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all"
+                    onChange={(e) => {
+                      const val = parseFloat(e.target.value) || 0;
+                      setFarmSize(val);
+                      if (val > 0) {
+                        setValidationErrors((prev) => prev.filter((f) => f !== "farmSize"));
+                      }
+                    }}
+                    className={`w-full pl-11 pr-4 py-3 bg-surface-container-low rounded-xl text-on-surface text-xl font-bold outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all border ${
+                      validationErrors.includes("farmSize") ? "border-red-400" : "border-transparent"
+                    }`}
                   />
                 </div>
 
@@ -304,18 +370,31 @@ export default function FarmCharacteristicsPage() {
             </div>
           </div>
 
-
-
           {/* Water Sources */}
-          <div className="space-y-4 pt-4 border-t border-surface-container-high/60">
+          <div
+            id="q-waterSources"
+            className={`space-y-4 pt-4 border-t p-4 rounded-2xl transition-all ${
+              validationErrors.includes("waterSources")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-surface-container-high/60"
+            }`}
+          >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-              <div>
-                <label className="text-base font-bold text-on-surface block">
-                  Where do you get water for your farm?
-                </label>
-                <p className="text-xs text-on-surface-variant mt-0.5">
-                  Select all water sources you currently use.
-                </p>
+              <div className="flex items-center gap-2">
+                <div>
+                  <label className="text-base font-bold text-on-surface block">
+                    Where do you get water for your farm?
+                  </label>
+                  <p className="text-xs text-on-surface-variant mt-0.5">
+                    Select all water sources you currently use.
+                  </p>
+                </div>
+                {validationErrors.includes("waterSources") && (
+                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="material-symbols-outlined text-[14px]">warning</span>
+                    Required
+                  </span>
+                )}
               </div>
               <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full self-start sm:self-auto">
                 {waterSources.length} selected
@@ -395,12 +474,27 @@ export default function FarmCharacteristicsPage() {
           </div>
 
           {/* Soil Testing */}
-          <div className="space-y-4 pt-4 border-t border-surface-container-high/60">
+          <div
+            id="q-soilTested"
+            className={`space-y-4 pt-4 border-t p-4 rounded-2xl transition-all ${
+              validationErrors.includes("soilTested")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-surface-container-high/60"
+            }`}
+          >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <label className="text-base font-bold text-on-surface block">
-                  Have you tested your soil recently?
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="text-base font-bold text-on-surface block">
+                    Have you tested your soil recently?
+                  </label>
+                  {validationErrors.includes("soilTested") && (
+                    <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                      <span className="material-symbols-outlined text-[14px]">warning</span>
+                      Required
+                    </span>
+                  )}
+                </div>
                 <p className="text-xs text-on-surface-variant mt-0.5">
                   Soil testing helps recommend the right fertilizers and crops.
                 </p>
@@ -409,7 +503,10 @@ export default function FarmCharacteristicsPage() {
               <div className="bg-surface-container-low p-1 rounded-xl flex items-center self-start sm:self-auto shadow-inner">
                 <button
                   type="button"
-                  onClick={() => setSoilTested("yes")}
+                  onClick={() => {
+                    setSoilTested("yes");
+                    setValidationErrors((prev) => prev.filter((f) => f !== "soilTested"));
+                  }}
                   className={`px-5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                     soilTested === "yes"
                       ? "bg-primary text-white shadow-xs"
@@ -421,7 +518,10 @@ export default function FarmCharacteristicsPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setSoilTested("no")}
+                  onClick={() => {
+                    setSoilTested("no");
+                    setValidationErrors((prev) => prev.filter((f) => f !== "soilTested"));
+                  }}
                   className={`px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     soilTested === "no"
                       ? "bg-primary text-white shadow-xs"

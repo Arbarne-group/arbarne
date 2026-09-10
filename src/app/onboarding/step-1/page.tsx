@@ -16,6 +16,7 @@ export default function FarmerProfilePage() {
   const [otherEducation, setOtherEducation] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const email = getActiveUserEmail();
@@ -37,8 +38,31 @@ export default function FarmerProfilePage() {
   }, []);
 
   const handleSave = async (navigateNext = true) => {
-    setSaving(true);
     setSaveFeedback(null);
+
+    // Validate when attempting to navigate to the next page
+    if (navigateNext) {
+      const missing: string[] = [];
+      if (!jobTitle) missing.push("jobTitle");
+      if (!valueChain.trim()) missing.push("valueChain");
+      if (!experienceYears) missing.push("experienceYears");
+      if (!businessHistory) missing.push("businessHistory");
+      if (!educationLevel || (educationLevel === "Other" && !otherEducation.trim())) {
+        missing.push("educationLevel");
+      }
+
+      if (missing.length > 0) {
+        setValidationErrors(missing);
+        const firstMissingEl = document.getElementById(`q-${missing[0]}`);
+        if (firstMissingEl) {
+          firstMissingEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
+    }
+
+    setValidationErrors([]);
+    setSaving(true);
     const email = getActiveUserEmail();
     try {
       const res = await fetch("/api/onboarding/step", {
@@ -146,13 +170,38 @@ export default function FarmerProfilePage() {
           </p>
         </div>
 
+        {/* Validation Warning Banner */}
+        {validationErrors.length > 0 && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+            <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
+            <span className="font-semibold">
+              Please complete all questions on this page before continuing ({validationErrors.length} required question{validationErrors.length > 1 ? "s" : ""} remaining).
+            </span>
+          </div>
+        )}
+
         {/* Form Container */}
         <div className="space-y-8">
           {/* Question 1 */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <label className="block text-base font-semibold text-on-surface mb-1">
-              1. What is your current job title or primary occupation?
-            </label>
+          <div
+            id="q-jobTitle"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all duration-200 ${
+              validationErrors.includes("jobTitle")
+                ? "border-2 border-red-400 bg-red-50/20"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4 mb-1">
+              <label className="block text-base font-semibold text-on-surface">
+                1. What is your current job title or primary occupation?
+              </label>
+              {validationErrors.includes("jobTitle") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Select the role that best defines your primary day-to-day engagement.
             </p>
@@ -164,7 +213,10 @@ export default function FarmerProfilePage() {
                   <button
                     key={opt.title}
                     type="button"
-                    onClick={() => setJobTitle(opt.title)}
+                    onClick={() => {
+                      setJobTitle(opt.title);
+                      setValidationErrors((prev) => prev.filter((e) => e !== "jobTitle"));
+                    }}
                     className={`rounded-2xl border p-4 text-left transition-all duration-200 flex items-center justify-between gap-3 cursor-pointer ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -207,13 +259,28 @@ export default function FarmerProfilePage() {
           </div>
 
           {/* Question 2 */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <label
-              className="block text-base font-semibold text-on-surface mb-1"
-              htmlFor="value_chain"
-            >
-              2. Which agricultural value chain(s) are you involved in?
-            </label>
+          <div
+            id="q-valueChain"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all duration-200 ${
+              validationErrors.includes("valueChain")
+                ? "border-2 border-red-400 bg-red-50/20"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4 mb-1">
+              <label
+                className="block text-base font-semibold text-on-surface"
+                htmlFor="value_chain"
+              >
+                2. Which agricultural value chain(s) are you involved in?
+              </label>
+              {validationErrors.includes("valueChain") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-4">
               Enter your key crops, livestock, or value chains.
             </p>
@@ -223,7 +290,12 @@ export default function FarmerProfilePage() {
               type="text"
               placeholder="e.g., Horticulture & Vegetables, Dairy, Poultry, Cereals..."
               value={valueChain}
-              onChange={(e) => setValueChain(e.target.value)}
+              onChange={(e) => {
+                setValueChain(e.target.value);
+                if (e.target.value.trim()) {
+                  setValidationErrors((prev) => prev.filter((err) => err !== "valueChain"));
+                }
+              }}
               className="w-full rounded-xl border border-outline-variant px-5 py-3.5 text-sm md:text-base text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none placeholder:text-on-surface-variant/40 bg-surface transition-all mb-3"
             />
 
@@ -243,6 +315,7 @@ export default function FarmerProfilePage() {
                       } else if (!valueChain.includes(sug)) {
                         setValueChain(`${valueChain}, ${sug}`);
                       }
+                      setValidationErrors((prev) => prev.filter((err) => err !== "valueChain"));
                     }}
                     className="text-xs px-3 py-1.5 rounded-lg border border-outline-variant/70 bg-surface-container-low hover:bg-primary/10 hover:border-primary/50 text-on-surface transition-colors cursor-pointer"
                   >
@@ -254,10 +327,25 @@ export default function FarmerProfilePage() {
           </div>
 
           {/* Question 3 */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <label className="block text-base font-semibold text-on-surface mb-1">
-              3. How many years of professional or business experience do you have?
-            </label>
+          <div
+            id="q-experienceYears"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all duration-200 ${
+              validationErrors.includes("experienceYears")
+                ? "border-2 border-red-400 bg-red-50/20"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4 mb-1">
+              <label className="block text-base font-semibold text-on-surface">
+                3. How many years of professional or business experience do you have?
+              </label>
+              {validationErrors.includes("experienceYears") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Include all relevant business, management, or farming background.
             </p>
@@ -269,7 +357,10 @@ export default function FarmerProfilePage() {
                   <button
                     key={opt}
                     type="button"
-                    onClick={() => setExperienceYears(opt)}
+                    onClick={() => {
+                      setExperienceYears(opt);
+                      setValidationErrors((prev) => prev.filter((err) => err !== "experienceYears"));
+                    }}
                     className={`rounded-2xl border p-4 text-left transition-all duration-200 flex items-center justify-between gap-3 cursor-pointer ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -299,10 +390,25 @@ export default function FarmerProfilePage() {
           </div>
 
           {/* Question 4 */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <label className="block text-base font-semibold text-on-surface mb-1">
-              4. Have you previously started, owned, or managed a business?
-            </label>
+          <div
+            id="q-businessHistory"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all duration-200 ${
+              validationErrors.includes("businessHistory")
+                ? "border-2 border-red-400 bg-red-50/20"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4 mb-1">
+              <label className="block text-base font-semibold text-on-surface">
+                4. Have you previously started, owned, or managed a business?
+              </label>
+              {validationErrors.includes("businessHistory") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Helps us assess your entrepreneurial background and strategic needs.
             </p>
@@ -314,7 +420,10 @@ export default function FarmerProfilePage() {
                   <button
                     key={opt}
                     type="button"
-                    onClick={() => setBusinessHistory(opt)}
+                    onClick={() => {
+                      setBusinessHistory(opt);
+                      setValidationErrors((prev) => prev.filter((err) => err !== "businessHistory"));
+                    }}
                     className={`rounded-2xl border p-4 text-left transition-all duration-200 flex items-center justify-between gap-3 cursor-pointer ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -344,10 +453,25 @@ export default function FarmerProfilePage() {
           </div>
 
           {/* Question 5 */}
-          <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <label className="block text-base font-semibold text-on-surface mb-1">
-              5. What is your highest level of education?
-            </label>
+          <div
+            id="q-educationLevel"
+            className={`bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border transition-all duration-200 ${
+              validationErrors.includes("educationLevel")
+                ? "border-2 border-red-400 bg-red-50/20"
+                : "border-surface-variant/40"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4 mb-1">
+              <label className="block text-base font-semibold text-on-surface">
+                5. What is your highest level of education?
+              </label>
+              {validationErrors.includes("educationLevel") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <p className="text-xs text-on-surface-variant mb-5">
               Select the option that best reflects your educational attainment.
             </p>
@@ -359,7 +483,12 @@ export default function FarmerProfilePage() {
                   <button
                     key={opt}
                     type="button"
-                    onClick={() => setEducationLevel(opt)}
+                    onClick={() => {
+                      setEducationLevel(opt);
+                      if (opt !== "Other") {
+                        setValidationErrors((prev) => prev.filter((err) => err !== "educationLevel"));
+                      }
+                    }}
                     className={`rounded-2xl border p-4 text-left transition-all duration-200 flex items-center justify-between gap-3 cursor-pointer ${
                       isSelected
                         ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
@@ -393,7 +522,12 @@ export default function FarmerProfilePage() {
                   type="text"
                   placeholder="Please specify your educational background..."
                   value={otherEducation}
-                  onChange={(e) => setOtherEducation(e.target.value)}
+                  onChange={(e) => {
+                    setOtherEducation(e.target.value);
+                    if (e.target.value.trim()) {
+                      setValidationErrors((prev) => prev.filter((err) => err !== "educationLevel"));
+                    }
+                  }}
                   className="w-full rounded-xl border border-outline-variant px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface"
                 />
               </div>

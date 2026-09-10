@@ -6,9 +6,23 @@ import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
+interface OnboardingUser {
+  name?: string;
+  farmerProfile?: {
+    jobTitle?: string;
+  };
+  farmLocation?: {
+    locationSearch?: string;
+    county?: string;
+    subcounty?: string;
+    ward?: string;
+    landmark?: string;
+  };
+}
+
 export default function FarmLocationPage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
   const [locationSearch, setLocationSearch] = useState("Mai Mahiu, Naivasha, Nakuru County");
@@ -21,6 +35,7 @@ export default function FarmLocationPage() {
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const email = getActiveUserEmail();
@@ -48,11 +63,31 @@ export default function FarmLocationPage() {
       setLocationSearch("Mai Mahiu, Longonot Foot, Nakuru (Accurate to 3m)");
       setDetectingGps(false);
       setGpsLocated(true);
+      setValidationErrors((prev) => prev.filter((f) => f !== "locationSearch"));
       setTimeout(() => setGpsLocated(false), 2500);
     }, 800);
   };
 
   const handleSave = async (navigateNext: boolean = true) => {
+    if (navigateNext) {
+      const missing: string[] = [];
+      if (!locationSearch.trim()) missing.push("locationSearch");
+      if (!county.trim()) missing.push("county");
+      if (!subcounty.trim()) missing.push("subcounty");
+      if (!ward.trim()) missing.push("ward");
+      if (!landmark.trim()) missing.push("landmark");
+
+      if (missing.length > 0) {
+        setValidationErrors(missing);
+        const firstMissing = missing[0];
+        const el = document.getElementById(`q-${firstMissing}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
+    }
+
     setSaving(true);
     setSaveFeedback(null);
     try {
@@ -164,6 +199,15 @@ export default function FarmLocationPage() {
           </div>
         </div>
 
+        {validationErrors.length > 0 && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+            <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
+            <span className="font-semibold">
+              Please complete all fields on this page before continuing ({validationErrors.length} required field{validationErrors.length > 1 ? "s" : ""} remaining).
+            </span>
+          </div>
+        )}
+
         {/* Main Content Container */}
         <div className="bg-surface-container-lowest rounded-3xl shadow-sm border border-surface-container-high/60 p-6 md:p-8 flex flex-col gap-8">
           {/* Section Header */}
@@ -188,10 +232,25 @@ export default function FarmLocationPage() {
           </div>
 
           {/* 1. Quick Search / Simple Location Input */}
-          <div className="flex flex-col gap-3 bg-surface-container-low p-5 rounded-2xl">
-            <label className="text-sm font-semibold text-on-surface" htmlFor="location-search">
-              Enter your farm location, town, or nearby landmark
-            </label>
+          <div
+            id="q-locationSearch"
+            className={`flex flex-col gap-3 bg-surface-container-low p-5 rounded-2xl border transition-all ${
+              validationErrors.includes("locationSearch")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-transparent"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-semibold text-on-surface" htmlFor="location-search">
+                Enter your farm location, town, or nearby landmark
+              </label>
+              {validationErrors.includes("locationSearch") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
+            </div>
             <div className="relative flex flex-col md:flex-row items-stretch gap-2.5">
               <div className="relative flex-1 flex items-center">
                 <span className="material-symbols-outlined text-primary absolute left-4 pointer-events-none text-[22px]">
@@ -201,7 +260,12 @@ export default function FarmLocationPage() {
                   id="location-search"
                   type="text"
                   value={locationSearch}
-                  onChange={(e) => setLocationSearch(e.target.value)}
+                  onChange={(e) => {
+                    setLocationSearch(e.target.value);
+                    if (e.target.value.trim()) {
+                      setValidationErrors((prev) => prev.filter((f) => f !== "locationSearch"));
+                    }
+                  }}
                   placeholder="e.g., Mai Mahiu, Naivasha or village name"
                   className={`w-full pl-12 pr-4 py-3.5 bg-surface-container-lowest text-on-surface text-sm rounded-xl shadow-xs outline-none focus:ring-2 focus:ring-primary transition-all ${
                     gpsLocated ? "bg-primary-fixed/20" : ""
@@ -247,16 +311,28 @@ export default function FarmLocationPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* County */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-on-surface-variant" htmlFor="field-county">
-                  County
-                </label>
+              <div id="q-county" className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-on-surface-variant" htmlFor="field-county">
+                    County
+                  </label>
+                  {validationErrors.includes("county") && (
+                    <span className="text-xs font-semibold text-red-600">Required</span>
+                  )}
+                </div>
                 <div className="relative">
                   <select
                     id="field-county"
                     value={county}
-                    onChange={(e) => setCounty(e.target.value)}
-                    className="w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer"
+                    onChange={(e) => {
+                      setCounty(e.target.value);
+                      if (e.target.value.trim()) {
+                        setValidationErrors((prev) => prev.filter((f) => f !== "county"));
+                      }
+                    }}
+                    className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer border ${
+                      validationErrors.includes("county") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
+                    }`}
                   >
                     <option value="nakuru">Nakuru County</option>
                     <option value="kiambu">Kiambu County</option>
@@ -271,16 +347,28 @@ export default function FarmLocationPage() {
               </div>
 
               {/* Sub-County */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-on-surface-variant" htmlFor="field-subcounty">
-                  Sub-County / Area
-                </label>
+              <div id="q-subcounty" className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-on-surface-variant" htmlFor="field-subcounty">
+                    Sub-County / Area
+                  </label>
+                  {validationErrors.includes("subcounty") && (
+                    <span className="text-xs font-semibold text-red-600">Required</span>
+                  )}
+                </div>
                 <div className="relative">
                   <select
                     id="field-subcounty"
                     value={subcounty}
-                    onChange={(e) => setSubcounty(e.target.value)}
-                    className="w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer"
+                    onChange={(e) => {
+                      setSubcounty(e.target.value);
+                      if (e.target.value.trim()) {
+                        setValidationErrors((prev) => prev.filter((f) => f !== "subcounty"));
+                      }
+                    }}
+                    className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer border ${
+                      validationErrors.includes("subcounty") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
+                    }`}
                   >
                     <option value="naivasha">Naivasha Sub-County</option>
                     <option value="gilgil">Gilgil Sub-County</option>
@@ -294,30 +382,54 @@ export default function FarmLocationPage() {
               </div>
 
               {/* Ward */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-on-surface-variant" htmlFor="field-ward">
-                  Ward / Village
-                </label>
+              <div id="q-ward" className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-on-surface-variant" htmlFor="field-ward">
+                    Ward / Village
+                  </label>
+                  {validationErrors.includes("ward") && (
+                    <span className="text-xs font-semibold text-red-600">Required</span>
+                  )}
+                </div>
                 <input
                   id="field-ward"
                   type="text"
                   value={ward}
-                  onChange={(e) => setWard(e.target.value)}
-                  className="w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-colors"
+                  onChange={(e) => {
+                    setWard(e.target.value);
+                    if (e.target.value.trim()) {
+                      setValidationErrors((prev) => prev.filter((f) => f !== "ward"));
+                    }
+                  }}
+                  className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-colors border ${
+                    validationErrors.includes("ward") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
+                  }`}
                 />
               </div>
 
               {/* Landmark */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-on-surface-variant" htmlFor="field-landmark">
-                  Nearest Trading Center / Landmark
-                </label>
+              <div id="q-landmark" className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-on-surface-variant" htmlFor="field-landmark">
+                    Nearest Trading Center / Landmark
+                  </label>
+                  {validationErrors.includes("landmark") && (
+                    <span className="text-xs font-semibold text-red-600">Required</span>
+                  )}
+                </div>
                 <input
                   id="field-landmark"
                   type="text"
                   value={landmark}
-                  onChange={(e) => setLandmark(e.target.value)}
-                  className="w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-colors"
+                  onChange={(e) => {
+                    setLandmark(e.target.value);
+                    if (e.target.value.trim()) {
+                      setValidationErrors((prev) => prev.filter((f) => f !== "landmark"));
+                    }
+                  }}
+                  className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-colors border ${
+                    validationErrors.includes("landmark") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
+                  }`}
                 />
               </div>
             </div>

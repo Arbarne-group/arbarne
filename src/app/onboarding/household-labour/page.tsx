@@ -6,9 +6,22 @@ import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
+interface OnboardingUser {
+  name?: string;
+  farmerProfile?: {
+    jobTitle?: string;
+  };
+  householdLabour?: {
+    permanentWorkers?: number;
+    seasonalWorkers?: number;
+    managementStructure?: string;
+    fairEmploymentPractices?: string;
+  };
+}
+
 export default function HouseholdLabourPage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
   const [permanentWorkers, setPermanentWorkers] = useState<number>(2);
@@ -22,6 +35,7 @@ export default function HouseholdLabourPage() {
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const email = getActiveUserEmail();
@@ -53,12 +67,52 @@ export default function HouseholdLabourPage() {
   }, []);
 
   const togglePractice = (id: string) => {
-    setFairEmploymentPractices((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    setFairEmploymentPractices((prev) => {
+      const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
+      if (next.length > 0) {
+        setValidationErrors((v) => v.filter((k) => k !== "fairEmploymentPractices"));
+      }
+      return next;
+    });
+  };
+
+  const validateForm = (): boolean => {
+    const missing: string[] = [];
+    if (
+      permanentWorkers === undefined ||
+      permanentWorkers === null ||
+      isNaN(permanentWorkers) ||
+      seasonalWorkers === undefined ||
+      seasonalWorkers === null ||
+      isNaN(seasonalWorkers)
+    ) {
+      missing.push("workforce");
+    }
+    if (!managementStructure || managementStructure.trim() === "") {
+      missing.push("managementStructure");
+    }
+    if (!fairEmploymentPractices || fairEmploymentPractices.length === 0) {
+      missing.push("fairEmploymentPractices");
+    }
+
+    if (missing.length > 0) {
+      setValidationErrors(missing);
+      const firstEl = document.getElementById(`q-${missing[0]}`);
+      if (firstEl) {
+        firstEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return false;
+    }
+
+    setValidationErrors([]);
+    return true;
   };
 
   const handleSave = async (navigateNext: boolean = true) => {
+    if (navigateNext) {
+      if (!validateForm()) return;
+    }
+
     setSaving(true);
     setSaveFeedback(null);
     try {
@@ -98,6 +152,8 @@ export default function HouseholdLabourPage() {
   };
 
   const handleSaveAndStartAssessment = async () => {
+    if (!validateForm()) return;
+
     setSaving(true);
     setSaveFeedback(null);
     try {
@@ -210,10 +266,34 @@ export default function HouseholdLabourPage() {
 
         {/* Main Questionnaire Card */}
         <div className="bg-surface-container-lowest rounded-3xl border border-surface-container-high/60 shadow-sm p-6 md:p-8 flex flex-col gap-8">
+          {validationErrors.length > 0 && (
+            <div className="p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+              <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
+              <span className="font-semibold">
+                Please complete all required questions on this page before continuing ({validationErrors.length} required field{validationErrors.length > 1 ? "s" : ""} remaining).
+              </span>
+            </div>
+          )}
+
           {/* Section 1: Workforce Size */}
-          <div className="flex flex-col gap-4">
+          <div
+            id="q-workforce"
+            className={`flex flex-col gap-4 p-4 rounded-2xl transition-all ${
+              validationErrors.includes("workforce")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300 dark:bg-red-950/20"
+                : ""
+            }`}
+          >
             <div>
-              <h3 className="text-base font-bold text-on-surface">1. Farm Workforce &amp; Labour Size</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-on-surface">1. Farm Workforce &amp; Labour Size</h3>
+                {validationErrors.includes("workforce") && (
+                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="material-symbols-outlined text-[14px]">warning</span>
+                    Required
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-on-surface-variant">
                 Detail full-time permanent personnel and seasonal hands hired during peak activities.
               </p>
@@ -245,7 +325,10 @@ export default function HouseholdLabourPage() {
                     <button
                       type="button"
                       aria-label="Decrease permanent workers"
-                      onClick={() => setPermanentWorkers((prev) => Math.max(0, prev - 1))}
+                      onClick={() => {
+                        setPermanentWorkers((prev) => Math.max(0, prev - 1));
+                        setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
+                      }}
                       className="w-10 h-10 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-all active:scale-95 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[20px]">remove</span>
@@ -253,7 +336,10 @@ export default function HouseholdLabourPage() {
                     <button
                       type="button"
                       aria-label="Increase permanent workers"
-                      onClick={() => setPermanentWorkers((prev) => prev + 1)}
+                      onClick={() => {
+                        setPermanentWorkers((prev) => prev + 1);
+                        setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
+                      }}
                       className="w-10 h-10 rounded-xl bg-primary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[20px]">add</span>
@@ -287,7 +373,10 @@ export default function HouseholdLabourPage() {
                     <button
                       type="button"
                       aria-label="Decrease seasonal workers"
-                      onClick={() => setSeasonalWorkers((prev) => Math.max(0, prev - 1))}
+                      onClick={() => {
+                        setSeasonalWorkers((prev) => Math.max(0, prev - 1));
+                        setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
+                      }}
                       className="w-10 h-10 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-all active:scale-95 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[20px]">remove</span>
@@ -295,7 +384,10 @@ export default function HouseholdLabourPage() {
                     <button
                       type="button"
                       aria-label="Increase seasonal workers"
-                      onClick={() => setSeasonalWorkers((prev) => prev + 1)}
+                      onClick={() => {
+                        setSeasonalWorkers((prev) => prev + 1);
+                        setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
+                      }}
                       className="w-10 h-10 rounded-xl bg-primary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[20px]">add</span>
@@ -307,9 +399,24 @@ export default function HouseholdLabourPage() {
           </div>
 
           {/* Section 2: Management Structure */}
-          <div className="flex flex-col gap-4 pt-2 border-t border-surface-container-high/60">
+          <div
+            id="q-managementStructure"
+            className={`flex flex-col gap-4 pt-2 border-t border-surface-container-high/60 p-4 rounded-2xl transition-all ${
+              validationErrors.includes("managementStructure")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300 dark:bg-red-950/20"
+                : ""
+            }`}
+          >
             <div>
-              <h3 className="text-base font-bold text-on-surface">2. Day-to-Day Farm Management</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-on-surface">2. Day-to-Day Farm Management</h3>
+                {validationErrors.includes("managementStructure") && (
+                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="material-symbols-outlined text-[14px]">warning</span>
+                    Required
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-on-surface-variant">
                 Select the primary operational decision maker and leadership model on your farm.
               </p>
@@ -340,7 +447,10 @@ export default function HouseholdLabourPage() {
                 return (
                   <label
                     key={item.id}
-                    onClick={() => setManagementStructure(item.id)}
+                    onClick={() => {
+                      setManagementStructure(item.id);
+                      setValidationErrors((prev) => prev.filter((k) => k !== "managementStructure"));
+                    }}
                     className={`relative flex flex-col p-5 rounded-2xl cursor-pointer shadow-xs transition-all border ${
                       isSelected
                         ? "bg-primary/5 border-primary shadow-sm"
@@ -372,9 +482,24 @@ export default function HouseholdLabourPage() {
           </div>
 
           {/* Section 3: Fair Employment & Inclusion */}
-          <div className="flex flex-col gap-4 pt-2 border-t border-surface-container-high/60">
+          <div
+            id="q-fairEmploymentPractices"
+            className={`flex flex-col gap-4 pt-2 border-t border-surface-container-high/60 p-4 rounded-2xl transition-all ${
+              validationErrors.includes("fairEmploymentPractices")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300 dark:bg-red-950/20"
+                : ""
+            }`}
+          >
             <div>
-              <h3 className="text-base font-bold text-on-surface">3. Fair Employment &amp; Inclusion Practices</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-on-surface">3. Fair Employment &amp; Inclusion Practices</h3>
+                {validationErrors.includes("fairEmploymentPractices") && (
+                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="material-symbols-outlined text-[14px]">warning</span>
+                    Required
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-on-surface-variant">
                 Ethical workforce standards, worker well-being, and social sustainability measures.
               </p>

@@ -6,9 +6,22 @@ import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
+interface OnboardingUser {
+  name?: string;
+  farmerProfile?: {
+    jobTitle?: string;
+  };
+  businessExperience?: {
+    commercialYears?: string;
+    annualRevenueBracket?: string;
+    recordKeepingMethod?: string;
+    produceBuyers?: string;
+  };
+}
+
 export default function BusinessExperiencePage() {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
   const [commercialYears, setCommercialYears] = useState<string>("3_7");
@@ -21,6 +34,7 @@ export default function BusinessExperiencePage() {
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     const email = getActiveUserEmail();
@@ -48,12 +62,34 @@ export default function BusinessExperiencePage() {
   }, []);
 
   const toggleBuyer = (id: string) => {
-    setProduceBuyers((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    setProduceBuyers((prev) => {
+      const next = prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id];
+      if (next.length > 0) {
+        setValidationErrors((v) => v.filter((k) => k !== "produceBuyers"));
+      }
+      return next;
+    });
   };
 
   const handleSave = async (navigateNext: boolean = true) => {
+    if (navigateNext) {
+      const missing: string[] = [];
+      if (!commercialYears || commercialYears.trim() === "") missing.push("commercialYears");
+      if (!annualRevenueBracket || annualRevenueBracket.trim() === "") missing.push("annualRevenueBracket");
+      if (!recordKeepingMethod || recordKeepingMethod.trim() === "") missing.push("recordKeepingMethod");
+      if (!produceBuyers || produceBuyers.length === 0) missing.push("produceBuyers");
+
+      if (missing.length > 0) {
+        setValidationErrors(missing);
+        const firstEl = document.getElementById(`q-${missing[0]}`);
+        if (firstEl) {
+          firstEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
+    }
+
+    setValidationErrors([]);
     setSaving(true);
     setSaveFeedback(null);
     try {
@@ -160,6 +196,15 @@ export default function BusinessExperiencePage() {
 
         {/* Questionnaire Bento Card */}
         <div className="bg-surface-container-lowest rounded-3xl border border-surface-container-high/60 shadow-sm p-6 md:p-8 space-y-8">
+          {validationErrors.length > 0 && (
+            <div className="p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+              <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
+              <span className="font-semibold">
+                Please complete all required questions on this page before continuing ({validationErrors.length} required field{validationErrors.length > 1 ? "s" : ""} remaining).
+              </span>
+            </div>
+          )}
+
           <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-surface-container-high/60">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center font-bold">
@@ -181,13 +226,26 @@ export default function BusinessExperiencePage() {
           </div>
 
           {/* Question 1: Commercial Duration */}
-          <div className="space-y-3">
+          <div
+            id="q-commercialYears"
+            className={`space-y-3 p-4 rounded-2xl transition-all ${
+              validationErrors.includes("commercialYears")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300 dark:bg-red-950/20"
+                : ""
+            }`}
+          >
             <div className="flex items-center justify-between">
               <label className="text-sm font-bold text-on-surface flex items-center gap-2">
                 <span className="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center text-xs text-primary font-bold">
                   1
                 </span>
-                How long have you been farming commercially?
+                <span>How long have you been farming commercially?</span>
+                {validationErrors.includes("commercialYears") && (
+                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="material-symbols-outlined text-[14px]">warning</span>
+                    Required
+                  </span>
+                )}
               </label>
               <span className="text-xs text-on-surface-variant">Select one</span>
             </div>
@@ -204,7 +262,10 @@ export default function BusinessExperiencePage() {
                   <button
                     key={opt.id}
                     type="button"
-                    onClick={() => setCommercialYears(opt.id)}
+                    onClick={() => {
+                      setCommercialYears(opt.id);
+                      setValidationErrors((prev) => prev.filter((k) => k !== "commercialYears"));
+                    }}
                     className={`py-3 px-3 rounded-xl text-xs font-semibold transition-all text-center flex items-center justify-center gap-1 cursor-pointer ${
                       isSelected
                         ? "bg-surface-container-lowest text-primary shadow-xs"
@@ -220,13 +281,26 @@ export default function BusinessExperiencePage() {
           </div>
 
           {/* Question 2: Revenue Bracket */}
-          <div className="space-y-3 pt-2">
+          <div
+            id="q-annualRevenueBracket"
+            className={`space-y-3 pt-2 p-4 rounded-2xl transition-all ${
+              validationErrors.includes("annualRevenueBracket")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300 dark:bg-red-950/20"
+                : ""
+            }`}
+          >
             <div className="flex items-center justify-between">
               <label className="text-sm font-bold text-on-surface flex items-center gap-2">
                 <span className="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center text-xs text-primary font-bold">
                   2
                 </span>
-                What is your estimated annual farm sales / revenue?
+                <span>What is your estimated annual farm sales / revenue?</span>
+                {validationErrors.includes("annualRevenueBracket") && (
+                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="material-symbols-outlined text-[14px]">warning</span>
+                    Required
+                  </span>
+                )}
               </label>
               <span className="text-xs text-on-surface-variant">Select bracket</span>
             </div>
@@ -258,7 +332,10 @@ export default function BusinessExperiencePage() {
                 return (
                   <div
                     key={bracket.id}
-                    onClick={() => setAnnualRevenueBracket(bracket.id)}
+                    onClick={() => {
+                      setAnnualRevenueBracket(bracket.id);
+                      setValidationErrors((prev) => prev.filter((k) => k !== "annualRevenueBracket"));
+                    }}
                     className={`p-4 rounded-2xl transition-all cursor-pointer flex items-center justify-between border ${
                       isSelected
                         ? "bg-primary/5 border-primary shadow-xs"
@@ -290,13 +367,26 @@ export default function BusinessExperiencePage() {
           </div>
 
           {/* Question 3: Record Keeping */}
-          <div className="space-y-3 pt-2">
+          <div
+            id="q-recordKeepingMethod"
+            className={`space-y-3 pt-2 p-4 rounded-2xl transition-all ${
+              validationErrors.includes("recordKeepingMethod")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300 dark:bg-red-950/20"
+                : ""
+            }`}
+          >
             <div className="flex items-center justify-between">
               <label className="text-sm font-bold text-on-surface flex items-center gap-2">
                 <span className="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center text-xs text-primary font-bold">
                   3
                 </span>
-                How do you currently keep farm records?
+                <span>How do you currently keep farm records?</span>
+                {validationErrors.includes("recordKeepingMethod") && (
+                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="material-symbols-outlined text-[14px]">warning</span>
+                    Required
+                  </span>
+                )}
               </label>
               <span className="text-xs text-on-surface-variant">Select primary method</span>
             </div>
@@ -332,7 +422,10 @@ export default function BusinessExperiencePage() {
                 return (
                   <div
                     key={item.id}
-                    onClick={() => setRecordKeepingMethod(item.id)}
+                    onClick={() => {
+                      setRecordKeepingMethod(item.id);
+                      setValidationErrors((prev) => prev.filter((k) => k !== "recordKeepingMethod"));
+                    }}
                     className={`p-4 rounded-2xl transition-all cursor-pointer flex items-start gap-3 border ${
                       isSelected
                         ? "bg-primary/5 border-primary shadow-xs"
@@ -364,13 +457,26 @@ export default function BusinessExperiencePage() {
           </div>
 
           {/* Question 4: Primary Produce Buyers */}
-          <div className="space-y-3 pt-2">
+          <div
+            id="q-produceBuyers"
+            className={`space-y-3 pt-2 p-4 rounded-2xl transition-all ${
+              validationErrors.includes("produceBuyers")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300 dark:bg-red-950/20"
+                : ""
+            }`}
+          >
             <div className="flex items-center justify-between">
               <label className="text-sm font-bold text-on-surface flex items-center gap-2">
                 <span className="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center text-xs text-primary font-bold">
                   4
                 </span>
-                Primary Produce Buyers &amp; Sales Channels
+                <span>Primary Produce Buyers &amp; Sales Channels</span>
+                {validationErrors.includes("produceBuyers") && (
+                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="material-symbols-outlined text-[14px]">warning</span>
+                    Required
+                  </span>
+                )}
               </label>
               <span className="text-xs text-primary font-semibold">Select all that apply</span>
             </div>
