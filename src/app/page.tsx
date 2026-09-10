@@ -125,42 +125,42 @@ export default function Home() {
 
         {/* Core Feature Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 mb-8 max-w-6xl w-full text-left">
-            <div className="p-6 rounded-2xl bg-surface border border-surface-variant/60 shadow-xs hover:border-primary/40 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                <span className="material-symbols-outlined text-[22px]">radar</span>
-              </div>
-              <h3 className="text-base font-bold text-on-surface mb-2">
-                8-Pillar FFMI Diagnostic
-              </h3>
-              <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
-                Benchmark capability across Agronomy, Water, Soil, Energy, Labor, Markets, and Financial Systems.
-              </p>
-            </div>
+          <div className="group relative p-7 rounded-2xl bg-surface border border-surface-variant/80 shadow-xs hover:shadow-lg hover:-translate-y-1.5 hover:border-outline-variant/60 transition-all duration-300 overflow-hidden cursor-default">
+            {/* Subtle card shimmer sweep on hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 dark:via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
 
-            <div className="p-6 rounded-2xl bg-surface border border-surface-variant/60 shadow-xs hover:border-primary/40 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                <span className="material-symbols-outlined text-[22px]">route</span>
-              </div>
-              <h3 className="text-base font-bold text-on-surface mb-2">
-                Tailored Transition Plans
-              </h3>
-              <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
-                Clear recommendations and priority steps to advance your operations from Basic to Established commercial readiness.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-surface border border-surface-variant/60 shadow-xs hover:border-primary/40 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
-                <span className="material-symbols-outlined text-[22px]">storefront</span>
-              </div>
-              <h3 className="text-base font-bold text-on-surface mb-2">
-                Capital &amp; Market Linkages
-              </h3>
-              <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
-                Unlock matching grants, ag-tech equipment financing, and commercial buyer opportunities for your farm.
-              </p>
-            </div>
+            <h3 className="text-base md:text-lg font-bold text-on-surface group-hover:text-primary transition-colors duration-200 mb-2.5">
+              8-Pillar FFMI Diagnostic
+            </h3>
+            <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
+              Benchmark capability across Agronomy, Water, Soil, Energy, Labor, Markets, and Financial Systems.
+            </p>
           </div>
+
+          <div className="group relative p-7 rounded-2xl bg-surface border border-surface-variant/80 shadow-xs hover:shadow-lg hover:-translate-y-1.5 hover:border-outline-variant/60 transition-all duration-300 overflow-hidden cursor-default">
+            {/* Subtle card shimmer sweep on hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 dark:via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+
+            <h3 className="text-base md:text-lg font-bold text-on-surface group-hover:text-primary transition-colors duration-200 mb-2.5">
+              Tailored Transition Plans
+            </h3>
+            <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
+              Clear recommendations and priority steps to advance your operations from Basic to Established commercial readiness.
+            </p>
+          </div>
+
+          <div className="group relative p-7 rounded-2xl bg-surface border border-surface-variant/80 shadow-xs hover:shadow-lg hover:-translate-y-1.5 hover:border-outline-variant/60 transition-all duration-300 overflow-hidden cursor-default">
+            {/* Subtle card shimmer sweep on hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 dark:via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+
+            <h3 className="text-base md:text-lg font-bold text-on-surface group-hover:text-primary transition-colors duration-200 mb-2.5">
+              Capital &amp; Market Linkages
+            </h3>
+            <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
+              Unlock matching grants, ag-tech equipment financing, and commercial buyer opportunities for your farm.
+            </p>
+          </div>
+        </div>
         </main>
 
       {/* Production Footer */}
