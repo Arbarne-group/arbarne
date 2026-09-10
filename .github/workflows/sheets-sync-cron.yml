@@ -1,0 +1,47 @@
+name: Hourly Sheets & Database Sync Cron
+
+on:
+  schedule:
+    # Run every hour at minute 0 (completely free on GitHub Actions)
+    - cron: '0 * * * *'
+  workflow_dispatch: # Allows 1-click manual execution anytime from GitHub Actions tab
+
+jobs:
+  sync-sheets:
+    name: Reconcile Clerk, DB & Google Sheets
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Ping Reconciliation API Endpoint
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          APP_URL: "https://app.futurefarms.africa"
+        run: |
+          echo "Starting reconciliation at $(date -u)..."
+          
+          AUTH_HEADER=""
+          if [ -n "$CRON_SECRET" ]; then
+            AUTH_HEADER="-H \"Authorization: Bearer $CRON_SECRET\""
+            echo "Using configured CRON_SECRET authorization."
+          fi
+
+          TARGET_URL="${APP_URL}/api/sync/users-to-sheet"
+          echo "Calling $TARGET_URL..."
+
+          RESPONSE=$(curl -s -S -w "\n%{http_code}" \
+            ${AUTH_HEADER:+$AUTH_HEADER} \
+            -X GET "$TARGET_URL")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "Response HTTP Status: $HTTP_CODE"
+          echo "Response Body: $BODY"
+
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "Reconciliation completed successfully!"
+          else
+            echo "::error::Sync endpoint returned non-2xx status code: $HTTP_CODE"
+            exit 1
+          fi
