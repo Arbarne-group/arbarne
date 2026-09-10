@@ -201,7 +201,7 @@ export default function AssessmentStandardQuestionnaireView({
     <div className="flex flex-col flex-1 min-h-screen">
       {/* Pillar Title & Progress (Sticky below top nav) */}
       <div className="w-full bg-surface border-b border-outline-variant/50 sticky top-16 md:top-0 z-30 shadow-sm">
-        <div className="px-6 md:px-12 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 max-w-5xl mx-auto w-full">
+        <div className="px-4 sm:px-6 md:px-12 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 max-w-5xl mx-auto w-full">
           <div className="flex items-center gap-3">
             <div
               className={`w-10 h-10 rounded-full ${pillar.iconBg} flex items-center justify-center shrink-0`}
@@ -385,11 +385,11 @@ export default function AssessmentStandardQuestionnaireView({
           </form>
 
           {/* Footer Actions */}
-          <div className="mt-10 flex items-center justify-between pt-6 border-t border-outline-variant/40">
+          <div className="mt-10 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-outline-variant/40">
             <button
               type="button"
               onClick={handleBack}
-              className="flex items-center gap-2 px-4 py-2 font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors cursor-pointer"
+              className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors cursor-pointer w-full sm:w-auto"
             >
               <span className="material-symbols-outlined text-[20px]">
                 chevron_left
@@ -400,7 +400,7 @@ export default function AssessmentStandardQuestionnaireView({
             <button
               type="button"
               onClick={handleNext}
-              className={`flex items-center gap-2 px-8 py-3 font-label-sm text-label-sm font-semibold rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer ${
+              className={`flex items-center justify-center gap-2 px-6 sm:px-8 py-3 font-label-sm text-label-sm font-semibold rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer w-full sm:w-auto ${
                 isCurrentPageComplete
                   ? "bg-[#009924] hover:bg-primary-container text-white hover:shadow-md"
                   : "bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80 border border-outline-variant"

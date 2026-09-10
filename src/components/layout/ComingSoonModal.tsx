@@ -158,7 +158,7 @@ export default function ComingSoonModal({ pathname }: ComingSoonModalProps) {
           aria-labelledby="coming-soon-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/65 backdrop-blur-sm animate-fadeIn select-none"
         >
-          <div className="relative w-full max-w-xl bg-surface-container-lowest border border-outline-variant/30 rounded-3xl shadow-2xl overflow-hidden animate-scaleUp">
+          <div className="relative w-full max-w-xl max-h-[90dvh] bg-surface-container-lowest border border-outline-variant/30 rounded-3xl shadow-2xl overflow-y-auto flex flex-col animate-scaleUp">
             {/* Top Glowing Header Strip */}
             <div className={`h-28 bg-gradient-to-b ${config.gradientHeader} relative flex items-center px-6 border-b border-outline-variant/20`}>
               <div className="flex items-center gap-4">

@@ -314,10 +314,10 @@ export default function OnboardingOverviewPage() {
                   Overview of your verified farm details, crops, and support.
                 </p>
               </div>
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
                 <Link
                   href="/assessment"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container transition-all shadow-sm hover:shadow-md font-label-sm text-label-sm font-semibold"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container transition-all shadow-sm hover:shadow-md font-label-sm text-label-sm font-semibold"
                 >
                   <span className="material-symbols-outlined text-[18px]">fact_check</span>
                   <span>Take Farm Assessment</span>
@@ -325,7 +325,7 @@ export default function OnboardingOverviewPage() {
                 </Link>
                 <button
                   onClick={() => window.print()}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container-lowest border border-surface-container-high hover:bg-surface-container text-on-surface transition-all shadow-sm hover:shadow-md font-label-sm text-label-sm font-semibold cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container-lowest border border-surface-container-high hover:bg-surface-container text-on-surface transition-all shadow-sm hover:shadow-md font-label-sm text-label-sm font-semibold cursor-pointer"
                   type="button"
                 >
                   <span className="material-symbols-outlined text-[18px] text-primary">download</span>
@@ -335,14 +335,14 @@ export default function OnboardingOverviewPage() {
             </div>
 
             {/* Top Farmer Identity Banner */}
-            <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-surface-container-high/60">
+            <div className="bg-surface-container-lowest p-5 sm:p-6 rounded-2xl shadow-sm mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-surface-container-high/60">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-primary-container/15 text-primary flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-[32px]">person</span>
+                <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-2xl bg-primary-container/15 text-primary flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-[28px] sm:text-[32px]">person</span>
                 </div>
                 <div className="flex flex-col">
-                  <div className="flex items-center gap-2">
-                    <h2 className="font-title-md text-title-md text-on-surface font-bold text-[22px]">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="font-title-md text-title-md text-on-surface font-bold text-lg sm:text-[22px]">
                       {userName}
                     </h2>
                     <span className="px-2.5 py-0.5 rounded-full bg-primary-container/10 text-primary text-xs font-semibold">
@@ -360,7 +360,7 @@ export default function OnboardingOverviewPage() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-6 text-label-sm text-on-surface">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-label-sm text-on-surface w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-surface-container-high/60">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">phone_iphone</span>
                   <div>

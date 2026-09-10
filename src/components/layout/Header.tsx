@@ -81,18 +81,18 @@ export default function Header({
   return (
     <>
       {/* Mobile Top App Bar - Exact h-16 */}
-      <header className="sticky top-0 z-50 flex justify-between items-center w-full px-4 h-16 bg-surface border-b border-surface-variant md:hidden">
-        <Link href={logoHref} className="flex items-center">
+      <header className="sticky top-0 z-50 flex justify-between items-center w-full px-3.5 sm:px-4 h-16 bg-surface border-b border-surface-variant md:hidden">
+        <Link href={logoHref} className="flex items-center shrink-0">
           <Image
             src="/logo.webp"
             alt="Future Farms"
             width={180}
             height={44}
-            className="h-10 w-auto object-contain"
+            className="h-8 sm:h-10 w-auto max-w-[140px] sm:max-w-[180px] object-contain"
             priority
           />
         </Link>
-        <div className="flex items-center gap-2 text-on-surface-variant relative" ref={menuRef}>
+        <div className="flex items-center gap-1.5 sm:gap-2 text-on-surface-variant relative" ref={menuRef}>
           <button
             onClick={() => setNotifOpen(!notifOpen)}
             aria-label="Notifications"
@@ -115,7 +115,7 @@ export default function Header({
 
           {/* Notifications Dropdown */}
           {notifOpen && (
-            <div className="absolute right-0 top-11 w-72 bg-surface-container-lowest rounded-2xl shadow-xl border border-surface-variant p-4 z-50 animate-fade-in text-left">
+            <div className="absolute right-0 top-11 w-72 max-w-[calc(100vw-2rem)] bg-surface-container-lowest rounded-2xl shadow-xl border border-surface-variant p-4 z-50 animate-fade-in text-left">
               <div className="flex justify-between items-center mb-3">
                 <span className="font-bold text-xs text-on-surface">Notifications</span>
                 <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">New</span>

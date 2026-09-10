@@ -1,5 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 
@@ -8,6 +8,13 @@ const outfit = Outfit({
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-outfit",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#009924",
+};
 
 export const metadata: Metadata = {
   title: "Future Farms - Cultivating the Future of African Agriculture",

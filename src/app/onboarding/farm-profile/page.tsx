@@ -517,12 +517,12 @@ export default function FarmProfileReviewPage() {
         </div>
 
         {/* Floating Bottom Confirmation */}
-        <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface/95 backdrop-blur-md border-t border-surface-variant px-6 py-4 flex justify-between items-center z-30 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]">
+        <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface/95 backdrop-blur-md border-t border-surface-variant px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-center gap-3 z-30 shadow-[0_-4px_16px_rgba(0,0,0,0.03)] pb-safe">
           <Link
             href="/onboarding/household-labour"
-            className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+            className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 self-start sm:self-auto"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+            <span>&larr;</span>
             <span>Edit Previous Sections</span>
           </Link>
 
@@ -530,7 +530,7 @@ export default function FarmProfileReviewPage() {
             type="button"
             onClick={handleApprove}
             disabled={approving}
-            className="px-6 md:px-8 py-2.5 md:py-3 rounded-xl bg-primary text-white font-bold text-xs md:text-sm shadow-md hover:bg-primary/90 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-75 btn-shadow hover-lift"
+            className="w-full sm:w-auto px-6 md:px-8 py-2.5 md:py-3 rounded-xl bg-primary text-white font-bold text-xs md:text-sm shadow-md hover:bg-primary/90 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 btn-shadow hover-lift"
           >
             <span className="material-symbols-outlined text-[18px]">verified</span>
             <span>{approving ? "Approving Profile..." : "Approve Profile & Take Assessment"}</span>

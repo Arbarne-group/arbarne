@@ -6,14 +6,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col justify-between text-on-background">
       {/* Top Navigation Bar */}
-      <header className="px-6 md:px-10 py-3.5 flex items-center justify-between border-b border-surface-variant bg-surface sticky top-0 z-50">
+      <header className="px-4 sm:px-6 md:px-10 py-3 sm:py-3.5 flex items-center justify-between border-b border-surface-variant bg-surface sticky top-0 z-50">
         <Link href="/" className="flex items-center">
           <Image
             src="/logo.webp"
             alt="Future Farms"
             width={240}
             height={60}
-            className="h-12 md:h-14 w-auto object-contain"
+            className="h-9 sm:h-12 md:h-14 max-w-[140px] sm:max-w-[180px] md:max-w-none w-auto object-contain"
             priority
           />
         </Link>
@@ -87,18 +87,18 @@ export default function Home() {
               Our Mission is to lead the transition of African agriculture from traditional, inefficient systems to future-ready, productive, and profitable farm enterprises.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto">
               <Show when="signed-out">
                 <Link
                   href="/sign-up"
-                  className="px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                  className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
                 >
                   <span>Start Farm Assessment</span>
                   <span className="material-symbols-outlined text-lg">arrow_forward</span>
                 </Link>
                 <Link
                   href="/sign-in"
-                  className="px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                  className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
                 >
                   <span>Sign In to Account</span>
                 </Link>
@@ -106,14 +106,14 @@ export default function Home() {
               <Show when="signed-in">
                 <Link
                   href="/dashboard"
-                  className="px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                  className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
                 >
                   <span>Go to My Farm Radar</span>
                   <span className="material-symbols-outlined text-lg">arrow_forward</span>
                 </Link>
                 <Link
                   href="/assessment"
-                  className="px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                  className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
                 >
                   <span className="material-symbols-outlined text-lg">fact_check</span>
                   <span>Assessment Hub</span>

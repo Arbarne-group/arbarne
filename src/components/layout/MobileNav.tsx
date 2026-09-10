@@ -53,7 +53,7 @@ export default function MobileNav({
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 bg-surface border-t border-surface-variant shadow-[0_-4px_12px_rgba(0,0,0,0.05)] md:hidden">
+    <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] bg-surface border-t border-surface-variant shadow-[0_-4px_12px_rgba(0,0,0,0.05)] md:hidden">
       {navItems.map((item) => {
         const locked = isItemLocked(item.href);
         const isActive =

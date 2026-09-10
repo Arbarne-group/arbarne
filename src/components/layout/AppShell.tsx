@@ -213,10 +213,15 @@ export default function AppShell({
             pathname === "/opportunities" ||
             pathname === "/service-desk";
 
+          const isSurveyStep =
+            pathname.startsWith("/onboarding/") && pathname !== "/onboarding";
+
           return (
             <>
               <main
-                className={`flex-1 overflow-y-auto bg-surface relative pb-20 md:pb-8 transition-opacity ${
+                className={`flex-1 overflow-y-auto bg-surface relative ${
+                  isSurveyStep ? "pb-6 md:pb-8" : "pb-20 md:pb-8"
+                } transition-opacity ${
                   isComingSoonPage ? "pointer-events-none select-none opacity-60" : ""
                 }`}
                 tabIndex={isComingSoonPage ? -1 : undefined}
@@ -227,15 +232,17 @@ export default function AppShell({
 
               {/* Blocking Coming Soon Pop Window for Digital Learning, Opportunity Desk, and Service Desk */}
               {isComingSoonPage && <ComingSoonModal pathname={pathname} />}
+
+              {/* Mobile Sticky Bottom Nav - Hidden on active survey steps so action buttons are unblocked */}
+              {!isSurveyStep && (
+                <MobileNav
+                  onboardingStage={onboardingStage}
+                  completedPillarsCount={completedPillarsCount}
+                />
+              )}
             </>
           );
         })()}
-
-        {/* Mobile Sticky Bottom Nav */}
-        <MobileNav
-          onboardingStage={onboardingStage}
-          completedPillarsCount={completedPillarsCount}
-        />
       </div>
     </div>
   );

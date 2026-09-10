@@ -509,7 +509,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Right Col: Radar Chart (8 Pillar Summary) */}
-            <div className="col-span-1 lg:col-span-8 bg-surface rounded-2xl p-6 shadow-ambient h-[400px] lg:h-auto flex flex-col relative overflow-hidden border border-outline-variant/40">
+            <div className="col-span-1 lg:col-span-8 bg-surface rounded-2xl p-4 sm:p-6 shadow-ambient min-h-[320px] sm:min-h-[380px] lg:h-auto flex flex-col relative overflow-hidden border border-outline-variant/40">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-title-md text-title-md text-on-surface font-bold">
                   8 Pillar Summary
@@ -524,7 +524,7 @@ export default function DashboardPage() {
                 />
               </div>
 
-              <div className="flex justify-center gap-6 mt-4 pt-4 border-t border-outline-variant">
+              <div className="flex flex-wrap justify-center gap-2.5 sm:gap-6 mt-4 pt-4 border-t border-outline-variant">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-primary" />
                   <span className="font-label-sm text-label-sm text-on-surface-variant font-medium">
@@ -542,7 +542,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Middle Stats Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => setShowStrengthsModal(true)}
@@ -892,7 +892,7 @@ export default function DashboardPage() {
         {/* Modal: View Progress Over Time */}
         {showProgressModal && (
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-surface rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-outline-variant animate-fade-in-up">
+            <div className="bg-surface rounded-3xl p-5 sm:p-6 md:p-8 max-w-lg w-full max-h-[90dvh] overflow-y-auto shadow-2xl border border-outline-variant animate-fade-in-up flex flex-col">
               <div className="flex justify-between items-center mb-4 border-b border-surface-variant pb-3">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-2xl">trending_up</span>
@@ -1014,7 +1014,7 @@ export default function DashboardPage() {
         {/* Modal: Strengths */}
         {showStrengthsModal && (
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-surface rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-outline-variant animate-fade-in-up">
+            <div className="bg-surface rounded-3xl p-5 sm:p-6 md:p-8 max-w-lg w-full max-h-[90dvh] overflow-y-auto shadow-2xl border border-outline-variant animate-fade-in-up flex flex-col">
               <div className="flex justify-between items-center mb-4 border-b border-surface-variant pb-3">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-2xl">psychiatry</span>
@@ -1072,7 +1072,7 @@ export default function DashboardPage() {
         {/* Modal: Priority Areas */}
         {showPriorityModal && (
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-surface rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-outline-variant animate-fade-in-up">
+            <div className="bg-surface rounded-3xl p-5 sm:p-6 md:p-8 max-w-lg w-full max-h-[90dvh] overflow-y-auto shadow-2xl border border-outline-variant animate-fade-in-up flex flex-col">
               <div className="flex justify-between items-center mb-4 border-b border-surface-variant pb-3">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-error text-2xl">priority_high</span>

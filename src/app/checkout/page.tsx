@@ -111,7 +111,7 @@ function CheckoutContent() {
             )}
 
             {/* Payment Method Section */}
-            <section className="bg-surface-container-lowest rounded-3xl shadow-[0_4px_16px_rgba(0,0,0,0.04)] p-6 md:p-8 border border-surface-variant/40">
+            <section className="bg-surface-container-lowest rounded-3xl shadow-[0_4px_16px_rgba(0,0,0,0.04)] p-5 sm:p-6 md:p-8 border border-surface-variant/40">
               <h2 className="text-base font-bold text-on-background mb-5">
                 Payment Method
               </h2>
@@ -293,7 +293,7 @@ function CheckoutContent() {
 
           {/* Order Summary Sidebar */}
           <div className="lg:col-span-5 flex flex-col gap-4">
-            <section className="bg-surface-container-lowest rounded-3xl shadow-[0_4px_16px_rgba(0,0,0,0.04)] p-6 md:p-8 flex flex-col h-full border border-surface-variant/40">
+            <section className="bg-surface-container-lowest rounded-3xl shadow-[0_4px_16px_rgba(0,0,0,0.04)] p-5 sm:p-6 md:p-8 flex flex-col h-full border border-surface-variant/40">
               <h2 className="text-base font-bold text-on-background mb-4">
                 Order Summary
               </h2>

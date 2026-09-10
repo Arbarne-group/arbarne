@@ -225,26 +225,26 @@ function AssessmentReportContent() {
           {/* Action Buttons */}
           <div className="flex items-center space-x-2">
             {/* View Switcher: Pillar vs Full */}
-            <div className="inline-flex rounded-lg p-0.5 bg-slate-100 border border-slate-200 text-xs mr-2">
+            <div className="inline-flex rounded-lg p-0.5 bg-slate-100 border border-slate-200 text-xs">
               <Link
                 href={`/assessment/report?pillar=${pillarId || 2}`}
-                className={`px-2.5 py-1 rounded-md font-semibold transition ${
+                className={`px-2 py-1 rounded-md font-semibold transition text-[11px] sm:text-xs ${
                   !isAllPillars
                     ? "bg-white text-emerald-800 shadow-xs"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
-                Pillar {pillarId || 2} Report
+                Pillar {pillarId || 2}
               </Link>
               <Link
                 href="/assessment/report?pillar=all"
-                className={`px-2.5 py-1 rounded-md font-semibold transition ${
+                className={`px-2 py-1 rounded-md font-semibold transition text-[11px] sm:text-xs ${
                   isAllPillars
                     ? "bg-white text-emerald-800 shadow-xs"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
-                Full 8-Pillar Report
+                Full 8-Pillar
               </Link>
             </div>
 
@@ -292,7 +292,7 @@ function AssessmentReportContent() {
           /* TEMPLATE 2: COMPREHENSIVE 8-PILLAR ASSESSMENT REPORT                      */
           /* Criteria-based scoring (No percentages or progress bars)                  */
           /* ========================================================================= */
-          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden relative p-6 sm:p-10 space-y-6 print:space-y-0">
+          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden relative p-4 sm:p-6 md:p-10 space-y-6 print:space-y-0">
             {/* Top Decorative Gradient Accent Bar */}
             <div className="h-2.5 w-full bg-gradient-to-r from-emerald-700 via-emerald-500 to-amber-500 absolute top-0 left-0" />
 
@@ -325,7 +325,7 @@ function AssessmentReportContent() {
 
                 {/* Official Stamps */}
                 <div className="text-left md:text-right">
-                  <span className="inline-block px-3 py-1 rounded bg-slate-900 text-white font-bold text-[11px] tracking-wider uppercase shadow-xs">
+                  <span className="inline-block px-3 py-1 rounded bg-slate-900 text-white font-bold text-[10px] sm:text-[11px] tracking-wider uppercase shadow-xs break-words">
                     OFFICIAL COMPREHENSIVE ASSESSMENT REPORT • ALL 8 PILLARS
                   </span>
                   <div className="text-xs text-slate-500 font-mono mt-1.5 space-y-0.5">
@@ -946,7 +946,7 @@ function AssessmentReportContent() {
           /* TEMPLATE 1: SINGLE PILLAR ASSESSMENT REPORT (Pillar 1 - 8)                */
           /* Criteria-based scoring (No percentages or progress bars)                  */
           /* ========================================================================= */
-          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden relative p-6 sm:p-10 space-y-7">
+          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden relative p-4 sm:p-6 md:p-10 space-y-7">
             {/* Top Decorative Band */}
             <div className="w-full h-2.5 bg-gradient-to-r from-emerald-700 via-emerald-500 to-amber-500 absolute top-0 left-0" />
 
@@ -976,7 +976,7 @@ function AssessmentReportContent() {
 
                 {/* Report Status Tag */}
                 <div className="flex flex-row sm:flex-col items-end justify-between sm:justify-start gap-2 text-right">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wider uppercase bg-emerald-800 text-white shadow-xs">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] sm:text-[11px] font-bold tracking-wider uppercase bg-emerald-800 text-white shadow-xs break-words">
                     Official Assessment Report • Pillar {pillarId}
                   </span>
                   <p className="text-[11px] text-slate-500 font-medium">
