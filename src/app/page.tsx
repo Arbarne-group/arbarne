@@ -17,19 +17,18 @@ export default function Home() {
             priority
           />
         </Link>
+        <div className="hidden md:flex items-center">
+          <a
+            href="https://www.futurefarms.africa/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs md:text-sm font-medium text-on-surface-variant hover:text-primary hover:bg-surface-variant/40 transition-all"
+          >
+            <span>Future Farms Main Site</span>
+            <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+          </a>
+        </div>
         <div className="flex items-center gap-3">
-          <Link
-            href="/pricing"
-            className="hidden sm:inline-block px-3.5 py-2 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
-          >
-            Pricing
-          </Link>
-          <Link
-            href="/contact"
-            className="hidden sm:inline-block px-3.5 py-2 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
-          >
-            Contact
-          </Link>
           <Show when="signed-out">
             <Link
               href="/sign-in"
@@ -57,62 +56,75 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-16 md:py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-container/20 text-primary text-xs font-bold uppercase tracking-wider mb-6 border border-primary/20">
-            <span className="material-symbols-outlined text-sm fill">eco</span>
-            Next-Generation Agricultural Intelligence
+      {/* Hero Content Section */}
+      <main className="flex-1 flex flex-col items-center justify-start px-4 sm:px-6 lg:px-8 py-4 md:py-6 w-full max-w-7xl mx-auto">
+        {/* Rounded Cinematic Hero Banner */}
+        <div className="relative w-full rounded-2xl md:rounded-[32px] overflow-hidden min-h-[500px] md:min-h-[560px] lg:min-h-[600px] flex flex-col items-center justify-center text-center p-6 sm:p-10 md:p-16 shadow-2xl border border-black/10">
+          {/* Background Aerial Drone Landscape Image */}
+          <Image
+            src="/images/hero-farm-drone.jpg"
+            alt="Facilitating Transition to Future-Ready Farm Systems with Precision Drone Agriculture"
+            fill
+            priority
+            className="object-cover object-center z-0"
+          />
+
+          {/* Contrast Overlay for Crisp Legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/45 to-black/75 z-10" />
+
+          {/* Centered Hero Content */}
+          <div className="relative z-20 max-w-4xl mx-auto flex flex-col items-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-serif font-bold text-white tracking-tight leading-[1.2] mb-5 drop-shadow-md">
+              Facilitating the Transition to{" "}
+              <span className="text-emerald-400 font-serif font-bold">
+                Future-Ready
+              </span>
+              <br className="hidden sm:inline" />{" "}
+              Farm Systems
+            </h1>
+
+            <p className="text-sm sm:text-base md:text-lg text-white/90 max-w-2xl sm:max-w-3xl mx-auto mb-8 font-normal leading-relaxed drop-shadow">
+              Our Mission is to lead the transition of African agriculture from traditional, inefficient systems to future-ready, productive, and profitable farm enterprises.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Show when="signed-out">
+                <Link
+                  href="/sign-up"
+                  className="px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                >
+                  <span>Start Farm Assessment</span>
+                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                </Link>
+                <Link
+                  href="/sign-in"
+                  className="px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                >
+                  <span>Sign In to Account</span>
+                </Link>
+              </Show>
+              <Show when="signed-in">
+                <Link
+                  href="/dashboard"
+                  className="px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                >
+                  <span>Go to My Farm Radar</span>
+                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                </Link>
+                <Link
+                  href="/assessment"
+                  className="px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-lg">fact_check</span>
+                  <span>Assessment Hub</span>
+                </Link>
+              </Show>
+            </div>
           </div>
+        </div>
 
-          <h1 className="text-4xl md:text-6xl font-extrabold text-on-surface tracking-tight leading-[1.15] mb-6">
-            Cultivating the Future of{" "}
-            <span className="text-primary underline decoration-primary/30 decoration-wavy">
-              African Agriculture
-            </span>
-          </h1>
-
-          <p className="text-base md:text-xl text-on-surface-variant max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-            Empower your farm with standard 8-pillar maturity diagnostics, precision capability
-            roadmaps, and dedicated market connections designed for sustainable agricultural transformation.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Show when="signed-out">
-              <Link
-                href="/sign-up"
-                className="px-8 py-3.5 text-sm md:text-base font-semibold bg-primary hover:bg-primary/90 text-on-primary rounded-xl shadow-md btn-shadow hover-lift flex items-center gap-2 transition-all"
-              >
-                <span>Start Farm Assessment</span>
-                <span className="material-symbols-outlined text-lg">arrow_forward</span>
-              </Link>
-              <Link
-                href="/sign-in"
-                className="px-8 py-3.5 text-sm md:text-base font-semibold bg-surface-container-lowest hover:bg-surface-container-high text-on-surface border border-outline-variant rounded-xl shadow-xs hover-lift transition-all flex items-center gap-2"
-              >
-                <span>Sign In to Account</span>
-              </Link>
-            </Show>
-            <Show when="signed-in">
-              <Link
-                href="/dashboard"
-                className="px-8 py-3.5 text-sm md:text-base font-semibold bg-primary hover:bg-primary/90 text-on-primary rounded-xl shadow-md btn-shadow hover-lift flex items-center gap-2 transition-all"
-              >
-                <span className="material-symbols-outlined text-lg">agriculture</span>
-                <span>Go to My Farm Radar</span>
-              </Link>
-              <Link
-                href="/assessment"
-                className="px-8 py-3.5 text-sm md:text-base font-semibold bg-surface-container-lowest hover:bg-surface-container-high text-on-surface border border-outline-variant rounded-xl shadow-xs hover-lift transition-all flex items-center gap-2"
-              >
-                <span className="material-symbols-outlined text-primary text-lg">fact_check</span>
-                <span>Assessment Hub</span>
-              </Link>
-            </Show>
-          </div>
-
-          {/* Core Feature Pillars */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-5xl mx-auto text-left">
+        {/* Core Feature Pillars */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 mb-8 max-w-6xl w-full text-left">
             <div className="p-6 rounded-2xl bg-surface border border-surface-variant/60 shadow-xs hover:border-primary/40 transition-colors">
               <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined text-[22px]">radar</span>
@@ -149,23 +161,22 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
 
       {/* Production Footer */}
       <footer className="py-8 px-6 border-t border-surface-variant bg-surface text-center text-xs text-on-surface-variant">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <p>&copy; {new Date().getFullYear()} Future Farms. Cultivating the Future of African Agriculture.</p>
           <div className="flex items-center gap-6 font-medium">
-            <Link href="/pricing" className="hover:text-primary transition-colors">
-              Pricing
-            </Link>
-            <Link href="/help" className="hover:text-primary transition-colors">
-              Help Center
-            </Link>
-            <Link href="/contact" className="hover:text-primary transition-colors">
-              Contact
-            </Link>
+            <a
+              href="https://www.futurefarms.africa/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors inline-flex items-center gap-1"
+            >
+              <span>Future Farms Main Site</span>
+              <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+            </a>
           </div>
         </div>
       </footer>
