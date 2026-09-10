@@ -70,7 +70,7 @@ assert(!blockedAssessStage2.allowed && blockedAssessStage2.redirectTo === "/onbo
 const blockedLearnStage2 = getRouteAccess("/learning", stage2.stage);
 assert(!blockedLearnStage2.allowed && blockedLearnStage2.redirectTo === "/onboarding", "Blocked on /learning, redirects to /onboarding");
 
-console.log("\n=== 3. Testing Stage 3: Survey 2 Answered (ADDITIONAL_COMPLETED) ===");
+console.log("\n=== 3. Testing Stage 3: Both Surveys Completed (FULLY_COMPLETED) ===");
 const survey2AnsweredUser = {
   ...survey1DoneUser,
   farmLocation: { county: "Nakuru" },
@@ -78,31 +78,46 @@ const survey2AnsweredUser = {
   farmingSystem: { enterprises: ["Vegetables"] },
   businessExperience: { commercialYears: "3-5 years" },
   householdLabour: { permanentWorkers: 4 },
-};
-const stage3 = computeOnboardingStageFromUser(survey2AnsweredUser);
-assert(stage3.stage === "ADDITIONAL_COMPLETED", "All questions answered is in ADDITIONAL_COMPLETED");
-assert(stage3.initialCompleted === true, "Initial completed");
-assert(stage3.additionalCompleted === true, "Additional completed");
-assert(stage3.profileApproved === false, "Profile not yet approved");
-
-assert(getRouteAccess("/onboarding", stage3.stage).allowed === true, "Allowed on /onboarding overview");
-assert(getRouteAccess("/onboarding/farm-profile", stage3.stage).allowed === true, "Allowed on /onboarding/farm-profile");
-assert(!getRouteAccess("/assessment", stage3.stage).allowed, "Assessment locked until approved");
-
-console.log("\n=== 4. Testing Stage 4: Profile Approved (FULLY_COMPLETED) ===");
-const fullyDoneUser = {
-  ...survey2AnsweredUser,
   onboardingStatus: { profileApproved: true, stage: "FULLY_COMPLETED" },
 };
-const stage4 = computeOnboardingStageFromUser(fullyDoneUser);
-assert(stage4.stage === "FULLY_COMPLETED", "Stage is FULLY_COMPLETED");
-assert(stage4.profileApproved === true, "Profile approved");
+const stage3 = computeOnboardingStageFromUser(survey2AnsweredUser);
+assert(stage3.stage === "FULLY_COMPLETED", "Both surveys complete sets stage to FULLY_COMPLETED");
+assert(stage3.initialCompleted === true, "Initial completed");
+assert(stage3.additionalCompleted === true, "Additional completed");
+assert(stage3.profileApproved === true, "Profile approved");
 
-assert(getRouteAccess("/onboarding", stage4.stage).allowed === true, "Allowed on /onboarding");
-assert(getRouteAccess("/dashboard", stage4.stage).allowed === true, "Allowed on /dashboard");
-assert(getRouteAccess("/assessment", stage4.stage).allowed === true, "Allowed on /assessment");
-assert(getRouteAccess("/learning", stage4.stage).allowed === true, "Allowed on /learning");
-assert(getRouteAccess("/opportunities", stage4.stage).allowed === true, "Allowed on /opportunities");
-assert(getRouteAccess("/service-desk", stage4.stage).allowed === true, "Allowed on /service-desk");
+// Main routes are unlocked
+assert(getRouteAccess("/onboarding", stage3.stage).allowed === true, "Allowed on /onboarding");
+assert(getRouteAccess("/dashboard", stage3.stage).allowed === true, "Allowed on /dashboard");
+assert(getRouteAccess("/assessment", stage3.stage).allowed === true, "Allowed on /assessment");
+assert(getRouteAccess("/learning", stage3.stage).allowed === true, "Allowed on /learning");
+assert(getRouteAccess("/opportunities", stage3.stage).allowed === true, "Allowed on /opportunities");
+assert(getRouteAccess("/service-desk", stage3.stage).allowed === true, "Allowed on /service-desk");
 
-console.log("\n🎉 ALL ONBOARDING GUARDRAIL TESTS PASSED SUCCESSFULLY!");
+console.log("\n=== 4. Testing Survey Retake Lockout for Completed Users ===");
+// Verify users cannot repeat ANY onboarding survey steps after finishing
+const retakeStep1 = getRouteAccess("/onboarding/step-1", stage3.stage);
+assert(!retakeStep1.allowed && retakeStep1.redirectTo === "/onboarding", "Blocked from repeating /onboarding/step-1");
+
+const retakeStep5 = getRouteAccess("/onboarding/step-5", stage3.stage);
+assert(!retakeStep5.allowed && retakeStep5.redirectTo === "/onboarding", "Blocked from repeating /onboarding/step-5");
+
+const retakeLoc = getRouteAccess("/onboarding/location", stage3.stage);
+assert(!retakeLoc.allowed && retakeLoc.redirectTo === "/onboarding", "Blocked from repeating /onboarding/location");
+
+const retakeChar = getRouteAccess("/onboarding/characteristics", stage3.stage);
+assert(!retakeChar.allowed && retakeChar.redirectTo === "/onboarding", "Blocked from repeating /onboarding/characteristics");
+
+const retakeSys = getRouteAccess("/onboarding/farming-system", stage3.stage);
+assert(!retakeSys.allowed && retakeSys.redirectTo === "/onboarding", "Blocked from repeating /onboarding/farming-system");
+
+const retakeBiz = getRouteAccess("/onboarding/business-experience", stage3.stage);
+assert(!retakeBiz.allowed && retakeBiz.redirectTo === "/onboarding", "Blocked from repeating /onboarding/business-experience");
+
+const retakeLab = getRouteAccess("/onboarding/household-labour", stage3.stage);
+assert(!retakeLab.allowed && retakeLab.redirectTo === "/onboarding", "Blocked from repeating /onboarding/household-labour");
+
+const retakeProfile = getRouteAccess("/onboarding/farm-profile", stage3.stage);
+assert(!retakeProfile.allowed && retakeProfile.redirectTo === "/onboarding", "Blocked from repeating /onboarding/farm-profile");
+
+console.log("\n🎉 ALL ONBOARDING GUARDRAIL & RETAKE LOCKOUT TESTS PASSED SUCCESSFULLY!");

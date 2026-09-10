@@ -47,17 +47,13 @@ export function computeOnboardingStageFromUser(user: any): OnboardingStatus {
   const additionalCompleted = additionalDoneCount === 5;
 
   const profileApproved = Boolean(
-    user.onboardingStatus?.profileApproved || user.onboardingStatus?.stage === "FULLY_COMPLETED"
+    user.onboardingStatus?.profileApproved || user.onboardingStatus?.stage === "FULLY_COMPLETED" || (initialCompleted && additionalCompleted)
   );
 
   let stage: OnboardingStage = "INITIAL_IN_PROGRESS";
   if (initialCompleted) {
     if (additionalCompleted) {
-      if (profileApproved) {
-        stage = "FULLY_COMPLETED";
-      } else {
-        stage = "ADDITIONAL_COMPLETED";
-      }
+      stage = "FULLY_COMPLETED";
     } else {
       stage = "INITIAL_COMPLETED";
     }
@@ -67,7 +63,7 @@ export function computeOnboardingStageFromUser(user: any): OnboardingStatus {
     stage,
     initialCompleted,
     additionalCompleted,
-    profileApproved,
+    profileApproved: stage === "FULLY_COMPLETED",
     initialCount: initialDoneCount,
     additionalCount: additionalDoneCount,
   };
@@ -104,8 +100,17 @@ export function getRouteAccess(
     };
   }
 
-  // 2. Stage 2 & 3: Survey 1 Done, Survey 2 In Progress
+  // 2. Stage 2: Survey 1 Done, Survey 2 In Progress
   if (stage === "INITIAL_COMPLETED" || stage === "ADDITIONAL_COMPLETED") {
+    // Cannot repeat Survey 1 steps once completed
+    const isSurvey1Step = /^\/onboarding\/step-[1-5]/.test(pathname);
+    if (isSurvey1Step) {
+      return {
+        allowed: false,
+        redirectTo: "/onboarding",
+        message: "You have already completed the first survey.",
+      };
+    }
     // /onboarding overview, /onboarding/* (location, characteristics, farming-system, business-experience, household-labour, farm-profile) allowed
     if (pathname.startsWith("/onboarding")) {
       return { allowed: true };
@@ -118,7 +123,19 @@ export function getRouteAccess(
     };
   }
 
-  // 3. Stage 4: Fully completed -> All routes unlocked
+  // 3. Stage 4: Fully completed -> All main routes unlocked, BUT survey steps cannot be repeated
+  if (stage === "FULLY_COMPLETED") {
+    const isSurveyStep = /^\/onboarding\/(step-[1-5]|location|characteristics|farming-system|business-experience|household-labour|farm-profile)/.test(pathname);
+    if (isSurveyStep) {
+      return {
+        allowed: false,
+        redirectTo: "/onboarding",
+        message: "Onboarding completed. You cannot repeat the onboarding surveys.",
+      };
+    }
+    return { allowed: true };
+  }
+
   return { allowed: true };
 }
 

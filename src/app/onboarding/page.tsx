@@ -7,6 +7,11 @@ import { useUser } from "@clerk/nextjs";
 import AppShell from "@/components/layout/AppShell";
 
 import { computeOnboardingStageFromUser, getActiveUserEmail } from "@/lib/onboardingGuard";
+import {
+  computeAssessmentResults,
+  getMaturityTier,
+  OverallAssessmentResult,
+} from "@/lib/assessmentScoring";
 
 export default function OnboardingOverviewPage() {
   const router = useRouter();
@@ -15,6 +20,8 @@ export default function OnboardingOverviewPage() {
   const [loading, setLoading] = useState(true);
   const [onboardingStage, setOnboardingStage] = useState<string>("INITIAL_IN_PROGRESS");
   const [resetting, setResetting] = useState(false);
+  const [assessmentResult, setAssessmentResult] = useState<OverallAssessmentResult | null>(null);
+  const [showProgressModal, setShowProgressModal] = useState(false);
 
   // Initial sections (5)
   const isStep1Done = Boolean(user?.farmerProfile?.jobTitle);
@@ -79,6 +86,31 @@ export default function OnboardingOverviewPage() {
 
   useEffect(() => {
     fetchStatus();
+
+    const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+    if (email) {
+      fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.answers && Object.keys(data.answers).length > 0) {
+            setAssessmentResult(computeAssessmentResults(data.answers));
+          } else {
+            try {
+              const saved = localStorage.getItem("future_farms_all_answers");
+              if (saved) {
+                setAssessmentResult(computeAssessmentResults(JSON.parse(saved)));
+              } else {
+                setAssessmentResult(computeAssessmentResults({}));
+              }
+            } catch (e) {
+              setAssessmentResult(computeAssessmentResults({}));
+            }
+          }
+        })
+        .catch(() => {
+          setAssessmentResult(computeAssessmentResults({}));
+        });
+    }
   }, [clerkUser]);
 
   const handleResetOnboarding = async () => {
@@ -223,221 +255,165 @@ export default function OnboardingOverviewPage() {
   const farmId =
     (user as any)?.futureFarmId ||
     (user?.id ? `FFF-KE-PROD-${user.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD");
+  const waterSupplyText = user?.farmingSystem?.waterSource || "Reliable Solar Borehole";
+  const overallPercentage = assessmentResult?.overallFfmiScore ?? 67;
+  const ffmiScore24 = Math.round((overallPercentage / 100) * 24) || 16;
+  const maturityTier = getMaturityTier(overallPercentage);
 
   return (
     <AppShell userName={userName} userRole={userRole}>
       <div className="px-4 md:px-10 py-6 max-w-[1280px] mx-auto w-full pb-20">
-        {/* Reset / Testing Strip */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-on-surface-variant">Onboarding State:</span>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary">
-              {onboardingStage === "FULLY_COMPLETED"
-                ? "Onboarding Completed"
-                : onboardingStage === "ADDITIONAL_COMPLETED"
-                ? "Farm Profile Pending Confirmation"
-                : onboardingStage === "INITIAL_COMPLETED"
-                ? "Additional Sections In Progress"
-                : "Initial Profiling In Progress"}
-            </span>
-          </div>
+        {/* Reset / Testing Strip (Only shown when onboarding is NOT yet completed) */}
+        {onboardingStage !== "FULLY_COMPLETED" && (
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-on-surface-variant">Onboarding State:</span>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary">
+                {onboardingStage === "ADDITIONAL_COMPLETED"
+                  ? "Farm Profile Pending Confirmation"
+                  : onboardingStage === "INITIAL_COMPLETED"
+                  ? "Additional Sections In Progress"
+                  : "Initial Profiling In Progress"}
+              </span>
+            </div>
 
-          <button
-            type="button"
-            onClick={handleResetOnboarding}
-            disabled={resetting}
-            className="text-xs font-semibold text-on-surface-variant hover:text-error bg-surface-container-high hover:bg-error/10 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
-            title="Clear all responses and restart onboarding from scratch"
-          >
-            <span className="material-symbols-outlined text-[15px]">restart_alt</span>
-            <span>{resetting ? "Resetting..." : "Reset Responses"}</span>
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={handleResetOnboarding}
+              disabled={resetting}
+              className="text-xs font-semibold text-on-surface-variant hover:text-error bg-surface-container-high hover:bg-error/10 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              title="Clear all responses and restart onboarding from scratch"
+            >
+              <span className="material-symbols-outlined text-[15px]">restart_alt</span>
+              <span>{resetting ? "Resetting..." : "Reset Responses"}</span>
+            </button>
+          </div>
+        )}
 
         {/* ─────────────────────────────────────────────────────────────
-            STAGE 4: FULLY COMPLETED -> RENDER FARM PROFILE (Matches Design)
+            STAGE 4: FULLY COMPLETED -> RENDER COMPLETED MY FARM PROFILE
             ───────────────────────────────────────────────────────────── */}
         {onboardingStage === "FULLY_COMPLETED" ? (
           <div className="space-y-8 animate-fadeIn">
-            {/* Header Section (Title size reduced cleanly) */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-surface-container-high">
-              <div className="flex flex-col gap-1.5">
-                <h1 className="text-xl md:text-2xl text-on-surface tracking-tight font-bold">
-                  My Farm Profile
-                </h1>
-                <p className="text-xs md:text-sm text-on-surface-variant">
-                  Overview of your verified farm details, crops, and support.
-                </p>
+            {/* Onboarding Completion Notice Banner & Next Steps CTA */}
+            <div className="p-5 md:p-6 rounded-2xl bg-primary/10 border border-primary/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 shadow-sm">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shrink-0 shadow-sm">
+                  <span className="material-symbols-outlined text-[26px]">task_alt</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full bg-primary text-white text-[11px] font-bold uppercase tracking-wider">
+                      Onboarding Completed
+                    </span>
+                    <span className="text-xs font-medium text-primary">
+                      • 2 of 2 Surveys Verified &amp; Saved
+                    </span>
+                  </div>
+                  <h2 className="text-base md:text-lg font-bold text-on-surface">
+                    Onboarding Complete! Your Verified Farm Baseline is Ready.
+                  </h2>
+                  <p className="text-xs md:text-sm text-on-surface-variant max-w-2xl leading-relaxed">
+                    You have submitted both onboarding surveys. The critical next step is to take your <strong>8-Pillar Farm Assessment</strong> to benchmark all 40 capabilities, verify your FFMI score, and access customized opportunities.
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/assessment/report?pillar=all"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-surface-container-high bg-surface-container-lowest hover:bg-surface-container text-xs font-semibold text-on-surface transition-all shadow-xs cursor-pointer"
-                >
-                  <span className="material-symbols-outlined text-[18px] text-emerald-700">picture_as_pdf</span>
-                  <span>Download Summary (PDF)</span>
-                </Link>
+
+              <div className="flex flex-wrap items-center gap-3 shrink-0 self-stretch md:self-auto justify-end">
                 <Link
                   href="/assessment"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary/90 transition-all shadow-sm hover:shadow-md text-xs font-semibold"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-white hover:bg-primary-container font-semibold text-xs md:text-sm transition-all shadow-sm hover:shadow-md"
                 >
-                  <span>Start Farm Assessment</span>
+                  <span className="material-symbols-outlined text-[18px]">fact_check</span>
+                  <span>Take Farm Assessment</span>
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </Link>
               </div>
             </div>
 
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8 pb-6 border-b border-surface-container-high">
+              <div className="flex flex-col gap-1.5">
+                <h1 className="font-headline-lg text-headline-lg text-on-surface tracking-tight font-bold">
+                  My Farm Profile
+                </h1>
+                <p className="font-body-md text-body-md text-on-surface-variant">
+                  Overview of your verified farm details, crops, and support.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link
+                  href="/assessment"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container transition-all shadow-sm hover:shadow-md font-label-sm text-label-sm font-semibold"
+                >
+                  <span className="material-symbols-outlined text-[18px]">fact_check</span>
+                  <span>Take Farm Assessment</span>
+                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </Link>
+                <button
+                  onClick={() => window.print()}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface-container-lowest border border-surface-container-high hover:bg-surface-container text-on-surface transition-all shadow-sm hover:shadow-md font-label-sm text-label-sm font-semibold cursor-pointer"
+                  type="button"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-primary">download</span>
+                  <span>Download Summary (PDF)</span>
+                </button>
+              </div>
+            </div>
+
             {/* Top Farmer Identity Banner */}
-            <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-surface-container-high/60">
+            <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-surface-container-high/60">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl bg-primary-container/15 text-primary flex items-center justify-center shrink-0">
                   <span className="material-symbols-outlined text-[32px]">person</span>
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-lg md:text-xl text-on-surface font-bold">{userName}</h2>
+                    <h2 className="font-title-md text-title-md text-on-surface font-bold text-[22px]">
+                      {userName}
+                    </h2>
                     <span className="px-2.5 py-0.5 rounded-full bg-primary-container/10 text-primary text-xs font-semibold">
-                      Farm Owner
+                      {userRole}
                     </span>
                   </div>
-                  <span className="text-on-surface-variant text-xs md:text-sm mt-0.5">{locationText}</span>
-                  <div className="mt-1.5 flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-md bg-secondary-fixed/40 text-on-secondary-fixed text-xs font-mono font-bold tracking-wide">
-                      Future Farms ID: {farmId}
-                    </span>
-                    <span className="text-[11px] text-on-surface-variant italic">
-                      (Unified Farm Profile Code)
+                  <span className="text-on-surface-variant text-label-sm mt-0.5">
+                    {locationText}
+                  </span>
+                  <div className="mt-1 flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-md bg-secondary-fixed/40 text-on-secondary-fixed text-xs font-mono font-bold">
+                      Unified Farm ID: {farmId}
                     </span>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-6 text-xs md:text-sm text-on-surface">
+
+              <div className="flex flex-wrap items-center gap-6 text-label-sm text-on-surface">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">phone_iphone</span>
                   <div>
-                    <span className="text-[11px] text-on-surface-variant block">Phone Number</span>
+                    <span className="text-xs text-on-surface-variant block">Phone Number</span>
                     <span className="font-semibold">{user?.phone || "+254 712 345 678"}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">landscape</span>
                   <div>
-                    <span className="text-[11px] text-on-surface-variant block">Total Land Size</span>
+                    <span className="text-xs text-on-surface-variant block">Total Land Size</span>
                     <span className="font-semibold">{farmSize} {farmUnit}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">water_drop</span>
                   <div>
-                    <span className="text-[11px] text-on-surface-variant block">Water Supply</span>
-                    <span className="font-semibold text-primary">Reliable Solar Borehole</span>
+                    <span className="text-xs text-on-surface-variant block">Water Supply</span>
+                    <span className="font-semibold text-primary">{waterSupplyText}</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Farm Profile - Complete Key Metadata Accordion/Card */}
-            <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-surface-container-high/60 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-surface-container-high">
-                <div>
-                  <h3 className="text-sm md:text-base text-on-surface font-bold flex items-center gap-2">
-                    <span className="material-symbols-outlined text-primary text-[20px]">badge</span>
-                    Farm Profile — Verified Metadata
-                  </h3>
-                  <p className="text-xs text-on-surface-variant">
-                    Future Farms Framework key metadata holding your entire farm operational profile.
-                  </p>
-                </div>
-                <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-                  {farmId}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 text-xs">
-                {/* 1. Farm Identity */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-                  <span className="font-bold text-primary block mb-1">1. Farm Identity</span>
-                  <p className="text-on-surface font-semibold">{user?.farmName || "My Farm"}</p>
-                  <p className="text-on-surface-variant">ID: {farmId}</p>
-                  <p className="text-on-surface-variant">Ownership: Farmer Owned (Freehold)</p>
-                </div>
-
-                {/* 2. Farmer / Manager */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-                  <span className="font-bold text-primary block mb-1">2. Farmer / Manager</span>
-                  <p className="text-on-surface font-semibold">{userName}</p>
-                  <p className="text-on-surface-variant">Role: Lead Owner &amp; Operator</p>
-                  <p className="text-on-surface-variant">Contact: {user?.phone || "+254 712 345 678"}</p>
-                </div>
-
-                {/* 3. Location */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-                  <span className="font-bold text-primary block mb-1">3. Location</span>
-                  <p className="text-on-surface font-semibold">Kenya • Nakuru County</p>
-                  <p className="text-on-surface-variant">Naivasha Sub-county • Maraigushu</p>
-                  <p className="text-on-surface-variant font-mono text-[11px]">GPS: 0°59&apos;48&quot;S 36°35&apos;12&quot;E</p>
-                </div>
-
-                {/* 4. Farm Size & Land */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-                  <span className="font-bold text-primary block mb-1">4. Farm Size &amp; Land</span>
-                  <p className="text-on-surface font-semibold">Total: {farmSize} {farmUnit} (5.06 Ha)</p>
-                  <p className="text-on-surface-variant">Under Production: {cultivatedAcres} {farmUnit}</p>
-                  <p className="text-on-surface-variant">Grazing &amp; Infrastructure: {grazingAcres} {farmUnit}</p>
-                </div>
-
-                {/* 5. Production */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-                  <span className="font-bold text-primary block mb-1">5. Production Enterprises</span>
-                  <p className="text-on-surface font-semibold">Mixed: Horticulture &amp; Dairy</p>
-                  <p className="text-on-surface-variant">French Beans, Field Tomatoes, Maize</p>
-                  <p className="text-on-surface-variant">System: Semi-intensive drip &amp; open field</p>
-                </div>
-
-                {/* 6. Infrastructure */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-                  <span className="font-bold text-primary block mb-1">6. Infrastructure</span>
-                  <p className="text-on-surface font-semibold">Solar Borehole Drip Irrigation</p>
-                  <p className="text-on-surface-variant">Energy: 10kW Solar PV + Grid backup</p>
-                  <p className="text-on-surface-variant">Storage: Evaporative charcoal packhouse</p>
-                </div>
-
-                {/* 7. Labour */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-                  <span className="font-bold text-primary block mb-1">7. Labour</span>
-                  <p className="text-on-surface font-semibold">3 Permanent Full-time Workers</p>
-                  <p className="text-on-surface-variant">8–12 Seasonal Harvest Workers</p>
-                  <p className="text-on-surface-variant">2 Household / Family Managers</p>
-                </div>
-
-                {/* 8. Markets */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-                  <span className="font-bold text-primary block mb-1">8. Markets</span>
-                  <p className="text-on-surface font-semibold">Primary: Export &amp; Formal Retail</p>
-                  <p className="text-on-surface-variant">Buyers: Fresh produce off-takers</p>
-                  <p className="text-on-surface-variant">Local: Regional wholesale aggregators</p>
-                </div>
-
-                {/* 9. Farm Business & Scale */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-                  <span className="font-bold text-primary block mb-1">9. Farm Business</span>
-                  <p className="text-on-surface font-semibold">Registered Agribusiness Entity</p>
-                  <p className="text-on-surface-variant">4 Years in Continuous Operation</p>
-                  <p className="text-on-surface-variant">Scale: KES 2.5M – 5.0M annual band</p>
-                </div>
-
-                {/* 10. Farm Goals (spans 3 cols on large) */}
-                <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high sm:col-span-2 lg:col-span-3">
-                  <span className="font-bold text-primary block mb-1">10. Farm Goals &amp; Strategic Priorities</span>
-                  <p className="text-on-surface">
-                    Transition to 100% renewable solar irrigation, attain Global GAP food safety certification, expand packhouse cold storage, and increase high-value export horticulture yields by 35% within 12 months.
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* Main 2-Column Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: Land, Crops, Markets (7 cols) */}
               <div className="lg:col-span-7 flex flex-col gap-6">
                 {/* Card 1: What You Grow & Produce */}
@@ -447,8 +423,12 @@ export default function OnboardingOverviewPage() {
                       <span className="material-symbols-outlined text-[22px]">agriculture</span>
                     </div>
                     <div>
-                      <h3 className="text-sm md:text-base text-on-surface font-semibold">What You Grow &amp; Produce</h3>
-                      <p className="text-xs text-on-surface-variant">Your ongoing crop farming and dairy livestock</p>
+                      <h3 className="font-title-md text-title-md text-on-surface font-semibold">
+                        What You Grow &amp; Produce
+                      </h3>
+                      <p className="font-label-sm text-xs text-on-surface-variant">
+                        Your ongoing crop farming and dairy livestock
+                      </p>
                     </div>
                   </div>
                   <div className="flex flex-col gap-3.5">
@@ -459,11 +439,15 @@ export default function OnboardingOverviewPage() {
                           <span className="material-symbols-outlined text-[20px]">spa</span>
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-xs md:text-sm text-on-surface font-semibold">Vegetables &amp; Horticulture</span>
-                          <span className="text-xs text-on-surface-variant mt-0.5">Export French Beans &amp; determinate field tomatoes</span>
+                          <span className="font-label-sm text-label-sm text-on-surface font-semibold">
+                            Vegetables &amp; Horticulture
+                          </span>
+                          <span className="font-label-sm text-xs text-on-surface-variant mt-0.5">
+                            Export French Beans &amp; determinate field tomatoes
+                          </span>
                         </div>
                       </div>
-                      <span className="px-2.5 py-1 rounded-lg bg-surface-container-highest text-on-surface text-xs font-bold shrink-0">
+                      <span className="px-2.5 py-1 rounded-lg bg-surface-container-highest text-on-surface font-label-sm text-xs font-bold shrink-0">
                         5.5 Acres
                       </span>
                     </div>
@@ -474,11 +458,15 @@ export default function OnboardingOverviewPage() {
                           <span className="material-symbols-outlined text-[20px]">grain</span>
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-xs md:text-sm text-on-surface font-semibold">Maize &amp; Rhodes Grass</span>
-                          <span className="text-xs text-on-surface-variant mt-0.5">Dual-season grain and dairy animal fodder</span>
+                          <span className="font-label-sm text-label-sm text-on-surface font-semibold">
+                            Maize &amp; Rhodes Grass
+                          </span>
+                          <span className="font-label-sm text-xs text-on-surface-variant mt-0.5">
+                            Dual-season grain and dairy animal fodder
+                          </span>
                         </div>
                       </div>
-                      <span className="px-2.5 py-1 rounded-lg bg-surface-container-highest text-on-surface text-xs font-bold shrink-0">
+                      <span className="px-2.5 py-1 rounded-lg bg-surface-container-highest text-on-surface font-label-sm text-xs font-bold shrink-0">
                         2.5 Acres
                       </span>
                     </div>
@@ -489,11 +477,15 @@ export default function OnboardingOverviewPage() {
                           <span className="material-symbols-outlined text-[20px]">pets</span>
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-xs md:text-sm text-on-surface font-semibold">Dairy Cows</span>
-                          <span className="text-xs text-on-surface-variant mt-0.5">4 Friesian cows producing an average of ~62 Litres/day</span>
+                          <span className="font-label-sm text-label-sm text-on-surface font-semibold">
+                            Dairy Cows
+                          </span>
+                          <span className="font-label-sm text-xs text-on-surface-variant mt-0.5">
+                            4 Friesian cows producing an average of ~62 Litres/day
+                          </span>
                         </div>
                       </div>
-                      <span className="px-2.5 py-1 rounded-lg bg-secondary-container text-on-secondary-container text-xs font-bold shrink-0">
+                      <span className="px-2.5 py-1 rounded-lg bg-secondary-container text-on-secondary-container font-label-sm text-xs font-bold shrink-0">
                         4 Head
                       </span>
                     </div>
@@ -507,47 +499,61 @@ export default function OnboardingOverviewPage() {
                       <span className="material-symbols-outlined text-[22px]">water_drop</span>
                     </div>
                     <div>
-                      <h3 className="text-sm md:text-base text-on-surface font-semibold">Land &amp; Water</h3>
-                      <p className="text-xs text-on-surface-variant">Total acreage and irrigation status</p>
+                      <h3 className="font-title-md text-title-md text-on-surface font-semibold">
+                        Land &amp; Water
+                      </h3>
+                      <p className="font-label-sm text-xs text-on-surface-variant">
+                        Total acreage and irrigation status
+                      </p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     <div className="p-4 rounded-xl bg-surface-container-low flex flex-col gap-1">
-                      <span className="text-xs text-on-surface-variant uppercase font-semibold">Total Land Use</span>
+                      <span className="text-xs text-on-surface-variant uppercase font-semibold">
+                        Total Land Use
+                      </span>
                       <div className="flex items-baseline gap-2 mt-1">
-                        <span className="text-2xl font-bold text-on-surface">{farmSize}</span>
-                        <span className="text-xs text-on-surface-variant">Gross {farmUnit}</span>
+                        <span className="font-headline-lg text-headline-lg font-bold text-on-surface">
+                          {farmSize}
+                        </span>
+                        <span className="text-label-sm text-on-surface-variant">
+                          Gross {farmUnit}
+                        </span>
                       </div>
                       <div className="mt-3 pt-2 flex flex-col gap-1.5 text-xs text-on-surface-variant border-t border-surface-container-high/60">
                         <div className="flex justify-between">
                           <span className="flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-primary inline-block" />
-                            Cultivated Crops
+                            <span className="w-2 h-2 rounded-full bg-primary inline-block"></span> Cultivated Crops
                           </span>
-                          <span className="font-semibold text-on-surface">{cultivatedAcres} {farmUnit}</span>
+                          <span className="font-semibold text-on-surface">
+                            {cultivatedAcres} {farmUnit}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-secondary inline-block" />
-                            Pasture &amp; Resting
+                            <span className="w-2 h-2 rounded-full bg-secondary inline-block"></span> Pasture &amp; Resting
                           </span>
-                          <span className="font-semibold text-on-surface">{grazingAcres} {farmUnit}</span>
+                          <span className="font-semibold text-on-surface">
+                            {grazingAcres} {farmUnit}
+                          </span>
                         </div>
                       </div>
                     </div>
-
                     <div className="p-4 rounded-xl bg-surface-container-low flex flex-col justify-between">
                       <div className="flex flex-col gap-1">
-                        <span className="text-xs text-on-surface-variant uppercase font-semibold">Water Source</span>
-                        <span className="text-sm md:text-base text-on-surface font-bold mt-1">Solar Borehole &amp; Rain Dam</span>
+                        <span className="text-xs text-on-surface-variant uppercase font-semibold">
+                          Water Source
+                        </span>
+                        <span className="font-title-md text-title-md text-on-surface font-bold mt-1">
+                          Solar Borehole &amp; Rain Dam
+                        </span>
                         <p className="text-xs text-on-surface-variant mt-1">
                           15,000 Litres storage tank with pressurized drip lines installed across crop fields.
                         </p>
                       </div>
                       <div className="mt-3">
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-primary-container/15 text-primary text-xs font-semibold">
-                          <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                          Reliable Year-Round
+                          <span className="material-symbols-outlined text-[14px]">check_circle</span> Reliable Year-Round
                         </span>
                       </div>
                     </div>
@@ -555,115 +561,79 @@ export default function OnboardingOverviewPage() {
                 </div>
               </div>
 
-              {/* Right Column: Location & Support (5 cols) */}
+              {/* Right Column: Future Farm Maturity Index & Support (5 cols) */}
               <div className="lg:col-span-5 flex flex-col gap-6">
-                {/* Farm Location & Map */}
-                <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-surface-container-high/60 flex flex-col gap-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-primary-container/10 text-primary flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[22px]">distance</span>
-                      </div>
-                      <div>
-                        <h3 className="text-sm md:text-base text-on-surface font-semibold">Farm Location &amp; Map</h3>
-                        <p className="text-xs text-on-surface-variant">Naivasha, Nakuru County • Longonot Foothills</p>
-                      </div>
-                    </div>
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-container/10 text-primary text-xs font-semibold shrink-0">
-                      <span className="material-symbols-outlined text-[14px]">verified</span> Boundary Verified
-                    </span>
-                  </div>
+                {/* SECTION: Future Farm Maturity Index FFMI/24 (Replaces Farm Location & Map from My Farm Dashboard) */}
+                <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-surface-container-high/60 h-full flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group">
+                  <div className="absolute -right-10 -top-10 w-32 h-32 bg-primary-container opacity-10 rounded-full blur-2xl group-hover:bg-primary transition-colors duration-500 pointer-events-none" />
 
-                  {/* Styled Vector Map Preview */}
-                  <div className="relative w-full h-56 rounded-xl overflow-hidden border border-surface-container-high/60 bg-[#f4f3f0] shadow-inner select-none">
-                    <svg className="w-full h-full object-cover" viewBox="0 0 460 224" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <defs>
-                        <filter id="ov-pin-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.35" />
-                        </filter>
-                        <filter id="ov-pill-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                          <feDropShadow dx="0" dy="1.5" stdDeviation="2" floodColor="#000000" floodOpacity="0.2" />
-                        </filter>
-                      </defs>
-                      <rect width="100%" height="100%" fill="#f5f4f0" />
-                      <path d="M-20 40 C60 20, 110 50, 180 30 C250 10, 320 40, 480 15 L480 0 L-20 0 Z" fill="#e8ece5" />
-                      <polygon points="-20,130 90,120 140,210 20,240" fill="#e5edd9" fillOpacity="0.8" />
-                      <polygon points="120,-10 280,-10 320,80 160,75" fill="#ebf3e2" fillOpacity="0.7" />
-                      <polygon points="320,60 480,40 480,190 310,170" fill="#d9ecc8" fillOpacity="0.75" />
-                      <polygon points="130,224 230,170 330,224" fill="#f0eee6" />
-                      <path d="M -20 170 Q 140 160 240 115 T 480 85" stroke="#ffffff" strokeWidth="16" strokeLinecap="square" />
-                      <path d="M -20 170 Q 140 160 240 115 T 480 85" stroke="#fce588" strokeWidth="10" strokeLinecap="square" />
-                      <path d="M 160 230 L 195 145 L 260 -10" stroke="#ffffff" strokeWidth="9" strokeLinecap="round" />
-                      <path d="M 160 230 L 195 145 L 260 -10" stroke="#fdfcf7" strokeWidth="6" strokeLinecap="round" />
-                      <path d="M 195 145 L 360 175 L 430 200" stroke="#ffffff" strokeWidth="7" strokeLinecap="round" />
-                      <path d="M 195 145 L 360 175 L 430 200" stroke="#fdfcf7" strokeWidth="4.5" strokeLinecap="round" />
-                      <path d="M 20 -10 L 45 75 L 140 100" stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
-                      <polygon points="165,55 310,48 335,138 235,152 152,118" fill="#16a34a" fillOpacity="0.24" stroke="#15803d" strokeWidth="2.5" strokeLinejoin="round" />
-                      <polygon points="170,59 248,53 242,108 175,104" fill="#15803d" fillOpacity="0.12" stroke="#15803d" strokeWidth="1" strokeDasharray="3 3" />
-                      <g opacity="0.75" transform="translate(50, 153) rotate(-6)">
-                        <text x="0" y="0" fill="#8c8475" fontSize="8.5" fontWeight="600" fontFamily="sans-serif" letterSpacing="0.05em">OLD NAIVASHA RD</text>
-                      </g>
-                      <g opacity="0.8" transform="translate(310, 102) rotate(-13)">
-                        <text x="0" y="0" fill="#837c6d" fontSize="8.5" fontWeight="600" fontFamily="sans-serif" letterSpacing="0.05em">MAI MAHIU HWY</text>
-                      </g>
-                      <g filter="url(#ov-pin-shadow)">
-                        <g transform="translate(232, 70)">
-                          <path d="M12 0C5.37 0 0 5.37 0 12C0 20.25 10.5 30.75 11.05 31.3C11.55 31.8 12.45 31.8 12.95 31.3C13.5 30.75 24 20.25 24 12C24 5.37 18.63 0 12 0Z" fill="#ea4335" />
-                          <circle cx="12" cy="11" r="5.5" fill="#ffffff" />
-                          <circle cx="12" cy="11" r="3.5" fill="#b31412" />
-                        </g>
-                      </g>
-                      <g filter="url(#ov-pill-shadow)" transform="translate(182, 40)">
-                        <rect x="0" y="0" width="124" height="22" rx="11" fill="#ffffff" stroke="#dadce0" strokeWidth="0.8" />
-                        <circle cx="11" cy="11" r="4" fill="#16a34a" />
-                        <text x="20" y="14.5" fill="#202124" fontSize="9.5" fontWeight="600" fontFamily="sans-serif">Kariuki Farm • {farmSize} Ac</text>
-                      </g>
-                    </svg>
-
-                    {/* Map/Satellite toggle */}
-                    <div className="absolute top-2.5 left-2.5 flex items-center bg-white/95 backdrop-blur-md rounded-md shadow-xs border border-[#dadce0] overflow-hidden text-[11px] font-medium font-sans">
-                      <span className="px-2.5 py-1 bg-white text-[#1a73e8] font-semibold border-r border-[#e8eaed]">Map</span>
-                      <span className="px-2.5 py-1 text-[#5f6368]">Satellite</span>
-                    </div>
-
-                    <div className="absolute top-2.5 right-2.5 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-md border border-[#dadce0] shadow-xs text-[10px] font-semibold text-[#5f6368] tracking-wider">
-                      ZONE: UM4 RIFT VALLEY
-                    </div>
-
-                    <div className="absolute bottom-1 right-2.5 text-[9px] text-[#70757a] flex items-center gap-2 select-none pointer-events-none">
-                      <span className="font-sans">Map data ©2025</span>
-                      <div className="flex items-center gap-1 pl-1 border-l border-[#dadce0]">
-                        <span className="font-mono text-[8.5px]">200 m</span>
-                        <div className="w-8 h-[2px] bg-[#5f6368]" />
-                      </div>
-                    </div>
-
-                    <div className="absolute bottom-1.5 left-2 flex items-center gap-1.5 pointer-events-none">
-                      <span className="font-bold text-[12px] tracking-tight text-[#4285f4]" style={{ fontFamily: "Arial, sans-serif" }}>Google</span>
-                      <span className="text-[9px] font-mono text-[#5f6368] bg-white/80 px-1 py-0.5 rounded border border-[#e0e0e0] leading-none">
-                        0°59&apos;48&quot;S 36°35&apos;12&quot;E
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-title-md text-title-md text-on-surface font-semibold">
+                        Future Farm Maturity Index
+                      </h3>
+                      <span className="px-2.5 py-0.5 rounded-full bg-primary-container/15 text-primary text-xs font-bold uppercase tracking-wider font-mono">
+                        FFMI/24
                       </span>
                     </div>
+                    <p className="font-label-sm text-xs text-on-surface-variant mb-6">
+                      Composite diagnostic score across all 8 capability pillars
+                    </p>
+
+                    <div className="flex items-baseline gap-1 mb-4">
+                      <span className="font-display-lg text-display-lg text-on-surface font-extrabold text-[44px] leading-tight">
+                        {ffmiScore24}
+                      </span>
+                      <span className="font-title-md text-title-md text-on-surface-variant font-bold">
+                        /24
+                      </span>
+                    </div>
+
+                    <div className="mb-6">
+                      <p className="font-label-sm text-xs text-on-surface-variant mb-2 font-medium">
+                        Classification
+                      </p>
+                      <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm shadow-sm font-semibold">
+                        <span className="material-symbols-outlined text-[18px] mr-1.5">
+                          verified
+                        </span>
+                        {maturityTier.label || "Structured Farm"}
+                      </span>
+                    </div>
+
+                    <p className="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed text-sm">
+                      You are on the right track! Keep improving your capabilities to become a Future-Ready Farm.
+                    </p>
                   </div>
 
-                  {/* Action buttons */}
-                  <div className="flex items-center gap-2 pt-1">
+                  <div className="flex flex-col gap-2.5 pt-2">
+                    <Link
+                      href="/assessment"
+                      className="w-full py-3 px-4 bg-primary text-on-primary hover:bg-primary-container rounded-xl font-label-sm text-sm transition-all flex justify-center items-center gap-2 cursor-pointer font-semibold shadow-sm"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">
+                        fact_check
+                      </span>
+                      <span>Take 8-Pillar Assessment</span>
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </Link>
                     <button
                       type="button"
-                      onClick={() => window.open("https://maps.google.com/?q=-0.99672,36.58678", "_blank")}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-primary text-white hover:bg-primary/90 text-xs font-semibold transition-all shadow-xs"
+                      onClick={() => setShowProgressModal(true)}
+                      className="w-full py-3 px-4 border border-outline rounded-xl text-primary font-label-sm text-sm hover:bg-surface-container transition-colors flex justify-center items-center gap-2 cursor-pointer font-semibold"
                     >
-                      <span className="material-symbols-outlined text-[16px]">map</span>
-                      <span>Open in Google Maps</span>
+                      <span className="material-symbols-outlined text-[18px]">
+                        trending_up
+                      </span>
+                      View Progress Over Time
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => window.open("https://maps.google.com/?q=-0.99672,36.58678", "_blank")}
-                      className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-semibold text-on-surface transition-colors"
+                    <Link
+                      href="/dashboard"
+                      className="w-full py-2 px-4 text-center text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center gap-1"
                     >
-                      <span className="material-symbols-outlined text-[16px]">directions</span>
-                      <span>Get Directions</span>
-                    </button>
+                      <span>Open My Farm Dashboard</span>
+                      <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                    </Link>
                   </div>
                 </div>
 
@@ -674,20 +644,100 @@ export default function OnboardingOverviewPage() {
                       <span className="material-symbols-outlined text-[20px]">support_agent</span>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xs md:text-sm font-semibold text-on-surface">Need help with your farm profile?</span>
-                      <span className="text-xs text-on-surface-variant">Our agritech support team is available Mon–Sat.</span>
+                      <span className="font-label-sm text-sm font-semibold text-on-surface">
+                        Need help with your farm profile?
+                      </span>
+                      <span className="font-label-sm text-xs text-on-surface-variant">
+                        Our agritech support team is available Mon–Sat.
+                      </span>
                     </div>
                   </div>
                   <button
-                    type="button"
                     onClick={() => router.push("/contact")}
-                    className="px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-xs font-semibold text-on-surface transition-colors shadow-xs shrink-0 cursor-pointer"
+                    className="px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-xs font-semibold text-on-surface transition-colors shadow-sm shrink-0 cursor-pointer"
+                    type="button"
                   >
                     Contact Support
                   </button>
                 </div>
               </div>
             </div>
+
+            {/* Progress Over Time Modal */}
+            {showProgressModal && (
+              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-surface rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-outline-variant animate-fade-in-up">
+                  <div className="flex justify-between items-center mb-4 border-b border-surface-variant pb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-primary text-2xl">trending_up</span>
+                      <h3 className="text-lg font-bold text-on-surface">Maturity Progress Over Time</h3>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowProgressModal(false)}
+                      className="p-1 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-variant transition-colors cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined">close</span>
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-on-surface-variant mb-6 leading-relaxed">
+                    Track your farm&apos;s capability index growth across quarterly diagnostic reviews.
+                  </p>
+
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low border border-outline-variant/40">
+                      <div>
+                        <span className="text-xs font-bold text-on-surface block">Q4 2024 • Initial Baseline</span>
+                        <span className="text-[11px] text-on-surface-variant">Stage: Emerging Farm</span>
+                      </div>
+                      <span className="text-sm font-extrabold text-on-surface-variant">11 / 24</span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low border border-outline-variant/40">
+                      <div>
+                        <span className="text-xs font-bold text-on-surface block">Q1 2025 • Post Soil &amp; Water Audit</span>
+                        <span className="text-[11px] text-on-surface-variant">Stage: Developing Farm</span>
+                      </div>
+                      <span className="text-sm font-extrabold text-on-surface-variant">14 / 24</span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-primary/10 border border-primary/30">
+                      <div>
+                        <span className="text-xs font-bold text-primary block">Q2 2025 (Current) • Structured Audit</span>
+                        <span className="text-[11px] text-primary/80">Stage: Structured Farm</span>
+                      </div>
+                      <span className="text-base font-black text-primary">{ffmiScore24} / 24</span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low border border-dashed border-outline-variant">
+                      <div>
+                        <span className="text-xs font-bold text-on-surface-variant block">Q3 2025 (Target Projection)</span>
+                        <span className="text-[11px] text-on-surface-variant">Target: Future-Ready Farm</span>
+                      </div>
+                      <span className="text-sm font-bold text-secondary">19 / 24</span>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center pt-3 border-t border-surface-variant">
+                    <Link
+                      href="/assessment"
+                      className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-container transition-colors inline-flex items-center gap-1.5"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">fact_check</span>
+                      <span>Run Full Audit</span>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setShowProgressModal(false)}
+                      className="px-5 py-2.5 rounded-xl border border-surface-container-high bg-surface text-on-surface text-xs font-bold hover:bg-surface-container-high transition-colors cursor-pointer"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         ) : onboardingStage === "ADDITIONAL_COMPLETED" ? (
           /* ─────────────────────────────────────────────────────────────

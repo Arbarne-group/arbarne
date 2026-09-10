@@ -382,12 +382,17 @@ async function runFullUserStoryTest() {
     "/settings",
     "/verification",
     "/onboarding",
-    "/onboarding/farm-profile",
   ];
   for (const r of allRoutes) {
     const access = getRouteAccess(r, finalStage.stage);
     assert(access.allowed, `Route '${r}' is fully unlocked without any redirects`);
   }
+
+  // Verify survey steps cannot be repeated once onboarding is completed
+  const blockedRetake = getRouteAccess("/onboarding/farm-profile", finalStage.stage);
+  assert(!blockedRetake.allowed && blockedRetake.redirectTo === "/onboarding", "Survey retake '/onboarding/farm-profile' is blocked");
+  const blockedRetakeStep1 = getRouteAccess("/onboarding/step-1", finalStage.stage);
+  assert(!blockedRetakeStep1.allowed && blockedRetakeStep1.redirectTo === "/onboarding", "Survey retake '/onboarding/step-1' is blocked");
 
   // -------------------------------------------------------------
   // Step 9: Test Fast-Track Flow (Direct to Assessment from Household Labour)

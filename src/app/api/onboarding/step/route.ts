@@ -25,11 +25,7 @@ function computeOnboardingStage(user: any) {
   let stage = "INITIAL_IN_PROGRESS";
   if (initialCompleted) {
     if (additionalCompleted) {
-      if (profileApproved) {
-        stage = "FULLY_COMPLETED";
-      } else {
-        stage = "ADDITIONAL_COMPLETED";
-      }
+      stage = "FULLY_COMPLETED";
     } else {
       stage = "INITIAL_COMPLETED";
     }
@@ -78,6 +74,18 @@ export async function POST(request: Request) {
 
     if (!user) {
       return NextResponse.json({ error: "User not found or unauthenticated" }, { status: 401 });
+    }
+
+    const currentStage = computeOnboardingStage(user);
+    if (currentStage.stage === "FULLY_COMPLETED" && step !== "confirm-profile") {
+      return NextResponse.json(
+        {
+          error: "Onboarding surveys are already completed and cannot be repeated.",
+          stage: "FULLY_COMPLETED",
+          user,
+        },
+        { status: 400 }
+      );
     }
 
     switch (step) {
@@ -489,6 +497,14 @@ export async function DELETE(request: Request) {
 
     if (!user) {
       return NextResponse.json({ error: "User not found or unauthenticated" }, { status: 401 });
+    }
+
+    const currentStage = computeOnboardingStage(user);
+    if (currentStage.stage === "FULLY_COMPLETED") {
+      return NextResponse.json(
+        { error: "Completed onboarding cannot be reset." },
+        { status: 403 }
+      );
     }
 
     await prisma.$transaction([
