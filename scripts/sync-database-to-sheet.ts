@@ -1,14 +1,22 @@
 import { syncAllUnsentUsersToSheet } from "../src/lib/googleSheets";
+import { syncClerkUsersToDatabaseAndSheet } from "../src/lib/clerkSync";
 
 async function main() {
   console.log("=================================================");
-  console.log("Future Farms - Database to Google Sheet Sync");
+  console.log("Future Farms - Clerk & Database to Sheet Sync");
   console.log("=================================================");
   console.log(`Starting scan at: ${new Date().toISOString()}`);
 
+  console.log("\n1. Syncing users from Clerk Production...");
+  const clerkResult = await syncClerkUsersToDatabaseAndSheet();
+  console.log(`- Total users in Clerk:        ${clerkResult.clerkTotal}`);
+  console.log(`- New users imported to DB:    ${clerkResult.importedToDb}`);
+  console.log(`- Clerk users synced to Sheet: ${clerkResult.syncedToSheet}`);
+
+  console.log("\n2. Scanning Database for any unsent records...");
   const result = await syncAllUnsentUsersToSheet();
 
-  console.log("\nSync Summary:");
+  console.log("\nDatabase Sync Summary:");
   console.log(`- Total users in database:     ${result.totalInDb}`);
   console.log(`- Users already in sheet:      ${result.alreadyInSheet}`);
   console.log(`- Unsent users synchronized:   ${result.syncedCount}`);

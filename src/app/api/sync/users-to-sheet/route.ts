@@ -1,15 +1,19 @@
 import { NextResponse } from "next/server";
 import { syncAllUnsentUsersToSheet } from "@/lib/googleSheets";
+import { syncClerkUsersToDatabaseAndSheet } from "@/lib/clerkSync";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const result = await syncAllUnsentUsersToSheet();
+    const clerkResult = await syncClerkUsersToDatabaseAndSheet();
+    const dbResult = await syncAllUnsentUsersToSheet();
+
     return NextResponse.json({
       success: true,
       timestamp: new Date().toISOString(),
-      ...result,
+      clerk: clerkResult,
+      database: dbResult,
     });
   } catch (err: any) {
     console.error("Error in /api/sync/users-to-sheet:", err);
