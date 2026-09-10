@@ -314,89 +314,90 @@ export function resolveProfileWithDashboardFallback(userRecord: any) {
   };
 
   const formatPhone = (p: string | null | undefined) => {
-    const raw = val(p, userRecord.phone, fp.phone, "+254 712 345 678");
+    const raw = val(p, userRecord.phone, fp.phone);
+    if (!raw) return "";
     return raw.startsWith("+") ? `'${raw}` : raw;
   };
 
   const fullName = val(userRecord.name, fp.fullName, "Farmer");
-  const email = val(userRecord.email, "farmer@futurefarms.africa");
+  const email = val(userRecord.email, "");
   const phone = formatPhone(userRecord.phone);
-  const farmName = val(userRecord.farmName, loc.farmName, "Green Horizon Agri-Farm");
+  const farmName = val(userRecord.farmName, loc.farmName, "");
 
   // Location & Coordinates
-  const locationSearch = val(loc.locationSearch, loc.county ? `${loc.county}, Kenya` : null, "Naivasha, Nakuru County");
-  const county = val(loc.county, "Nakuru County");
-  const subcounty = val(loc.subcounty, "Naivasha East");
-  const ward = val(loc.ward, "Hell's Gate Ward");
-  const landmark = val(loc.landmark, "Near Lake Naivasha Crescent");
-  const latitude = loc.latitude !== null && loc.latitude !== undefined ? loc.latitude : -0.71719;
-  const longitude = loc.longitude !== null && loc.longitude !== undefined ? loc.longitude : 36.43103;
-  const coordinates = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+  const locationSearch = val(loc.locationSearch, loc.county ? `${loc.county}, Kenya` : null, "");
+  const county = val(loc.county, "");
+  const subcounty = val(loc.subcounty, "");
+  const ward = val(loc.ward, "");
+  const landmark = val(loc.landmark, "");
+  const latitude = loc.latitude !== null && loc.latitude !== undefined ? loc.latitude : null;
+  const longitude = loc.longitude !== null && loc.longitude !== undefined ? loc.longitude : null;
+  const coordinates = latitude !== null && longitude !== null ? `${latitude.toFixed(5)}, ${longitude.toFixed(5)}` : "";
 
   // Characteristics
-  const farmSize = val(char.farmSize, "12.5");
-  const farmUnit = val(char.farmUnit, "Acres");
-  const cultivatedAcres = val(char.cultivatedAcres, "8.0");
-  const grazingAcres = val(char.grazingAcres, "4.5");
-  const landTenure = val(char.landTenure, "Private / Title Deed (Freehold)");
-  const waterSources = val(char.waterSources, sys.waterSource, "Reliable Solar Borehole & Drip");
-  const soilTested = val(char.soilTested, "Tested within last 12 months");
+  const farmSize = val(char.farmSize, "");
+  const farmUnit = val(char.farmUnit, char.farmSize ? "Acres" : "");
+  const cultivatedAcres = val(char.cultivatedAcres, "");
+  const grazingAcres = val(char.grazingAcres, "");
+  const landTenure = val(char.landTenure, "");
+  const waterSources = val(char.waterSources, sys.waterSource, "");
+  const soilTested = val(char.soilTested, "");
 
   // Farming System
-  const enterprises = val(sys.enterprises, fp.valueChain, "Export French Beans & Determinate Field Tomatoes, Dairy Herd");
-  const cultivationMethod = val(sys.cultivationMethod, "Precision Drip Irrigation with Scheduled Fertigation");
-  const mechanizationSetup = val(sys.mechanizationSetup, "Contractor 75HP Tractor Tillage & 5.5kW Solar Booster Pumping");
-  const energySource = val(sys.energySource, "Off-grid solar hybrid with 10kWh battery storage");
+  const enterprises = val(sys.enterprises, fp.valueChain, "");
+  const cultivationMethod = val(sys.cultivationMethod, "");
+  const mechanizationSetup = val(sys.mechanizationSetup, "");
+  const energySource = val(sys.energySource, "");
 
   // Labour
-  const permanentWorkers = val(lab.permanentWorkers, "4 Full-Time Field Workers");
-  const seasonalWorkers = val(lab.seasonalWorkers, "12 Seasonal Harvest Workers");
-  const managementStructure = val(lab.managementStructure, "Owner-managed with designated field supervisor");
-  const fairEmploymentPractices = val(lab.fairEmploymentPractices, "Formal written contracts, PPE supplied, statutory compliance");
+  const permanentWorkers = val(lab.permanentWorkers, "");
+  const seasonalWorkers = val(lab.seasonalWorkers, "");
+  const managementStructure = val(lab.managementStructure, "");
+  const fairEmploymentPractices = val(lab.fairEmploymentPractices, "");
 
   // Business & Experience
-  const commercialYears = val(biz.commercialYears, fp.experienceYears, "4-6 years commercial operation");
-  const annualRevenueBracket = val(biz.annualRevenueBracket, "KES 1,500,000 - 3,500,000");
-  const recordKeepingMethod = val(biz.recordKeepingMethod, dp.recordKeeping, "Digital farm management logs & mobile spreadsheets");
-  const produceBuyers = val(biz.produceBuyers, "Fresh produce exporter off-takers & Nairobi wholesale hubs");
+  const commercialYears = val(biz.commercialYears, fp.experienceYears, "");
+  const annualRevenueBracket = val(biz.annualRevenueBracket, "");
+  const recordKeepingMethod = val(biz.recordKeepingMethod, dp.recordKeeping, "");
+  const produceBuyers = val(biz.produceBuyers, "");
 
   // Goals & Prioritization
-  const primaryGoals = val(goals.goals, asp.twelveMonthSuccess, "Complete 8-pillar assessment, expand solar borehole capacity to 10 acres, and attain GlobalGAP certification");
-  const operationalBottleneck = val(goals.operationalBottleneck, os.obstacles, "Dry-season irrigation fuel costs and cold chain storage transport");
-  const advisoryMode = val(goals.advisoryMode, os.guidancePreference, "Bi-weekly digital agronomy reviews & quarterly on-farm physical audits");
+  const primaryGoals = val(goals.goals, asp.twelveMonthSuccess, "");
+  const operationalBottleneck = val(goals.operationalBottleneck, os.obstacles, "");
+  const advisoryMode = val(goals.advisoryMode, os.guidancePreference, "");
 
   // Survey 1 Profile Fields
-  const jobTitle = val(fp.jobTitle, "Farm Owner & Enterprise Director");
-  const valueChain = val(fp.valueChain, enterprises, "Horticulture & Dairy");
-  const experienceYears = val(fp.experienceYears, commercialYears, "5-10 Years");
-  const businessHistory = val(fp.businessHistory, "Founded commercial farming operation in 2019");
-  const educationLevel = val(fp.educationLevel, fp.education, "University Degree / Agricultural Diploma");
+  const jobTitle = val(fp.jobTitle, "");
+  const valueChain = val(fp.valueChain, enterprises, "");
+  const experienceYears = val(fp.experienceYears, commercialYears, "");
+  const businessHistory = val(fp.businessHistory, "");
+  const educationLevel = val(fp.educationLevel, fp.education, "");
 
-  const mgmtAbility = val(fm.mgmtAbility, "Advanced - Manages full production and financial planning");
-  const opsResponsibility = val(fm.opsResponsibility, fm.operationsResponsible, "Direct daily supervision with field team");
-  const desiredInvolvement = val(fm.desiredInvolvement, "Strategic direction with delegated day-to-day execution");
+  const mgmtAbility = val(fm.mgmtAbility, "");
+  const opsResponsibility = val(fm.opsResponsibility, fm.operationsResponsible, "");
+  const desiredInvolvement = val(fm.desiredInvolvement, "");
 
-  const decisionStyle = val(os.decisionStyle, "Data-driven and evidence-backed with agronomy advice");
-  const failureResponse = val(os.failureResponse, "Root cause analysis and corrective technical actions");
-  const obstacles = val(os.obstacles, operationalBottleneck, "Working capital for cold storage and irrigation automation");
-  const guidancePreference = val(os.guidancePreference, advisoryMode, "Direct recommendations with quantified ROI");
-  const trackingFrequency = val(os.trackingFrequency, "Weekly production and financial tracking");
-  const updatePreference = val(os.updatePreference, os.updatePreferences, "Digital dashboard & WhatsApp summary alerts");
+  const decisionStyle = val(os.decisionStyle, "");
+  const failureResponse = val(os.failureResponse, "");
+  const obstacles = val(os.obstacles, operationalBottleneck, "");
+  const guidancePreference = val(os.guidancePreference, advisoryMode, "");
+  const trackingFrequency = val(os.trackingFrequency, "");
+  const updatePreference = val(os.updatePreference, os.updatePreferences, "");
 
-  const twelveMonthSuccess = val(asp.twelveMonthSuccess, primaryGoals, "Achieve 30% yield increase and secure certified export contracts");
-  const greatestImpactSupport = val(asp.greatestImpactSupport, "Solar drip telemetry, cold chain linkage, and export compliance");
-  const marketInsight = val(asp.marketInsight, "High-margin counter-seasonal European export windows");
-  const threeToFiveYearRole = val(asp.threeToFiveYearRole, "Managing Director scaling regional outgrower network");
-  const fmResponsibility = val(asp.fmResponsibility, asp.managerResponsibilities, "Production scheduling, pest scouting, and cold chain logs");
-  const personallyApprovedDecisions = val(asp.personallyApprovedDecisions, "Capital expenditures above KES 50,000 and chemical purchases");
-  const twentyFiveYearVision = val(asp.twentyFiveYearVision, "Build a climate-resilient, commercialized African agricultural enterprise");
+  const twelveMonthSuccess = val(asp.twelveMonthSuccess, primaryGoals, "");
+  const greatestImpactSupport = val(asp.greatestImpactSupport, "");
+  const marketInsight = val(asp.marketInsight, "");
+  const threeToFiveYearRole = val(asp.threeToFiveYearRole, "");
+  const fmResponsibility = val(asp.fmResponsibility, asp.managerResponsibilities, "");
+  const personallyApprovedDecisions = val(asp.personallyApprovedDecisions, "");
+  const twentyFiveYearVision = val(asp.twentyFiveYearVision, "");
 
-  const supportReasons = val(dp.supportReasons, "Transitioning from manual operations to verified commercial standards");
-  const remoteConfidence = val(dp.remoteConfidence, "High - comfortable with IoT telemetry and remote dashboards");
-  const remoteComfort = val(dp.remoteComfort, "Very comfortable using digital tools on smartphone and PC");
-  const recordKeeping = val(dp.recordKeeping, recordKeepingMethod, "Fully committed to maintaining digital logs and traceability");
-  const physicalAudits = val(dp.physicalAudits, "Welcoming scheduled on-farm verifications and inspections");
-  const additionalNotes = val(dp.additionalNotes, "Seeking matching grants for solar pumping through Opportunity Desk");
+  const supportReasons = val(dp.supportReasons, "");
+  const remoteConfidence = val(dp.remoteConfidence, "");
+  const remoteComfort = val(dp.remoteComfort, "");
+  const recordKeeping = val(dp.recordKeeping, recordKeepingMethod, "");
+  const physicalAudits = val(dp.physicalAudits, "");
+  const additionalNotes = val(dp.additionalNotes, "");
 
   return {
     assignedId,
@@ -484,6 +485,10 @@ export async function recordUserToSheet(
     const now = new Date().toISOString().replace("T", " ").substring(0, 19);
     const clerkId = clerkUserData?.id || (userRecord.clerkId ? userRecord.clerkId : "clerk_authenticated_user");
 
+    const locationDisplay = resolved.county
+      ? (resolved.locationSearch ? `${resolved.county} (${resolved.locationSearch})` : resolved.county)
+      : (resolved.locationSearch || "");
+
     const rowData = [
       regDate,
       resolved.assignedId,
@@ -491,7 +496,7 @@ export async function recordUserToSheet(
       resolved.email,
       resolved.phone,
       resolved.farmName,
-      `${resolved.county} (${resolved.locationSearch})`,
+      locationDisplay,
       "Clerk Authentication",
       clerkId,
       userRecord.id || `usr_${resolved.assignedId.toLowerCase()}`,
@@ -655,8 +660,30 @@ export async function syncUserOnboardingToSheet(
     const resolved = resolveProfileWithDashboardFallback(userRecord);
     const timestamp = new Date().toISOString().replace("T", " ").substring(0, 19);
 
+    const hasSurvey1Data = Boolean(
+      resolved.valueChain ||
+      resolved.experienceYears ||
+      resolved.mgmtAbility ||
+      resolved.decisionStyle ||
+      resolved.twelveMonthSuccess ||
+      userRecord.onboardingStatus?.stage === "FULLY_COMPLETED"
+    );
+
+    const hasSurvey2Data = Boolean(
+      resolved.farmName ||
+      resolved.county ||
+      resolved.farmSize ||
+      resolved.enterprises ||
+      userRecord.onboardingStatus?.stage === "FULLY_COMPLETED"
+    );
+
+    if (!hasSurvey1Data && !hasSurvey2Data) {
+      return { success: true, skipped: true };
+    }
+
     // --- 1. SYNC SURVEY 1 - FARMER (SHAMBANY) (33 Columns) ---
-    const s1RowData = [
+    if (hasSurvey1Data) {
+      const s1RowData = [
       timestamp,
       resolved.fullName,
       resolved.email,
@@ -721,8 +748,10 @@ export async function syncUserOnboardingToSheet(
     } catch (err) {
       console.warn("Could not sync to Survey 1 tab:", err);
     }
+  }
 
-    // --- 2. SYNC SURVEY 2 - FARM PROFILE (34 Columns) ---
+  // --- 2. SYNC SURVEY 2 - FARM PROFILE (34 Columns) ---
+  if (hasSurvey2Data) {
     const s2RowData = [
       timestamp,
       resolved.assignedId,
@@ -789,8 +818,10 @@ export async function syncUserOnboardingToSheet(
     } catch (err) {
       console.warn("Could not sync to Survey 2 tab:", err);
     }
+  }
 
-    // --- 3. SYNC MASTER CONSOLIDATED (61 Columns) ---
+  // --- 3. SYNC MASTER CONSOLIDATED (61 Columns) ---
+  if (hasSurvey1Data || hasSurvey2Data) {
     const masterRowData = [
       timestamp,
       resolved.assignedId,
@@ -888,6 +919,7 @@ export async function syncUserOnboardingToSheet(
     } catch (err) {
       console.warn("Could not sync to Master Consolidated tab:", err);
     }
+  }
 
     return { success: true };
   } catch (error: any) {
