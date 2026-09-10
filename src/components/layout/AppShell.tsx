@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import MobileNav from "./MobileNav";
+import ComingSoonModal from "./ComingSoonModal";
 import {
   OnboardingStage,
   computeOnboardingStageFromUser,
@@ -174,9 +175,29 @@ export default function AppShell({
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto bg-surface relative pb-20 md:pb-8">
-          {children}
-        </main>
+        {(() => {
+          const isComingSoonPage =
+            pathname === "/learning" ||
+            pathname === "/opportunities" ||
+            pathname === "/service-desk";
+
+          return (
+            <>
+              <main
+                className={`flex-1 overflow-y-auto bg-surface relative pb-20 md:pb-8 transition-opacity ${
+                  isComingSoonPage ? "pointer-events-none select-none opacity-60" : ""
+                }`}
+                tabIndex={isComingSoonPage ? -1 : undefined}
+                aria-hidden={isComingSoonPage ? "true" : undefined}
+              >
+                {children}
+              </main>
+
+              {/* Blocking Coming Soon Pop Window for Digital Learning, Opportunity Desk, and Service Desk */}
+              {isComingSoonPage && <ComingSoonModal pathname={pathname} />}
+            </>
+          );
+        })()}
 
         {/* Mobile Sticky Bottom Nav */}
         <MobileNav onboardingStage={onboardingStage} />

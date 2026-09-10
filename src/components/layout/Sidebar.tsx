@@ -37,9 +37,9 @@ export default function Sidebar({
     { label: "Overview", href: "/onboarding", icon: "dashboard" },
     { label: "My Farm", href: "/dashboard", icon: "agriculture" },
     { label: "Assessment", href: "/assessment", icon: "fact_check" },
-    { label: "Digital Learning", href: "/learning", icon: "school" },
-    { label: "Opportunity Desk", href: "/opportunities", icon: "lightbulb" },
-    { label: "Service Desk", href: "/service-desk", icon: "support_agent" },
+    { label: "Digital Learning", href: "/learning", icon: "school", badge: "Soon" },
+    { label: "Opportunity Desk", href: "/opportunities", icon: "lightbulb", badge: "Soon" },
+    { label: "Service Desk", href: "/service-desk", icon: "support_agent", badge: "Soon" },
   ];
 
   const bottomItems = [
@@ -164,6 +164,11 @@ export default function Sidebar({
               {!collapsed && (
                 <div className="flex items-center justify-between flex-1 min-w-0">
                   <span className="truncate whitespace-nowrap">{item.label}</span>
+                  {item.badge && !locked && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant/80 border border-outline-variant/30 ml-1.5 shrink-0">
+                      {item.badge}
+                    </span>
+                  )}
                   {locked && (
                     <span className="material-symbols-outlined text-[15px] text-outline ml-1 shrink-0">
                       lock
