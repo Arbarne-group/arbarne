@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { computeAssessmentResults, getMaturityTier } from "@/lib/assessmentScoring";
-import { syncUserAssessmentToSheet } from "@/lib/googleSheets";
+import { syncUserAssessmentToSheet, syncReportGenerationToSheet } from "@/lib/googleSheets";
 
 const QUESTION_MAP = new Map<string, {
   pillarId: number;
@@ -220,9 +220,13 @@ export async function POST(request: Request) {
       },
     });
 
-    // 8. Asynchronously sync to Google Spreadsheet (1lia89URlWwsngU0E7Kd5zyQTzm-SBWlQj2Lsu08b1wg)
+    // 8. Asynchronously sync to Google Spreadsheet (Assessment Overview, Pillar Submissions Log, Detailed Question Responses, and Reports Generated)
     syncUserAssessmentToSheet(email, numPillarId).catch((err) => {
-      console.warn("Google Sheets assessment sync warning:", err?.message || err);
+      console.warn("[GoogleSheets] Assessment sync warning:", err?.message || err);
+    });
+
+    syncReportGenerationToSheet(email, String(numPillarId)).catch((err) => {
+      console.warn("[GoogleSheets] Pillar completion report sync warning:", err?.message || err);
     });
 
     return NextResponse.json({

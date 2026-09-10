@@ -4,6 +4,7 @@ import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { PILLAR_BRANDS } from "@/data/brandColors";
 import { getMaturityTier } from "@/lib/assessmentScoring";
+import { syncReportGenerationToSheet } from "@/lib/googleSheets";
 
 export const dynamic = "force-dynamic";
 
@@ -141,6 +142,11 @@ export async function GET(request: Request) {
         })),
       };
 
+      // Synchronize single-pillar report generation to Google Sheets in background
+      syncReportGenerationToSheet(user.email, String(pId)).catch((err) => {
+        console.warn("[GoogleSheets] Single pillar report sync background error:", err?.message || err);
+      });
+
       return NextResponse.json({ success: true, report: pillarReport });
     }
 
@@ -221,6 +227,11 @@ export async function GET(request: Request) {
         },
       },
     };
+
+    // Synchronize comprehensive 8-pillar report generation to Google Sheets in background
+    syncReportGenerationToSheet(user.email, "all").catch((err) => {
+      console.warn("[GoogleSheets] Comprehensive report sync background error:", err?.message || err);
+    });
 
     return NextResponse.json({ success: true, report: overallReport });
   } catch (error: any) {
