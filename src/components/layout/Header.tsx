@@ -14,6 +14,7 @@ interface HeaderProps {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   onboardingStage?: OnboardingStage;
+  completedPillarsCount?: number;
 }
 
 export default function Header({
@@ -22,6 +23,7 @@ export default function Header({
   collapsed = false,
   onToggleCollapse,
   onboardingStage = "FULLY_COMPLETED",
+  completedPillarsCount = 0,
 }: HeaderProps) {
   const router = useRouter();
   const { user } = useUser();
@@ -43,6 +45,8 @@ export default function Header({
     ? "/onboarding/step-1"
     : isSurvey2
     ? "/onboarding"
+    : completedPillarsCount < 1
+    ? "/assessment"
     : "/dashboard";
 
   useEffect(() => {

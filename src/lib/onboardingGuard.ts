@@ -70,39 +70,46 @@ export function computeOnboardingStageFromUser(user: any): OnboardingStatus {
 }
 
 /**
- * Checks if a given pathname is permitted for the current onboarding stage.
+ * Checks if a given pathname is permitted for the current onboarding stage and assessment completion.
  */
 export function getRouteAccess(
   pathname: string,
-  stage: OnboardingStage
+  stage: OnboardingStage,
+  options?: {
+    completedPillarsCount?: number;
+  }
 ): { allowed: boolean; redirectTo?: string; message?: string } {
-  // Public auth paths always allowed
+  // Public auth & webhook paths always allowed
   if (
     pathname === "/login" ||
     pathname === "/signup" ||
-    pathname.startsWith("/api")
+    pathname.startsWith("/sign-in") ||
+    pathname.startsWith("/sign-up") ||
+    pathname.startsWith("/api") ||
+    pathname === "/pricing" ||
+    pathname.startsWith("/checkout")
   ) {
     return { allowed: true };
   }
 
+  const completedPillars = options?.completedPillarsCount ?? 0;
+
   // 1. Stage 1: Initial Survey 1 In Progress
   if (stage === "INITIAL_IN_PROGRESS") {
-    // Only survey 1 steps allowed: /onboarding/step-1 through /onboarding/step-5
     const isSurvey1Step = /^\/onboarding\/step-[1-5]/.test(pathname);
     if (isSurvey1Step) {
       return { allowed: true };
     }
-    // Any other page (including /onboarding overview, /dashboard, /assessment, etc.) is blocked
     return {
       allowed: false,
       redirectTo: "/onboarding/step-1",
-      message: "Please complete the first onboarding survey to continue.",
+      message: "Please complete your initial farm profile survey to access the platform.",
     };
   }
 
   // 2. Stage 2: Survey 1 Done, Survey 2 In Progress
   if (stage === "INITIAL_COMPLETED" || stage === "ADDITIONAL_COMPLETED") {
-    // Cannot repeat Survey 1 steps once completed
+    // Cannot repeat Survey 1 steps
     const isSurvey1Step = /^\/onboarding\/step-[1-5]/.test(pathname);
     if (isSurvey1Step) {
       return {
@@ -111,32 +118,61 @@ export function getRouteAccess(
         message: "You have already completed the first survey.",
       };
     }
-    // /onboarding overview, /onboarding/* (location, characteristics, farming-system, business-experience, household-labour, farm-profile) allowed
+    // Survey 2 paths allowed
     if (pathname.startsWith("/onboarding")) {
       return { allowed: true };
     }
-    // Any outside page (e.g. /dashboard, /assessment, /learning, /opportunities, /service-desk) is blocked
+    // Access to /assessment and /dashboard is strictly BLOCKED until onboarding is completed!
     return {
       allowed: false,
       redirectTo: "/onboarding",
-      message: "Please complete your Farm Profile survey to access other sections.",
+      message: "Please complete your onboarding surveys before accessing the assessment or dashboard.",
     };
   }
 
-  // 3. Stage 4: Fully completed -> All main routes unlocked, BUT survey steps cannot be repeated
+  // 3. Stage 3: Fully completed onboarding
   if (stage === "FULLY_COMPLETED") {
+    // Survey steps cannot be repeated once onboarding is complete -> redirect to assessment
     const isSurveyStep = /^\/onboarding\/(step-[1-5]|location|characteristics|farming-system|business-experience|household-labour|farm-profile)/.test(pathname);
     if (isSurveyStep) {
       return {
         allowed: false,
-        redirectTo: "/onboarding",
-        message: "Onboarding completed. You cannot repeat the onboarding surveys.",
+        redirectTo: "/assessment",
+        message: "Onboarding completed. Please continue with your farm assessment.",
       };
     }
+
+    // A user cannot access the dashboard without completing at least 1 pillar assessment!
+    if (pathname === "/dashboard" || pathname.startsWith("/dashboard")) {
+      if (completedPillars < 1) {
+        return {
+          allowed: false,
+          redirectTo: "/assessment",
+          message: "Please complete at least 1 pillar assessment to unlock your farm dashboard.",
+        };
+      }
+    }
+
     return { allowed: true };
   }
 
   return { allowed: true };
+}
+
+/**
+ * Counts how many pillars have at least 25 answered questions from user's answers dictionary.
+ */
+export function countCompletedPillarsFromAnswers(answers: Record<string, "yes" | "no"> | null | undefined): number {
+  if (!answers) return 0;
+  const pillarCounts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
+  Object.keys(answers).forEach((qId) => {
+    const match = qId.match(/^P([1-8])\./i);
+    if (match) {
+      const pid = parseInt(match[1], 10);
+      pillarCounts[pid] = (pillarCounts[pid] || 0) + 1;
+    }
+  });
+  return Object.values(pillarCounts).filter((cnt) => cnt >= 25).length;
 }
 
 /**

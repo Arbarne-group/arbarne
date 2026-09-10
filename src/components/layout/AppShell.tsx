@@ -10,6 +10,7 @@ import ComingSoonModal from "./ComingSoonModal";
 import {
   OnboardingStage,
   computeOnboardingStageFromUser,
+  countCompletedPillarsFromAnswers,
   getRouteAccess,
 } from "@/lib/onboardingGuard";
 
@@ -29,6 +30,7 @@ export default function AppShell({
   const { user, isLoaded } = useUser();
   const [collapsed, setCollapsed] = useState(false);
   const [onboardingStage, setOnboardingStage] = useState<OnboardingStage>("FULLY_COMPLETED");
+  const [completedPillarsCount, setCompletedPillarsCount] = useState<number>(0);
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
 
@@ -47,6 +49,17 @@ export default function AppShell({
     } catch (e) {
       // Ignore localStorage errors in restricted environments
     }
+
+    try {
+      const savedAnswers =
+        localStorage.getItem("future_farms_assessment_answers") ||
+        localStorage.getItem("future_farms_all_answers");
+      if (savedAnswers) {
+        const parsed = JSON.parse(savedAnswers);
+        const cnt = countCompletedPillarsFromAnswers(parsed);
+        setCompletedPillarsCount(cnt);
+      }
+    } catch (e) {}
 
     // Determine user email from Clerk or cached session
     let email = "";
@@ -86,6 +99,9 @@ export default function AppShell({
         } else if (data.stage) {
           setOnboardingStage(data.stage);
         }
+        if (data.completedPillarsCount !== undefined) {
+          setCompletedPillarsCount(data.completedPillarsCount);
+        }
       })
       .catch(() => {})
       .finally(() => setStatusLoaded(true));
@@ -112,7 +128,7 @@ export default function AppShell({
   useEffect(() => {
     if (!statusLoaded) return;
 
-    const check = getRouteAccess(pathname, onboardingStage);
+    const check = getRouteAccess(pathname, onboardingStage, { completedPillarsCount });
     if (!check.allowed && check.redirectTo && pathname !== check.redirectTo) {
       setRedirectNotice(check.message || "Please complete the required onboarding survey.");
       router.replace(check.redirectTo);
@@ -122,7 +138,7 @@ export default function AppShell({
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [pathname, onboardingStage, statusLoaded, router]);
+  }, [pathname, onboardingStage, completedPillarsCount, statusLoaded, router]);
 
   const handleToggleCollapse = () => {
     setCollapsed((prev) => {
@@ -142,6 +158,7 @@ export default function AppShell({
         collapsed={collapsed}
         onToggleCollapse={handleToggleCollapse}
         onboardingStage={onboardingStage}
+        completedPillarsCount={completedPillarsCount}
       />
 
       {/* Main Content Area - Transitions smoothly between ml-64 and ml-20 */}
@@ -156,6 +173,7 @@ export default function AppShell({
           collapsed={collapsed}
           onToggleCollapse={handleToggleCollapse}
           onboardingStage={onboardingStage}
+          completedPillarsCount={completedPillarsCount}
         />
 
         {/* Floating Redirect Alert Banner */}
@@ -200,7 +218,10 @@ export default function AppShell({
         })()}
 
         {/* Mobile Sticky Bottom Nav */}
-        <MobileNav onboardingStage={onboardingStage} />
+        <MobileNav
+          onboardingStage={onboardingStage}
+          completedPillarsCount={completedPillarsCount}
+        />
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ interface SidebarProps {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   onboardingStage?: OnboardingStage;
+  completedPillarsCount?: number;
 }
 
 export default function Sidebar({
@@ -18,6 +19,7 @@ export default function Sidebar({
   collapsed = false,
   onToggleCollapse,
   onboardingStage = "FULLY_COMPLETED",
+  completedPillarsCount = 0,
 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -31,6 +33,8 @@ export default function Sidebar({
     ? "/onboarding/step-1"
     : isSurvey2
     ? "/onboarding"
+    : completedPillarsCount < 1
+    ? "/assessment"
     : "/dashboard";
 
   const navItems = [
@@ -57,6 +61,11 @@ export default function Sidebar({
       // During Survey 2, Overview (/onboarding) is unlocked; other pages are locked
       return itemHref !== "/onboarding";
     }
+    // Fully completed onboarding:
+    // A user cannot access the dashboard without completing at least 1 pillar assessment!
+    if (itemHref === "/dashboard" && completedPillarsCount < 1) {
+      return true;
+    }
     return false;
   };
 
@@ -69,6 +78,11 @@ export default function Sidebar({
     if (isSurvey2 && itemHref !== "/onboarding") {
       e.preventDefault();
       router.push("/onboarding");
+      return;
+    }
+    if (itemHref === "/dashboard" && completedPillarsCount < 1) {
+      e.preventDefault();
+      router.push("/assessment");
       return;
     }
   };
@@ -138,9 +152,27 @@ export default function Sidebar({
           return (
             <Link
               key={item.label}
-              href={locked ? (isSurvey1 ? "/onboarding/step-1" : "/onboarding") : item.href}
+              href={
+                locked
+                  ? isSurvey1
+                    ? "/onboarding/step-1"
+                    : isSurvey2
+                    ? "/onboarding"
+                    : "/assessment"
+                  : item.href
+              }
               onClick={(e) => handleItemClick(e, item.href)}
-              title={collapsed ? `${item.label}${locked ? " (Locked)" : ""}` : undefined}
+              title={
+                collapsed
+                  ? `${item.label}${
+                      locked
+                        ? item.href === "/dashboard" && completedPillarsCount < 1
+                          ? " (Requires 1 Completed Pillar Assessment)"
+                          : " (Locked)"
+                        : ""
+                    }`
+                  : undefined
+              }
               className={`rounded-xl flex items-center transition-colors text-sm font-medium relative group ${
                 collapsed
                   ? "w-12 h-12 mx-auto justify-center"
@@ -170,7 +202,14 @@ export default function Sidebar({
                     </span>
                   )}
                   {locked && (
-                    <span className="material-symbols-outlined text-[15px] text-outline ml-1 shrink-0">
+                    <span
+                      className="material-symbols-outlined text-[15px] text-outline ml-1 shrink-0"
+                      title={
+                        item.href === "/dashboard" && completedPillarsCount < 1
+                          ? "Requires at least 1 completed pillar assessment"
+                          : "Locked"
+                      }
+                    >
                       lock
                     </span>
                   )}
@@ -182,7 +221,11 @@ export default function Sidebar({
                 <div className="absolute left-full ml-3 px-2.5 py-1.5 bg-inverse-surface text-inverse-on-surface text-xs font-semibold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50 shadow-lg flex items-center gap-1.5">
                   <span>{item.label}</span>
                   {locked && (
-                    <span className="text-[10px] text-amber-300 font-bold">(Locked)</span>
+                    <span className="text-[10px] text-amber-300 font-bold">
+                      {item.href === "/dashboard" && completedPillarsCount < 1
+                        ? "(1 Pillar Required)"
+                        : "(Locked)"}
+                    </span>
                   )}
                 </div>
               )}

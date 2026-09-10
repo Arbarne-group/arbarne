@@ -19,7 +19,6 @@ export default function OnboardingOverviewPage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [onboardingStage, setOnboardingStage] = useState<string>("INITIAL_IN_PROGRESS");
-  const [resetting, setResetting] = useState(false);
   const [assessmentResult, setAssessmentResult] = useState<OverallAssessmentResult | null>(null);
   const [showProgressModal, setShowProgressModal] = useState(false);
 
@@ -58,6 +57,9 @@ export default function OnboardingOverviewPage() {
         if (st.stage === "INITIAL_IN_PROGRESS") {
           router.replace("/onboarding/step-1");
           return;
+        } else if (st.stage === "FULLY_COMPLETED") {
+          router.replace("/assessment");
+          return;
         }
       } catch (e) {}
     }
@@ -77,6 +79,8 @@ export default function OnboardingOverviewPage() {
           localStorage.setItem("future_farms_user", JSON.stringify({ ...data.user, stage: st.stage }));
           if (st.stage === "INITIAL_IN_PROGRESS") {
             router.replace("/onboarding/step-1");
+          } else if (st.stage === "FULLY_COMPLETED") {
+            router.replace("/assessment");
           }
         }
       })
@@ -112,26 +116,6 @@ export default function OnboardingOverviewPage() {
         });
     }
   }, [clerkUser]);
-
-  const handleResetOnboarding = async () => {
-    if (!confirm("Are you sure you want to reset all onboarding responses to test the flow from scratch?")) return;
-    setResetting(true);
-    try {
-      const email = getActiveUserEmail();
-      localStorage.removeItem("future_farms_user");
-      await fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`, {
-        method: "DELETE",
-      });
-      setUser(null);
-      setOnboardingStage("INITIAL_IN_PROGRESS");
-      router.push("/onboarding/step-1");
-    } catch (e) {
-      console.error(e);
-      router.push("/onboarding/step-1");
-    } finally {
-      setResetting(false);
-    }
-  };
 
   const userName = user?.name || "Keziah Wanjiku";
   const userRole = user?.farmerProfile?.jobTitle || "Farm Owner";
@@ -263,9 +247,9 @@ export default function OnboardingOverviewPage() {
   return (
     <AppShell userName={userName} userRole={userRole}>
       <div className="px-4 md:px-10 py-6 max-w-[1280px] mx-auto w-full pb-20">
-        {/* Reset / Testing Strip (Only shown when onboarding is NOT yet completed) */}
+        {/* Onboarding State Status (Only shown when onboarding is NOT yet completed) */}
         {onboardingStage !== "FULLY_COMPLETED" && (
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center mb-4">
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold text-on-surface-variant">Onboarding State:</span>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/10 text-primary">
@@ -276,17 +260,6 @@ export default function OnboardingOverviewPage() {
                   : "Initial Profiling In Progress"}
               </span>
             </div>
-
-            <button
-              type="button"
-              onClick={handleResetOnboarding}
-              disabled={resetting}
-              className="text-xs font-semibold text-on-surface-variant hover:text-error bg-surface-container-high hover:bg-error/10 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
-              title="Clear all responses and restart onboarding from scratch"
-            >
-              <span className="material-symbols-outlined text-[15px]">restart_alt</span>
-              <span>{resetting ? "Resetting..." : "Reset Responses"}</span>
-            </button>
           </div>
         )}
 

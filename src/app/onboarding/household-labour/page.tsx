@@ -189,10 +189,10 @@ export default function HouseholdLabourPage() {
           JSON.stringify({ ...resData.user, stage: "FULLY_COMPLETED" })
         );
       }
-      router.push("/onboarding");
+      router.push("/assessment");
     } catch (e) {
       console.error(e);
-      router.push("/onboarding");
+      router.push("/assessment");
     } finally {
       setSaving(false);
     }

@@ -6,10 +6,12 @@ import { OnboardingStage } from "@/lib/onboardingGuard";
 
 interface MobileNavProps {
   onboardingStage?: OnboardingStage;
+  completedPillarsCount?: number;
 }
 
 export default function MobileNav({
   onboardingStage = "FULLY_COMPLETED",
+  completedPillarsCount = 0,
 }: MobileNavProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -28,6 +30,7 @@ export default function MobileNav({
   const isItemLocked = (itemHref: string) => {
     if (isSurvey1) return true;
     if (isSurvey2) return itemHref !== "/onboarding";
+    if (itemHref === "/dashboard" && completedPillarsCount < 1) return true;
     return false;
   };
 
@@ -42,6 +45,11 @@ export default function MobileNav({
       router.push("/onboarding");
       return;
     }
+    if (itemHref === "/dashboard" && completedPillarsCount < 1) {
+      e.preventDefault();
+      router.push("/assessment");
+      return;
+    }
   };
 
   return (
@@ -50,13 +58,22 @@ export default function MobileNav({
         const locked = isItemLocked(item.href);
         const isActive =
           pathname === item.href ||
-          (item.href === "/onboarding" && pathname.startsWith("/onboarding"));
+          (item.href === "/onboarding" && pathname.startsWith("/onboarding")) ||
+          (item.href === "/assessment" && pathname.startsWith("/assessment"));
 
         if (item.highlight) {
           return (
             <Link
               key={item.label}
-              href={locked ? (isSurvey1 ? "/onboarding/step-1" : "/onboarding") : item.href}
+              href={
+                locked
+                  ? isSurvey1
+                    ? "/onboarding/step-1"
+                    : isSurvey2
+                    ? "/onboarding"
+                    : "/assessment"
+                  : item.href
+              }
               onClick={(e) => handleItemClick(e, item.href)}
               className={`flex flex-col items-center justify-center rounded-xl px-3 py-1.5 active:scale-95 transition-transform ${
                 locked
@@ -77,7 +94,15 @@ export default function MobileNav({
         return (
           <Link
             key={item.label}
-            href={locked ? (isSurvey1 ? "/onboarding/step-1" : "/onboarding") : item.href}
+            href={
+              locked
+                ? isSurvey1
+                  ? "/onboarding/step-1"
+                  : isSurvey2
+                  ? "/onboarding"
+                  : "/assessment"
+                : item.href
+            }
             onClick={(e) => handleItemClick(e, item.href)}
             className={`flex flex-col items-center justify-center p-1.5 rounded-xl transition-colors relative ${
               isActive
