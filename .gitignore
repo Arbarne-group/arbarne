@@ -58,6 +58,7 @@ scratch/
 # SQLite databases
 *.db
 *.db-journal
+!prisma/dev.db
 
 # Misc & OS
 .DS_Store

@@ -54,24 +54,29 @@ export async function GET(request: Request) {
 
     const stageInfo = computeOnboardingStage(user);
 
-    const assessment = await prisma.assessment.findFirst({
-      where: { userId: user.id },
-      include: { pillarAssessments: true, assessmentResponses: true },
-    });
+    let completedPillarsCount = 0;
+    try {
+      const assessment = await prisma.assessment.findFirst({
+        where: { userId: user.id },
+        include: { pillarAssessments: true, assessmentResponses: true },
+      });
 
-    const completedFromPillars =
-      assessment?.pillarAssessments?.filter((pa) => pa.isCompleted).length || 0;
-    const pillarResponsesCount: Record<string, number> = {};
-    assessment?.assessmentResponses?.forEach((r) => {
-      const match = r.questionId.match(/^P([1-8])\./i);
-      if (match) {
-        pillarResponsesCount[match[1]] = (pillarResponsesCount[match[1]] || 0) + 1;
-      }
-    });
-    const completedFromResponses = Object.values(pillarResponsesCount).filter(
-      (cnt) => cnt >= 25
-    ).length;
-    const completedPillarsCount = Math.max(completedFromPillars, completedFromResponses);
+      const completedFromPillars =
+        assessment?.pillarAssessments?.filter((pa) => pa.isCompleted).length || 0;
+      const pillarResponsesCount: Record<string, number> = {};
+      assessment?.assessmentResponses?.forEach((r) => {
+        const match = r.questionId.match(/^P([1-8])\./i);
+        if (match) {
+          pillarResponsesCount[match[1]] = (pillarResponsesCount[match[1]] || 0) + 1;
+        }
+      });
+      const completedFromResponses = Object.values(pillarResponsesCount).filter(
+        (cnt) => cnt >= 25
+      ).length;
+      completedPillarsCount = Math.max(completedFromPillars, completedFromResponses);
+    } catch (dbErr: any) {
+      console.warn("[Onboarding API] Could not query assessment from database:", dbErr.message);
+    }
 
     return NextResponse.json({
       success: true,

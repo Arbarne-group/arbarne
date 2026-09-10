@@ -20,14 +20,19 @@ export async function GET(request: Request) {
       });
     }
 
-    const assessment = await prisma.assessment.findFirst({
-      where: { userId: user.id },
-      orderBy: { createdAt: "desc" },
-      include: {
-        pillarAssessments: true,
-        assessmentResponses: true,
-      },
-    });
+    let assessment: any = null;
+    try {
+      assessment = await prisma.assessment.findFirst({
+        where: { userId: user.id },
+        orderBy: { createdAt: "desc" },
+        include: {
+          pillarAssessments: true,
+          assessmentResponses: true,
+        },
+      });
+    } catch (dbErr: any) {
+      console.warn("[Assessment Responses API] DB query notice:", dbErr.message);
+    }
 
     if (!assessment) {
       return NextResponse.json({
@@ -39,7 +44,7 @@ export async function GET(request: Request) {
     }
 
     const answers: Record<string, "yes" | "no"> = {};
-    assessment.assessmentResponses.forEach((r) => {
+    assessment.assessmentResponses.forEach((r: any) => {
       answers[r.questionId] = r.answer as "yes" | "no";
     });
 
@@ -59,7 +64,7 @@ export async function GET(request: Request) {
     const COOLDOWN_DAYS = 90;
     const now = Date.now();
 
-    assessment.pillarAssessments.forEach((pa) => {
+    assessment.pillarAssessments.forEach((pa: any) => {
       let parsedCapScores = {};
       try {
         parsedCapScores = JSON.parse(pa.capabilityScores);
@@ -94,7 +99,7 @@ export async function GET(request: Request) {
     });
 
     // Overall assessment 90-day cooldown
-    const completedPillars = assessment.pillarAssessments.filter((pa) => pa.isCompleted);
+    const completedPillars = assessment.pillarAssessments.filter((pa: any) => pa.isCompleted);
     const isFullAssessmentComplete = completedPillars.length === 8 || assessment.status === "COMPLETED";
 
     let canReassessFull = true;
@@ -103,7 +108,7 @@ export async function GET(request: Request) {
 
     if (isFullAssessmentComplete) {
       const latestTime = Math.max(
-        ...completedPillars.map((p) => (p.completedAt ? new Date(p.completedAt).getTime() : 0)),
+        ...completedPillars.map((p: any) => (p.completedAt ? new Date(p.completedAt).getTime() : 0)),
         new Date(assessment.updatedAt).getTime()
       );
       const eligibleFullTime = latestTime + COOLDOWN_DAYS * 24 * 60 * 60 * 1000;

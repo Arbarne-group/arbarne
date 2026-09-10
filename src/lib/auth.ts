@@ -53,44 +53,14 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
     return null;
   }
 
-  let dbUser = await prisma.user.findUnique({
-    where: { email },
-    include: {
-      farmerProfile: true,
-      farmManagement: true,
-      operatingStyle: true,
-      digitalPlatform: true,
-      aspiration: true,
-      farmLocation: true,
-      farmCharacteristics: true,
-      farmingSystem: true,
-      businessExperience: true,
-      goalsPriorities: true,
-      householdLabour: true,
-      onboardingStatus: true,
-    },
-  });
+  const fullName = clerkUser
+    ? [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ") || "Farmer"
+    : "Farmer";
 
-  if (!dbUser) {
-    const fullName = clerkUser
-      ? [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ") || "Farmer"
-      : "Farmer";
-
-    const userCount = await prisma.user.count();
-    const assignedId = `FFF-KE-PROD-${String(userCount + 1).padStart(3, "0")}`;
-
-    dbUser = await prisma.user.create({
-      data: {
-        name: fullName,
-        email,
-        futureFarmId: assignedId,
-        passwordHash: "CLERK_AUTHENTICATED",
-        farmerProfile: { create: {} },
-        farmManagement: { create: {} },
-        operatingStyle: { create: {} },
-        digitalPlatform: { create: {} },
-        aspiration: { create: {} },
-      },
+  let dbUser: any = null;
+  try {
+    dbUser = await prisma.user.findUnique({
+      where: { email },
       include: {
         farmerProfile: true,
         farmManagement: true,
@@ -106,16 +76,64 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
         onboardingStatus: true,
       },
     });
+  } catch (findErr: any) {
+    console.warn("[Auth] prisma.user.findUnique notice:", findErr.message);
+  }
 
-    // Record new user to Google Sheet in background
-    recordUserToSheet(dbUser, clerkUser).catch((err) => {
-      console.warn("Non-blocking Google Sheet recording warning:", err);
-    });
-  } else if (!dbUser.futureFarmId) {
-    // If existing user has no assigned ID yet, generate and save it
-    const userCount = await prisma.user.count();
-    const assignedId = `FFF-KE-PROD-${String(userCount).padStart(3, "0")}`;
+  if (!dbUser) {
+    let assignedId = `FFF-KE-PROD-${Date.now().toString().slice(-3)}`;
     try {
+      const userCount = await prisma.user.count();
+      assignedId = `FFF-KE-PROD-${String(userCount + 1).padStart(3, "0")}`;
+    } catch {}
+
+    try {
+      dbUser = await prisma.user.create({
+        data: {
+          name: fullName,
+          email,
+          futureFarmId: assignedId,
+          passwordHash: "CLERK_AUTHENTICATED",
+          farmerProfile: { create: {} },
+          farmManagement: { create: {} },
+          operatingStyle: { create: {} },
+          digitalPlatform: { create: {} },
+          aspiration: { create: {} },
+        },
+        include: {
+          farmerProfile: true,
+          farmManagement: true,
+          operatingStyle: true,
+          digitalPlatform: true,
+          aspiration: true,
+          farmLocation: true,
+          farmCharacteristics: true,
+          farmingSystem: true,
+          businessExperience: true,
+          goalsPriorities: true,
+          householdLabour: true,
+          onboardingStatus: true,
+        },
+      });
+    } catch (createErr: any) {
+      console.warn("[Auth] prisma.user.create notice (using in-memory user):", createErr.message);
+      dbUser = {
+        id: `usr_${Date.now()}`,
+        name: fullName,
+        email,
+        futureFarmId: assignedId,
+        farmerProfile: {},
+        farmManagement: {},
+        operatingStyle: {},
+        digitalPlatform: {},
+        aspiration: {},
+        onboardingStatus: { stage: "INITIAL_IN_PROGRESS" },
+      };
+    }
+  } else if (!dbUser.futureFarmId) {
+    try {
+      const userCount = await prisma.user.count();
+      const assignedId = `FFF-KE-PROD-${String(userCount).padStart(3, "0")}`;
       dbUser = await prisma.user.update({
         where: { id: dbUser.id },
         data: { futureFarmId: assignedId },
@@ -134,13 +152,16 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
           onboardingStatus: true,
         },
       });
-    } catch (updateErr) {
-      console.warn("Could not update user futureFarmId:", updateErr);
+    } catch (updateErr: any) {
+      console.warn("Could not update user futureFarmId:", updateErr.message);
     }
+  }
 
-    recordUserToSheet(dbUser, clerkUser).catch((err) => {
-      console.warn("Non-blocking Google Sheet recording warning:", err);
-    });
+  // Record user to Google Sheet (must await in serverless environments)
+  try {
+    await recordUserToSheet(dbUser, clerkUser);
+  } catch (err: any) {
+    console.warn("[GoogleSheets] Google Sheet recording notice:", err.message);
   }
 
   return dbUser;
