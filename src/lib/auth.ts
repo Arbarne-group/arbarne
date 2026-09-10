@@ -59,7 +59,7 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
 
   let dbUser: any = null;
   try {
-    dbUser = await prisma.user.findUnique({
+    dbUser = await (prisma.user as any).findUnique({
       where: { email },
       include: {
         farmerProfile: true,
@@ -88,7 +88,7 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
     } catch {}
 
     try {
-      dbUser = await prisma.user.create({
+      dbUser = await (prisma.user as any).create({
         data: {
           name: fullName,
           email,
@@ -134,7 +134,7 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
     try {
       const userCount = await prisma.user.count();
       const assignedId = `FFF-KE-PROD-${String(userCount).padStart(3, "0")}`;
-      dbUser = await prisma.user.update({
+      dbUser = await (prisma.user as any).update({
         where: { id: dbUser.id },
         data: { futureFarmId: assignedId },
         include: {
