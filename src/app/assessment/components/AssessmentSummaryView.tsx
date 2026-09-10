@@ -3,6 +3,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
 import {
   getPillarById,
   ALL_PILLARS,
@@ -47,6 +48,10 @@ export default function AssessmentSummaryView({
   const [mounted, setMounted] = useState(false);
   const [answers, setAnswers] = useState<Record<string, "yes" | "no">>({});
   const [expandedCapIds, setExpandedCapIds] = useState<Record<string, boolean>>({});
+
+  const { user: clerkUser } = useUser();
+  const dynamicFarmId = clerkUser?.id ? `FFF-KE-PROD-${clerkUser.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD";
+  const dynamicFarmerName = clerkUser?.fullName || "Farmer";
 
   // Modals and drawers
   const [isFFVOpen, setIsFFVOpen] = useState(false);
@@ -1248,7 +1253,7 @@ export default function AssessmentSummaryView({
                     Future Farms Transformation Report
                   </h2>
                   <p className="text-xs text-on-surface-variant m-0 mt-0.5">
-                    Report ID: FFF-REP-2026-0881 • Farm ID: FFF-KE-000-001
+                    Report ID: FFF-REP-2026-0881 • Farm ID: {dynamicFarmId}
                   </p>
                 </div>
               </div>
@@ -1266,11 +1271,11 @@ export default function AssessmentSummaryView({
               <div className="p-4 rounded-2xl bg-surface-container-lowest border border-surface-container-high grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Farm Name</span>
-                  <span className="font-bold text-on-surface">Tumaini Progressive Farm</span>
+                  <span className="font-bold text-on-surface">My Farm</span>
                 </div>
                 <div>
                   <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Future Farm ID</span>
-                  <span className="font-bold text-primary">FFF-KE-000-001</span>
+                  <span className="font-bold text-primary">{dynamicFarmId}</span>
                 </div>
                 <div>
                   <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Location</span>
@@ -1399,15 +1404,15 @@ export default function AssessmentSummaryView({
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 border-b border-surface-variant pb-3">
                   <div>
                     <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Farm Name</span>
-                    <strong className="text-sm text-on-surface">Tumaini Progressive Farm</strong>
+                    <strong className="text-sm text-on-surface">My Farm</strong>
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Future Farm ID</span>
-                    <strong className="text-sm text-emerald-700 font-mono">FFF-KE-000-001</strong>
+                    <strong className="text-sm text-emerald-700 font-mono">{dynamicFarmId}</strong>
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Owner / Manager</span>
-                    <strong className="text-sm text-on-surface">David Mwangi</strong>
+                    <strong className="text-sm text-on-surface">{dynamicFarmerName}</strong>
                   </div>
                 </div>
 

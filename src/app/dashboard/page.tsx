@@ -179,9 +179,9 @@ export default function DashboardPage() {
     ? assessmentResult.pillarScores.filter((s) => s.score > 0 || s.answeredCount > 0).length
     : 0;
 
-  const farmIdentifier = user?.id
-    ? `FFF-KE-${user.id.slice(-6).toUpperCase()}`
-    : "FFF-KE-PROD";
+  const farmIdentifier =
+    (user as any)?.futureFarmId ||
+    (user?.id ? `FFF-KE-PROD-${user.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD");
 
   return (
     <AppShell

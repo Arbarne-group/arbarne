@@ -52,7 +52,10 @@ export default function FarmProfileReviewPage() {
     }
   };
 
-  const name = user?.name || "Keziah W. Kariuki";
+  const name = user?.name || "Farmer";
+  const farmId =
+    (user as any)?.futureFarmId ||
+    (user?.id ? `FFF-KE-PROD-${user.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD");
   const phone = user?.phone || "+254 712 345 678";
   const farmSize = user?.farmCharacteristics?.farmSize || 12.5;
   const farmUnit = user?.farmCharacteristics?.farmUnit || "Acres";
@@ -125,7 +128,7 @@ export default function FarmProfileReviewPage() {
               <span className="text-on-surface-variant text-xs md:text-sm mt-0.5">{locationText}</span>
               <div className="mt-1.5 flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-md bg-secondary-fixed/40 text-on-secondary-fixed text-xs font-mono font-bold tracking-wide">
-                  Future Farms ID: FFF-KE-000-001
+                  Future Farms ID: {farmId}
                 </span>
                 <span className="text-[11px] text-on-surface-variant italic">
                   (Unified Farm Profile Code)
@@ -171,7 +174,7 @@ export default function FarmProfileReviewPage() {
               </p>
             </div>
             <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-              FFF-KE-000-001
+              {farmId}
             </span>
           </div>
 
@@ -179,8 +182,8 @@ export default function FarmProfileReviewPage() {
             {/* 1. Farm Identity */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
               <span className="font-bold text-primary block mb-1">1. Farm Identity</span>
-              <p className="text-on-surface font-semibold">Green Horizon Agri-Farm</p>
-              <p className="text-on-surface-variant">ID: FFF-KE-000-001 • Est. 2021</p>
+              <p className="text-on-surface font-semibold">{user?.farmName || "My Farm"}</p>
+              <p className="text-on-surface-variant">ID: {farmId}</p>
               <p className="text-on-surface-variant">Ownership: Farmer Owned (Freehold)</p>
             </div>
 

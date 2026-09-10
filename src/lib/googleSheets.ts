@@ -102,8 +102,98 @@ export async function getGoogleSheetsAccessToken(): Promise<string> {
   return data.access_token;
 }
 
-const DEFAULT_SPREADSHEET_ID = "1tEYJhZijyMfaZ8_btZmC9_5UJRLk4af2luL1vKixSyM";
+export const DEFAULT_SPREADSHEET_ID = "1tEYJhZijyMfaZ8_btZmC9_5UJRLk4af2luL1vKixSyM";
 export const DEFAULT_ASSESSMENT_SPREADSHEET_ID = "1lia89URlWwsngU0E7Kd5zyQTzm-SBWlQj2Lsu08b1wg";
+
+/**
+ * Records an authenticated user to the 'Registered Users' directory in the Google Spreadsheet
+ * and ensures their assigned Future Farms Production ID is permanently registered.
+ */
+export async function recordUserToSheet(
+  userRecord: any,
+  clerkUserData?: any,
+  spreadsheetId?: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const id = spreadsheetId || process.env.GOOGLE_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
+
+    const assignedId =
+      userRecord.futureFarmId ||
+      (userRecord.id ? `FFF-KE-PROD-${userRecord.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD");
+
+    const regDate = userRecord.createdAt
+      ? new Date(userRecord.createdAt).toISOString().replace("T", " ").substring(0, 19)
+      : new Date().toISOString().replace("T", " ").substring(0, 19);
+
+    const now = new Date().toISOString().replace("T", " ").substring(0, 19);
+    const county =
+      userRecord.farmLocation?.county || userRecord.farmLocation?.locationSearch || "";
+
+    const formatPhone = (p: string | null | undefined) => {
+      if (!p) return "";
+      const trimmed = p.trim();
+      return trimmed.startsWith("+") ? `'${trimmed}` : trimmed;
+    };
+
+    const clerkId = clerkUserData?.id || "";
+
+    const rowData = [
+      regDate,
+      assignedId,
+      userRecord.name || "Farmer",
+      userRecord.email,
+      formatPhone(userRecord.phone),
+      userRecord.farmName || "",
+      county,
+      "Clerk Authentication",
+      clerkId,
+      userRecord.id,
+      "Active",
+      userRecord.onboardingStatus?.stage || "NEW_REGISTERED",
+      now,
+    ];
+
+    // Check if user's email already exists in 'Registered Users'!D3:D
+    try {
+      const emailRows = await getSheetValues("'Registered Users'!D3:D", id);
+      let existingRowIndex = -1;
+      if (emailRows && emailRows.length > 0) {
+        for (let i = 0; i < emailRows.length; i++) {
+          const rowEmail = emailRows[i][0];
+          if (
+            rowEmail &&
+            rowEmail.toLowerCase().trim() === userRecord.email.toLowerCase().trim()
+          ) {
+            existingRowIndex = i + 3;
+            break;
+          }
+        }
+      }
+
+      if (existingRowIndex > 0) {
+        await updateSheetValues(
+          `'Registered Users'!A${existingRowIndex}:M${existingRowIndex}`,
+          [rowData],
+          id
+        );
+      } else {
+        await appendSheetValues("'Registered Users'!A:M", [rowData], id);
+      }
+    } catch (err) {
+      console.warn("Could not sync to 'Registered Users' tab, attempting append:", err);
+      try {
+        await appendSheetValues("'Registered Users'!A:M", [rowData], id);
+      } catch (appendErr) {
+        console.warn("Append to 'Registered Users' also failed:", appendErr);
+      }
+    }
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error in recordUserToSheet:", error.message || error);
+    return { success: false, error: error.message };
+  }
+}
 
 export async function getSpreadsheetMetadata(spreadsheetId?: string) {
   const id = spreadsheetId || process.env.GOOGLE_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
@@ -219,7 +309,9 @@ export async function syncUserOnboardingToSheet(
     }
 
     const timestamp = new Date().toISOString().replace("T", " ").substring(0, 19);
-    const futureFarmId = "FFF-KE-000-001";
+    const futureFarmId =
+      userRecord.futureFarmId ||
+      (userRecord.id ? `FFF-KE-PROD-${userRecord.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD");
 
     const cleanField = (val: any) => {
       if (val === null || val === undefined) return "";
