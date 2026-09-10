@@ -615,13 +615,25 @@ export async function syncAllUnsentUsersToSheet(spreadsheetId?: string): Promise
         const res = await recordUserToSheet(u, undefined, id);
         if (res.success) {
           syncedEmails.push(u.email);
-          // Also sync onboarding responses if any
-          await syncUserOnboardingToSheet(u, id).catch(() => {});
         } else if (res.error) {
           errors.push(`${u.email}: ${res.error}`);
         }
       } catch (userErr: any) {
         errors.push(`${u.email}: ${userErr.message}`);
+      }
+    }
+
+    // Ensure all DB users with onboarding data have their latest survey responses synced
+    for (const u of dbUsers) {
+      const hasOnboardingData = Boolean(
+        u.farmerProfile?.valueChain ||
+        u.farmLocation?.county ||
+        u.farmCharacteristics?.farmSize ||
+        u.farmingSystem?.enterprises ||
+        u.onboardingStatus?.stage === "FULLY_COMPLETED"
+      );
+      if (hasOnboardingData) {
+        await syncUserOnboardingToSheet(u, id).catch(() => {});
       }
     }
 
@@ -1275,3 +1287,65 @@ export async function syncReportGenerationToSheet(
     return { success: false, error: error.message };
   }
 }
+
+/**
+ * Scans the database for all user assessments that need to be synchronized
+ * across the dedicated Assessment Questionnaire Google Spreadsheet:
+ * - Assessment Overview
+ * - Pillar Submissions Log
+ * - Detailed Question Responses
+ */
+export async function syncAllUnsentAssessmentsToSheet(spreadsheetId?: string): Promise<{
+  totalInDb: number;
+  syncedCount: number;
+  syncedEmails: string[];
+  errors: string[];
+}> {
+  const errors: string[] = [];
+  const syncedEmails: string[] = [];
+
+  try {
+    const assessments = await (prisma.assessment as any).findMany({
+      include: {
+        user: true,
+        pillarAssessments: true,
+        assessmentResponses: true,
+      },
+    });
+
+    for (const a of assessments) {
+      if (!a.user?.email) continue;
+      const hasResponses =
+        (a.assessmentResponses && a.assessmentResponses.length > 0) ||
+        (a.pillarAssessments && a.pillarAssessments.length > 0);
+      if (!hasResponses) continue;
+
+      try {
+        const res = await syncUserAssessmentToSheet(a.user.email, undefined, spreadsheetId);
+        if (res.success) {
+          syncedEmails.push(a.user.email);
+        } else if (res.error) {
+          errors.push(`${a.user.email}: ${res.error}`);
+        }
+      } catch (err: any) {
+        errors.push(`${a.user.email}: ${err.message}`);
+      }
+    }
+
+    return {
+      totalInDb: assessments.length,
+      syncedCount: syncedEmails.length,
+      syncedEmails,
+      errors,
+    };
+  } catch (err: any) {
+    console.error("[GoogleSheets] syncAllUnsentAssessmentsToSheet failed:", err);
+    return {
+      totalInDb: 0,
+      syncedCount: 0,
+      syncedEmails: [],
+      errors: [err.message || String(err)],
+    };
+  }
+}
+

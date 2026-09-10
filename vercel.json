@@ -1,5 +1,11 @@
 {
   "framework": "nextjs",
   "buildCommand": "node scripts/vercel-build.js",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "crons": [
+    {
+      "path": "/api/sync/users-to-sheet",
+      "schedule": "0 * * * *"
+    }
+  ]
 }

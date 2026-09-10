@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { syncAllUnsentUsersToSheet } from "@/lib/googleSheets";
+import { syncAllUnsentUsersToSheet, syncAllUnsentAssessmentsToSheet } from "@/lib/googleSheets";
 import { syncClerkUsersToDatabaseAndSheet } from "@/lib/clerkSync";
 
 export const dynamic = "force-dynamic";
@@ -7,13 +7,15 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const clerkResult = await syncClerkUsersToDatabaseAndSheet();
-    const dbResult = await syncAllUnsentUsersToSheet();
+    const onboardingResult = await syncAllUnsentUsersToSheet();
+    const assessmentResult = await syncAllUnsentAssessmentsToSheet();
 
     return NextResponse.json({
       success: true,
       timestamp: new Date().toISOString(),
       clerk: clerkResult,
-      database: dbResult,
+      onboarding: onboardingResult,
+      assessment: assessmentResult,
     });
   } catch (err: any) {
     console.error("Error in /api/sync/users-to-sheet:", err);

@@ -1,9 +1,9 @@
-import { syncAllUnsentUsersToSheet } from "../src/lib/googleSheets";
+import { syncAllUnsentUsersToSheet, syncAllUnsentAssessmentsToSheet } from "../src/lib/googleSheets";
 import { syncClerkUsersToDatabaseAndSheet } from "../src/lib/clerkSync";
 
 async function main() {
   console.log("=================================================");
-  console.log("Future Farms - Clerk & Database to Sheet Sync");
+  console.log("Future Farms - Clerk, Onboarding & Assessment Sync");
   console.log("=================================================");
   console.log(`Starting scan at: ${new Date().toISOString()}`);
 
@@ -13,10 +13,10 @@ async function main() {
   console.log(`- New users imported to DB:    ${clerkResult.importedToDb}`);
   console.log(`- Clerk users synced to Sheet: ${clerkResult.syncedToSheet}`);
 
-  console.log("\n2. Scanning Database for any unsent records...");
+  console.log("\n2. Scanning Database for User & Onboarding records...");
   const result = await syncAllUnsentUsersToSheet();
 
-  console.log("\nDatabase Sync Summary:");
+  console.log("\nUser & Onboarding Sync Summary:");
   console.log(`- Total users in database:     ${result.totalInDb}`);
   console.log(`- Users already in sheet:      ${result.alreadyInSheet}`);
   console.log(`- Unsent users synchronized:   ${result.syncedCount}`);
@@ -35,8 +35,20 @@ async function main() {
     });
   }
 
+  console.log("\n3. Scanning Database for Assessment & Diagnostic records...");
+  const assessResult = await syncAllUnsentAssessmentsToSheet();
+  console.log(`- Total assessments in DB:     ${assessResult.totalInDb}`);
+  console.log(`- Assessments synced to Sheet: ${assessResult.syncedCount}`);
+
+  if (assessResult.errors.length > 0) {
+    console.log("\nAssessment errors encountered:");
+    assessResult.errors.forEach((err, i) => {
+      console.error(`  ${i + 1}. ${err}`);
+    });
+  }
+
   console.log("\n=================================================");
-  console.log("Database to Sheet Sync complete!");
+  console.log("Complete Database to Sheet Sync finished!");
   console.log("=================================================");
 }
 
