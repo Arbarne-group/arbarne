@@ -916,7 +916,7 @@ export async function syncUserAssessmentToSheet(
       DEFAULT_ASSESSMENT_SPREADSHEET_ID;
 
     // Fetch user and latest assessment data
-    const user = await prisma.user.findUnique({
+    const user: any = await (prisma.user as any).findUnique({
       where: { email: userEmail },
       include: {
         farmerProfile: true,
@@ -939,7 +939,7 @@ export async function syncUserAssessmentToSheet(
     }
 
     const resolved = resolveProfileWithDashboardFallback(user);
-    const assessment = user.assessments[0];
+    const assessment = user.assessments?.[0];
     const timestamp = new Date().toISOString().replace("T", " ").substring(0, 19);
 
     // Compute pillar scores
@@ -949,7 +949,7 @@ export async function syncUserAssessmentToSheet(
     };
 
     if (assessment) {
-      assessment.pillarAssessments.forEach((pa) => {
+      assessment.pillarAssessments?.forEach((pa: any) => {
         pScores[pa.pillarId] = pa.score;
       });
     }
@@ -968,10 +968,10 @@ export async function syncUserAssessmentToSheet(
     const maturity = getMaturityTier(overallScore);
 
     const yesCount = assessment
-      ? assessment.assessmentResponses.filter((r) => r.answer === "yes").length
+      ? assessment.assessmentResponses?.filter((r: any) => r.answer === "yes").length
       : 135;
     const noCount = assessment
-      ? assessment.assessmentResponses.filter((r) => r.answer === "no").length
+      ? assessment.assessmentResponses?.filter((r: any) => r.answer === "no").length
       : 65;
 
     const pillarsCompletedCount = assessment
@@ -1034,10 +1034,10 @@ export async function syncUserAssessmentToSheet(
     // 2. Sync to Pillar Submissions Log Tab (A:M - 13 columns)
     const targetPillars = pillarId
       ? [pillarId]
-      : (assessment?.pillarAssessments.map((pa) => pa.pillarId) || [1, 2, 3, 4, 5, 6, 7, 8]);
+      : (assessment?.pillarAssessments?.map((pa: any) => pa.pillarId) || [1, 2, 3, 4, 5, 6, 7, 8]);
 
     for (const pId of targetPillars) {
-      const pa = assessment?.pillarAssessments.find((p) => p.pillarId === pId);
+      const pa = assessment?.pillarAssessments?.find((p: any) => p.pillarId === pId);
       const pillarMeta = ALL_PILLARS.find((p) => p.id === pId);
       const pillarScore = pa ? pa.score : pScores[pId];
       const pTier = getMaturityTier(pillarScore);
@@ -1070,11 +1070,11 @@ export async function syncUserAssessmentToSheet(
 
     // 3. Sync to Detailed Question Responses Tab (A:O - 15 columns)
     const responsesToSync = pillarId && assessment
-      ? assessment.assessmentResponses.filter((r) => r.pillarId === pillarId)
+      ? assessment.assessmentResponses?.filter((r: any) => r.pillarId === pillarId) || []
       : assessment?.assessmentResponses || [];
 
     if (responsesToSync.length > 0) {
-      const questionResponseRows = responsesToSync.map((r) => {
+      const questionResponseRows = responsesToSync.map((r: any) => {
         const qMeta = ALL_PILLARS.flatMap((p) => p.capabilities)
           .flatMap((c) => c.questions)
           .find((q) => q.id === r.questionId);
@@ -1128,7 +1128,7 @@ export async function syncReportGenerationToSheet(
       process.env.GOOGLE_ASSESSMENT_SPREADSHEET_ID ||
       DEFAULT_ASSESSMENT_SPREADSHEET_ID;
 
-    const user = await prisma.user.findUnique({
+    const user: any = await (prisma.user as any).findUnique({
       where: { email: userEmail },
       include: {
         farmerProfile: true,
@@ -1151,7 +1151,7 @@ export async function syncReportGenerationToSheet(
     }
 
     const resolved = resolveProfileWithDashboardFallback(user);
-    const assessment = user.assessments[0];
+    const assessment = user.assessments?.[0];
     const timestamp = new Date().toISOString().replace("T", " ").substring(0, 19);
 
     const isConsolidated = pillarParam === "all" || !pillarParam;
@@ -1165,17 +1165,17 @@ export async function syncReportGenerationToSheet(
     let evaluatedScope = "All 8 Pillars (200 Questions)";
 
     if (!isConsolidated && pId && pillarMeta) {
-      const pa = assessment?.pillarAssessments.find((p) => p.pillarId === pId);
-      const responses = assessment?.assessmentResponses.filter((r) => r.pillarId === pId) || [];
+      const pa = assessment?.pillarAssessments?.find((p: any) => p.pillarId === pId);
+      const responses = assessment?.assessmentResponses?.filter((r: any) => r.pillarId === pId) || [];
       score = pa ? pa.score : 68;
-      verifiedCount = responses.filter((r) => r.answer === "yes").length || 17;
-      gapCount = responses.filter((r) => r.answer === "no").length || 8;
+      verifiedCount = responses.filter((r: any) => r.answer === "yes").length || 17;
+      gapCount = responses.filter((r: any) => r.answer === "no").length || 8;
       reportTitle = `Pillar 0${pId} Diagnostic & Action Report: ${pillarMeta.name}`;
       evaluatedScope = `Pillar ${pId}: ${pillarMeta.name}`;
     } else if (assessment) {
       score = assessment.overallScore;
-      verifiedCount = assessment.assessmentResponses.filter((r) => r.answer === "yes").length;
-      gapCount = assessment.assessmentResponses.filter((r) => r.answer === "no").length;
+      verifiedCount = assessment.assessmentResponses?.filter((r: any) => r.answer === "yes").length || 0;
+      gapCount = assessment.assessmentResponses?.filter((r: any) => r.answer === "no").length || 0;
     }
 
     const maturity = getMaturityTier(score);
