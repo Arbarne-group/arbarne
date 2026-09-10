@@ -37,14 +37,6 @@ export default clerkMiddleware(
     if (!isPublicRoute(req)) {
       await auth.protect();
     }
-  },
-  {
-    authorizedParties: [
-      "https://app.futurefarms.africa",
-      "https://futurefarms.africa",
-      "http://localhost:3000",
-      "http://localhost:3001",
-    ],
   }
 );
 

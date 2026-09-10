@@ -541,6 +541,105 @@ export async function recordUserToSheet(
 }
 
 /**
+ * Scans the database for any users that are missing from the Google Spreadsheet 'Registered Users' tab
+ * (or need updating), and automatically synchronizes them and their onboarding responses.
+ */
+export async function syncAllUnsentUsersToSheet(spreadsheetId?: string): Promise<{
+  totalInDb: number;
+  alreadyInSheet: number;
+  syncedCount: number;
+  syncedEmails: string[];
+  errors: string[];
+}> {
+  const id = spreadsheetId || process.env.GOOGLE_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
+  const errors: string[] = [];
+  const syncedEmails: string[] = [];
+
+  try {
+    const dbUsers = await (prisma.user as any).findMany({
+      include: {
+        farmerProfile: true,
+        farmManagement: true,
+        operatingStyle: true,
+        digitalPlatform: true,
+        aspiration: true,
+        farmLocation: true,
+        farmCharacteristics: true,
+        farmingSystem: true,
+        businessExperience: true,
+        goalsPriorities: true,
+        householdLabour: true,
+        onboardingStatus: true,
+      },
+    });
+
+    // Get current registered emails from sheet
+    const sheetEmails = new Set<string>();
+    try {
+      const emailRows = await getSheetValues("'Registered Users'!D3:D", id);
+      if (emailRows && emailRows.length > 0) {
+        for (const row of emailRows) {
+          if (row[0]) {
+            sheetEmails.add(row[0].toLowerCase().trim());
+          }
+        }
+      }
+    } catch (sheetErr: any) {
+      console.warn("[GoogleSheets] Notice reading sheet emails for sync:", sheetErr.message);
+    }
+
+    const unsentUsers = dbUsers.filter(
+      (u: any) => u.email && !sheetEmails.has(u.email.toLowerCase().trim())
+    );
+
+    for (const u of unsentUsers) {
+      try {
+        // If missing futureFarmId, assign one and update in DB
+        if (!u.futureFarmId) {
+          const userCount = await prisma.user.count();
+          const assignedId = `FFF-KE-PROD-${String(userCount + 1).padStart(3, "0")}`;
+          try {
+            await (prisma.user as any).update({
+              where: { id: u.id },
+              data: { futureFarmId: assignedId },
+            });
+            u.futureFarmId = assignedId;
+          } catch {}
+        }
+
+        const res = await recordUserToSheet(u, undefined, id);
+        if (res.success) {
+          syncedEmails.push(u.email);
+          // Also sync onboarding responses if any
+          await syncUserOnboardingToSheet(u, id).catch(() => {});
+        } else if (res.error) {
+          errors.push(`${u.email}: ${res.error}`);
+        }
+      } catch (userErr: any) {
+        errors.push(`${u.email}: ${userErr.message}`);
+      }
+    }
+
+    return {
+      totalInDb: dbUsers.length,
+      alreadyInSheet: sheetEmails.size,
+      syncedCount: syncedEmails.length,
+      syncedEmails,
+      errors,
+    };
+  } catch (err: any) {
+    console.error("[GoogleSheets] syncAllUnsentUsersToSheet failed:", err);
+    return {
+      totalInDb: 0,
+      alreadyInSheet: 0,
+      syncedCount: 0,
+      syncedEmails: [],
+      errors: [err.message || String(err)],
+    };
+  }
+}
+
+/**
  * Synchronizes a user's database onboarding responses across:
  * 1. Master Consolidated (61 columns)
  * 2. Survey 1 - Farmer (Shambany) (33 columns)

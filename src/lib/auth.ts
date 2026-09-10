@@ -1,6 +1,9 @@
 import { currentUser, auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { recordUserToSheet } from "@/lib/googleSheets";
+import { recordUserToSheet, syncAllUnsentUsersToSheet } from "@/lib/googleSheets";
+
+let lastBackgroundSync = 0;
+const BACKGROUND_SYNC_COOLDOWN = 5 * 60 * 1000; // 5 minutes
 
 /**
  * Retrieves the currently authenticated Clerk user on the server.
@@ -162,6 +165,15 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
     await recordUserToSheet(dbUser, clerkUser);
   } catch (err: any) {
     console.warn("[GoogleSheets] Google Sheet recording notice:", err.message);
+  }
+
+  // Sweep and reconcile any unsent database users to the sheet (throttled)
+  const now = Date.now();
+  if (now - lastBackgroundSync > BACKGROUND_SYNC_COOLDOWN) {
+    lastBackgroundSync = now;
+    syncAllUnsentUsersToSheet().catch((syncErr: any) => {
+      console.warn("[GoogleSheets] Background reconciliation notice:", syncErr.message);
+    });
   }
 
   return dbUser;
