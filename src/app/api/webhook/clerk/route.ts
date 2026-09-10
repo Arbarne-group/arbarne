@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { recordUserToSheet } from "@/lib/googleSheets";
+import { generateUniqueFutureFarmId } from "@/lib/idGenerator";
 
 export async function POST(req: Request) {
   try {
@@ -34,13 +35,9 @@ export async function POST(req: Request) {
         });
 
         if (!dbUser) {
-          let assignedId = `FFF-KE-PROD-${Date.now().toString().slice(-3)}`;
-          try {
-            const userCount = await prisma.user.count();
-            assignedId = `FFF-KE-PROD-${String(userCount + 1).padStart(3, "0")}`;
-          } catch {}
+          const assignedId = await generateUniqueFutureFarmId();
 
-          dbUser = await prisma.user.create({
+          dbUser = await (prisma.user as any).create({
             data: {
               name: fullName,
               email,
@@ -59,9 +56,8 @@ export async function POST(req: Request) {
             },
           });
         } else if (!dbUser.futureFarmId) {
-          const userCount = await prisma.user.count();
-          const assignedId = `FFF-KE-PROD-${String(userCount).padStart(3, "0")}`;
-          dbUser = await prisma.user.update({
+          const assignedId = await generateUniqueFutureFarmId();
+          dbUser = await (prisma.user as any).update({
             where: { id: dbUser.id },
             data: { futureFarmId: assignedId },
             include: {

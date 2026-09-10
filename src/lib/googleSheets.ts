@@ -4,6 +4,7 @@ import path from "path";
 import { prisma } from "@/lib/prisma";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { getMaturityTier, computeAssessmentResults } from "@/lib/assessmentScoring";
+import { generateUniqueFutureFarmId } from "@/lib/idGenerator";
 
 interface ServiceAccountCredentials {
   client_email: string;
@@ -596,8 +597,7 @@ export async function syncAllUnsentUsersToSheet(spreadsheetId?: string): Promise
       try {
         // If missing futureFarmId, assign one and update in DB
         if (!u.futureFarmId) {
-          const userCount = await prisma.user.count();
-          const assignedId = `FFF-KE-PROD-${String(userCount + 1).padStart(3, "0")}`;
+          const assignedId = await generateUniqueFutureFarmId();
           try {
             await (prisma.user as any).update({
               where: { id: u.id },

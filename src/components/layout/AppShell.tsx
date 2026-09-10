@@ -90,6 +90,13 @@ export default function AppShell({
       return;
     }
 
+    // Ensure user is recorded and synced to Google Sheet
+    fetch("/api/auth/register-sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    }).catch(() => {});
+
     // Refresh stage from API to keep in sync with database
     fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())

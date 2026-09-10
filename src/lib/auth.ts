@@ -1,9 +1,12 @@
 import { currentUser, auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { recordUserToSheet, syncAllUnsentUsersToSheet } from "@/lib/googleSheets";
+import { generateUniqueFutureFarmId } from "@/lib/idGenerator";
 
 let lastBackgroundSync = 0;
 const BACKGROUND_SYNC_COOLDOWN = 5 * 60 * 1000; // 5 minutes
+
+export { generateUniqueFutureFarmId };
 
 /**
  * Retrieves the currently authenticated Clerk user on the server.
@@ -84,11 +87,7 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
   }
 
   if (!dbUser) {
-    let assignedId = `FFF-KE-PROD-${Date.now().toString().slice(-3)}`;
-    try {
-      const userCount = await prisma.user.count();
-      assignedId = `FFF-KE-PROD-${String(userCount + 1).padStart(3, "0")}`;
-    } catch {}
+    const assignedId = await generateUniqueFutureFarmId();
 
     try {
       dbUser = await (prisma.user as any).create({
@@ -135,8 +134,7 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
     }
   } else if (!dbUser.futureFarmId) {
     try {
-      const userCount = await prisma.user.count();
-      const assignedId = `FFF-KE-PROD-${String(userCount).padStart(3, "0")}`;
+      const assignedId = await generateUniqueFutureFarmId();
       dbUser = await (prisma.user as any).update({
         where: { id: dbUser.id },
         data: { futureFarmId: assignedId },
