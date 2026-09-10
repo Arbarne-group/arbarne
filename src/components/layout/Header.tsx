@@ -6,9 +6,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { UserButton, Show, SignInButton, useUser, useClerk } from "@clerk/nextjs";
 
-import { OnboardingStage } from "@/lib/onboardingGuard";
+import { OnboardingStage, getActiveUserEmail } from "@/lib/onboardingGuard";
 
 interface HeaderProps {
+  userEmail?: string;
   userName?: string;
   userRole?: string;
   collapsed?: boolean;
@@ -18,6 +19,7 @@ interface HeaderProps {
 }
 
 export default function Header({
+  userEmail,
   userName = "Farmer",
   userRole = "Farm Owner",
   collapsed = false,
@@ -30,12 +32,29 @@ export default function Header({
   const { signOut } = useClerk();
   const [notifOpen, setNotifOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [clientEmail, setClientEmail] = useState<string>("");
 
-  const effectiveName =
-    user?.fullName ||
-    (user?.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : "") ||
-    userName ||
-    "Farmer";
+  const clerkEmail =
+    user?.primaryEmailAddress?.emailAddress ||
+    user?.emailAddresses?.[0]?.emailAddress ||
+    "";
+
+  useEffect(() => {
+    if (clerkEmail) {
+      setClientEmail(clerkEmail);
+      return;
+    }
+    const localEmail = getActiveUserEmail();
+    if (localEmail) {
+      setClientEmail(localEmail);
+    }
+  }, [clerkEmail]);
+
+  const displayEmail =
+    userEmail ||
+    clerkEmail ||
+    clientEmail ||
+    (typeof window !== "undefined" ? getActiveUserEmail() : "");
 
   const isSurvey1 = onboardingStage === "INITIAL_IN_PROGRESS";
   const isSurvey2 =
@@ -168,14 +187,16 @@ export default function Header({
           {/* User Controls */}
           <Show when="signed-in">
             <div className="flex items-center gap-3 pl-2 border-l border-surface-variant">
-              <div className="text-right hidden lg:block leading-tight">
-                <span className="text-sm font-semibold text-on-surface block">
-                  {effectiveName}
-                </span>
-                <span className="text-xs text-on-surface-variant block">
-                  {userRole}
-                </span>
-              </div>
+              {displayEmail && (
+                <div className="text-right hidden sm:block leading-tight">
+                  <span
+                    className="text-xs sm:text-sm font-semibold text-on-surface block max-w-[220px] lg:max-w-[280px] truncate"
+                    title={displayEmail}
+                  >
+                    {displayEmail}
+                  </span>
+                </div>
+              )}
               <UserButton
                 appearance={{
                   elements: {

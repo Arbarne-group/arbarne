@@ -31,6 +31,7 @@ export default function AppShell({
   const [collapsed, setCollapsed] = useState(false);
   const [onboardingStage, setOnboardingStage] = useState<OnboardingStage>("FULLY_COMPLETED");
   const [completedPillarsCount, setCompletedPillarsCount] = useState<number>(0);
+  const [userEmail, setUserEmail] = useState<string>("");
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
 
@@ -65,12 +66,16 @@ export default function AppShell({
     let email = "";
     if (user?.primaryEmailAddress?.emailAddress) {
       email = user.primaryEmailAddress.emailAddress;
+      setUserEmail(email);
     } else {
       const cached = localStorage.getItem("future_farms_user");
       if (cached) {
         try {
           const u = JSON.parse(cached);
-          if (u.email) email = u.email;
+          if (u.email) {
+            email = u.email;
+            setUserEmail(email);
+          }
           const status = computeOnboardingStageFromUser(u);
           setOnboardingStage(status.stage);
           setStatusLoaded(true);
@@ -90,6 +95,9 @@ export default function AppShell({
       .then((res) => res.json())
       .then((data) => {
         if (data.user) {
+          if (data.user.email) {
+            setUserEmail(data.user.email);
+          }
           const status = computeOnboardingStageFromUser(data.user);
           setOnboardingStage(status.stage);
           localStorage.setItem(
@@ -168,8 +176,7 @@ export default function AppShell({
         }`}
       >
         <Header
-          userName={effectiveUserName}
-          userRole={userRole}
+          userEmail={userEmail}
           collapsed={collapsed}
           onToggleCollapse={handleToggleCollapse}
           onboardingStage={onboardingStage}
