@@ -54,10 +54,7 @@ export default function OnboardingOverviewPage() {
         setUser(u);
         const st = computeOnboardingStageFromUser(u);
         setOnboardingStage(st.stage);
-        if (st.stage === "INITIAL_IN_PROGRESS") {
-          router.replace("/onboarding/step-1");
-          return;
-        } else if (st.stage === "FULLY_COMPLETED") {
+        if (st.stage === "FULLY_COMPLETED") {
           router.replace("/assessment");
           return;
         }
@@ -77,9 +74,7 @@ export default function OnboardingOverviewPage() {
           const st = computeOnboardingStageFromUser(data.user);
           setOnboardingStage(st.stage);
           localStorage.setItem("future_farms_user", JSON.stringify({ ...data.user, stage: st.stage }));
-          if (st.stage === "INITIAL_IN_PROGRESS") {
-            router.replace("/onboarding/step-1");
-          } else if (st.stage === "FULLY_COMPLETED") {
+          if (st.stage === "FULLY_COMPLETED") {
             router.replace("/assessment");
           }
         }

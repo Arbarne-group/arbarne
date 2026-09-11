@@ -96,13 +96,14 @@ export function getRouteAccess(
 
   // 1. Stage 1: Initial Survey 1 In Progress
   if (stage === "INITIAL_IN_PROGRESS") {
+    // Both the welcome onboarding hub (/onboarding) and Survey 1 steps (/onboarding/step-1..5) are allowed
     const isSurvey1Step = /^\/onboarding\/step-[1-5]/.test(pathname);
-    if (isSurvey1Step) {
+    if (pathname === "/onboarding" || isSurvey1Step) {
       return { allowed: true };
     }
     return {
       allowed: false,
-      redirectTo: "/onboarding/step-1",
+      redirectTo: "/onboarding",
       message: "Please complete your initial farm profile survey to access the platform.",
     };
   }

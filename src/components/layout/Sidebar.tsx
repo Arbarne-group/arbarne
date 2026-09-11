@@ -29,9 +29,7 @@ export default function Sidebar({
   const isSurvey2 = onboardingStage === "INITIAL_COMPLETED" || onboardingStage === "ADDITIONAL_COMPLETED";
 
   // Compute effective brand logo destination
-  const logoHref = isSurvey1
-    ? "/onboarding/step-1"
-    : isSurvey2
+  const logoHref = isSurvey1 || isSurvey2
     ? "/onboarding"
     : completedPillarsCount < 1
     ? "/assessment"
@@ -53,12 +51,8 @@ export default function Sidebar({
 
   // Helper to determine if an individual item is locked
   const isItemLocked = (itemHref: string) => {
-    if (isSurvey1) {
-      // During Survey 1, all nav destinations outside /onboarding/step-* are locked
-      return true;
-    }
-    if (isSurvey2) {
-      // During Survey 2, Overview (/onboarding) is unlocked; other pages are locked
+    if (isSurvey1 || isSurvey2) {
+      // During Survey 1 and Survey 2, Overview (/onboarding) is unlocked; other pages are locked
       return itemHref !== "/onboarding";
     }
     // Fully completed onboarding:
@@ -70,12 +64,7 @@ export default function Sidebar({
   };
 
   const handleItemClick = (e: React.MouseEvent, itemHref: string) => {
-    if (isSurvey1) {
-      e.preventDefault();
-      router.push("/onboarding/step-1");
-      return;
-    }
-    if (isSurvey2 && itemHref !== "/onboarding") {
+    if ((isSurvey1 || isSurvey2) && itemHref !== "/onboarding") {
       e.preventDefault();
       router.push("/onboarding");
       return;
@@ -154,9 +143,7 @@ export default function Sidebar({
               key={item.label}
               href={
                 locked
-                  ? isSurvey1
-                    ? "/onboarding/step-1"
-                    : isSurvey2
+                  ? isSurvey1 || isSurvey2
                     ? "/onboarding"
                     : "/assessment"
                   : item.href
@@ -237,18 +224,12 @@ export default function Sidebar({
       {/* Bottom Nav Actions */}
       <div className="p-3 border-t border-surface-variant mt-auto flex flex-col gap-1.5 shrink-0">
         {bottomItems.map((item) => {
-          const locked = isSurvey1;
+          const locked = false;
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.label}
-              href={locked ? "/onboarding/step-1" : item.href}
-              onClick={(e) => {
-                if (locked) {
-                  e.preventDefault();
-                  router.push("/onboarding/step-1");
-                }
-              }}
+              href={item.href}
               title={collapsed ? item.label : undefined}
               className={`rounded-xl flex items-center transition-colors text-sm font-medium relative group ${
                 collapsed

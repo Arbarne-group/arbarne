@@ -28,19 +28,13 @@ export default function MobileNav({
   ];
 
   const isItemLocked = (itemHref: string) => {
-    if (isSurvey1) return true;
-    if (isSurvey2) return itemHref !== "/onboarding";
+    if (isSurvey1 || isSurvey2) return itemHref !== "/onboarding";
     if (itemHref === "/dashboard" && completedPillarsCount < 1) return true;
     return false;
   };
 
   const handleItemClick = (e: React.MouseEvent, itemHref: string) => {
-    if (isSurvey1) {
-      e.preventDefault();
-      router.push("/onboarding/step-1");
-      return;
-    }
-    if (isSurvey2 && itemHref !== "/onboarding") {
+    if ((isSurvey1 || isSurvey2) && itemHref !== "/onboarding") {
       e.preventDefault();
       router.push("/onboarding");
       return;
@@ -67,9 +61,7 @@ export default function MobileNav({
               key={item.label}
               href={
                 locked
-                  ? isSurvey1
-                    ? "/onboarding/step-1"
-                    : isSurvey2
+                  ? isSurvey1 || isSurvey2
                     ? "/onboarding"
                     : "/assessment"
                   : item.href
@@ -96,9 +88,7 @@ export default function MobileNav({
             key={item.label}
             href={
               locked
-                ? isSurvey1
-                  ? "/onboarding/step-1"
-                  : isSurvey2
+                ? isSurvey1 || isSurvey2
                   ? "/onboarding"
                   : "/assessment"
                 : item.href

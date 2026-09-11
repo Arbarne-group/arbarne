@@ -60,9 +60,7 @@ export default function Header({
   const isSurvey2 =
     onboardingStage === "INITIAL_COMPLETED" || onboardingStage === "ADDITIONAL_COMPLETED";
 
-  const logoHref = isSurvey1
-    ? "/onboarding/step-1"
-    : isSurvey2
+  const logoHref = isSurvey1 || isSurvey2
     ? "/onboarding"
     : completedPillarsCount < 1
     ? "/assessment"

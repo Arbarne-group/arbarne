@@ -36,10 +36,7 @@ function AssessmentPageContent() {
         const u = JSON.parse(cached);
         if (u.stage) {
           setOnboardingStage(u.stage);
-          if (u.stage === "INITIAL_IN_PROGRESS") {
-            router.replace("/onboarding/step-1");
-            return;
-          } else if (u.stage === "INITIAL_COMPLETED" || u.stage === "ADDITIONAL_COMPLETED") {
+          if (u.stage !== "FULLY_COMPLETED") {
             router.replace("/onboarding");
             return;
           }
@@ -51,13 +48,9 @@ function AssessmentPageContent() {
       fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
         .then((res) => res.json())
         .then((data) => {
-          if (data.stage) {
+          if (data.stage && data.stage !== "FULLY_COMPLETED") {
             setOnboardingStage(data.stage);
-            if (data.stage === "INITIAL_IN_PROGRESS") {
-              router.replace("/onboarding/step-1");
-            } else if (data.stage === "INITIAL_COMPLETED" || data.stage === "ADDITIONAL_COMPLETED") {
-              router.replace("/onboarding");
-            }
+            router.replace("/onboarding");
           }
         })
         .catch(console.error)

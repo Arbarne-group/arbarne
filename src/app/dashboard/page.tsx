@@ -56,7 +56,7 @@ export default function DashboardPage() {
         if (u) {
           const st = computeOnboardingStageFromUser(u);
           if (st.stage !== "FULLY_COMPLETED") {
-            router.replace(st.stage === "INITIAL_IN_PROGRESS" ? "/onboarding/step-1" : "/onboarding");
+            router.replace("/onboarding");
             return;
           }
         }
@@ -81,7 +81,7 @@ export default function DashboardPage() {
             setUser(data.user);
             const st = computeOnboardingStageFromUser(data.user);
             if (st.stage !== "FULLY_COMPLETED") {
-              router.replace(st.stage === "INITIAL_IN_PROGRESS" ? "/onboarding/step-1" : "/onboarding");
+              router.replace("/onboarding");
               return;
             }
           }
