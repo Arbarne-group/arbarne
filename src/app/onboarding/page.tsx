@@ -224,7 +224,7 @@ export default function OnboardingOverviewPage() {
     : !isSysDone ? "/onboarding/farming-system"
     : !isBizDone ? "/onboarding/business-experience"
     : !isLabDone ? "/onboarding/household-labour"
-    : "/onboarding/farm-profile";
+    : "/assessment";
 
   const farmSize = user?.farmCharacteristics?.farmSize || 12.5;
   const farmUnit = user?.farmCharacteristics?.farmUnit || "Acres";
@@ -722,22 +722,22 @@ export default function OnboardingOverviewPage() {
                   All onboarding sections completed!
                 </h1>
                 <p className="text-xs md:text-sm text-on-surface-variant max-w-xl leading-relaxed">
-                  Your responses have established your farm baseline. Please review and confirm your <strong>Farm Profile</strong> to finalize onboarding and access the Assessment Hub.
+                  Your responses have established your farm baseline. Directly take your <strong>Farm Assessment</strong> to benchmark all 40 capabilities and unlock customized growth opportunities.
                 </p>
 
                 <div className="pt-3 flex flex-wrap items-center gap-3">
                   <Link
-                    href="/onboarding/farm-profile"
+                    href="/assessment"
                     className="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs md:text-sm shadow-sm hover:shadow-md transition-all inline-flex items-center gap-2"
                   >
-                    <span>Review &amp; Confirm Farm Profile</span>
+                    <span>Take Farm Assessment</span>
                     <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                   </Link>
                   <Link
-                    href="/onboarding/location"
+                    href="/onboarding/farm-profile"
                     className="px-4 py-2.5 rounded-xl border border-surface-container-high bg-surface hover:bg-surface-container-high text-xs font-semibold text-on-surface transition-colors"
                   >
-                    Edit Responses
+                    View Farm Profile
                   </Link>
                 </div>
               </div>

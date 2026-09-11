@@ -139,12 +139,29 @@ export default function HouseholdLabourPage() {
       setTimeout(() => setSaveFeedback(null), 2500);
 
       if (navigateNext) {
-        router.push("/onboarding/farm-profile");
+        // Automatically confirm profile and route directly to /assessment
+        const confirmRes = await fetch("/api/onboarding/step", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            step: "confirm-profile",
+            email,
+            data: {},
+          }),
+        });
+        const confirmData = await confirmRes.json();
+        if (confirmData.user) {
+          localStorage.setItem(
+            "future_farms_user",
+            JSON.stringify({ ...confirmData.user, stage: "FULLY_COMPLETED" })
+          );
+        }
+        router.push("/assessment");
       }
     } catch (e) {
       console.error(e);
       if (navigateNext) {
-        router.push("/onboarding/farm-profile");
+        router.push("/assessment");
       }
     } finally {
       setSaving(false);
@@ -590,15 +607,13 @@ export default function HouseholdLabourPage() {
                 <span className="material-symbols-outlined text-[16px]">save</span>
                 <span>Save Draft</span>
               </button>
-              <button
-                type="button"
-                onClick={() => handleSave(true)}
-                disabled={saving}
-                className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-primary/30 hover:border-primary text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-primary/5 hover:bg-primary/10"
+              <Link
+                href="/onboarding/farm-profile"
+                className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface-variant hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-surface"
               >
-                <span>Review Profile</span>
+                <span>View Profile</span>
                 <span className="material-symbols-outlined text-[16px]">visibility</span>
-              </button>
+              </Link>
             </div>
             <button
               type="button"

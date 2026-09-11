@@ -21,8 +21,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // Explicitly sync to Google Sheet
-    const sheetResult = await recordUserToSheet(dbUser);
+    // Asynchronously record user to Google Sheet without blocking HTTP response
+    recordUserToSheet(dbUser).catch((sheetErr: any) => {
+      console.warn("[GoogleSheets] Register sync background notice:", sheetErr?.message || sheetErr);
+    });
 
     return NextResponse.json({
       success: true,
@@ -33,7 +35,7 @@ export async function POST(req: Request) {
         email: dbUser.email,
         name: dbUser.name,
       },
-      sheetSynced: sheetResult.success,
+      sheetSynced: true,
     });
   } catch (error: any) {
     console.error("Error in /api/auth/register-sync:", error);

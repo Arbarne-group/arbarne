@@ -81,12 +81,10 @@ export async function POST(req: Request) {
         }
       }
 
-      // Record to Google Sheet
-      try {
-        await recordUserToSheet(dbUser, { id: userData.id });
-      } catch (sheetErr: any) {
-        console.warn("[ClerkWebhook] Google Sheet recording error:", sheetErr.message);
-      }
+      // Record to Google Sheet asynchronously (background cron job scans database to update spreadsheet)
+      recordUserToSheet(dbUser, { id: userData.id }).catch((sheetErr: any) => {
+        console.warn("[ClerkWebhook] Google Sheet recording notice:", sheetErr?.message || sheetErr);
+      });
     }
 
     return NextResponse.json({ success: true, received: true });

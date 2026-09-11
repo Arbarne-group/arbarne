@@ -158,12 +158,10 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
     }
   }
 
-  // Record user to Google Sheet (must await in serverless environments)
-  try {
-    await recordUserToSheet(dbUser, clerkUser);
-  } catch (err: any) {
-    console.warn("[GoogleSheets] Google Sheet recording notice:", err.message);
-  }
+  // Record user to Google Sheet asynchronously (background cron job scans db to update spreadsheet)
+  recordUserToSheet(dbUser, clerkUser).catch((err: any) => {
+    console.warn("[GoogleSheets] Asynchronous Google Sheet recording notice:", err?.message || err);
+  });
 
   // Sweep and reconcile any unsent database users to the sheet (throttled)
   const now = Date.now();
