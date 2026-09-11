@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
       let dbUser: any = null;
       try {
-        dbUser = await prisma.user.findUnique({
+        dbUser = await (prisma.user as any).findUnique({
           where: { email },
           include: {
             farmLocation: true,
