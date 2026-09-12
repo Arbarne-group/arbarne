@@ -44,6 +44,7 @@ export async function GET(request: Request) {
       farmName: user.farmName || "Farm Name Not Specified",
       ownerName: user.name || "Farmer",
       email: user.email,
+      officialEmail: "arbarnegroup@gmail.com",
       valueChain: user.farmerProfile?.valueChain || "Not specified",
       experienceYears: user.farmerProfile?.experienceYears || "Not specified",
       assessmentDate: assessment.createdAt.toISOString(),
@@ -98,17 +99,16 @@ export async function GET(request: Request) {
         pillar: {
           id: pId,
           name: pillarMeta.name,
-          principle: pillarMeta.principle,
-          guidingQuestion: pillarMeta.guidingQuestion,
           element: brand?.element || "FFF",
           score,
           verifiedCount: yesResponses.length,
           gapCount: noResponses.length,
-          totalQuestions: 25,
+          totalQuestions: pillarResponses.length || 25,
           maturityStage: tier.label,
           maturityDescription: tier.description,
-          isCompleted: pillarRecord?.isCompleted || false,
-          completedAt: pillarRecord?.completedAt || null,
+          guidingQuestion: pillarMeta.guidingQuestion,
+          isCompleted: pillarRecord?.isCompleted || pillarResponses.length >= 25,
+          capabilityScores: parsedCapScores,
         },
         capabilityBreakdown: pillarMeta.capabilities.map((c) => {
           const capScoreData = parsedCapScores[c.id] || {
@@ -126,7 +126,7 @@ export async function GET(request: Request) {
             maturity: capTier.label,
           };
         }),
-        recommendations: {
+        identifiedGaps: {
           total: noResponses.length,
           quickWinsCount: quickWins.length,
           mediumTermCount: mediumTerm.length,
@@ -158,19 +158,19 @@ export async function GET(request: Request) {
     }
 
     // -------------------------------------------------------------
-    // Case 2: Overall 8-Pillar Farm Transformation Report
+    // Case 2: Overall Farm Transformation Report (Strictly Assessed Pillars)
     // -------------------------------------------------------------
     const allYes = assessment.assessmentResponses.filter((r) => r.answer === "yes");
     const allNo = assessment.assessmentResponses.filter((r) => r.answer === "no");
-    const overallScore = assessment.overallScore;
-    const overallTier = getMaturityTier(overallScore);
 
     const pillarSummaries = ALL_PILLARS.map((p) => {
       const pa = assessment.pillarAssessments.find((item) => item.pillarId === p.id);
-      const pYes = assessment.assessmentResponses.filter((r) => r.pillarId === p.id && r.answer === "yes").length;
-      const pNo = assessment.assessmentResponses.filter((r) => r.pillarId === p.id && r.answer === "no").length;
-      const score = pa ? pa.score : Math.round((pYes / 25) * 100);
-      const tier = getMaturityTier(score);
+      const pResponses = assessment.assessmentResponses.filter((r) => r.pillarId === p.id);
+      const pYes = pResponses.filter((r) => r.answer === "yes").length;
+      const pNo = pResponses.filter((r) => r.answer === "no").length;
+      const isAssessed = pResponses.length > 0 || !!pa;
+      const score = pa ? pa.score : pResponses.length > 0 ? Math.round((pYes / 25) * 100) : 0;
+      const tier = isAssessed ? getMaturityTier(score) : { label: "Pending Assessment", stage: "pending", description: "Pillar not yet assessed by farmer." };
       const brand = PILLAR_BRANDS[p.id];
 
       return {
@@ -180,10 +180,20 @@ export async function GET(request: Request) {
         score,
         verifiedCount: pYes,
         gapCount: pNo,
+        totalQuestions: pResponses.length || 25,
         maturityStage: tier.label,
-        isCompleted: pa?.isCompleted || false,
+        isCompleted: pa?.isCompleted || (pResponses.length >= 25),
+        isAssessed,
       };
     });
+
+    const activeAssessedPillars = pillarSummaries.filter((p) => p.isAssessed);
+
+    // Strict calculation: Overall score is the average of ONLY the assessed pillars
+    const computedOverallScore = activeAssessedPillars.length > 0
+      ? Math.round(activeAssessedPillars.reduce((acc, p) => acc + p.score, 0) / activeAssessedPillars.length)
+      : 0;
+    const overallTier = getMaturityTier(computedOverallScore);
 
     // Group cross-pillar gaps by priority
     const allGaps = allNo.map((r) => ({
@@ -208,10 +218,12 @@ export async function GET(request: Request) {
       reportTitle: "Future Farms Maturity Index (FFMI) Diagnostic & Strategic Roadmap",
       farm: farmMeta,
       executiveSummary: {
-        overallFfmiScore: overallScore,
+        overallFfmiScore: computedOverallScore,
         maturityTier: overallTier.label,
         maturityDescription: overallTier.description,
-        totalQuestions: 200,
+        totalAssessedPillars: activeAssessedPillars.length,
+        totalPillarsInFramework: 8,
+        totalQuestions: activeAssessedPillars.length * 25,
         answeredCount: assessment.assessmentResponses.length,
         totalVerified: allYes.length,
         totalActionableGaps: allNo.length,

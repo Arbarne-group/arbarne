@@ -92,10 +92,10 @@ export default function ContactUsPage() {
                     General Inquiries
                   </span>
                   <a
-                    href="mailto:support@futurefarms.africa"
+                    href="mailto:arbarnegroup@gmail.com"
                     className="text-sm font-bold text-on-surface hover:text-primary transition-colors"
                   >
-                    support@futurefarms.africa
+                    arbarnegroup@gmail.com
                   </a>
                 </div>
               </div>

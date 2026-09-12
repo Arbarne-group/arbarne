@@ -272,7 +272,7 @@ def generate_transformation_pdf(
 
     # ─── Footer Sign-off Note ─────────────────────────────────────────────
     elements.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#e5e7eb"), spaceAfter=6))
-    elements.append(Paragraph("This transformation report is an official diagnostic output of the Future Farms Framework (FFF). To schedule verifier evidence validation or unlock capital partnerships, contact advisory@futurefarms.africa.", small_style))
+    elements.append(Paragraph("This transformation report is an official diagnostic output of the Future Farms Framework (FFF) by Arbarne Group Ltd. To schedule verifier evidence validation or unlock capital partnerships, contact arbarnegroup@gmail.com.", small_style))
 
     doc.build(elements)
     pdf_bytes = buffer.getvalue()

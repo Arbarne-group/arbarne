@@ -15,6 +15,7 @@ import {
   getPillarAutomaticFeedback,
 } from "@/data/capabilityFeedback";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import ScannableQrCode from "@/components/ScannableQrCode";
 
 interface AssessmentSummaryViewProps {
   pillarId: number;
@@ -215,27 +216,55 @@ export default function AssessmentSummaryView({
   const pillarPercentage = Math.round((totalYes / totalQuestions) * 100);
   const nextPillarId = pillar.id < ALL_PILLARS.length ? pillar.id + 1 : 1;
 
-  // FFV Claims compilation for "Yes" answers
+  // Pillar assessment completion check (must have answered all 25 questions in the pillar)
+  const answeredPillarQuestionsCount = useMemo(() => {
+    const allPillarQIds = pillar.capabilities.flatMap((c) => c.questions.map((q) => q.id));
+    return allPillarQIds.filter((qId) => answers[qId] === "yes" || answers[qId] === "no").length;
+  }, [pillar, answers]);
+  const isPillarCompleted = answeredPillarQuestionsCount >= totalQuestions && totalQuestions > 0;
+
+  // FFV Claims compilation for "Yes" answers using authentic canonical requirements
   const ffvCapabilityClaims = useMemo(() => {
+    // Map canonical questions for quick evidence requirement lookup
+    const canonicalQuestionMap = new Map<string, any>();
+    if (canonicalPillar) {
+      canonicalPillar.capabilities.forEach((c) => {
+        c.questions.forEach((q) => {
+          canonicalQuestionMap.set(q.id, q);
+        });
+      });
+    }
+
     return pillar.capabilities.map((cap) => {
       const yesQuestions = cap.questions.filter((q) => answers[q.id] === "yes");
-      const claims: FFVClaimItem[] = yesQuestions.map((q, idx) => {
-        const evidenceTypes = [
-          { text: "Upload a screenshot / digital record", code: "DIG / DEM", action: "Upload screenshot or demonstrate use" },
-          { text: "Verification interview - online or visit", code: "DIG / DEM / INT", action: "Upload evidence or verify during call" },
-          { text: "Demonstrate the activity", code: "DEM", action: "Practical demonstration" },
-          { text: "Upload a document or record", code: "DOC / EXT", action: "Upload certificate or register" },
-        ];
-        const assigned = evidenceTypes[idx % evidenceTypes.length];
+      const claims: FFVClaimItem[] = yesQuestions.map((q) => {
+        const canonicalQ = canonicalQuestionMap.get(q.id);
+        const authenticEvidence =
+          canonicalQ?.evidenceRequired ||
+          q.ffv_evidence_required ||
+          "Documented farm record, application screenshot, photo, or demonstration of farm practice.";
+        const technicalCode = authenticEvidence.toLowerCase().includes("interview")
+          ? "INT / DEM"
+          : authenticEvidence.toLowerCase().includes("record") || authenticEvidence.toLowerCase().includes("screenshot")
+          ? "DIG / DEM"
+          : authenticEvidence.toLowerCase().includes("certif") || authenticEvidence.toLowerCase().includes("plan")
+          ? "DOC / EXT"
+          : "DEM";
+        const farmerAction = authenticEvidence.toLowerCase().includes("interview")
+          ? "Upload supporting record or verify during interview"
+          : authenticEvidence.toLowerCase().includes("demonstrat")
+          ? "Practical demonstration on farm or video call"
+          : "Upload screenshot, register, or digital record";
+
         return {
           id: q.id,
           capabilityId: cap.id,
           questionNumber: q.question_number,
           questionText: q.question_text,
           capCode: `${pillar.id}.${cap.number}`,
-          acceptableEvidence: assigned.text,
-          technicalCode: assigned.code,
-          farmerAction: assigned.action,
+          acceptableEvidence: authenticEvidence,
+          technicalCode,
+          farmerAction,
           status: claimStatuses[q.id] || "not_submitted",
           evidenceNotes: "",
           evidenceType: "digital",
@@ -252,7 +281,7 @@ export default function AssessmentSummaryView({
         claims,
       };
     });
-  }, [pillar, answers, claimStatuses]);
+  }, [pillar, answers, claimStatuses, canonicalPillar]);
 
   const totalFFVClaims = ffvCapabilityClaims.reduce((acc, c) => acc + c.totalClaims, 0);
   const totalFFVVerified = ffvCapabilityClaims.reduce((acc, c) => acc + c.verifiedCount, 0);
@@ -268,6 +297,15 @@ export default function AssessmentSummaryView({
     if (totalFFVVerified === 0) return Math.max(0, totalYes - 3);
     return Math.min(totalYes, Math.max(totalFFVVerified, Math.round(totalYes * 0.85)));
   }, [totalFFVVerified, totalYes]);
+
+  const certRefId = `FFF-CERT-P${pillar.id}-${dynamicFarmId}`;
+  const certificateVerifyUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/verify?type=certificate&certId=${encodeURIComponent(certRefId)}&pillar=${pillar.id}&farmId=${encodeURIComponent(dynamicFarmId)}&farmName=${encodeURIComponent(dynamicFarmName)}&farmerName=${encodeURIComponent(dynamicFarmerName)}&location=${encodeURIComponent(dynamicLocation)}&score=${encodeURIComponent(`${verifiedPillarScore}/25`)}&tier=${encodeURIComponent(pillarFeedback.label)}`
+    : `https://futurefarms.africa/verify?type=certificate&certId=${certRefId}`;
+
+  const reportVerifyUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/verify?type=report&reportId=${encodeURIComponent(`FFF-REP-P${pillar.id}-${dynamicFarmId}`)}&pillar=${pillar.id}&farmId=${encodeURIComponent(dynamicFarmId)}&farmName=${encodeURIComponent(dynamicFarmName)}&farmerName=${encodeURIComponent(dynamicFarmerName)}&location=${encodeURIComponent(dynamicLocation)}&score=${encodeURIComponent(`${pillarPercentage}%`)}&tier=${encodeURIComponent(pillarFeedback.label)}`
+    : `https://futurefarms.africa/verify?type=report&reportId=FFF-REP-P${pillar.id}-${dynamicFarmId}`;
 
   const toggleCapability = (capId: string) => {
     setExpandedCapIds((prev) => ({
@@ -405,7 +443,7 @@ export default function AssessmentSummaryView({
         [submittingClaim.id]: resData.evidence,
       }));
 
-      setUploadToast("Digital evidence stored securely in Neon PostgreSQL!");
+      setUploadToast("Digital evidence uploaded and stored securely!");
       setTimeout(() => setUploadToast(null), 3500);
 
       setSubmittingClaim(null);
@@ -414,7 +452,7 @@ export default function AssessmentSummaryView({
       setSubmissionNotes("");
     } catch (err: any) {
       console.error("Evidence upload error:", err);
-      setFileError(err?.message || "Failed to store evidence in Neon. Please try again.");
+      setFileError(err?.message || "Failed to save evidence. Please try again.");
     } finally {
       setIsUploading(false);
     }
@@ -593,22 +631,42 @@ export default function AssessmentSummaryView({
             </div>
 
             <div className="shrink-0 flex flex-col sm:flex-row md:flex-col gap-2">
-              <button
-                type="button"
-                onClick={() => setIsFFVOpen(true)}
-                className="px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[18px]">verified</span>
-                <span>Start Pillar Verification</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowCertificateModal(true)}
-                className="px-4 py-2 rounded-xl bg-surface border border-emerald-600/30 hover:bg-emerald-50/50 text-emerald-800 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[16px]">workspace_premium</span>
-                <span>View FFV Certificate</span>
-              </button>
+              {isPillarCompleted ? (
+                <button
+                  type="button"
+                  onClick={() => setIsFFVOpen(true)}
+                  className="px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[18px]">verified</span>
+                  <span>Start Pillar Verification</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    alert(`Please answer all ${totalQuestions} questions for Pillar ${pillar.id} before accessing the verification studio (${answeredPillarQuestionsCount}/${totalQuestions} answered).`);
+                  }}
+                  title={`Complete all ${totalQuestions} questions in this pillar to unlock verification`}
+                  className="px-5 py-3 rounded-xl bg-surface-container-high border border-outline-variant/60 text-on-surface-variant font-bold text-xs flex items-center justify-center gap-2 cursor-not-allowed opacity-85"
+                >
+                  <span className="material-symbols-outlined text-[18px] text-amber-600">lock</span>
+                  <span>Verification Locked ({answeredPillarQuestionsCount}/{totalQuestions})</span>
+                </button>
+              )}
+              {isPillarCompleted ? (
+                <button
+                  type="button"
+                  onClick={() => setShowCertificateModal(true)}
+                  className="px-4 py-2 rounded-xl bg-surface border border-emerald-600/30 hover:bg-emerald-50/50 text-emerald-800 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[16px]">workspace_premium</span>
+                  <span>View FFV Certificate</span>
+                </button>
+              ) : (
+                <div className="text-[10px] text-center text-amber-800 bg-amber-50 rounded-lg px-2.5 py-1 border border-amber-200">
+                  Complete assessment to unlock certificate
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -939,30 +997,68 @@ export default function AssessmentSummaryView({
             </div>
 
             {/* Modal Body */}
-            <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
-              {/* Capability Tabs */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
-                {ffvCapabilityClaims.map((cap, idx) => {
-                  const isActive = idx === activeFfvCapIndex;
-                  return (
-                    <button
-                      key={cap.capId}
-                      type="button"
-                      onClick={() => setActiveFfvCapIndex(idx)}
-                      className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border shrink-0 cursor-pointer ${
-                        isActive
-                          ? "bg-primary text-white border-primary shadow-sm"
-                          : "bg-surface-container-lowest text-on-surface-variant border-surface-container-high hover:bg-surface-container hover:text-on-surface"
-                      }`}
-                    >
-                      <span>Capability {cap.capCode}</span>
-                      <span className="ml-1.5 opacity-80">
-                        ({cap.verifiedCount}/{cap.totalClaims})
-                      </span>
-                    </button>
-                  );
-                })}
+            {!isPillarCompleted ? (
+              <div className="flex-1 overflow-y-auto p-8 sm:p-12 flex flex-col items-center justify-center text-center space-y-4">
+                <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-4xl">lock</span>
+                </div>
+                <div className="max-w-md space-y-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
+                    Assessment Incomplete
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-bold text-on-surface m-0">
+                    Pillar {pillar.id} Verification is Locked
+                  </h3>
+                  <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed m-0">
+                    To access the Future Farms Verification (FFV) studio for <strong>Pillar {pillar.id}: {pillar.name}</strong>, you must first complete all {totalQuestions} diagnostic questions in this pillar.
+                  </p>
+                  <div className="p-3.5 bg-surface-container-lowest rounded-xl border border-outline-variant/60 text-xs text-on-surface font-semibold">
+                    Current Progress: <strong>{answeredPillarQuestionsCount} of {totalQuestions}</strong> questions completed
+                  </div>
+                </div>
+                <div className="pt-2 flex items-center gap-3">
+                  <Link
+                    href={`/assessment?view=focus&pillar=${pillar.id}`}
+                    onClick={() => setIsFFVOpen(false)}
+                    className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+                  >
+                    <span>Complete Pillar Assessment</span>
+                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setIsFFVOpen(false)}
+                    className="px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs transition-colors cursor-pointer"
+                  >
+                    Close Studio
+                  </button>
+                </div>
               </div>
+            ) : (
+              <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
+                {/* Capability Tabs */}
+                <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+                  {ffvCapabilityClaims.map((cap, idx) => {
+                    const isActive = idx === activeFfvCapIndex;
+                    return (
+                      <button
+                        key={cap.capId}
+                        type="button"
+                        onClick={() => setActiveFfvCapIndex(idx)}
+                        className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all border shrink-0 cursor-pointer ${
+                          isActive
+                            ? "bg-primary text-white border-primary shadow-sm"
+                            : "bg-surface-container-lowest text-on-surface-variant border-surface-container-high hover:bg-surface-container hover:text-on-surface"
+                        }`}
+                      >
+                        <span>Capability {cap.capCode}</span>
+                        <span className="ml-1.5 opacity-80">
+                          ({cap.verifiedCount}/{cap.totalClaims})
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
 
               {/* Active Capability Verification Panel */}
               {(() => {
@@ -1096,16 +1192,12 @@ export default function AssessmentSummaryView({
                                               {savedEvidences[claim.id].fileSize
                                                 ? `${(savedEvidences[claim.id].fileSize / (1024 * 1024)).toFixed(2)} MB • `
                                                 : ""}
-                                              Stored in Neon DB
+                                              Attached Digital Record
                                             </p>
                                           </div>
                                         </div>
 
                                         <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
-                                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1 border border-emerald-300/80">
-                                            <span className="material-symbols-outlined text-[12px]">database</span>
-                                            Neon Lakebase
-                                          </span>
                                           {savedEvidences[claim.id].fileData && (
                                             <a
                                               href={savedEvidences[claim.id].fileData}
@@ -1296,6 +1388,7 @@ export default function AssessmentSummaryView({
                 </div>
               </div>
             </div>
+          )}
 
             {/* Modal Footer */}
             <div className="p-4 border-t border-surface-container-high bg-surface-container-lowest flex items-center justify-between">
@@ -1318,9 +1411,9 @@ export default function AssessmentSummaryView({
       {/* MODAL 2: 3. SIMPLE EVIDENCE SUBMISSION PANEL                              */}
       {/* ========================================================================= */}
       {submittingClaim && (
-        <div className="fixed inset-0 z-60 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="bg-surface rounded-3xl max-w-lg w-full border border-surface-container-high shadow-2xl p-6 space-y-5">
-            <div className="flex items-start justify-between gap-3">
+        <div className="fixed inset-0 z-60 bg-black/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-150 overflow-y-auto">
+          <div className="bg-surface rounded-3xl max-w-lg w-full border border-surface-container-high shadow-2xl flex flex-col max-h-[90vh] overflow-hidden my-auto">
+            <div className="p-5 sm:p-6 pb-4 border-b border-surface-container-high flex items-start justify-between gap-3 shrink-0">
               <div>
                 <span className="text-xs font-bold text-primary uppercase tracking-wider">
                   Verify This Claim
@@ -1332,211 +1425,213 @@ export default function AssessmentSummaryView({
               <button
                 type="button"
                 onClick={() => setSubmittingClaim(null)}
-                className="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center hover:bg-surface-container-high cursor-pointer"
+                className="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center hover:bg-surface-container-high cursor-pointer shrink-0"
               >
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </div>
 
-            <div className="space-y-3">
-              <label className="text-xs font-bold text-on-surface-variant block">
-                Choose how you want to verify it:
-              </label>
-
-              <div className="space-y-2">
-                <label
-                  className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-colors ${
-                    submissionType === "digital"
-                      ? "bg-primary/5 border-primary text-on-surface"
-                      : "bg-surface-container-lowest border-surface-container-high hover:bg-surface-container"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="evidenceType"
-                    checked={submissionType === "digital"}
-                    onChange={() => setSubmissionType("digital")}
-                    className="mt-0.5 text-primary"
-                  />
-                  <div>
-                    <strong className="text-xs font-bold text-on-surface block">
-                      Upload Digital Evidence
-                    </strong>
-                    <span className="text-[11px] text-on-surface-variant">
-                      Screenshot, digital record, application screenshot or farm register
-                    </span>
-                  </div>
-                </label>
-
-                <label
-                  className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-colors ${
-                    submissionType === "demonstration"
-                      ? "bg-primary/5 border-primary text-on-surface"
-                      : "bg-surface-container-lowest border-surface-container-high hover:bg-surface-container"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="evidenceType"
-                    checked={submissionType === "demonstration"}
-                    onChange={() => setSubmissionType("demonstration")}
-                    className="mt-0.5 text-primary"
-                  />
-                  <div>
-                    <strong className="text-xs font-bold text-on-surface block">
-                      Practical Demonstration
-                    </strong>
-                    <span className="text-[11px] text-on-surface-variant">
-                      Demonstrate during remote video call or verification visit
-                    </span>
-                  </div>
-                </label>
-
-                <label
-                  className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-colors ${
-                    submissionType === "visit"
-                      ? "bg-primary/5 border-primary text-on-surface"
-                      : "bg-surface-container-lowest border-surface-container-high hover:bg-surface-container"
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="evidenceType"
-                    checked={submissionType === "visit"}
-                    onChange={() => setSubmissionType("visit")}
-                    className="mt-0.5 text-primary"
-                  />
-                  <div>
-                    <strong className="text-xs font-bold text-on-surface block">
-                      Save for Verification Visit
-                    </strong>
-                    <span className="text-[11px] text-on-surface-variant">
-                      Include in the scheduled on-farm verifier inspection
-                    </span>
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            {submissionType === "digital" && (
+            <div className="p-5 sm:p-6 space-y-5 overflow-y-auto flex-1">
               <div className="space-y-3">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] || null;
-                    handleFileChange(file);
-                  }}
-                />
+                <label className="text-xs font-bold text-on-surface-variant block">
+                  Choose how you want to verify it:
+                </label>
 
-                {!selectedFile && !fileDataUrl ? (
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      const file = e.dataTransfer.files?.[0] || null;
-                      handleFileChange(file);
-                    }}
-                    className={`p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center space-y-2 group ${
-                      fileError
-                        ? "border-red-400 bg-red-50/40 dark:bg-red-950/20"
-                        : "border-outline-variant hover:border-primary hover:bg-primary/5 bg-surface-container-lowest"
+                <div className="space-y-2">
+                  <label
+                    className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-colors ${
+                      submissionType === "digital"
+                        ? "bg-primary/5 border-primary text-on-surface"
+                        : "bg-surface-container-lowest border-surface-container-high hover:bg-surface-container"
                     }`}
                   >
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto transition-transform group-hover:scale-110">
-                      <span className="material-symbols-outlined text-3xl">cloud_upload</span>
-                    </div>
+                    <input
+                      type="radio"
+                      name="evidenceType"
+                      checked={submissionType === "digital"}
+                      onChange={() => setSubmissionType("digital")}
+                      className="mt-0.5 text-primary"
+                    />
                     <div>
-                      <p className="text-xs font-bold text-on-surface m-0 group-hover:text-primary transition-colors">
-                        Click to select screenshot or digital record file
-                      </p>
-                      <p className="text-[11px] font-semibold text-on-surface-variant mt-1 m-0">
-                        PNG, JPG, PDF up to 10MB
-                      </p>
+                      <strong className="text-xs font-bold text-on-surface block">
+                        Upload Digital Evidence
+                      </strong>
+                      <span className="text-[11px] text-on-surface-variant">
+                        Screenshot, digital record, application screenshot or farm register
+                      </span>
                     </div>
-                  </div>
-                ) : (
-                  <div className="p-4 rounded-2xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between gap-3 shadow-xs">
-                    <div className="flex items-center gap-3 min-w-0">
-                      {(selectedFile?.type.startsWith("image/") || fileDataUrl?.startsWith("data:image/")) ? (
-                        <div className="w-12 h-12 rounded-xl overflow-hidden border border-outline-variant/60 shrink-0 bg-surface-container">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={fileDataUrl || ""}
-                            alt="Preview"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-12 h-12 rounded-xl bg-red-100 text-red-700 flex items-center justify-center shrink-0">
-                          <span className="material-symbols-outlined text-2xl">picture_as_pdf</span>
-                        </div>
-                      )}
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="text-xs font-bold text-on-surface truncate m-0">
-                            {selectedFile?.name || savedEvidences[submittingClaim.id]?.fileName || "Evidence Document"}
-                          </p>
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary uppercase shrink-0">
-                            {selectedFile?.name?.split(".").pop() || savedEvidences[submittingClaim.id]?.fileName?.split(".").pop() || "FILE"}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-on-surface-variant m-0 mt-0.5">
-                          {selectedFile
-                            ? `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • Ready to store in Neon`
-                            : savedEvidences[submittingClaim.id]?.fileSize
-                            ? `${(savedEvidences[submittingClaim.id].fileSize / (1024 * 1024)).toFixed(2)} MB • Already stored in Neon`
-                            : "Ready to store in Neon"}
+                  </label>
+
+                  <label
+                    className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-colors ${
+                      submissionType === "demonstration"
+                        ? "bg-primary/5 border-primary text-on-surface"
+                        : "bg-surface-container-lowest border-surface-container-high hover:bg-surface-container"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="evidenceType"
+                      checked={submissionType === "demonstration"}
+                      onChange={() => setSubmissionType("demonstration")}
+                      className="mt-0.5 text-primary"
+                    />
+                    <div>
+                      <strong className="text-xs font-bold text-on-surface block">
+                        Practical Demonstration
+                      </strong>
+                      <span className="text-[11px] text-on-surface-variant">
+                        Demonstrate during remote video call or verification visit
+                      </span>
+                    </div>
+                  </label>
+
+                  <label
+                    className={`p-3.5 rounded-xl border flex items-start gap-3 cursor-pointer transition-colors ${
+                      submissionType === "visit"
+                        ? "bg-primary/5 border-primary text-on-surface"
+                        : "bg-surface-container-lowest border-surface-container-high hover:bg-surface-container"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="evidenceType"
+                      checked={submissionType === "visit"}
+                      onChange={() => setSubmissionType("visit")}
+                      className="mt-0.5 text-primary"
+                    />
+                    <div>
+                      <strong className="text-xs font-bold text-on-surface block">
+                        Save for Verification Visit
+                      </strong>
+                      <span className="text-[11px] text-on-surface-variant">
+                        Include in the scheduled on-farm verifier inspection
+                      </span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {submissionType === "digital" && (
+                <div className="space-y-3">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null;
+                      handleFileChange(file);
+                    }}
+                  />
+
+                  {!selectedFile && !fileDataUrl ? (
+                    <div
+                      onClick={() => fileInputRef.current?.click()}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const file = e.dataTransfer.files?.[0] || null;
+                        handleFileChange(file);
+                      }}
+                      className={`p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center space-y-2 group ${
+                        fileError
+                          ? "border-red-400 bg-red-50/40 dark:bg-red-950/20"
+                          : "border-outline-variant hover:border-primary hover:bg-primary/5 bg-surface-container-lowest"
+                      }`}
+                    >
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto transition-transform group-hover:scale-110">
+                        <span className="material-symbols-outlined text-3xl">cloud_upload</span>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-on-surface m-0 group-hover:text-primary transition-colors">
+                          Click to select screenshot or digital record file
+                        </p>
+                        <p className="text-[11px] font-semibold text-on-surface-variant mt-1 m-0">
+                          PNG, JPG, PDF up to 10MB
                         </p>
                       </div>
                     </div>
+                  ) : (
+                    <div className="p-4 rounded-2xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between gap-3 shadow-xs">
+                      <div className="flex items-center gap-3 min-w-0">
+                        {(selectedFile?.type.startsWith("image/") || fileDataUrl?.startsWith("data:image/")) ? (
+                          <div className="w-12 h-12 rounded-xl overflow-hidden border border-outline-variant/60 shrink-0 bg-surface-container">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={fileDataUrl || ""}
+                              alt="Preview"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-12 h-12 rounded-xl bg-red-100 text-red-700 flex items-center justify-center shrink-0">
+                            <span className="material-symbols-outlined text-2xl">picture_as_pdf</span>
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs font-bold text-on-surface truncate m-0">
+                              {selectedFile?.name || savedEvidences[submittingClaim.id]?.fileName || "Evidence Document"}
+                            </p>
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary uppercase shrink-0">
+                              {selectedFile?.name?.split(".").pop() || savedEvidences[submittingClaim.id]?.fileName?.split(".").pop() || "FILE"}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-on-surface-variant m-0 mt-0.5">
+                            {selectedFile
+                              ? `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • Ready to submit`
+                              : savedEvidences[submittingClaim.id]?.fileSize
+                              ? `${(savedEvidences[submittingClaim.id].fileSize / (1024 * 1024)).toFixed(2)} MB • Uploaded & Saved`
+                              : "Ready to submit"}
+                          </p>
+                        </div>
+                      </div>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedFile(null);
-                        setFileDataUrl(null);
-                        setFileError(null);
-                        if (fileInputRef.current) fileInputRef.current.value = "";
-                      }}
-                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors flex items-center gap-1 shrink-0 cursor-pointer"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">delete</span>
-                      <span>Change</span>
-                    </button>
-                  </div>
-                )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedFile(null);
+                          setFileDataUrl(null);
+                          setFileError(null);
+                          if (fileInputRef.current) fileInputRef.current.value = "";
+                        }}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors flex items-center gap-1 shrink-0 cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">delete</span>
+                        <span>Change</span>
+                      </button>
+                    </div>
+                  )}
 
-                {fileError && (
-                  <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-900 rounded-xl flex items-center gap-2 text-red-700 dark:text-red-300 text-xs">
-                    <span className="material-symbols-outlined text-red-500 text-base shrink-0">error</span>
-                    <span>{fileError}</span>
-                  </div>
-                )}
+                  {fileError && (
+                    <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-900 rounded-xl flex items-center gap-2 text-red-700 dark:text-red-300 text-xs">
+                      <span className="material-symbols-outlined text-red-500 text-base shrink-0">error</span>
+                      <span>{fileError}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-on-surface-variant block">
+                  Add Note (Optional):
+                </label>
+                <textarea
+                  value={submissionNotes}
+                  onChange={(e) => setSubmissionNotes(e.target.value)}
+                  placeholder="E.g., screenshot from FarmDrive mobile app showing monthly records..."
+                  rows={2}
+                  className="w-full text-xs p-3 rounded-xl bg-surface-container-lowest border border-outline-variant text-on-surface focus:outline-primary"
+                />
               </div>
-            )}
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-on-surface-variant block">
-                Add Note (Optional):
-              </label>
-              <textarea
-                value={submissionNotes}
-                onChange={(e) => setSubmissionNotes(e.target.value)}
-                placeholder="E.g., screenshot from FarmDrive mobile app showing monthly records..."
-                rows={2}
-                className="w-full text-xs p-3 rounded-xl bg-surface-container-lowest border border-outline-variant text-on-surface focus:outline-primary"
-              />
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
+            <div className="p-4 px-6 border-t border-surface-container-high bg-surface flex items-center justify-end gap-2 shrink-0">
               <button
                 type="button"
                 disabled={isUploading}
@@ -1559,7 +1654,7 @@ export default function AssessmentSummaryView({
                 {isUploading ? (
                   <>
                     <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
-                    <span>Storing in Neon...</span>
+                    <span>Saving Evidence...</span>
                   </>
                 ) : (
                   <>
@@ -1681,8 +1776,22 @@ export default function AssessmentSummaryView({
               </div>
 
               {/* Report Notice */}
-              <div className="p-3.5 rounded-xl bg-surface-container-high text-[11px] text-on-surface-variant">
-                <strong>Progress Benchmark Notice:</strong> Reassessment eligible in 90 days. To convert this self-assessment report into an accredited <strong>Future Farms Verified Certification</strong>, complete the FFV verification protocol.
+              <div className="p-3.5 rounded-xl bg-surface-container-high text-[11px] text-on-surface-variant flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <div>
+                    <strong>Progress Benchmark Notice:</strong> Reassessment eligible in 90 days. To convert this self-assessment report into an accredited <strong>Future Farms Verified Certification</strong>, complete the FFV verification protocol.
+                  </div>
+                  <div className="text-[10px] text-on-surface-variant">
+                    Official Advisory &amp; Verification Board: <a href="mailto:arbarnegroup@gmail.com" className="text-emerald-700 font-semibold hover:underline">arbarnegroup@gmail.com</a>
+                  </div>
+                </div>
+                <div className="p-1 rounded-xl bg-white border border-outline-variant shrink-0 shadow-xs">
+                  <ScannableQrCode
+                    value={reportVerifyUrl}
+                    size={52}
+                    alt="Scan to verify report"
+                  />
+                </div>
               </div>
             </div>
 
@@ -1721,9 +1830,20 @@ export default function AssessmentSummaryView({
               >
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
-              <div className="w-12 h-12 mx-auto mb-2 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center">
-                <span className="material-symbols-outlined text-amber-400 text-3xl">workspace_premium</span>
+              
+              {/* Prominent Logo */}
+              <div className="mb-2">
+                <Image
+                  src="/logo.webp"
+                  alt="Future Farms"
+                  width={180}
+                  height={45}
+                  priority
+                  unoptimized
+                  className="h-9 w-auto object-contain mx-auto drop-shadow-md brightness-0 invert"
+                />
               </div>
+
               <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-200">
                 Official Certification of Capability
               </span>
@@ -1731,12 +1851,25 @@ export default function AssessmentSummaryView({
                 Future Farm Verification (FFV) Certificate
               </h2>
               <p className="text-xs text-emerald-200 mt-1 m-0">
-                Certificate Ref: <strong>FFF-CERT-2026-0042</strong>
+                Certificate Ref: <strong>{certRefId}</strong>
               </p>
             </div>
 
             {/* Certificate Body */}
             <div className="flex-1 overflow-y-auto p-6 space-y-5 text-xs text-on-surface bg-surface-container-lowest/40">
+              {/* Brand Watermark / Secondary Logo */}
+              <div className="flex items-center justify-center pt-1 pb-1 border-b border-surface-variant/40">
+                <Image
+                  src="/logo.webp"
+                  alt="Future Farms Logo"
+                  width={140}
+                  height={36}
+                  priority
+                  unoptimized
+                  className="h-7 w-auto object-contain"
+                />
+              </div>
+
               {/* Certification Statement */}
               <div className="text-center max-w-lg mx-auto py-1">
                 <p className="text-xs text-on-surface-variant leading-relaxed m-0 italic">
@@ -1749,7 +1882,7 @@ export default function AssessmentSummaryView({
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 border-b border-surface-variant pb-3">
                   <div>
                     <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Farm Name</span>
-                    <strong className="text-sm text-on-surface">My Farm</strong>
+                    <strong className="text-sm text-on-surface">{dynamicFarmName}</strong>
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Future Farm ID</span>
@@ -1798,7 +1931,7 @@ export default function AssessmentSummaryView({
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Issue Date</span>
-                    <span className="text-on-surface">September 7, 2026</span>
+                    <span className="text-on-surface">{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Validity / Cycle</span>
@@ -1810,8 +1943,12 @@ export default function AssessmentSummaryView({
               {/* QR Verification Code & Signatory */}
               <div className="p-4 rounded-2xl bg-surface border border-outline-variant/60 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-xl bg-white border border-outline-variant flex items-center justify-center p-1 shrink-0">
-                    <span className="material-symbols-outlined text-4xl text-neutral-800">qr_code_2</span>
+                  <div className="p-1 rounded-xl bg-white border border-outline-variant shrink-0 shadow-xs">
+                    <ScannableQrCode
+                      value={certificateVerifyUrl}
+                      size={64}
+                      alt="Scan to authenticate certificate"
+                    />
                   </div>
                   <div>
                     <span className="text-[11px] font-bold text-on-surface block">
@@ -1820,19 +1957,30 @@ export default function AssessmentSummaryView({
                     <span className="text-[10px] text-on-surface-variant leading-tight block">
                       Enables financiers, buyers, and partners to verify farm credentials online.
                     </span>
+                    <Link
+                      href={certificateVerifyUrl}
+                      target="_blank"
+                      className="text-[10px] font-semibold text-emerald-700 hover:underline inline-flex items-center gap-1 mt-0.5"
+                    >
+                      <span>Open Verification Portal</span>
+                      <span className="material-symbols-outlined text-[11px]">open_in_new</span>
+                    </Link>
                   </div>
                 </div>
 
                 <div className="text-right sm:text-right border-t sm:border-t-0 pt-2 sm:pt-0">
                   <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Authorized Signatory</span>
                   <strong className="text-xs text-on-surface block">Dr. Angela Kamau</strong>
-                  <span className="text-[10px] text-on-surface-variant">Future Farms Verification Board</span>
+                  <span className="text-[10px] text-on-surface-variant block">Future Farms Verification Board • Arbarne Group</span>
+                  <a href="mailto:arbarnegroup@gmail.com" className="text-[10px] text-emerald-700 font-semibold hover:underline block mt-0.5">
+                    arbarnegroup@gmail.com
+                  </a>
                 </div>
               </div>
 
               {/* Statutory Disclaimer */}
               <div className="p-3 rounded-xl bg-surface-container-high/60 text-[10px] text-on-surface-variant leading-relaxed">
-                <strong>Disclaimer / Scope Statement:</strong> FFV verifies capabilities under the Future Farms Framework and does not replace statutory, regulatory or sector-specific certifications.
+                <strong>Disclaimer / Scope Statement:</strong> FFV verifies capabilities under the Future Farms Framework and does not replace statutory, regulatory or sector-specific certifications. Accredited by Arbarne Group.
               </div>
             </div>
 
@@ -1904,16 +2052,30 @@ export default function AssessmentSummaryView({
             </div>
 
             <div className="flex items-center justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedCapForDetail(null);
-                  setIsFFVOpen(true);
-                }}
-                className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs cursor-pointer"
-              >
-                Verify In FFV Studio
-              </button>
+              {isPillarCompleted ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCapForDetail(null);
+                    setIsFFVOpen(true);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs cursor-pointer"
+                >
+                  Verify In FFV Studio
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCapForDetail(null);
+                    setIsFFVOpen(true);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-bold text-xs border border-amber-500/30 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[15px]">lock</span>
+                  <span>Verification Locked ({answeredPillarQuestionsCount}/{totalQuestions})</span>
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => setSelectedCapForDetail(null)}

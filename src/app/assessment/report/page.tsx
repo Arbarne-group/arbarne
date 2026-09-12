@@ -8,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { ALL_PILLARS, PillarData, AssessmentQuestion } from "@/data/allPillarsData";
 import { getMaturityTier } from "@/lib/assessmentScoring";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ScannableQrCode } from "@/components/ScannableQrCode";
 
 interface QuestionResponseItem {
   questionId: string;
@@ -112,6 +113,44 @@ function AssessmentReportContent() {
       ? `FFV-FULL-${year}-${hash}`
       : `FFV-P${pillarId}-${year}-${hash}`;
   }, [isAllPillars, pillarId]);
+
+  // Live Public Verification URL for QR Code
+  const reportVerifyUrl = useMemo(() => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://futurefarms.africa";
+    const params = new URLSearchParams();
+    params.set("type", "report");
+    params.set("reportId", docRef);
+    params.set("farm", farmName);
+    params.set("pillar", isAllPillars ? "all" : String(pillarId));
+    params.set(
+      "score",
+      String(
+        reportData?.executiveSummary?.overallFfmiScore ??
+        reportData?.pillar?.score ??
+        85
+      )
+    );
+    params.set(
+      "tier",
+      reportData?.executiveSummary?.maturityTier ||
+      reportData?.pillar?.maturityStage ||
+      "Structured Agribusiness"
+    );
+    params.set("date", assessmentDate);
+    return `${origin}/verify?${params.toString()}`;
+  }, [docRef, farmName, isAllPillars, pillarId, reportData, assessmentDate]);
+
+  // Cross-pillar gaps list memoization (no dummy data)
+  const allGapsList = useMemo(() => {
+    if (!reportData?.crossPillarPriorityActionPlan) return [];
+    const plan = reportData.crossPillarPriorityActionPlan;
+    const combined = [
+      ...(plan.quickWins?.items || []),
+      ...(plan.mediumTerm?.items || []),
+      ...(plan.strategic?.items || []),
+    ];
+    return combined;
+  }, [reportData]);
 
   // Handle browser print -> Save as PDF
   const handlePrint = () => {
@@ -447,7 +486,7 @@ function AssessmentReportContent() {
                   <div className="border-b border-slate-100 pb-2">
                     <span className="text-[11px] text-slate-500 block">Verified Capabilities:</span>
                     <span className="text-lg font-black text-emerald-700">
-                      {reportData?.executiveSummary?.totalVerified || 28} / 40 Core Capabilities
+                      {reportData?.executiveSummary?.totalVerified ?? 0} Core Capabilities
                     </span>
                     <span className="text-[10px] block font-medium text-slate-600 mt-0.5">
                       Systematically Verified In Place
@@ -456,13 +495,13 @@ function AssessmentReportContent() {
                   <div>
                     <span className="text-[11px] text-slate-500 block">Identified Action Gaps:</span>
                     <span className="text-base font-bold text-amber-700">
-                      {reportData?.executiveSummary?.totalActionableGaps || 12} Priority Intervention Areas
+                      {reportData?.executiveSummary?.totalActionableGaps ?? 0} Priority Intervention Areas
                     </span>
                   </div>
                   <div className="pt-2 border-t border-slate-100">
-                    <span className="text-[11px] text-slate-500 block">Estimated Monthly Value Gap:</span>
+                    <span className="text-[11px] text-slate-500 block">Assessed Framework Scope:</span>
                     <span className="text-sm font-bold text-emerald-800 font-mono">
-                      KES 64,500 / month
+                      {reportData?.executiveSummary?.totalAssessedPillars ?? 0} of 8 Pillars Completed
                     </span>
                   </div>
                 </div>
@@ -479,23 +518,33 @@ function AssessmentReportContent() {
               </div>
               <div className="bg-slate-50/80 border border-slate-200 rounded-xl p-4 text-xs leading-relaxed space-y-2 text-slate-700">
                 <p>
-                  <strong className="text-slate-900">{farmName}</strong> exhibits consistent operational discipline,
-                  positioning the enterprise at the{" "}
+                  <strong className="text-slate-900">{farmName}</strong> has systematically completed evaluation across{" "}
                   <strong className="text-emerald-800 font-bold">
-                    {reportData?.executiveSummary?.maturityTier || "Structured Agribusiness (Level 3)"}
+                    {reportData?.executiveSummary?.totalAssessedPillars || 0} of 8 Pillars
+                  </strong>
+                  , positioning the enterprise at the{" "}
+                  <strong className="text-emerald-800 font-bold">
+                    {reportData?.executiveSummary?.maturityTier || "Structured Agribusiness"}
                   </strong>{" "}
-                  maturity tier. The farm possesses high capability in Climate Resilience, complete conversion to
-                  clean solar borehole irrigation, and established linkages to commercial fresh export buyers.
+                  maturity tier with an overall assessed capability score of{" "}
+                  <strong className="text-emerald-800 font-bold">
+                    {reportData?.executiveSummary?.overallFfmiScore || 0}%
+                  </strong>.
+                  The farm demonstrates {reportData?.executiveSummary?.totalVerified || 0} capabilities verified in active operation.
                 </p>
                 <p>
-                  <strong className="text-amber-900">Primary Enterprise Bottlenecks for Commercial Financing:</strong>{" "}
-                  Long-term expansion and access to low-interest working capital remain constrained by:
-                  <span className="font-semibold text-slate-800"> (1) Informal financial ledgers</span> without separation of
-                  household and farm cash flow,
-                  <span className="font-semibold text-slate-800"> (2) Lack of cold-chain pre-cooling buffer</span> causing
-                  perishable harvest depreciation, and
-                  <span className="font-semibold text-slate-800"> (3) Incomplete seasonal worker contracts</span> required for
-                  formal GlobalG.A.P. social risk audits.
+                  <strong className="text-amber-900">Priority Diagnostics &amp; Commercial Recommendations:</strong>{" "}
+                  {(reportData?.executiveSummary?.totalActionableGaps || 0) > 0 ? (
+                    <>
+                      The diagnostic identified <strong className="text-slate-800">{reportData?.executiveSummary?.totalActionableGaps} actionable improvement areas</strong>.
+                      Closing these gaps through structured record keeping, standard operating procedures, and targeted resource management will elevate the farm&apos;s operational resilience and investment appraisal rating.
+                    </>
+                  ) : (
+                    <>
+                      All evaluated capabilities across the completed pillar assessments satisfy formal accreditation criteria.
+                      Maintain current logging standards and verified operational practices to preserve accredited standing.
+                    </>
+                  )}
                 </p>
               </div>
 
@@ -503,15 +552,15 @@ function AssessmentReportContent() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
                 <div className="p-2.5 bg-emerald-50/50 border border-emerald-200/80 rounded-lg">
                   <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wide block">Current Standing</span>
-                  <p className="font-bold text-slate-800 text-xs mt-0.5">Level 3: Structured Agribusiness</p>
+                  <p className="font-bold text-slate-800 text-xs mt-0.5">{reportData?.executiveSummary?.maturityTier || "Structured Agribusiness"}</p>
                 </div>
                 <div className="p-2.5 bg-amber-50/50 border border-amber-200/80 rounded-lg">
-                  <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wide block">Priority Constraint</span>
-                  <p className="font-bold text-slate-800 text-xs mt-0.5">Commercial Financial Ledgers</p>
+                  <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wide block">Assessed Scope</span>
+                  <p className="font-bold text-slate-800 text-xs mt-0.5">{reportData?.executiveSummary?.totalAssessedPillars || 0} / 8 Pillars Evaluated</p>
                 </div>
                 <div className="p-2.5 bg-blue-50/50 border border-blue-200/80 rounded-lg">
-                  <span className="text-[10px] font-bold text-blue-800 uppercase tracking-wide block">Value Realization Gap</span>
-                  <p className="font-bold text-slate-800 text-xs mt-0.5">KES 64,500 Monthly Recovery</p>
+                  <span className="text-[10px] font-bold text-blue-800 uppercase tracking-wide block">Action Priorities</span>
+                  <p className="font-bold text-slate-800 text-xs mt-0.5">{reportData?.executiveSummary?.totalActionableGaps || 0} Targeted Interventions</p>
                 </div>
               </div>
             </section>
@@ -564,24 +613,22 @@ function AssessmentReportContent() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200 text-slate-700">
-                    {(reportData?.eightPillarScorecard || [
-                      { pillarId: 1, name: "Smart Farming & Digital Transformation", verifiedCount: 3, gapCount: 2, maturityStage: "Developing" },
-                      { pillarId: 2, name: "Productive Use of Renewable Energy", verifiedCount: 4, gapCount: 1, maturityStage: "Advancing" },
-                      { pillarId: 3, name: "Food Safety, Quality & Compliance", verifiedCount: 4, gapCount: 1, maturityStage: "Advancing" },
-                      { pillarId: 4, name: "Indigenous Knowledge & Climate Resilience", verifiedCount: 5, gapCount: 0, maturityStage: "Leading" },
-                      { pillarId: 5, name: "Farm Business Performance & Growth", verifiedCount: 2, gapCount: 3, maturityStage: "Emerging" },
-                      { pillarId: 6, name: "Human Capital, Leadership & Operations", verifiedCount: 3, gapCount: 2, maturityStage: "Developing" },
-                      { pillarId: 7, name: "Market Access, Customer Value & Competitiveness", verifiedCount: 4, gapCount: 1, maturityStage: "Advancing" },
-                      { pillarId: 8, name: "Investment Readiness & Enterprise Development", verifiedCount: 3, gapCount: 2, maturityStage: "Developing" },
-                    ]).map((row: any) => {
-                      const isLeading = row.verifiedCount >= 5;
-                      const isCritical = row.gapCount >= 3;
+                    {(reportData?.eightPillarScorecard || []).map((row: any) => {
+                      const isAssessed = row.isAssessed !== false;
+                      const isLeading = isAssessed && (row.score >= 80 || row.verifiedCount >= 20);
+                      const isCritical = isAssessed && row.gapCount >= 3;
 
                       return (
                         <tr
                           key={row.pillarId}
                           className={`hover:bg-slate-50/70 transition-colors ${
-                            isLeading ? "bg-emerald-50/30" : isCritical ? "bg-amber-50/20" : ""
+                            !isAssessed
+                              ? "opacity-60 bg-slate-50/40"
+                              : isLeading
+                              ? "bg-emerald-50/30"
+                              : isCritical
+                              ? "bg-amber-50/20"
+                              : ""
                           }`}
                         >
                           <td className="py-2 px-4 font-mono font-bold text-center text-slate-600">
@@ -591,27 +638,37 @@ function AssessmentReportContent() {
                             {row.name}
                           </td>
                           <td className="py-2 px-4 text-center font-mono font-medium">
-                            <span className="text-emerald-800 font-bold">{row.verifiedCount} Verified</span>
-                            <span className="text-slate-400 mx-1">•</span>
-                            <span className={row.gapCount > 0 ? "text-amber-700 font-semibold" : "text-slate-400"}>
-                              {row.gapCount} Action {row.gapCount === 1 ? "Gap" : "Gaps"}
-                            </span>
+                            {isAssessed ? (
+                              <>
+                                <span className="text-emerald-800 font-bold">{row.verifiedCount} Verified</span>
+                                <span className="text-slate-400 mx-1">•</span>
+                                <span className={row.gapCount > 0 ? "text-amber-700 font-semibold" : "text-slate-400"}>
+                                  {row.gapCount} Action {row.gapCount === 1 ? "Gap" : "Gaps"}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="text-slate-400 italic text-[11px]">Pending Assessment</span>
+                            )}
                           </td>
                           <td className="py-2 px-4 text-center">
                             <span
                               className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                                isLeading
+                                !isAssessed
+                                  ? "bg-slate-100 text-slate-500 border border-slate-200"
+                                  : isLeading
                                   ? "bg-emerald-700 text-white"
                                   : isCritical
                                   ? "bg-amber-100 text-amber-900 border border-amber-300"
                                   : "bg-slate-100 text-slate-800 border border-slate-200"
                               }`}
                             >
-                              {row.maturityStage || (isLeading ? "Benchmark" : isCritical ? "Priority Focus" : "Established")}
+                              {row.maturityStage || (isAssessed ? "Assessed" : "Pending")}
                             </span>
                           </td>
                           <td className="py-2 px-4 text-center font-semibold text-[11px]">
-                            {isCritical ? (
+                            {!isAssessed ? (
+                              <span className="text-slate-400">Complete Assessment</span>
+                            ) : isCritical ? (
                               <span className="text-amber-800 font-bold">High Priority Intervention</span>
                             ) : isLeading ? (
                               <span className="text-emerald-700">Maintain Standard</span>
@@ -627,35 +684,57 @@ function AssessmentReportContent() {
               </div>
 
               {/* Strategic Pillar Maturity Summary & Key Benchmark Observations */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-xs">
-                <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl">
-                  <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">
-                    Benchmark Capabilities
-                  </span>
-                  <p className="font-bold text-slate-800 mt-0.5">3 Pillars Verified In Place</p>
-                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                    P4 (Climate Resilience), P2 (Renewable Energy), and P3 (Compliance) satisfy core verification requirements.
-                  </p>
-                </div>
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block">
-                    Established Operations
-                  </span>
-                  <p className="font-bold text-slate-800 mt-0.5">3 Pillars In Active Progress</p>
-                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                    P1 (Digital AgTech), P6 (Leadership &amp; Operations), and P7 (Market Access) require formal standard operating records.
-                  </p>
-                </div>
-                <div className="p-3 bg-amber-50/60 border border-amber-200 rounded-xl">
-                  <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block">
-                    Priority Interventions
-                  </span>
-                  <p className="font-bold text-slate-800 mt-0.5">2 Pillars Transformation Focus</p>
-                  <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                    P5 (Commercial Finance) and P8 (Investment Dossier) represent the primary constraints to commercial credit.
-                  </p>
-                </div>
-              </div>
+              {(() => {
+                const scorecard: any[] = reportData?.eightPillarScorecard || [];
+                const assessed = scorecard.filter((p) => p.isAssessed !== false);
+                const benchmark = assessed.filter((p) => p.score >= 80 || p.verifiedCount >= 20);
+                const established = assessed.filter((p) => p.score >= 50 && p.score < 80);
+                const priority = assessed.filter((p) => p.score < 50 || p.gapCount >= 3);
+
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-xs">
+                    <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl">
+                      <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">
+                        Benchmark Capabilities
+                      </span>
+                      <p className="font-bold text-slate-800 mt-0.5">
+                        {benchmark.length} {benchmark.length === 1 ? "Pillar" : "Pillars"} Verified Leading
+                      </p>
+                      <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                        {benchmark.length > 0
+                          ? benchmark.map((p) => `P${p.pillarId} (${p.name.split(" ")[0]})`).join(", ") + " satisfy rigorous operational requirements."
+                          : "Complete pillar assessments to identify leading enterprise benchmarks."}
+                      </p>
+                    </div>
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                      <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider block">
+                        Established Operations
+                      </span>
+                      <p className="font-bold text-slate-800 mt-0.5">
+                        {established.length} {established.length === 1 ? "Pillar" : "Pillars"} In Progress
+                      </p>
+                      <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                        {established.length > 0
+                          ? established.map((p) => `P${p.pillarId}`).join(", ") + " show operational adoption and require standard documentation."
+                          : "Ongoing capability development across active farming cycles."}
+                      </p>
+                    </div>
+                    <div className="p-3 bg-amber-50/60 border border-amber-200 rounded-xl">
+                      <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block">
+                        Priority Interventions
+                      </span>
+                      <p className="font-bold text-slate-800 mt-0.5">
+                        {priority.length} {priority.length === 1 ? "Pillar" : "Pillars"} Action Focus
+                      </p>
+                      <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                        {priority.length > 0
+                          ? priority.map((p) => `P${p.pillarId}`).join(", ") + " contain key operational gaps to address for accreditation."
+                          : "No critical bottlenecks identified across assessed pillars."}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })()}
             </section>
 
             {/* ══════════════════════════════════════════════════════════════════════
@@ -690,146 +769,56 @@ function AssessmentReportContent() {
                   </h3>
                 </div>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-200">
-                  5 Core Action Priorities
+                  {allGapsList.length} Action Priorities
                 </span>
               </div>
 
-              <div className="space-y-2.5 text-xs">
-                {/* Intervention 1: Business Performance */}
-                <div className="p-3 border border-amber-200 bg-amber-50/30 rounded-xl flex items-start justify-between gap-3 shadow-xs">
-                  <div className="flex items-start space-x-2.5">
-                    <span className="w-6 h-6 rounded-lg bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
-                      P5
-                    </span>
-                    <div>
-                      <h4 className="font-bold text-slate-900 text-xs">
-                        Gap 1: Digital Enterprise Cash Flow &amp; Account Segregation
-                      </h4>
-                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
-                        Transition from manual notebooks to a verified mobile/cloud ledger. Separating household living costs
-                        from farm production inputs immediately unlocks credit appraisal qualification for up to{" "}
-                        <strong className="text-slate-800">KES 350,000 seasonal facility</strong> with partner ag-lenders.
-                      </p>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
-                        <span className="font-semibold text-emerald-800 bg-emerald-100/70 px-2 py-0.5 rounded border border-emerald-200">
-                          Direct Impact: Est. Savings KES 22,000 / month
+              {allGapsList.length > 0 ? (
+                <div className="space-y-2.5 text-xs">
+                  {allGapsList.slice(0, 6).map((gap: any, idx: number) => (
+                    <div
+                      key={gap.questionId || idx}
+                      className="p-3 border border-amber-200 bg-amber-50/30 rounded-xl flex items-start justify-between gap-3 shadow-xs"
+                    >
+                      <div className="flex items-start space-x-2.5">
+                        <span className="w-6 h-6 rounded-lg bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
+                          P{gap.pillarId || "•"}
                         </span>
-                        <span className="text-slate-400 font-medium">• Timeline: Immediate (1–2 weeks)</span>
+                        <div>
+                          <h4 className="font-bold text-slate-900 text-xs">
+                            Gap {idx + 1}: {gap.question || gap.questionId}
+                          </h4>
+                          <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
+                            {gap.recommendation || "Implement standard operating protocol and formal record keeping."}
+                            {gap.whyItMatters ? ` ${gap.whyItMatters}` : ""}
+                          </p>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
+                            {gap.quickWin && (
+                              <span className="font-semibold text-emerald-800 bg-emerald-100/70 px-2 py-0.5 rounded border border-emerald-200">
+                                {gap.quickWin}
+                              </span>
+                            )}
+                            <span className="text-slate-400 font-medium">
+                              • Pillar: {gap.pillarName || `Pillar ${gap.pillarId}`}
+                            </span>
+                          </div>
+                        </div>
                       </div>
+                      <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-amber-100 text-amber-800 border border-amber-200 shrink-0">
+                        {gap.priority?.replace(/^[^\w]+/, "") || "Priority"}
+                      </span>
                     </div>
-                  </div>
-                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-amber-100 text-amber-800 border border-amber-200 shrink-0">
-                    High Impact
-                  </span>
+                  ))}
                 </div>
-
-                {/* Intervention 2: Renewable Energy */}
-                <div className="p-3 border border-slate-200 rounded-xl flex items-start justify-between gap-3 bg-white shadow-xs">
-                  <div className="flex items-start space-x-2.5">
-                    <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
-                      P2
-                    </span>
-                    <div>
-                      <h4 className="font-bold text-slate-900 text-xs">
-                        Gap 2: Cold-Chain Continuity &amp; Pay-As-You-Go Solar Chilling Buffer
-                      </h4>
-                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
-                        Deploy modular Pay-As-You-Go (PAYG) walk-in solar cold storage to eliminate harvest field heat for French beans
-                        and horticultural greens, curbing post-harvest spoilage by an estimated 22%.
-                      </p>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
-                        <span className="text-emerald-800 bg-emerald-50 border border-emerald-200 font-semibold px-2 py-0.5 rounded">
-                          Service Desk Partner: SunCulture Commercial Cold Facility
-                        </span>
-                        <span className="text-slate-400 font-medium">• Est. ROI: 4.2 Months</span>
-                      </div>
-                    </div>
-                  </div>
-                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-blue-50 text-blue-800 border border-blue-200 shrink-0">
-                    Asset Finance
-                  </span>
+              ) : (
+                <div className="p-6 border border-emerald-200 bg-emerald-50/40 rounded-xl text-center space-y-2">
+                  <span className="material-symbols-outlined text-3xl text-emerald-700">verified</span>
+                  <h4 className="font-bold text-slate-900 text-sm">No Action Gaps Identified</h4>
+                  <p className="text-slate-600 text-xs max-w-lg mx-auto">
+                    All evaluated criteria across your completed pillar assessments meet verified operational standards. Continue adhering to established operating procedures.
+                  </p>
                 </div>
-
-                {/* Intervention 3: Food Safety & Traceability */}
-                <div className="p-3 border border-slate-200 rounded-xl flex items-start justify-between gap-3 bg-white shadow-xs">
-                  <div className="flex items-start space-x-2.5">
-                    <span className="w-6 h-6 rounded-lg bg-slate-100 text-slate-800 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
-                      P3
-                    </span>
-                    <div>
-                      <h4 className="font-bold text-slate-900 text-xs">
-                        Gap 3: GlobalG.A.P. MRL Chemical Spray Registers &amp; Batch Traceability
-                      </h4>
-                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
-                        Formalize maximum residue limit (MRL) spray logs with batch QR codes to prevent cargo rejection risks
-                        at European and regional fresh produce export terminals.
-                      </p>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
-                        <span className="text-emerald-800 bg-emerald-50 border border-emerald-200 font-semibold px-2 py-0.5 rounded">
-                          Compliance Readiness: Meets Exporter Supplier Standards
-                        </span>
-                        <span className="text-slate-400 font-medium">• Timeline: Month 2</span>
-                      </div>
-                    </div>
-                  </div>
-                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
-                    Compliance
-                  </span>
-                </div>
-
-                {/* Intervention 4: Human Capital & Operations */}
-                <div className="p-3 border border-slate-200 rounded-xl flex items-start justify-between gap-3 bg-white shadow-xs">
-                  <div className="flex items-start space-x-2.5">
-                    <span className="w-6 h-6 rounded-lg bg-slate-100 text-slate-800 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
-                      P6
-                    </span>
-                    <div>
-                      <h4 className="font-bold text-slate-900 text-xs">
-                        Gap 4: Formalized Seasonal Worker Safety SOPs &amp; Standard Contracts
-                      </h4>
-                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
-                        Execute standard bi-lingual casual labor contracts and provide certified chemical handler PPE gear
-                        to fulfill export buyer ethical audit guidelines.
-                      </p>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
-                        <span className="text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
-                          Digital Templates Available on Future Farms Library
-                        </span>
-                        <span className="text-slate-400 font-medium">• Low Cost Fast Intervention</span>
-                      </div>
-                    </div>
-                  </div>
-                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
-                    Operational
-                  </span>
-                </div>
-
-                {/* Intervention 5: Investment Readiness */}
-                <div className="p-3 border border-emerald-200 bg-emerald-50/20 rounded-xl flex items-start justify-between gap-3 shadow-xs">
-                  <div className="flex items-start space-x-2.5">
-                    <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
-                      P8
-                    </span>
-                    <div>
-                      <h4 className="font-bold text-slate-900 text-xs">
-                        Gap 5: Bankable Enterprise Expansion Dossier &amp; Unit Economics
-                      </h4>
-                      <p className="text-slate-600 text-[11px] mt-0.5 leading-relaxed">
-                        Compile 3-year historical yield curves and cost-of-production metrics into an investor-ready pitch dossier
-                        for the regional Agri-Investment Acceleration Window.
-                      </p>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[9.5px]">
-                        <span className="text-emerald-900 font-semibold bg-emerald-100/60 px-2 py-0.5 rounded">
-                          Eligible Facility: KES 1.5M Subsidized Matching Grant Window
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <span className="px-2 py-0.5 rounded text-[9.5px] font-bold uppercase bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0">
-                    Investment
-                  </span>
-                </div>
-              </div>
+              )}
             </section>
 
             {/* ══════════════════════════════════════════════════════════════════════
@@ -876,9 +865,9 @@ function AssessmentReportContent() {
                     </span>
                     <span className="w-2 h-2 rounded-full bg-emerald-600" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-xs">Foundations &amp; Operational Records</h4>
+                  <h4 className="font-bold text-slate-900 text-xs">Immediate Record Keeping &amp; SOPs</h4>
                   <p className="text-slate-600 text-[11px] leading-relaxed">
-                    Deploy mobile farm bookkeeping app, register casual workers with formal agreements, and configure chemical safety logs.
+                    Deploy digital farm logs, formalize worker agreements, and institute routine operational registers for all verified activities.
                   </p>
                 </div>
 
@@ -889,9 +878,9 @@ function AssessmentReportContent() {
                     </span>
                     <span className="w-2 h-2 rounded-full bg-amber-400" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-xs">Productive Solar Cold Chain</h4>
+                  <h4 className="font-bold text-slate-900 text-xs">Capability Expansion &amp; Efficiency</h4>
                   <p className="text-slate-600 text-[11px] leading-relaxed">
-                    Install modular PAYG solar precooling unit through SunCulture equipment matching facility; submit energy logbook for clean energy subsidy.
+                    Close prioritized action gaps identified in diagnostic assessment to optimize input efficiency and reduce harvest losses.
                   </p>
                 </div>
 
@@ -902,9 +891,9 @@ function AssessmentReportContent() {
                     </span>
                     <span className="w-2 h-2 rounded-full bg-slate-300" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-xs">Certification &amp; Level 4 Capital</h4>
+                  <h4 className="font-bold text-slate-900 text-xs">Accreditation &amp; Investment Readiness</h4>
                   <p className="text-slate-600 text-[11px] leading-relaxed">
-                    Complete external GlobalG.A.P. verification and present validated enterprise dossier to regional ag-equity and debt investors.
+                    Complete remaining framework pillars and present validated enterprise dossier for commercial credit appraisal and buyer contracts.
                   </p>
                 </div>
               </div>
@@ -914,62 +903,46 @@ function AssessmentReportContent() {
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                   <div className="space-y-1 flex-1">
                     <span className="text-[10px] uppercase font-bold text-emerald-800 tracking-wider block">
-                      Future Farms Service Desk Support Window
+                      Future Farms Advisory &amp; Accreditation Support
                     </span>
                     <h4 className="font-bold text-slate-900 text-xs">
-                      Pre-Qualified Capital &amp; Technology Facilities
+                      Official Advisory by Arbarne Group Ltd
                     </h4>
                     <p className="text-slate-600 text-[11px] leading-relaxed">
-                      Based on this verified diagnostic, <strong className="text-slate-900">{farmName}</strong> is pre-qualified for the SunCulture Productive Equipment Facility and the Regional Agribusiness Matching Grant. Access technical support and onboarding assistance through your assigned account manager.
+                      Based on this verified diagnostic, <strong className="text-slate-900">{farmName}</strong> has established actionable benchmarks. Access advisory support, verification guidance, and technical assistance through our designated contact desk.
                     </p>
                   </div>
-                  <div className="sm:w-52 bg-white border border-emerald-200 rounded-lg p-2.5 shrink-0 text-center shadow-xs">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Advisory Desk Channel</span>
-                    <span className="text-xs font-bold text-emerald-800 block mt-0.5">advisory@futurefarms.africa</span>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">Direct Line: +254 700 000 000</span>
+                  <div className="sm:w-56 bg-white border border-emerald-200 rounded-lg p-2.5 shrink-0 text-center shadow-xs">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Official Advisory Desk</span>
+                    <span className="text-xs font-bold text-emerald-800 block mt-0.5 select-all">arbarnegroup@gmail.com</span>
+                    <span className="text-[10px] text-slate-500 block mt-0.5">Issuing Authority: Arbarne Group Ltd</span>
                   </div>
                 </div>
               </div>
 
-              {/* Document Footer: Tamper-Proof Seals & QR Code */}
+              {/* Document Footer: Tamper-Proof Seals & Scannable QR Code */}
               <footer className="border-t border-slate-200 pt-4 mt-2 text-[11px] text-slate-500 flex flex-col md:flex-row items-center justify-between gap-4 print-break-inside-avoid">
                 <div className="flex items-center space-x-3.5">
-                  <div className="p-1.5 bg-white border border-slate-300 rounded-lg shadow-xs">
-                    {/* SVG QR Code */}
-                    <svg className="w-11 h-11 text-slate-900" fill="currentColor" viewBox="0 0 100 100">
-                      <rect x="0" y="0" width="30" height="30" />
-                      <rect x="5" y="5" width="20" height="20" fill="white" />
-                      <rect x="9" y="9" width="12" height="12" />
-                      <rect x="70" y="0" width="30" height="30" />
-                      <rect x="75" y="5" width="20" height="20" fill="white" />
-                      <rect x="79" y="9" width="12" height="12" />
-                      <rect x="0" y="70" width="30" height="30" />
-                      <rect x="5" y="75" width="20" height="20" fill="white" />
-                      <rect x="9" y="79" width="12" height="12" />
-                      <rect x="40" y="10" width="15" height="10" />
-                      <rect x="40" y="30" width="20" height="10" />
-                      <rect x="10" y="40" width="20" height="10" />
-                      <rect x="65" y="45" width="25" height="10" />
-                      <rect x="35" y="60" width="15" height="25" />
-                      <rect x="60" y="65" width="15" height="10" />
-                      <rect x="80" y="60" width="10" height="25" />
-                    </svg>
+                  <div className="p-1 bg-white border border-slate-300 rounded-lg shadow-xs shrink-0">
+                    <ScannableQrCode value={reportVerifyUrl} size={64} />
                   </div>
                   <div className="font-mono text-[10px] space-y-0.5">
                     <span className="font-bold text-slate-800 uppercase block tracking-wider text-[11px]">
-                      Tamper-Proof Verification
+                      Verified Document Ledger
                     </span>
-                    <span>Hash: e82a-992d-ffa1-8294-ce88-b710</span>
+                    <span>Doc Ref: {docRef}</span>
                     <br />
-                    <span>Ledger: Future Farms AgTech Registry #812</span>
+                    <span>Issuing Authority: Arbarne Group Ltd</span>
+                    <br />
+                    <span>Official Registry: arbarnegroup@gmail.com</span>
                   </div>
                 </div>
 
                 <div className="text-left md:text-right text-xs">
-                  <p className="font-bold text-slate-800">Future Farms Advisory Framework • Kenya AgHub</p>
+                  <p className="font-bold text-slate-800">Future Farms Advisory Framework • Arbarne Group Ltd</p>
                   <p className="text-[11px] text-slate-500 mt-0.5">Issued under Guidelines v2.4 (2025)</p>
                   <p className="text-[10px] text-slate-400 mt-1 italic">
-                    Strictly Confidential • {farmName} Verified Diagnostic Record
+                    Strictly Confidential • {farmName} Diagnostic Record
                   </p>
                 </div>
               </footer>
@@ -1109,13 +1082,13 @@ function AssessmentReportContent() {
                   </div>
                   <div className="sm:w-44 bg-white border border-emerald-200 rounded-lg p-3 shrink-0 text-center shadow-xs">
                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                      Estimated Monthly Savings Gap
+                      Action Priorities
                     </span>
-                    <span className="text-lg font-black text-emerald-700 mt-0.5 block">
-                      KES 18,000
+                    <span className="text-lg font-black text-amber-700 mt-0.5 block">
+                      {reportData?.pillar?.gapCount ?? 0} Identified Gaps
                     </span>
                     <span className="text-[10px] text-slate-500 leading-tight block mt-0.5">
-                      Potential monthly benefit upon closing recommendations
+                      Priority areas to address for verified compliance
                     </span>
                   </div>
                 </div>
@@ -1150,7 +1123,7 @@ function AssessmentReportContent() {
                   2. Capability Checklist &amp; Question Evaluation
                 </h3>
                 <span className="text-[11px] font-semibold text-slate-500">
-                  {reportData?.pillar?.verifiedCount || 18} Verified Yes • {reportData?.pillar?.gapCount || 7} Action Gaps
+                  {reportData?.pillar?.verifiedCount ?? 0} Verified Yes • {reportData?.pillar?.gapCount ?? 0} Action Gaps
                 </span>
               </div>
 
@@ -1165,55 +1138,54 @@ function AssessmentReportContent() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 bg-white">
-                    {((reportData?.allQuestionResponses?.length > 0
-                      ? reportData.allQuestionResponses
-                      : ALL_PILLARS.find((p) => p.id === pillarId)?.capabilities.flatMap((c) =>
-                          c.questions.map((q, idx) => ({
-                            questionId: q.id,
-                            question: q.question,
-                            answer: idx % 3 === 0 ? "no" : "yes",
-                          }))
-                        )
-                    ) || []).slice(0, 10).map((item: any, idx: number) => {
-                      const isYes = item.answer === "yes";
+                    {(reportData?.allQuestionResponses && reportData.allQuestionResponses.length > 0) ? (
+                      reportData.allQuestionResponses.map((item: any, idx: number) => {
+                        const isYes = item.answer === "yes";
 
-                      return (
-                        <tr
-                          key={item.questionId || idx}
-                          className={`hover:bg-slate-50/80 transition-colors ${
-                            !isYes ? "bg-amber-50/20" : ""
-                          }`}
-                        >
-                          <td className="py-2.5 px-4 text-center font-mono text-slate-400 font-semibold">
-                            Q{idx + 1}
-                          </td>
-                          <td className="py-2.5 px-4">
-                            <p className="font-semibold text-slate-900">{item.questionId}</p>
-                            <p className="text-slate-500 text-[11px] mt-0.5">{item.question}</p>
-                          </td>
-                          <td className="py-2.5 px-4 text-center">
-                            {isYes ? (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                                <span className="material-symbols-outlined text-[12px] mr-1 text-emerald-600">check</span>
-                                YES - Verified
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                                <span className="material-symbols-outlined text-[12px] mr-1 text-amber-700">warning</span>
-                                NO - Action Gap
-                              </span>
-                            )}
-                          </td>
-                          <td className="py-2.5 px-4 text-center font-medium text-[11px]">
-                            {isYes ? (
-                              <span className="text-emerald-700 font-semibold">Verified Practice</span>
-                            ) : (
-                              <span className="text-amber-800 font-bold">Needs Implementation</span>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
+                        return (
+                          <tr
+                            key={item.questionId || idx}
+                            className={`hover:bg-slate-50/80 transition-colors ${
+                              !isYes ? "bg-amber-50/20" : ""
+                            }`}
+                          >
+                            <td className="py-2.5 px-4 text-center font-mono text-slate-400 font-semibold">
+                              Q{idx + 1}
+                            </td>
+                            <td className="py-2.5 px-4">
+                              <p className="font-semibold text-slate-900">{item.questionId}</p>
+                              <p className="text-slate-500 text-[11px] mt-0.5">{item.question}</p>
+                            </td>
+                            <td className="py-2.5 px-4 text-center">
+                              {isYes ? (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                  <span className="material-symbols-outlined text-[12px] mr-1 text-emerald-600">check</span>
+                                  YES - Verified
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                                  <span className="material-symbols-outlined text-[12px] mr-1 text-amber-700">warning</span>
+                                  NO - Action Gap
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-2.5 px-4 text-center font-medium text-[11px]">
+                              {isYes ? (
+                                <span className="text-emerald-700 font-semibold">Verified Practice</span>
+                              ) : (
+                                <span className="text-amber-800 font-bold">Needs Implementation</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan={4} className="py-6 text-center text-slate-500 italic">
+                          No assessment question responses recorded for Pillar 0{pillarId} yet.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -1225,10 +1197,10 @@ function AssessmentReportContent() {
                     Verified Capabilities In Practice
                   </span>
                   <p className="font-bold text-slate-800 mt-0.5">
-                    {reportData?.pillar?.verifiedCount || 18} Standards Compliant &amp; Active
+                    {reportData?.pillar?.verifiedCount ?? 0} Standards Compliant &amp; Active
                   </p>
                   <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                    Evaluated procedures meet criteria for sustainable operational efficiency and environmental compliance.
+                    Evaluated procedures meet criteria for sustainable operational efficiency and compliance.
                   </p>
                 </div>
                 <div className="p-3 bg-amber-50/60 border border-amber-200 rounded-xl">
@@ -1236,10 +1208,10 @@ function AssessmentReportContent() {
                     Identified Operational Action Gaps
                   </span>
                   <p className="font-bold text-slate-800 mt-0.5">
-                    {reportData?.pillar?.gapCount || 7} Practice Improvement Points
+                    {reportData?.pillar?.gapCount ?? 0} Practice Improvement Points
                   </p>
                   <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                    Prioritize the actionable interventions outlined on Page 3 to achieve complete capability maturity.
+                    Prioritize the actionable interventions outlined below to achieve complete capability maturity.
                   </p>
                 </div>
               </div>
@@ -1270,101 +1242,69 @@ function AssessmentReportContent() {
               <div className="flex items-center justify-between mb-1">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center">
                   <span className="w-2 h-2 rounded-full bg-amber-500 mr-2" />
-                  3. Actionable Recommendations for Identified Gaps (Questions Answered &quot;No&quot;)
+                  3. Actionable Recommendations for Identified Gaps
                 </h3>
                 <span className="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded border border-emerald-200">
                   Priority Interventions
                 </span>
               </div>
 
-              <div className="space-y-3">
-                {/* Gap 1 */}
-                <div className="border border-slate-200 bg-white rounded-xl p-4 transition-all hover:border-emerald-300 shadow-xs">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 font-mono">
-                        G1
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-900">
-                          Gap 1: Operational Expenditure Tracking &amp; Energy Baseline Log
-                        </h4>
-                        <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
-                          Implement a simple digital or logbook operational audit. Tracking daily fuel and utility costs validates
-                          return-on-investment and unlocks eligibility for regional green credit rebates and tax deductions under local agritech frameworks.
-                        </p>
-                        <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px]">
-                          <span className="inline-flex items-center font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            Est. Savings: ~KES 18,000 / month
+              {(() => {
+                const singlePillarGaps: any[] = reportData?.identifiedGaps?.items || [];
+                if (singlePillarGaps.length === 0) {
+                  return (
+                    <div className="p-6 border border-emerald-200 bg-emerald-50/40 rounded-xl text-center space-y-2">
+                      <span className="material-symbols-outlined text-3xl text-emerald-700">verified</span>
+                      <h4 className="font-bold text-slate-900 text-sm">No Compliance Gaps Identified</h4>
+                      <p className="text-slate-600 text-xs max-w-lg mx-auto">
+                        All evaluated criteria for Pillar 0{pillarId} meet verified standards. Continue maintaining active logs and standard practices.
+                      </p>
+                    </div>
+                  );
+                }
+                return (
+                  <div className="space-y-3">
+                    {singlePillarGaps.map((gap: any, idx: number) => (
+                      <div
+                        key={gap.questionId || idx}
+                        className="border border-slate-200 bg-white rounded-xl p-4 transition-all hover:border-emerald-300 shadow-xs"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 font-mono">
+                              G{idx + 1}
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-bold text-slate-900">
+                                Gap {idx + 1}: {gap.question || gap.questionId}
+                              </h4>
+                              <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                                {gap.recommendation || "Establish standard operating procedure and documentation records."}
+                                {gap.whyItMatters ? ` ${gap.whyItMatters}` : ""}
+                              </p>
+                              <div className="mt-2 flex flex-wrap items-center gap-2 text-[10px]">
+                                {gap.quickWin && (
+                                  <span className="inline-flex items-center font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                                    {gap.quickWin}
+                                  </span>
+                                )}
+                                {gap.supportAvailable && (
+                                  <span className="text-slate-500 font-medium">
+                                    • Support: {gap.supportAvailable}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-[10px] uppercase font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded shrink-0 border border-amber-200">
+                            {gap.priority?.replace(/^[^\w]+/, "") || "Action Priority"}
                           </span>
-                          <span className="text-slate-400 font-medium">• Fast Implementation (1–2 weeks)</span>
                         </div>
                       </div>
-                    </div>
-                    <span className="text-[10px] uppercase font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded shrink-0 border border-amber-200">
-                      High Impact
-                    </span>
+                    ))}
                   </div>
-                </div>
-
-                {/* Gap 2 */}
-                <div className="border border-slate-200 bg-white rounded-xl p-4 transition-all hover:border-emerald-300 shadow-xs">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 font-mono">
-                        G2
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-900">
-                          Gap 2: Cold Chain Continuity &amp; Backup Battery Systems
-                        </h4>
-                        <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
-                          Explore Pay-As-You-Go (PAYG) battery storage packages or commercial chilling facilities from accredited framework partners
-                          listed on the Future Farms Service Desk to eliminate post-harvest horticultural spoilage.
-                        </p>
-                        <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px]">
-                          <span className="inline-flex items-center font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            Service Desk Match: Commercial Clean Cold Chain Solutions
-                          </span>
-                          <span className="text-slate-400 font-medium">• Reduces post-harvest losses by 22%</span>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="text-[10px] uppercase font-bold text-emerald-800 bg-emerald-50 px-2 py-1 rounded shrink-0 border border-emerald-200">
-                      Medium Term
-                    </span>
-                  </div>
-                </div>
-
-                {/* Gap 3 */}
-                <div className="border border-slate-200 bg-white rounded-xl p-4 transition-all hover:border-emerald-300 shadow-xs">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 font-mono">
-                        G3
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-900">
-                          Gap 3: Productive Use Equipment Matching Grant
-                        </h4>
-                        <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
-                          {farmName} meets the eligibility threshold for the Agri-Equipment &amp; Productive Transition Match Facility.
-                          Apply through your Opportunity Desk pipeline where this enterprise holds an active pre-qualification rating.
-                        </p>
-                        <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[10px]">
-                          <span className="inline-flex items-center font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            Opportunity Desk Facility: Pre-Qualified Match
-                          </span>
-                          <span className="text-slate-400 font-medium">• Submission Window Open</span>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="text-[10px] uppercase font-bold text-emerald-800 bg-emerald-50 px-2 py-1 rounded shrink-0 border border-emerald-200">
-                      Direct Funding
-                    </span>
-                  </div>
-                </div>
-              </div>
+                );
+              })()}
             </section>
 
             {/* Section 4: Transformation Roadmap */}
@@ -1380,16 +1320,16 @@ function AssessmentReportContent() {
                   </span>
                   <p className="text-xs font-bold text-slate-800 mt-1">Audit Log Setup</p>
                   <p className="text-[11px] text-slate-500 mt-0.5">
-                    Activate mobile-based daily logs to establish verified baseline expenditure and performance records.
+                    Activate daily operational logs to establish verified baseline performance records.
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 shadow-xs">
                   <span className="text-[10px] font-black text-emerald-800 block uppercase">
                     Phase 2 (Days 31–60)
                   </span>
-                  <p className="text-xs font-bold text-slate-800 mt-1">Equipment Application</p>
+                  <p className="text-xs font-bold text-slate-800 mt-1">Action Gap Closure</p>
                   <p className="text-[11px] text-slate-500 mt-0.5">
-                    Submit equipment matching grant dossier through the Future Farms Opportunity Desk.
+                    Implement prioritized recommendations and formalize operational protocols.
                   </p>
                 </div>
                 <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 shadow-xs">
@@ -1398,36 +1338,34 @@ function AssessmentReportContent() {
                   </span>
                   <p className="text-xs font-bold text-slate-800 mt-1">Pillar Re-Assessment</p>
                   <p className="text-[11px] text-slate-500 mt-0.5">
-                    Undergo verifier spot-check to elevate standing to Level 4 (Investment Ready Agri-Enterprise).
+                    Complete verification review to confirm fully accredited standing.
                   </p>
                 </div>
               </div>
             </section>
 
-            {/* Document Footer */}
+            {/* Document Footer: Tamper-Proof Seals & Scannable QR Code */}
             <footer className="pt-5 border-t border-slate-200 mt-6 text-[10px] text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-4 print-break-inside-avoid">
               <div className="flex items-center space-x-3 text-left">
-                <div className="w-12 h-12 bg-slate-900 rounded-lg p-1 flex items-center justify-center shrink-0">
-                  <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14-2h4v2h-4v-2zm-4 0h2v4h-2v-4zm2 2h2v4h-2v-4zm2 2h2v4h-2v-4zm-4 2h2v2h-2v-2zM5 5h2v2H5V5zm12 0h2v2h-2V5zM5 17h2v2H5v-2z" />
-                  </svg>
+                <div className="p-1 bg-white border border-slate-300 rounded-lg shadow-xs shrink-0">
+                  <ScannableQrCode value={reportVerifyUrl} size={60} />
                 </div>
                 <div>
                   <p className="font-bold text-slate-700 uppercase tracking-tight">
-                    Verified by Future Farms AgTech Engine
+                    Verified by Future Farms Verification Framework
                   </p>
                   <p className="text-slate-400">
-                    Cryptographic hash: <span className="font-mono text-[9px] text-slate-500">e82a-992d-ffa1-0294-ce</span>
+                    Doc Ref: <span className="font-mono text-[9px] text-slate-600 font-semibold">{docRef}</span>
                   </p>
                   <p className="text-slate-400">
-                    For inquiries: <span className="text-slate-600">advisory@futurefarms.africa</span>
+                    Official Registry &amp; Inquiries: <span className="text-slate-600 font-medium select-all">arbarnegroup@gmail.com</span>
                   </p>
                 </div>
               </div>
 
               <div className="text-center sm:text-right">
-                <p className="font-medium text-slate-600">Future Farms Framework • Confidential Farm Advisory Report</p>
-                <p className="mt-0.5 text-slate-400">Issued under FFV Guidelines v2.4</p>
+                <p className="font-medium text-slate-600">Future Farms Framework • Arbarne Group Ltd</p>
+                <p className="mt-0.5 text-slate-400">Official Diagnostic Record • Issued under FFV Guidelines v2.4</p>
               </div>
             </footer>
           </article>
