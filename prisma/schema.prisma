@@ -259,6 +259,7 @@ model Assessment {
 
   pillarAssessments   PillarAssessment[]
   assessmentResponses AssessmentResponse[]
+  ffvEvidences        FfvEvidence[]
 }
 
 model PillarAssessment {
@@ -297,6 +298,28 @@ model AssessmentResponse {
   supportAvailable String?
   priority         String?
   updatedAt        DateTime   @default(now()) @updatedAt
+
+  @@unique([assessmentId, questionId])
+  @@index([assessmentId, pillarId])
+}
+
+model FfvEvidence {
+  id           String      @id @default(cuid())
+  assessmentId String
+  assessment   Assessment  @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  pillarId     Int
+  capabilityId String
+  questionId   String
+  claimText    String?
+  evidenceType String      @default("digital") // "digital", "demonstration", "visit"
+  fileName     String?
+  fileType     String?
+  fileSize     Int?
+  fileData     String?     @db.Text
+  notes        String?
+  status       String      @default("submitted") // "submitted", "verified", "rejected"
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now()) @updatedAt
 
   @@unique([assessmentId, questionId])
   @@index([assessmentId, pillarId])

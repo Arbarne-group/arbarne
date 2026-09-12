@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
@@ -14,6 +14,7 @@ import {
   getCapabilityFeedbackText,
   getPillarAutomaticFeedback,
 } from "@/data/capabilityFeedback";
+import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 interface AssessmentSummaryViewProps {
   pillarId: number;
@@ -26,6 +27,7 @@ type FFVClaimStatus = "not_submitted" | "submitted" | "verified" | "needs_review
 
 interface FFVClaimItem {
   id: string;
+  capabilityId: string;
   questionNumber: number;
   questionText: string;
   capCode: string;
@@ -89,9 +91,47 @@ export default function AssessmentSummaryView({
     statusFeedback: string;
   } | null>(null);
 
+  // Evidence File Upload & Neon DB State
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileDataUrl, setFileDataUrl] = useState<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadToast, setUploadToast] = useState<string | null>(null);
+  const [savedEvidences, setSavedEvidences] = useState<Record<string, any>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // FFV claim statuses state (initialized per "yes" answer)
   const [claimStatuses, setClaimStatuses] = useState<Record<string, FFVClaimStatus>>({});
   const [verifierEvMethods, setVerifierEvMethods] = useState<Record<string, string>>({});
+
+  // Load existing evidence records from Neon database
+  useEffect(() => {
+    async function loadEvidences() {
+      const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+      if (!email) return;
+      try {
+        const res = await fetch(
+          `/api/assessment/evidence?email=${encodeURIComponent(email)}&pillarId=${pillarId}`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          if (data.evidences && Array.isArray(data.evidences)) {
+            const evMap: Record<string, any> = {};
+            const statusMap: Record<string, FFVClaimStatus> = {};
+            data.evidences.forEach((ev: any) => {
+              evMap[ev.questionId] = ev;
+              statusMap[ev.questionId] = ev.status as FFVClaimStatus;
+            });
+            setSavedEvidences(evMap);
+            setClaimStatuses((prev) => ({ ...prev, ...statusMap }));
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load existing evidences from Neon:", e);
+      }
+    }
+    loadEvidences();
+  }, [pillarId, clerkUser]);
 
   // Safely load answers after client-side mount
   useEffect(() => {
@@ -189,6 +229,7 @@ export default function AssessmentSummaryView({
         const assigned = evidenceTypes[idx % evidenceTypes.length];
         return {
           id: q.id,
+          capabilityId: cap.id,
           questionNumber: q.question_number,
           questionText: q.question_text,
           capCode: `${pillar.id}.${cap.number}`,
@@ -249,24 +290,157 @@ export default function AssessmentSummaryView({
 
   const handleOpenProvideEvidence = (claim: FFVClaimItem) => {
     setSubmittingClaim(claim);
-    setSubmissionType("digital");
-    setSubmissionNotes("");
+    const existing = savedEvidences[claim.id];
+    if (existing) {
+      setSubmissionType((existing.evidenceType as any) || "digital");
+      setSubmissionNotes(existing.notes || "");
+      setSelectedFile(null);
+      setFileDataUrl(existing.fileData || null);
+    } else {
+      setSubmissionType("digital");
+      setSubmissionNotes("");
+      setSelectedFile(null);
+      setFileDataUrl(null);
+    }
+    setFileError(null);
   };
 
-  const handleSubmitEvidence = () => {
+  const handleFileChange = (file: File | null) => {
+    setFileError(null);
+    if (!file) {
+      setSelectedFile(null);
+      setFileDataUrl(null);
+      return;
+    }
+
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    const validExtensions = [".png", ".jpg", ".jpeg", ".pdf"];
+    const validMimeTypes = ["image/png", "image/jpeg", "application/pdf"];
+
+    const fileNameLower = file.name.toLowerCase();
+    const hasValidExt = validExtensions.some((ext) => fileNameLower.endsWith(ext));
+    const hasValidMime = file.type ? validMimeTypes.includes(file.type.toLowerCase()) : true;
+
+    if (!hasValidExt || !hasValidMime) {
+      setFileError(
+        `Invalid file format "${file.name}". Only PNG, JPG, and PDF files are accepted.`
+      );
+      setSelectedFile(null);
+      setFileDataUrl(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    if (file.size > MAX_SIZE) {
+      const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+      setFileError(
+        `File is too large (${sizeMb} MB). Maximum allowed size is 10MB.`
+      );
+      setSelectedFile(null);
+      setFileDataUrl(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    setSelectedFile(file);
+
+    // Read as Base64 Data URL for Neon database storage & instant preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFileDataUrl(reader.result as string);
+    };
+    reader.onerror = () => {
+      setFileError("Error reading file. Please select the file again.");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmitEvidence = async () => {
     if (!submittingClaim) return;
-    setClaimStatuses((prev) => ({
-      ...prev,
-      [submittingClaim.id]: "submitted",
-    }));
-    setSubmittingClaim(null);
+
+    if (submissionType === "digital" && !selectedFile && !fileDataUrl) {
+      setFileError("Please click or drag to select a PNG, JPG, or PDF file up to 10MB.");
+      return;
+    }
+
+    setIsUploading(true);
+    setFileError(null);
+
+    try {
+      const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+      const payload = {
+        email,
+        pillarId,
+        capabilityId: submittingClaim.capabilityId,
+        questionId: submittingClaim.id,
+        claimText: submittingClaim.questionText,
+        evidenceType: submissionType,
+        fileName: selectedFile?.name || savedEvidences[submittingClaim.id]?.fileName || null,
+        fileType: selectedFile?.type || savedEvidences[submittingClaim.id]?.fileType || null,
+        fileSize: selectedFile?.size || savedEvidences[submittingClaim.id]?.fileSize || null,
+        fileData: fileDataUrl || null,
+        notes: submissionNotes || null,
+      };
+
+      const res = await fetch("/api/assessment/evidence", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const resData = await res.json();
+
+      if (!res.ok || resData.error) {
+        throw new Error(resData.error || "Failed to store evidence in Neon database");
+      }
+
+      // Update local state
+      setClaimStatuses((prev) => ({
+        ...prev,
+        [submittingClaim.id]: "submitted",
+      }));
+
+      setSavedEvidences((prev) => ({
+        ...prev,
+        [submittingClaim.id]: resData.evidence,
+      }));
+
+      setUploadToast("Digital evidence stored securely in Neon PostgreSQL!");
+      setTimeout(() => setUploadToast(null), 3500);
+
+      setSubmittingClaim(null);
+      setSelectedFile(null);
+      setFileDataUrl(null);
+      setSubmissionNotes("");
+    } catch (err: any) {
+      console.error("Evidence upload error:", err);
+      setFileError(err?.message || "Failed to store evidence in Neon. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  const handleVerifierDecision = (claimId: string, decision: FFVClaimStatus) => {
+  const handleVerifierDecision = async (claimId: string, decision: FFVClaimStatus) => {
     setClaimStatuses((prev) => ({
       ...prev,
       [claimId]: decision,
     }));
+
+    const existing = savedEvidences[claimId];
+    if (existing?.id) {
+      try {
+        await fetch("/api/assessment/evidence", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: existing.id,
+            status: decision,
+          }),
+        });
+      } catch (e) {
+        console.error("Failed to update status in Neon:", e);
+      }
+    }
   };
 
   if (!mounted) {
@@ -904,6 +1078,49 @@ export default function AssessmentSummaryView({
                                         </span>
                                       </div>
                                     </div>
+
+                                    {/* Display Attached Neon Evidence Record if available */}
+                                    {savedEvidences[claim.id] && (
+                                      <div className="mt-2.5 p-3 rounded-xl bg-surface-container/60 border border-outline-variant/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                          <span className="material-symbols-outlined text-primary text-[20px] shrink-0">
+                                            {savedEvidences[claim.id].fileType?.includes("pdf") || savedEvidences[claim.id].fileName?.endsWith(".pdf")
+                                              ? "picture_as_pdf"
+                                              : "image"}
+                                          </span>
+                                          <div className="min-w-0">
+                                            <p className="font-bold text-on-surface truncate m-0">
+                                              {savedEvidences[claim.id].fileName || "Attached Digital Evidence"}
+                                            </p>
+                                            <p className="text-[11px] text-on-surface-variant m-0">
+                                              {savedEvidences[claim.id].fileSize
+                                                ? `${(savedEvidences[claim.id].fileSize / (1024 * 1024)).toFixed(2)} MB • `
+                                                : ""}
+                                              Stored in Neon DB
+                                            </p>
+                                          </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+                                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1 border border-emerald-300/80">
+                                            <span className="material-symbols-outlined text-[12px]">database</span>
+                                            Neon Lakebase
+                                          </span>
+                                          {savedEvidences[claim.id].fileData && (
+                                            <a
+                                              href={savedEvidences[claim.id].fileData}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              download={savedEvidences[claim.id].fileName || "evidence"}
+                                              className="px-2.5 py-1 rounded-lg bg-surface text-primary border border-primary/30 hover:bg-primary/5 text-xs font-bold transition-all flex items-center gap-1"
+                                            >
+                                              <span className="material-symbols-outlined text-[14px]">visibility</span>
+                                              <span>View / Download</span>
+                                            </a>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
                                   </div>
 
                                   {/* Right side: Status Indicator & Action */}
@@ -1202,14 +1419,107 @@ export default function AssessmentSummaryView({
             </div>
 
             {submissionType === "digital" && (
-              <div className="p-4 rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-lowest text-center space-y-1">
-                <span className="material-symbols-outlined text-3xl text-primary">cloud_upload</span>
-                <p className="text-xs font-semibold text-on-surface m-0">
-                  Click to select screenshot or digital record file
-                </p>
-                <p className="text-[10px] text-on-surface-variant m-0">
-                  PNG, JPG, PDF up to 10MB
-                </p>
+              <div className="space-y-3">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    handleFileChange(file);
+                  }}
+                />
+
+                {!selectedFile && !fileDataUrl ? (
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const file = e.dataTransfer.files?.[0] || null;
+                      handleFileChange(file);
+                    }}
+                    className={`p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center space-y-2 group ${
+                      fileError
+                        ? "border-red-400 bg-red-50/40 dark:bg-red-950/20"
+                        : "border-outline-variant hover:border-primary hover:bg-primary/5 bg-surface-container-lowest"
+                    }`}
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto transition-transform group-hover:scale-110">
+                      <span className="material-symbols-outlined text-3xl">cloud_upload</span>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-on-surface m-0 group-hover:text-primary transition-colors">
+                        Click to select screenshot or digital record file
+                      </p>
+                      <p className="text-[11px] font-semibold text-on-surface-variant mt-1 m-0">
+                        PNG, JPG, PDF up to 10MB
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-2xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between gap-3 shadow-xs">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {(selectedFile?.type.startsWith("image/") || fileDataUrl?.startsWith("data:image/")) ? (
+                        <div className="w-12 h-12 rounded-xl overflow-hidden border border-outline-variant/60 shrink-0 bg-surface-container">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={fileDataUrl || ""}
+                            alt="Preview"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-12 h-12 rounded-xl bg-red-100 text-red-700 flex items-center justify-center shrink-0">
+                          <span className="material-symbols-outlined text-2xl">picture_as_pdf</span>
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-bold text-on-surface truncate m-0">
+                            {selectedFile?.name || savedEvidences[submittingClaim.id]?.fileName || "Evidence Document"}
+                          </p>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary uppercase shrink-0">
+                            {selectedFile?.name?.split(".").pop() || savedEvidences[submittingClaim.id]?.fileName?.split(".").pop() || "FILE"}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-on-surface-variant m-0 mt-0.5">
+                          {selectedFile
+                            ? `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • Ready to store in Neon`
+                            : savedEvidences[submittingClaim.id]?.fileSize
+                            ? `${(savedEvidences[submittingClaim.id].fileSize / (1024 * 1024)).toFixed(2)} MB • Already stored in Neon`
+                            : "Ready to store in Neon"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedFile(null);
+                        setFileDataUrl(null);
+                        setFileError(null);
+                        if (fileInputRef.current) fileInputRef.current.value = "";
+                      }}
+                      className="px-2.5 py-1.5 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors flex items-center gap-1 shrink-0 cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">delete</span>
+                      <span>Change</span>
+                    </button>
+                  </div>
+                )}
+
+                {fileError && (
+                  <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-900 rounded-xl flex items-center gap-2 text-red-700 dark:text-red-300 text-xs">
+                    <span className="material-symbols-outlined text-red-500 text-base shrink-0">error</span>
+                    <span>{fileError}</span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -1229,17 +1539,34 @@ export default function AssessmentSummaryView({
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 type="button"
-                onClick={() => setSubmittingClaim(null)}
-                className="px-4 py-2 rounded-xl bg-surface-container text-on-surface font-semibold text-xs hover:bg-surface-container-high transition-colors cursor-pointer"
+                disabled={isUploading}
+                onClick={() => {
+                  setSubmittingClaim(null);
+                  setSelectedFile(null);
+                  setFileDataUrl(null);
+                  setFileError(null);
+                }}
+                className="px-4 py-2 rounded-xl bg-surface-container text-on-surface font-semibold text-xs hover:bg-surface-container-high transition-colors cursor-pointer disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="button"
+                disabled={isUploading}
                 onClick={handleSubmitEvidence}
-                className="px-5 py-2 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-all shadow-xs cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-all shadow-xs cursor-pointer flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Submit Evidence
+                {isUploading ? (
+                  <>
+                    <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                    <span>Storing in Neon...</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-sm">cloud_done</span>
+                    <span>Submit Evidence</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -1596,6 +1923,13 @@ export default function AssessmentSummaryView({
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {/* Floating Toast for Neon Storage */}
+      {uploadToast && (
+        <div className="fixed bottom-6 right-6 z-70 bg-surface border-2 border-emerald-500 shadow-2xl p-4 rounded-2xl flex items-center gap-3 text-xs font-bold text-on-surface animate-bounce">
+          <span className="material-symbols-outlined text-emerald-600 text-xl">check_circle</span>
+          <span>{uploadToast}</span>
         </div>
       )}
     </div>
