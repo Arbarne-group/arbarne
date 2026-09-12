@@ -27,16 +27,13 @@ export default function FarmCharacteristicsPage() {
   const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
-  const [farmSize, setFarmSize] = useState<number>(12.5);
+  const [farmSize, setFarmSize] = useState<number | "">("");
   const [farmUnit, setFarmUnit] = useState<"Acres" | "Hectares">("Acres");
-  const [cultivatedAcres, setCultivatedAcres] = useState<number>(8.0);
-  const [grazingAcres, setGrazingAcres] = useState<number>(4.5);
-  const [landTenure, setLandTenure] = useState<string>("freehold");
-  const [waterSources, setWaterSources] = useState<string[]>([
-    "borehole_solar",
-    "rainwater_dam",
-  ]);
-  const [soilTested, setSoilTested] = useState<string>("yes");
+  const [cultivatedAcres, setCultivatedAcres] = useState<number | "">("");
+  const [grazingAcres, setGrazingAcres] = useState<number | "">("");
+  const [landTenure, setLandTenure] = useState<string>("");
+  const [waterSources, setWaterSources] = useState<string[]>([]);
+  const [soilTested, setSoilTested] = useState<string>("");
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
@@ -52,10 +49,10 @@ export default function FarmCharacteristicsPage() {
         }
         if (data.user?.farmCharacteristics) {
           const char = data.user.farmCharacteristics;
-          if (char.farmSize) setFarmSize(char.farmSize);
+          if (char.farmSize !== null && char.farmSize !== undefined) setFarmSize(char.farmSize);
           if (char.farmUnit === "Acres" || char.farmUnit === "Hectares") setFarmUnit(char.farmUnit);
-          if (char.cultivatedAcres) setCultivatedAcres(char.cultivatedAcres);
-          if (char.grazingAcres) setGrazingAcres(char.grazingAcres);
+          if (char.cultivatedAcres !== null && char.cultivatedAcres !== undefined) setCultivatedAcres(char.cultivatedAcres);
+          if (char.grazingAcres !== null && char.grazingAcres !== undefined) setGrazingAcres(char.grazingAcres);
           if (char.landTenure) setLandTenure(char.landTenure);
           if (char.soilTested) setSoilTested(char.soilTested);
           if (char.waterSources) {
@@ -83,7 +80,7 @@ export default function FarmCharacteristicsPage() {
   const handleSave = async (navigateNext: boolean = true) => {
     if (navigateNext) {
       const missing: string[] = [];
-      if (!farmSize || farmSize <= 0) missing.push("farmSize");
+      if (farmSize === "" || Number(farmSize) <= 0) missing.push("farmSize");
       if (waterSources.length === 0) missing.push("waterSources");
       if (!soilTested) missing.push("soilTested");
 
@@ -102,6 +99,10 @@ export default function FarmCharacteristicsPage() {
     setSaveFeedback(null);
     try {
       const email = getActiveUserEmail();
+      const numFarmSize = typeof farmSize === "number" ? farmSize : 0;
+      const numCultivated = typeof cultivatedAcres === "number" ? cultivatedAcres : 0;
+      const numGrazing = typeof grazingAcres === "number" ? grazingAcres : 0;
+
       const res = await fetch("/api/onboarding/step", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -109,10 +110,10 @@ export default function FarmCharacteristicsPage() {
           step: "characteristics",
           email,
           data: {
-            farmSize,
+            farmSize: numFarmSize,
             farmUnit,
-            cultivatedAcres,
-            grazingAcres,
+            cultivatedAcres: numCultivated,
+            grazingAcres: numGrazing,
             landTenure,
             waterSources,
             soilTested,
@@ -140,15 +141,19 @@ export default function FarmCharacteristicsPage() {
   };
 
   // Conversions
-  const hectaresEquiv = farmUnit === "Acres"
-    ? (farmSize * 0.404686).toFixed(2)
-    : farmSize.toFixed(2);
-  const sqmEquiv = farmUnit === "Acres"
-    ? Math.round(farmSize * 4046.86).toLocaleString()
-    : Math.round(farmSize * 10000).toLocaleString();
+  const numFarmSize = typeof farmSize === "number" ? farmSize : 0;
+  const numCultivated = typeof cultivatedAcres === "number" ? cultivatedAcres : 0;
+  const numGrazing = typeof grazingAcres === "number" ? grazingAcres : 0;
 
-  const cultivatedPercent = farmSize > 0 ? Math.round((cultivatedAcres / farmSize) * 100) : 64;
-  const grazingPercent = Math.max(0, 100 - cultivatedPercent);
+  const hectaresEquiv = numFarmSize > 0
+    ? (farmUnit === "Acres" ? (numFarmSize * 0.404686).toFixed(2) : numFarmSize.toFixed(2))
+    : "0.00";
+  const sqmEquiv = numFarmSize > 0
+    ? (farmUnit === "Acres" ? Math.round(numFarmSize * 4046.86).toLocaleString() : Math.round(numFarmSize * 10000).toLocaleString())
+    : "0";
+
+  const cultivatedPercent = numFarmSize > 0 ? Math.min(100, Math.round((numCultivated / numFarmSize) * 100)) : 0;
+  const grazingPercent = numFarmSize > 0 ? Math.min(100 - cultivatedPercent, Math.round((numGrazing / numFarmSize) * 100)) : 0;
 
   return (
     <AppShell userName={currentUser?.name || "Keziah Wanjiku"} userRole={currentUser?.farmerProfile?.jobTitle || "Farm Owner"}>
@@ -257,11 +262,12 @@ export default function FarmCharacteristicsPage() {
                   <input
                     type="number"
                     step="0.1"
+                    placeholder="e.g. 10.0"
                     value={farmSize}
                     onChange={(e) => {
-                      const val = parseFloat(e.target.value) || 0;
+                      const val = e.target.value === "" ? "" : parseFloat(e.target.value);
                       setFarmSize(val);
-                      if (val > 0) {
+                      if (typeof val === "number" && val > 0) {
                         setValidationErrors((prev) => prev.filter((f) => f !== "farmSize"));
                       }
                     }}
@@ -315,7 +321,7 @@ export default function FarmCharacteristicsPage() {
                   </span>
                 </div>
                 <span className="text-xs font-medium text-on-surface-variant">
-                  {farmSize} {farmUnit} Total
+                  {numFarmSize > 0 ? `${numFarmSize} ${farmUnit} Total` : `— ${farmUnit} Total`}
                 </span>
               </div>
 
@@ -325,7 +331,7 @@ export default function FarmCharacteristicsPage() {
                   style={{ width: `${cultivatedPercent}%` }}
                 >
                   <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-semibold py-1 px-2 rounded pointer-events-none transition-opacity whitespace-nowrap">
-                    {cultivatedAcres} {farmUnit} Cultivated
+                    {numCultivated} {farmUnit} Cultivated
                   </div>
                 </div>
                 <div
@@ -333,40 +339,106 @@ export default function FarmCharacteristicsPage() {
                   style={{ width: `${grazingPercent}%` }}
                 >
                   <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-semibold py-1 px-2 rounded pointer-events-none transition-opacity whitespace-nowrap">
-                    {grazingAcres} {farmUnit} Pasture
+                    {numGrazing} {farmUnit} Pasture
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div className="bg-surface-container-lowest p-3 rounded-xl flex items-center justify-between border border-surface-container-high/60">
-                  <div className="flex items-center gap-2.5">
+                <div className="bg-surface-container-lowest p-3 rounded-xl flex items-center justify-between border border-surface-container-high/60 gap-2">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <span className="w-3 h-3 rounded-full bg-primary shrink-0" />
                     <div>
-                      <div className="text-xs font-semibold text-on-surface">Cultivated / Farming</div>
+                      <div className="text-xs font-semibold text-on-surface truncate">Cultivated / Farming</div>
                       <div className="text-[11px] text-on-surface-variant">Active crop land</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-xs font-bold text-primary">{cultivatedAcres} {farmUnit}</div>
-                    <div className="text-[11px] text-on-surface-variant">{cultivatedPercent}%</div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <input
+                      type="number"
+                      step="0.1"
+                      placeholder="0.0"
+                      value={cultivatedAcres}
+                      onChange={(e) => {
+                        const val = e.target.value === "" ? "" : parseFloat(e.target.value);
+                        setCultivatedAcres(val);
+                      }}
+                      className="w-16 px-2 py-1 text-right text-xs font-bold text-primary bg-surface-container-low rounded-lg border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
+                    <span className="text-[11px] font-semibold text-on-surface-variant">{farmUnit}</span>
                   </div>
                 </div>
 
-                <div className="bg-surface-container-lowest p-3 rounded-xl flex items-center justify-between border border-surface-container-high/60">
-                  <div className="flex items-center gap-2.5">
+                <div className="bg-surface-container-lowest p-3 rounded-xl flex items-center justify-between border border-surface-container-high/60 gap-2">
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <span className="w-3 h-3 rounded-full bg-outline-variant shrink-0" />
                     <div>
-                      <div className="text-xs font-semibold text-on-surface">Grazing / Resting / Other</div>
-                      <div className="text-[11px] text-on-surface-variant">Pasture and unplanted</div>
+                      <div className="text-xs font-semibold text-on-surface truncate">Grazing / Resting</div>
+                      <div className="text-[11px] text-on-surface-variant">Pasture &amp; other</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-xs font-bold text-on-surface">{grazingAcres} {farmUnit}</div>
-                    <div className="text-[11px] text-on-surface-variant">{grazingPercent}%</div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <input
+                      type="number"
+                      step="0.1"
+                      placeholder="0.0"
+                      value={grazingAcres}
+                      onChange={(e) => {
+                        const val = e.target.value === "" ? "" : parseFloat(e.target.value);
+                        setGrazingAcres(val);
+                      }}
+                      className="w-16 px-2 py-1 text-right text-xs font-bold text-on-surface bg-surface-container-low rounded-lg border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
+                    <span className="text-[11px] font-semibold text-on-surface-variant">{farmUnit}</span>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Land Ownership / Tenure */}
+          <div
+            id="q-landTenure"
+            className="space-y-4 pt-4 border-t border-surface-container-high/60 p-4 rounded-2xl"
+          >
+            <div>
+              <label className="text-base font-bold text-on-surface block">
+                What is your land ownership or tenure status?
+              </label>
+              <p className="text-xs text-on-surface-variant mt-0.5">
+                Select your legal tenure arrangement for the farmland.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { id: "freehold", title: "Freehold (Owned with Title Deed)", desc: "Private deeded ownership" },
+                { id: "leasehold", title: "Leasehold (Rented / Leased)", desc: "Long or short-term lease agreement" },
+                { id: "communal_family", title: "Family / Customary Land", desc: "Ancestral or community-held land" },
+              ].map((item) => {
+                const isSelected = landTenure === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setLandTenure(item.id)}
+                    className={`p-3.5 rounded-xl text-left border transition-all cursor-pointer ${
+                      isSelected
+                        ? "bg-primary/5 border-primary shadow-xs ring-1 ring-primary"
+                        : "bg-surface-container-low border-transparent hover:bg-surface-container"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className={`text-xs font-bold ${isSelected ? "text-primary" : "text-on-surface"}`}>
+                        {item.title}
+                      </span>
+                      {isSelected && (
+                        <span className="material-symbols-outlined text-primary text-[16px]">check_circle</span>
+                      )}
+                    </div>
+                    <span className="text-[11px] text-on-surface-variant block">{item.desc}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 

@@ -56,12 +56,47 @@ export default function FarmProfileReviewPage() {
   const farmId =
     (user as any)?.futureFarmId ||
     (user?.id ? `FFF-KE-PROD-${user.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD");
-  const phone = user?.phone || "+254 712 345 678";
-  const farmSize = user?.farmCharacteristics?.farmSize || 12.5;
+  const phone = user?.phone || "Not set";
+  const farmSize = user?.farmCharacteristics?.farmSize ?? 0;
   const farmUnit = user?.farmCharacteristics?.farmUnit || "Acres";
-  const cultivatedAcres = user?.farmCharacteristics?.cultivatedAcres || 8.0;
-  const grazingAcres = user?.farmCharacteristics?.grazingAcres || 4.5;
-  const locationText = user?.farmLocation?.locationSearch || "Naivasha, Nakuru County";
+  const cultivatedAcres = user?.farmCharacteristics?.cultivatedAcres ?? 0;
+  const grazingAcres = user?.farmCharacteristics?.grazingAcres ?? 0;
+  const locationText =
+    user?.farmLocation?.locationSearch ||
+    [user?.farmLocation?.ward, user?.farmLocation?.subcounty, user?.farmLocation?.county].filter(Boolean).join(", ") ||
+    "Location not set";
+
+  // Dynamic values from survey submissions
+  let enterprisesList: string[] = [];
+  try {
+    if (user?.farmingSystem?.enterprises) {
+      enterprisesList = JSON.parse(user.farmingSystem.enterprises);
+    }
+  } catch {}
+
+  let waterSourcesList: string[] = [];
+  try {
+    if (user?.farmCharacteristics?.waterSources) {
+      waterSourcesList = JSON.parse(user.farmCharacteristics.waterSources);
+    }
+  } catch {}
+
+  let produceBuyersList: string[] = [];
+  try {
+    if (user?.businessExperience?.produceBuyers) {
+      produceBuyersList = JSON.parse(user.businessExperience.produceBuyers);
+    }
+  } catch {}
+
+  const permWorkers = user?.householdLabour?.permanentWorkers ?? 0;
+  const seasWorkers = user?.householdLabour?.seasonalWorkers ?? 0;
+  const managementStructure = user?.householdLabour?.managementStructure || "Owner-managed";
+  const landTenure = user?.farmCharacteristics?.landTenure || "Freehold";
+  const cultivationMethod = user?.farmingSystem?.cultivationMethod || "Open-field";
+  const mechanizationSetup = user?.farmingSystem?.mechanizationSetup || "Manual / Hired";
+  const energySource = user?.farmingSystem?.energySource || "Solar / Grid";
+  const commercialYears = user?.businessExperience?.commercialYears || "Established";
+  const annualRevenue = user?.businessExperience?.annualRevenueBracket || "Commercial scale";
 
   return (
     <AppShell userName={name} userRole="Farm Owner">
@@ -148,14 +183,16 @@ export default function FarmProfileReviewPage() {
               <span className="material-symbols-outlined text-primary text-[20px]">landscape</span>
               <div>
                 <span className="text-[11px] text-on-surface-variant block">Total Land Size</span>
-                <span className="font-semibold">{farmSize} {farmUnit}</span>
+                <span className="font-semibold">{farmSize > 0 ? `${farmSize} ${farmUnit}` : "Not set"}</span>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-[20px]">water_drop</span>
               <div>
                 <span className="text-[11px] text-on-surface-variant block">Water Supply</span>
-                <span className="font-semibold text-primary">Reliable Solar Borehole</span>
+                <span className="font-semibold text-primary">
+                  {waterSourcesList.length > 0 ? `${waterSourcesList.length} sources registered` : "None set"}
+                </span>
               </div>
             </div>
           </div>
@@ -184,78 +221,87 @@ export default function FarmProfileReviewPage() {
               <span className="font-bold text-primary block mb-1">1. Farm Identity</span>
               <p className="text-on-surface font-semibold">{user?.farmName || "My Farm"}</p>
               <p className="text-on-surface-variant">ID: {farmId}</p>
-              <p className="text-on-surface-variant">Ownership: Farmer Owned (Freehold)</p>
+              <p className="text-on-surface-variant">Ownership: {landTenure}</p>
             </div>
 
             {/* 2. Farmer / Manager */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
               <span className="font-bold text-primary block mb-1">2. Farmer / Manager</span>
               <p className="text-on-surface font-semibold">{name}</p>
-              <p className="text-on-surface-variant">Role: Lead Owner &amp; Operator</p>
+              <p className="text-on-surface-variant">Role: {user?.farmerProfile?.jobTitle || "Lead Owner & Operator"}</p>
               <p className="text-on-surface-variant">Contact: {phone}</p>
             </div>
 
             {/* 3. Location */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
               <span className="font-bold text-primary block mb-1">3. Location</span>
-              <p className="text-on-surface font-semibold">Kenya • Nakuru County</p>
-              <p className="text-on-surface-variant">Naivasha Sub-county • Maraigushu</p>
-              <p className="text-on-surface-variant font-mono text-[11px]">GPS: 0°59&apos;48&quot;S 36°35&apos;12&quot;E</p>
+              <p className="text-on-surface font-semibold">
+                {user?.farmLocation?.county ? `Kenya • ${user.farmLocation.county} County` : "Kenya"}
+              </p>
+              <p className="text-on-surface-variant">
+                {[user?.farmLocation?.subcounty, user?.farmLocation?.ward].filter(Boolean).join(" • ") || locationText}
+              </p>
+              <p className="text-on-surface-variant font-mono text-[11px]">
+                {user?.farmLocation?.landmark ? `Landmark: ${user.farmLocation.landmark}` : locationText}
+              </p>
             </div>
 
             {/* 4. Farm Size & Land */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
               <span className="font-bold text-primary block mb-1">4. Farm Size &amp; Land</span>
-              <p className="text-on-surface font-semibold">Total: {farmSize} {farmUnit} (5.06 Ha)</p>
+              <p className="text-on-surface font-semibold">Total: {farmSize} {farmUnit}</p>
               <p className="text-on-surface-variant">Under Production: {cultivatedAcres} {farmUnit}</p>
-              <p className="text-on-surface-variant">Grazing &amp; Infrastructure: {grazingAcres} {farmUnit}</p>
+              <p className="text-on-surface-variant">Grazing &amp; Resting: {grazingAcres} {farmUnit}</p>
             </div>
 
             {/* 5. Production */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
               <span className="font-bold text-primary block mb-1">5. Production Enterprises</span>
-              <p className="text-on-surface font-semibold">Mixed: Horticulture &amp; Dairy</p>
-              <p className="text-on-surface-variant">French Beans, Field Tomatoes, Maize</p>
-              <p className="text-on-surface-variant">System: Semi-intensive drip &amp; open field</p>
+              <p className="text-on-surface font-semibold">
+                {enterprisesList.length > 0 ? enterprisesList.join(", ") : "None registered"}
+              </p>
+              <p className="text-on-surface-variant">System: {cultivationMethod}</p>
+              <p className="text-on-surface-variant">Setup: {mechanizationSetup}</p>
             </div>
 
             {/* 6. Infrastructure */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-              <span className="font-bold text-primary block mb-1">6. Infrastructure</span>
-              <p className="text-on-surface font-semibold">Solar Borehole Drip Irrigation</p>
-              <p className="text-on-surface-variant">Energy: 10kW Solar PV + Grid backup</p>
-              <p className="text-on-surface-variant">Storage: Evaporative charcoal packhouse</p>
+              <span className="font-bold text-primary block mb-1">6. Infrastructure &amp; Energy</span>
+              <p className="text-on-surface font-semibold">
+                {waterSourcesList.length > 0 ? waterSourcesList.join(", ") : "Water source not set"}
+              </p>
+              <p className="text-on-surface-variant">Energy: {energySource}</p>
             </div>
 
             {/* 7. Labour */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-              <span className="font-bold text-primary block mb-1">7. Labour</span>
-              <p className="text-on-surface font-semibold">3 Permanent Full-time Workers</p>
-              <p className="text-on-surface-variant">8–12 Seasonal Harvest Workers</p>
-              <p className="text-on-surface-variant">2 Household / Family Managers</p>
+              <span className="font-bold text-primary block mb-1">7. Labour &amp; Workforce</span>
+              <p className="text-on-surface font-semibold">{permWorkers} Permanent Full-time Workers</p>
+              <p className="text-on-surface-variant">{seasWorkers} Seasonal Harvest Workers</p>
+              <p className="text-on-surface-variant">Structure: {managementStructure}</p>
             </div>
 
             {/* 8. Markets */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-              <span className="font-bold text-primary block mb-1">8. Markets</span>
-              <p className="text-on-surface font-semibold">Primary: Export &amp; Formal Retail</p>
-              <p className="text-on-surface-variant">Buyers: Fresh produce off-takers</p>
-              <p className="text-on-surface-variant">Local: Regional wholesale aggregators</p>
+              <span className="font-bold text-primary block mb-1">8. Markets &amp; Buyers</span>
+              <p className="text-on-surface font-semibold">
+                {produceBuyersList.length > 0 ? produceBuyersList.join(", ") : "Buyers not specified"}
+              </p>
+              <p className="text-on-surface-variant">Years Active: {commercialYears}</p>
             </div>
 
             {/* 9. Farm Business & Scale */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high">
-              <span className="font-bold text-primary block mb-1">9. Farm Business</span>
-              <p className="text-on-surface font-semibold">Registered Agribusiness Entity</p>
-              <p className="text-on-surface-variant">4 Years in Continuous Operation</p>
-              <p className="text-on-surface-variant">Scale: KES 2.5M – 5.0M annual band</p>
+              <span className="font-bold text-primary block mb-1">9. Farm Business &amp; Scale</span>
+              <p className="text-on-surface font-semibold">Scale: {annualRevenue}</p>
+              <p className="text-on-surface-variant">Record Keeping: {user?.businessExperience?.recordKeepingMethod || "Standard"}</p>
             </div>
 
             {/* 10. Farm Goals (spans 3 cols on large) */}
             <div className="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-high sm:col-span-2 lg:col-span-3">
-              <span className="font-bold text-primary block mb-1">10. Farm Goals &amp; Strategic Priorities</span>
+              <span className="font-bold text-primary block mb-1">10. Farm Operations &amp; Support Goals</span>
               <p className="text-on-surface">
-                Transition to 100% renewable solar irrigation, attain Global GAP food safety certification, expand packhouse cold storage, and increase high-value export horticulture yields by 35% within 12 months.
+                Profile established through verified Survey 1 &amp; Survey 2 assessments.
               </p>
             </div>
           </div>

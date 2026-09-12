@@ -24,14 +24,10 @@ export default function HouseholdLabourPage() {
   const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
-  const [permanentWorkers, setPermanentWorkers] = useState<number>(2);
-  const [seasonalWorkers, setSeasonalWorkers] = useState<number>(14);
-  const [managementStructure, setManagementStructure] = useState<string>("owner");
-  const [fairEmploymentPractices, setFairEmploymentPractices] = useState<string[]>([
-    "equal_pay_women",
-    "ppe_clean_water",
-    "youth_opportunities",
-  ]);
+  const [permanentWorkers, setPermanentWorkers] = useState<number | "">("");
+  const [seasonalWorkers, setSeasonalWorkers] = useState<number | "">("");
+  const [managementStructure, setManagementStructure] = useState<string>("");
+  const [fairEmploymentPractices, setFairEmploymentPractices] = useState<string[]>([]);
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
@@ -79,12 +75,14 @@ export default function HouseholdLabourPage() {
   const validateForm = (): boolean => {
     const missing: string[] = [];
     if (
+      permanentWorkers === "" ||
       permanentWorkers === undefined ||
       permanentWorkers === null ||
-      isNaN(permanentWorkers) ||
+      isNaN(Number(permanentWorkers)) ||
+      seasonalWorkers === "" ||
       seasonalWorkers === undefined ||
       seasonalWorkers === null ||
-      isNaN(seasonalWorkers)
+      isNaN(Number(seasonalWorkers))
     ) {
       missing.push("workforce");
     }
@@ -124,8 +122,8 @@ export default function HouseholdLabourPage() {
           step: "household-labour",
           email,
           data: {
-            permanentWorkers,
-            seasonalWorkers,
+            permanentWorkers: permanentWorkers === "" ? 0 : Number(permanentWorkers),
+            seasonalWorkers: seasonalWorkers === "" ? 0 : Number(seasonalWorkers),
             managementStructure,
             fairEmploymentPractices,
           },
@@ -331,35 +329,53 @@ export default function HouseholdLabourPage() {
                   </p>
                 </div>
 
-                <div className="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between shadow-xs border border-surface-container-high/60">
+                <div className="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between shadow-xs border border-surface-container-high/60 gap-3">
                   <div className="flex flex-col">
                     <span className="text-[11px] text-outline uppercase font-semibold">Staff Count</span>
-                    <span className="text-xl md:text-2xl font-bold text-primary">
-                      {permanentWorkers} active worker{permanentWorkers === 1 ? "" : "s"}
+                    <span className="text-xs text-on-surface-variant font-medium">
+                      {permanentWorkers === ""
+                        ? "Enter or click + to set"
+                        : `${permanentWorkers} permanent worker${permanentWorkers === 1 ? "" : "s"}`}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     <button
                       type="button"
                       aria-label="Decrease permanent workers"
                       onClick={() => {
-                        setPermanentWorkers((prev) => Math.max(0, prev - 1));
+                        const cur = typeof permanentWorkers === "number" ? permanentWorkers : 0;
+                        setPermanentWorkers(Math.max(0, cur - 1));
                         setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
                       }}
-                      className="w-10 h-10 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-all active:scale-95 cursor-pointer"
+                      className="w-9 h-9 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-all active:scale-95 cursor-pointer"
                     >
-                      <span className="material-symbols-outlined text-[20px]">remove</span>
+                      <span className="material-symbols-outlined text-[18px]">remove</span>
                     </button>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={permanentWorkers}
+                      onChange={(e) => {
+                        const val = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value) || 0);
+                        setPermanentWorkers(val);
+                        if (val !== "") {
+                          setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
+                        }
+                      }}
+                      className="w-14 text-center py-1 text-base font-bold text-primary bg-surface-container-low rounded-xl border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
                     <button
                       type="button"
                       aria-label="Increase permanent workers"
                       onClick={() => {
-                        setPermanentWorkers((prev) => prev + 1);
+                        const cur = typeof permanentWorkers === "number" ? permanentWorkers : 0;
+                        setPermanentWorkers(cur + 1);
                         setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
                       }}
-                      className="w-10 h-10 rounded-xl bg-primary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
+                      className="w-9 h-9 rounded-xl bg-primary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
                     >
-                      <span className="material-symbols-outlined text-[20px]">add</span>
+                      <span className="material-symbols-outlined text-[18px]">add</span>
                     </button>
                   </div>
                 </div>
@@ -379,35 +395,53 @@ export default function HouseholdLabourPage() {
                   </p>
                 </div>
 
-                <div className="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between shadow-xs border border-surface-container-high/60">
+                <div className="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between shadow-xs border border-surface-container-high/60 gap-3">
                   <div className="flex flex-col">
                     <span className="text-[11px] text-outline uppercase font-semibold">Seasonal Influx</span>
-                    <span className="text-xl md:text-2xl font-bold text-primary">
-                      {seasonalWorkers} peak harvest hand{seasonalWorkers === 1 ? "" : "s"}
+                    <span className="text-xs text-on-surface-variant font-medium">
+                      {seasonalWorkers === ""
+                        ? "Enter or click + to set"
+                        : `${seasonalWorkers} peak harvest hand${seasonalWorkers === 1 ? "" : "s"}`}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     <button
                       type="button"
                       aria-label="Decrease seasonal workers"
                       onClick={() => {
-                        setSeasonalWorkers((prev) => Math.max(0, prev - 1));
+                        const cur = typeof seasonalWorkers === "number" ? seasonalWorkers : 0;
+                        setSeasonalWorkers(Math.max(0, cur - 1));
                         setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
                       }}
-                      className="w-10 h-10 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-all active:scale-95 cursor-pointer"
+                      className="w-9 h-9 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high flex items-center justify-center transition-all active:scale-95 cursor-pointer"
                     >
-                      <span className="material-symbols-outlined text-[20px]">remove</span>
+                      <span className="material-symbols-outlined text-[18px]">remove</span>
                     </button>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={seasonalWorkers}
+                      onChange={(e) => {
+                        const val = e.target.value === "" ? "" : Math.max(0, parseInt(e.target.value) || 0);
+                        setSeasonalWorkers(val);
+                        if (val !== "") {
+                          setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
+                        }
+                      }}
+                      className="w-14 text-center py-1 text-base font-bold text-primary bg-surface-container-low rounded-xl border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
                     <button
                       type="button"
                       aria-label="Increase seasonal workers"
                       onClick={() => {
-                        setSeasonalWorkers((prev) => prev + 1);
+                        const cur = typeof seasonalWorkers === "number" ? seasonalWorkers : 0;
+                        setSeasonalWorkers(cur + 1);
                         setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
                       }}
-                      className="w-10 h-10 rounded-xl bg-primary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
+                      className="w-9 h-9 rounded-xl bg-primary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
                     >
-                      <span className="material-symbols-outlined text-[20px]">add</span>
+                      <span className="material-symbols-outlined text-[18px]">add</span>
                     </button>
                   </div>
                 </div>

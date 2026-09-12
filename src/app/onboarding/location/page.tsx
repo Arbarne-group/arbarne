@@ -53,11 +53,11 @@ export default function FarmLocationPage() {
   const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
-  const [locationSearch, setLocationSearch] = useState("Mai Mahiu, Naivasha, Nakuru County");
-  const [county, setCounty] = useState("nakuru");
-  const [subcounty, setSubcounty] = useState("naivasha");
-  const [ward, setWard] = useState("Mai Mahiu Ward");
-  const [landmark, setLandmark] = useState("Mai Mahiu Town Center (1.8 km)");
+  const [locationSearch, setLocationSearch] = useState("");
+  const [county, setCounty] = useState("");
+  const [subcounty, setSubcounty] = useState("");
+  const [ward, setWard] = useState("");
+  const [landmark, setLandmark] = useState("");
   const [detectingGps, setDetectingGps] = useState(false);
   const [gpsLocated, setGpsLocated] = useState(false);
   const [gpsError, setGpsError] = useState<string | null>(null);
@@ -501,6 +501,7 @@ export default function FarmLocationPage() {
                       validationErrors.includes("county") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
                     }`}
                   >
+                    <option value="">-- Select County --</option>
                     {/* Render detected county if not in standard list */}
                     {county && !KENYAN_COUNTIES.some((c) => c.toLowerCase() === county.toLowerCase()) && (
                       <option value={county.toLowerCase()}>
@@ -545,6 +546,7 @@ export default function FarmLocationPage() {
                           validationErrors.includes("subcounty") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
                         }`}
                       >
+                        <option value="">-- Select Sub-County --</option>
                         {/* If detected subcounty is not in the list, provide it as first option */}
                         {subcounty &&
                           !COMMON_SUBCOUNTIES[county.toLowerCase()].some(

@@ -24,13 +24,10 @@ export default function BusinessExperiencePage() {
   const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
-  const [commercialYears, setCommercialYears] = useState<string>("3_7");
-  const [annualRevenueBracket, setAnnualRevenueBracket] = useState<string>("300k_1m");
-  const [recordKeepingMethod, setRecordKeepingMethod] = useState<string>("physical_book");
-  const [produceBuyers, setProduceBuyers] = useState<string[]>([
-    "brokers_gate",
-    "wholesale_market",
-  ]);
+  const [commercialYears, setCommercialYears] = useState<string>("");
+  const [annualRevenueBracket, setAnnualRevenueBracket] = useState<string>("");
+  const [recordKeepingMethod, setRecordKeepingMethod] = useState<string>("");
+  const [produceBuyers, setProduceBuyers] = useState<string[]>([]);
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
@@ -358,12 +355,14 @@ export default function BusinessExperiencePage() {
               })}
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-secondary-container/25 flex items-center gap-2.5 text-secondary border border-secondary-container">
-              <span className="material-symbols-outlined text-[18px]">verified</span>
-              <span className="text-xs font-semibold">
-                Qualifies for cooperative and SME seasonal input financing &amp; asset leasing
-              </span>
-            </div>
+            {annualRevenueBracket && (
+              <div className="p-3.5 rounded-2xl bg-secondary-container/25 flex items-center gap-2.5 text-secondary border border-secondary-container animate-fadeIn">
+                <span className="material-symbols-outlined text-[18px]">verified</span>
+                <span className="text-xs font-semibold">
+                  Qualifies for cooperative and SME seasonal input financing &amp; asset leasing
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Question 3: Record Keeping */}

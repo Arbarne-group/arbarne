@@ -24,13 +24,10 @@ export default function FarmingSystemPage() {
   const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
-  const [enterprises, setEnterprises] = useState<string[]>([
-    "vegetables_horticulture",
-    "dairy_livestock",
-  ]);
-  const [cultivationMethod, setCultivationMethod] = useState<string>("drip_irrigation");
-  const [mechanizationSetup, setMechanizationSetup] = useState<string>("hired_tractor");
-  const [energySource, setEnergySource] = useState<string>("solar_pv");
+  const [enterprises, setEnterprises] = useState<string[]>([]);
+  const [cultivationMethod, setCultivationMethod] = useState<string>("");
+  const [mechanizationSetup, setMechanizationSetup] = useState<string>("");
+  const [energySource, setEnergySource] = useState<string>("");
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
@@ -451,7 +448,6 @@ export default function FarmingSystemPage() {
                 title: "Hired Tractor & Implements",
                 desc: "Contractor disc plowing, harrowing, and trailer transport.",
                 icon: "agriculture",
-                badge: "Active",
               },
               {
                 id: "owned_tractor",
@@ -492,11 +488,6 @@ export default function FarmingSystemPage() {
                         </span>
                         <span className="text-sm font-bold text-on-surface leading-snug">{item.title}</span>
                       </div>
-                      {item.badge && isSelected && (
-                        <span className="px-2 py-0.5 rounded-full bg-primary text-white text-[11px] font-semibold">
-                          {item.badge}
-                        </span>
-                      )}
                     </div>
                     <p className="text-xs text-on-surface-variant mt-1">{item.desc}</p>
                   </div>
