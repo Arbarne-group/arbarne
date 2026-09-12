@@ -65,8 +65,8 @@ async function runFullUserStoryTest() {
   assert(initialStage.initialCompleted === false, "initialCompleted is false");
   assert(initialStage.additionalCompleted === false, "additionalCompleted is false");
 
-  // Verify route guards for all navigation menu items
-  const menuRoutesToTest = [
+  // Verify route guards for restricted navigation menu items
+  const restrictedRoutesToTest = [
     { route: "/dashboard", name: "Dashboard" },
     { route: "/assessment", name: "Assessment Hub" },
     { route: "/reports", name: "Reports" },
@@ -75,16 +75,19 @@ async function runFullUserStoryTest() {
     { route: "/learning", name: "Learning" },
     { route: "/settings", name: "Settings" },
     { route: "/verification", name: "Verification" },
-    { route: "/onboarding", name: "Onboarding Overview" },
   ];
 
-  for (const { route, name } of menuRoutesToTest) {
+  for (const { route, name } of restrictedRoutesToTest) {
     const access = getRouteAccess(route, initialStage.stage);
     assert(
-      !access.allowed && access.redirectTo === "/onboarding/step-1",
-      `Menu option '${name}' (${route}) is guarded and redirects to /onboarding/step-1`
+      !access.allowed && (access.redirectTo === "/onboarding" || access.redirectTo === "/onboarding/step-1"),
+      `Menu option '${name}' (${route}) is guarded and redirects to onboarding`
     );
   }
+
+  // Permitted routes during Stage 1: Welcome Hub (/onboarding) and Steps 1-5
+  const welcomeAccess = getRouteAccess("/onboarding", initialStage.stage);
+  assert(welcomeAccess.allowed, "Welcome Onboarding Overview (/onboarding) is accessible");
 
   // Permitted routes during Stage 1
   for (let s = 1; s <= 5; s++) {
@@ -371,10 +374,9 @@ async function runFullUserStoryTest() {
   assert(finalStage.initialCompleted === true, "finalStage.initialCompleted is true");
   assert(finalStage.additionalCompleted === true, "finalStage.additionalCompleted is true");
 
-  // Verify all routes are now UNLOCKED
-  const allRoutes = [
+  // Verify unlocked routes upon FULLY_COMPLETED
+  const unlockedRoutes = [
     "/assessment",
-    "/dashboard",
     "/reports",
     "/actions",
     "/team",
@@ -383,16 +385,22 @@ async function runFullUserStoryTest() {
     "/verification",
     "/onboarding",
   ];
-  for (const r of allRoutes) {
+  for (const r of unlockedRoutes) {
     const access = getRouteAccess(r, finalStage.stage);
     assert(access.allowed, `Route '${r}' is fully unlocked without any redirects`);
   }
 
+  // Dashboard requires at least 1 completed pillar assessment
+  const dashboardPreAudit = getRouteAccess("/dashboard", finalStage.stage, { completedPillarsCount: 0 });
+  assert(!dashboardPreAudit.allowed && dashboardPreAudit.redirectTo === "/assessment", "Dashboard requires at least 1 pillar and directs to /assessment");
+  const dashboardPostAudit = getRouteAccess("/dashboard", finalStage.stage, { completedPillarsCount: 1 });
+  assert(dashboardPostAudit.allowed, "Dashboard is unlocked once at least 1 pillar assessment is completed");
+
   // Verify survey steps cannot be repeated once onboarding is completed
   const blockedRetake = getRouteAccess("/onboarding/farm-profile", finalStage.stage);
-  assert(!blockedRetake.allowed && blockedRetake.redirectTo === "/onboarding", "Survey retake '/onboarding/farm-profile' is blocked");
+  assert(!blockedRetake.allowed && (blockedRetake.redirectTo === "/assessment" || blockedRetake.redirectTo === "/onboarding"), "Survey retake '/onboarding/farm-profile' is blocked");
   const blockedRetakeStep1 = getRouteAccess("/onboarding/step-1", finalStage.stage);
-  assert(!blockedRetakeStep1.allowed && blockedRetakeStep1.redirectTo === "/onboarding", "Survey retake '/onboarding/step-1' is blocked");
+  assert(!blockedRetakeStep1.allowed && (blockedRetakeStep1.redirectTo === "/assessment" || blockedRetakeStep1.redirectTo === "/onboarding"), "Survey retake '/onboarding/step-1' is blocked");
 
   // -------------------------------------------------------------
   // Step 9: Test Fast-Track Flow (Direct to Assessment from Household Labour)

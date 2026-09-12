@@ -107,6 +107,10 @@ class Settings(BaseSettings):
                 return "sqlite:///fff_dev.db"
 
         if url:
+            if url.startswith("postgres://"):
+                return url.replace("postgres://", "postgresql+psycopg2://", 1)
+            elif url.startswith("postgresql://") and not url.startswith("postgresql+"):
+                return url.replace("postgresql://", "postgresql+psycopg2://", 1)
             return url
 
         try:

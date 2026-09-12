@@ -1,11 +1,9 @@
 const { execSync } = require("child_process");
 
-// Fallback to local SQLite database if DATABASE_URL is not set in the environment
 if (!process.env.DATABASE_URL) {
-  process.env.DATABASE_URL = "file:./dev.db";
-  console.log("ℹ️ No DATABASE_URL found. Defaulting to local SQLite (file:./dev.db)");
+  console.warn("⚠️ Warning: No DATABASE_URL found in environment. Ensure DATABASE_URL is configured in Vercel Environment Variables for Neon Postgres.");
 } else {
-  console.log("✓ Found DATABASE_URL in environment.");
+  console.log("✓ Found DATABASE_URL in environment (Neon Postgres).");
 }
 
 try {
