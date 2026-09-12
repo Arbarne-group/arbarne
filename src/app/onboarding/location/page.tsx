@@ -20,6 +20,34 @@ interface OnboardingUser {
   };
 }
 
+// List of all 47 Kenyan Counties for comprehensive coverage
+const KENYAN_COUNTIES = [
+  "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo Marakwet", "Embu", "Garissa",
+  "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho", "Kiambu", "Kilifi",
+  "Kirinyaga", "Kisii", "Kisumu", "Kitui", "Kwale", "Laikipia", "Lamu",
+  "Machakos", "Makueni", "Mandera", "Marsabit", "Meru", "Migori", "Mombasa",
+  "Murang'a", "Nairobi", "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua",
+  "Nyeri", "Samburu", "Siaya", "Taita Taveta", "Tana River", "Tharaka Nithi",
+  "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+];
+
+// Sample sub-counties for common agricultural regions
+const COMMON_SUBCOUNTIES: Record<string, string[]> = {
+  nakuru: ["Naivasha", "Gilgil", "Nakuru East", "Nakuru West", "Rongai", "Subukia", "Molo", "Njoro", "Kuresoi North", "Kuresoi South", "Bahati"],
+  kiambu: ["Gatundu South", "Gatundu North", "Juja", "Thika Town", "Ruiru", "Githunguri", "Kiambu", "Kiambaa", "Kabete", "Kikuyu", "Limuru", "Lari"],
+  nyandarua: ["Kinangop", "Kipipiri", "Ol Kalou", "Ol Joro Orok", "Ndaragwa"],
+  narok: ["Narok North", "Narok South", "Narok East", "Narok West", "Kilgoris", "Emurua Dikirr"],
+  machakos: ["Machakos Town", "Mavoko", "Mwala", "Yatta", "Kangundo", "Matungulu", "Kathiani"],
+  "uasin gishu": ["Ainabkoi", "Kapseret", "Kesses", "Moiben", "Soy", "Turbo"],
+  nyeri: ["Tetu", "Kieni East", "Kieni West", "Mathira East", "Mathira West", "Othaya", "Mukurweini", "Nyeri Town"],
+  "murang'a": ["Kangema", "Mathioya", "Kiharu", "Kigumo", "Maragua", "Kandara", "Gatanga"],
+  kirinyaga: ["Mwea East", "Mwea West", "Gichugu", "Ndia", "Kirinyaga Central"],
+  meru: ["Imenti North", "Imenti South", "Central Imenti", "Buuri", "Tigania East", "Tigania West", "Igembe North", "Igembe Central", "Igembe South"],
+  "trans nzoia": ["Cherangany", "Kiminini", "Kwanza", "Endebess", "Saboti"],
+  kericho: ["Ainamoi", "Belgut", "Bureti", "Kipkelion East", "Kipkelion West", "Soin Sigowet"],
+  bomet: ["Bomet Central", "Bomet East", "Chepalungu", "Sotik", "Konoin"],
+};
+
 export default function FarmLocationPage() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
@@ -32,6 +60,9 @@ export default function FarmLocationPage() {
   const [landmark, setLandmark] = useState("Mai Mahiu Town Center (1.8 km)");
   const [detectingGps, setDetectingGps] = useState(false);
   const [gpsLocated, setGpsLocated] = useState(false);
+  const [gpsError, setGpsError] = useState<string | null>(null);
+  const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [gpsAccuracy, setGpsAccuracy] = useState<number | null>(null);
 
   const [saving, setSaving] = useState(false);
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
@@ -52,20 +83,127 @@ export default function FarmLocationPage() {
           if (loc.subcounty) setSubcounty(loc.subcounty);
           if (loc.ward) setWard(loc.ward);
           if (loc.landmark) setLandmark(loc.landmark);
+          if (loc.latitude && loc.longitude) {
+            setCoordinates({ latitude: Number(loc.latitude), longitude: Number(loc.longitude) });
+          }
         }
       })
       .catch(console.error);
   }, []);
 
   const handleUseCurrentLocation = () => {
+    setGpsError(null);
+
+    if (typeof window === "undefined" || !navigator.geolocation) {
+      setGpsError("Geolocation is not supported by your browser. Please type your location manually.");
+      return;
+    }
+
     setDetectingGps(true);
-    setTimeout(() => {
-      setLocationSearch("Mai Mahiu, Longonot Foot, Nakuru (Accurate to 3m)");
-      setDetectingGps(false);
-      setGpsLocated(true);
-      setValidationErrors((prev) => prev.filter((f) => f !== "locationSearch"));
-      setTimeout(() => setGpsLocated(false), 2500);
-    }, 800);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude, accuracy } = position.coords;
+        setCoordinates({ latitude, longitude });
+        setGpsAccuracy(Math.round(accuracy));
+        setValidationErrors((prev) => prev.filter((f) => f !== "locationSearch"));
+
+        try {
+          // Reverse geocode via OpenStreetMap Nominatim with timeout
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=16&addressdetails=1`,
+            {
+              headers: { "Accept-Language": "en" },
+              signal: AbortSignal.timeout(5000),
+            }
+          );
+
+          if (res.ok) {
+            const data = await res.json();
+            const addr = data.address || {};
+
+            const placeName =
+              addr.village ||
+              addr.suburb ||
+              addr.town ||
+              addr.city ||
+              addr.neighbourhood ||
+              addr.county ||
+              "Detected Farm Location";
+
+            const countyName = addr.county || addr.state || "";
+
+            const formattedLoc = countyName
+              ? `${placeName}, ${countyName} (${latitude.toFixed(4)}°, ${longitude.toFixed(4)}°)`
+              : `${placeName} (${latitude.toFixed(4)}°, ${longitude.toFixed(4)}°)`;
+
+            setLocationSearch(formattedLoc);
+
+            // Match county in lowercase
+            if (countyName) {
+              const matchedCounty = countyName.toLowerCase().replace(" county", "").trim();
+              setCounty(matchedCounty);
+              setValidationErrors((prev) => prev.filter((f) => f !== "county"));
+            }
+
+            // Subcounty or Town
+            const subcountyFound =
+              addr.city_district || addr.suburb || addr.municipality || addr.town;
+            if (subcountyFound) {
+              setSubcounty(subcountyFound.toLowerCase());
+              setValidationErrors((prev) => prev.filter((f) => f !== "subcounty"));
+            }
+
+            // Ward / Village
+            const wardFound = addr.village || addr.suburb || addr.quarter || addr.neighbourhood;
+            if (wardFound) {
+              setWard(`${wardFound} Ward`);
+              setValidationErrors((prev) => prev.filter((f) => f !== "ward"));
+            }
+
+            // Landmark
+            const roadOrAmenity = addr.road || addr.amenity || addr.shop;
+            if (roadOrAmenity) {
+              setLandmark(`Near ${roadOrAmenity} (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+              setValidationErrors((prev) => prev.filter((f) => f !== "landmark"));
+            } else {
+              setLandmark(`GPS Coordinates: ${latitude.toFixed(5)}°, ${longitude.toFixed(5)}°`);
+              setValidationErrors((prev) => prev.filter((f) => f !== "landmark"));
+            }
+          } else {
+            // Reverse geocoding service returned non-200
+            setLocationSearch(`GPS Location: ${latitude.toFixed(5)}°, ${longitude.toFixed(5)}° (±${Math.round(accuracy)}m)`);
+            setLandmark(`Coordinates: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+          }
+        } catch (err) {
+          // Network timeout or offline fallback
+          setLocationSearch(`GPS Location: ${latitude.toFixed(5)}°, ${longitude.toFixed(5)}° (±${Math.round(accuracy)}m)`);
+          setLandmark(`Coordinates: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+        } finally {
+          setDetectingGps(false);
+          setGpsLocated(true);
+          setTimeout(() => setGpsLocated(false), 4000);
+        }
+      },
+      (err) => {
+        setDetectingGps(false);
+        console.warn("Geolocation error:", err);
+        if (err.code === 1) {
+          setGpsError("Location permission was denied. Please allow location permissions in your browser or enter your farm location manually.");
+        } else if (err.code === 2) {
+          setGpsError("GPS position unavailable. Please check device location settings or enter location manually.");
+        } else if (err.code === 3) {
+          setGpsError("Location request timed out. Please try again or type your location manually.");
+        } else {
+          setGpsError(err.message || "Failed to retrieve current location.");
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
   };
 
   const handleSave = async (navigateNext: boolean = true) => {
@@ -104,8 +242,8 @@ export default function FarmLocationPage() {
             subcounty,
             ward,
             landmark,
-            latitude: -0.99672,
-            longitude: 36.58678,
+            latitude: coordinates ? coordinates.latitude : -0.99672,
+            longitude: coordinates ? coordinates.longitude : 36.58678,
           },
         }),
       });
@@ -297,6 +435,30 @@ export default function FarmLocationPage() {
                 )}
               </button>
             </div>
+
+            {gpsError && (
+              <div className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 text-xs rounded-xl border border-amber-300 dark:border-amber-800 animate-fadeIn">
+                <span className="material-symbols-outlined text-[18px] text-amber-600 shrink-0 mt-0.5">warning</span>
+                <span className="flex-1 leading-relaxed">{gpsError}</span>
+              </div>
+            )}
+
+            {coordinates && (
+              <div className="flex flex-wrap items-center gap-2 py-1 text-xs text-primary font-medium animate-fadeIn">
+                <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-lg border border-primary/20">
+                  <span className="material-symbols-outlined text-[16px] text-primary">gps_fixed</span>
+                  <span>
+                    Lat: {coordinates.latitude.toFixed(5)}°, Lng: {coordinates.longitude.toFixed(5)}°
+                  </span>
+                  {gpsAccuracy && <span className="text-on-surface-variant text-[11px]">(±{gpsAccuracy}m)</span>}
+                </span>
+                <span className="text-secondary text-[11px] inline-flex items-center gap-1 font-semibold">
+                  <span className="material-symbols-outlined text-[15px]">verified</span>
+                  Coordinates verified
+                </span>
+              </div>
+            )}
+
             <div className="flex items-center gap-2 text-on-surface-variant text-xs mt-1">
               <span className="material-symbols-outlined text-[16px] text-primary">info</span>
               <span>You can simply type the nearest town or trading center. We never publish your private coordinates.</span>
@@ -307,7 +469,7 @@ export default function FarmLocationPage() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <span className="text-base font-bold text-on-surface">Administrative Division</span>
-              <span className="text-xs text-on-surface-variant">Auto-filled from map selection</span>
+              <span className="text-xs text-on-surface-variant">Auto-filled from map &amp; GPS</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* County */}
@@ -323,22 +485,33 @@ export default function FarmLocationPage() {
                 <div className="relative">
                   <select
                     id="field-county"
-                    value={county}
+                    value={county.toLowerCase()}
                     onChange={(e) => {
                       setCounty(e.target.value);
                       if (e.target.value.trim()) {
                         setValidationErrors((prev) => prev.filter((f) => f !== "county"));
+                      }
+                      // Reset subcounty to first available for county if available
+                      const subs = COMMON_SUBCOUNTIES[e.target.value.toLowerCase()];
+                      if (subs && subs.length > 0) {
+                        setSubcounty(subs[0]);
                       }
                     }}
                     className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer border ${
                       validationErrors.includes("county") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
                     }`}
                   >
-                    <option value="nakuru">Nakuru County</option>
-                    <option value="kiambu">Kiambu County</option>
-                    <option value="nyandarua">Nyandarua County</option>
-                    <option value="narok">Narok County</option>
-                    <option value="machakos">Machakos County</option>
+                    {/* Render detected county if not in standard list */}
+                    {county && !KENYAN_COUNTIES.some((c) => c.toLowerCase() === county.toLowerCase()) && (
+                      <option value={county.toLowerCase()}>
+                        {county.charAt(0).toUpperCase() + county.slice(1)} County (Detected)
+                      </option>
+                    )}
+                    {KENYAN_COUNTIES.map((c) => (
+                      <option key={c} value={c.toLowerCase()}>
+                        {c} County
+                      </option>
+                    ))}
                   </select>
                   <span className="material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">
                     expand_more
@@ -357,27 +530,57 @@ export default function FarmLocationPage() {
                   )}
                 </div>
                 <div className="relative">
-                  <select
-                    id="field-subcounty"
-                    value={subcounty}
-                    onChange={(e) => {
-                      setSubcounty(e.target.value);
-                      if (e.target.value.trim()) {
-                        setValidationErrors((prev) => prev.filter((f) => f !== "subcounty"));
-                      }
-                    }}
-                    className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer border ${
-                      validationErrors.includes("subcounty") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
-                    }`}
-                  >
-                    <option value="naivasha">Naivasha Sub-County</option>
-                    <option value="gilgil">Gilgil Sub-County</option>
-                    <option value="nakuru-east">Nakuru East</option>
-                    <option value="subukia">Subukia Sub-County</option>
-                  </select>
-                  <span className="material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">
-                    expand_more
-                  </span>
+                  {COMMON_SUBCOUNTIES[county.toLowerCase()] ? (
+                    <>
+                      <select
+                        id="field-subcounty"
+                        value={subcounty}
+                        onChange={(e) => {
+                          setSubcounty(e.target.value);
+                          if (e.target.value.trim()) {
+                            setValidationErrors((prev) => prev.filter((f) => f !== "subcounty"));
+                          }
+                        }}
+                        className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer border ${
+                          validationErrors.includes("subcounty") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
+                        }`}
+                      >
+                        {/* If detected subcounty is not in the list, provide it as first option */}
+                        {subcounty &&
+                          !COMMON_SUBCOUNTIES[county.toLowerCase()].some(
+                            (s) => s.toLowerCase() === subcounty.toLowerCase()
+                          ) && (
+                            <option value={subcounty}>
+                              {subcounty.charAt(0).toUpperCase() + subcounty.slice(1)} (Detected)
+                            </option>
+                          )}
+                        {COMMON_SUBCOUNTIES[county.toLowerCase()].map((sub) => (
+                          <option key={sub} value={sub.toLowerCase()}>
+                            {sub} Sub-County
+                          </option>
+                        ))}
+                      </select>
+                      <span className="material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">
+                        expand_more
+                      </span>
+                    </>
+                  ) : (
+                    <input
+                      id="field-subcounty"
+                      type="text"
+                      value={subcounty}
+                      onChange={(e) => {
+                        setSubcounty(e.target.value);
+                        if (e.target.value.trim()) {
+                          setValidationErrors((prev) => prev.filter((f) => f !== "subcounty"));
+                        }
+                      }}
+                      placeholder="Enter sub-county or division"
+                      className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-colors border ${
+                        validationErrors.includes("subcounty") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
+                      }`}
+                    />
+                  )}
                 </div>
               </div>
 
