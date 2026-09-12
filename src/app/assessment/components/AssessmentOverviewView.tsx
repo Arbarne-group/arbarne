@@ -114,6 +114,8 @@ export default function AssessmentOverviewView({
     (p) => p.completed
   ).length;
 
+  const hasDoneAnyAssessment = completedPillarsCount > 0 || totalAnswered > 0;
+
   const assessmentStatus =
     completedPillarsCount === 8
       ? "Completed"
@@ -136,21 +138,46 @@ export default function AssessmentOverviewView({
             </p>
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">
-            <Link
-              href="/assessment/report?pillar=all"
-              className="px-5 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-label-sm text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-              Download 8-Pillar Report (PDF)
-            </Link>
-            <button
-              type="button"
-              onClick={() => setShowHistoryModal(true)}
-              className="px-5 py-2 border border-outline text-primary font-label-sm text-xs font-semibold rounded-full hover:bg-surface-variant transition-colors flex items-center gap-2 cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-sm">history</span>
-              Assessment History
-            </button>
+            {hasDoneAnyAssessment ? (
+              <Link
+                href="/assessment/report?pillar=all"
+                className="px-5 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-label-sm text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
+                Download 8-Pillar Report (PDF)
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                title="Complete at least one assessment pillar to unlock the report"
+                className="px-5 py-2 rounded-full bg-surface-variant/60 text-on-surface-variant/40 font-label-sm text-xs font-bold cursor-not-allowed flex items-center gap-1.5 border border-outline-variant/30 select-none"
+              >
+                <span className="material-symbols-outlined text-sm">lock</span>
+                Download 8-Pillar Report (PDF)
+              </button>
+            )}
+
+            {hasDoneAnyAssessment ? (
+              <button
+                type="button"
+                onClick={() => setShowHistoryModal(true)}
+                className="px-5 py-2 border border-outline text-primary font-label-sm text-xs font-semibold rounded-full hover:bg-surface-variant transition-colors flex items-center gap-2 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-sm">history</span>
+                Assessment History
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled
+                title="No assessment history available yet"
+                className="px-5 py-2 border border-outline-variant/30 text-on-surface-variant/40 font-label-sm text-xs font-semibold rounded-full cursor-not-allowed flex items-center gap-2 select-none"
+              >
+                <span className="material-symbols-outlined text-sm">lock</span>
+                Assessment History
+              </button>
+            )}
           </div>
         </div>
 
@@ -454,33 +481,65 @@ export default function AssessmentOverviewView({
               </button>
             </div>
 
-            <div className="py-4 space-y-3">
-              <div className="p-3 bg-surface-container rounded-xl flex items-center justify-between">
-                <div>
-                  <p className="font-bold text-sm text-on-surface">
-                    Pillar 2: Renewable Energy Baseline
+            <div className="py-4 space-y-3 max-h-80 overflow-y-auto pr-1">
+              {ALL_PILLARS.filter((p) => {
+                const prog = pillarProgress[p.id];
+                return prog && (prog.completed || (prog.answeredCount && prog.answeredCount > 0));
+              }).length === 0 ? (
+                <div className="text-center py-8 px-4 text-on-surface-variant space-y-2">
+                  <span className="material-symbols-outlined text-4xl text-on-surface-variant/40 block">
+                    inventory_2
+                  </span>
+                  <p className="font-semibold text-sm text-on-surface">
+                    No Assessment History Recorded Yet
                   </p>
-                  <p className="text-xs text-on-surface-variant">
-                    Completed 14 of 25 questions (56%)
-                  </p>
-                </div>
-                <span className="px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold rounded-full">
-                  Progressing
-                </span>
-              </div>
-              <div className="p-3 bg-surface-container rounded-xl flex items-center justify-between">
-                <div>
-                  <p className="font-bold text-sm text-on-surface">
-                    Initial Farm Self-Assessment
-                  </p>
-                  <p className="text-xs text-on-surface-variant">
-                    Started Sept 2026 • 8 Pillars
+                  <p className="text-xs text-on-surface-variant max-w-xs mx-auto">
+                    Complete any of the 8 capability pillars to see your benchmark scores and assessment logs here.
                   </p>
                 </div>
-                <span className="px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary text-xs font-bold rounded-full">
-                  Active
-                </span>
-              </div>
+              ) : (
+                ALL_PILLARS.filter((p) => {
+                  const prog = pillarProgress[p.id];
+                  return prog && (prog.completed || (prog.answeredCount && prog.answeredCount > 0));
+                }).map((p) => {
+                  const prog = pillarProgress[p.id];
+                  return (
+                    <div
+                      key={p.id}
+                      className="p-3 bg-surface-container rounded-xl flex items-center justify-between gap-3 border border-outline-variant/30"
+                    >
+                      <div className="min-w-0">
+                        <p className="font-bold text-sm text-on-surface truncate">
+                          Pillar {p.id}: {p.name}
+                        </p>
+                        <p className="text-xs text-on-surface-variant">
+                          {prog.completed
+                            ? `Completed all 25 questions • Score: ${prog.score ?? 0}%`
+                            : `In Progress • ${prog.answeredCount} of 25 answered (${prog.score ?? 0}%)`}
+                        </p>
+                        {prog.completedAt && (
+                          <p className="text-[10px] text-on-surface-variant/70 mt-0.5">
+                            {new Date(prog.completedAt).toLocaleDateString("en-GB", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </p>
+                        )}
+                      </div>
+                      <span
+                        className={`px-2.5 py-1 text-xs font-bold rounded-full shrink-0 ${
+                          prog.completed
+                            ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                            : "bg-amber-50 text-amber-800 border border-amber-200"
+                        }`}
+                      >
+                        {prog.completed ? "Completed" : "In Progress"}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
             </div>
 
             <div className="pt-3 border-t border-outline-variant/30 flex justify-end">

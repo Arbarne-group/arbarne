@@ -81,6 +81,11 @@ export default function FarmCharacteristicsPage() {
     if (navigateNext) {
       const missing: string[] = [];
       if (farmSize === "" || Number(farmSize) <= 0) missing.push("farmSize");
+      if (cultivatedAcres === "" || isNaN(Number(cultivatedAcres)) || Number(cultivatedAcres) < 0) missing.push("landUse");
+      if (grazingAcres === "" || isNaN(Number(grazingAcres)) || Number(grazingAcres) < 0) {
+        if (!missing.includes("landUse")) missing.push("landUse");
+      }
+      if (!landTenure) missing.push("landTenure");
       if (waterSources.length === 0) missing.push("waterSources");
       if (!soilTested) missing.push("soilTested");
 
@@ -156,7 +161,7 @@ export default function FarmCharacteristicsPage() {
   const grazingPercent = numFarmSize > 0 ? Math.min(100 - cultivatedPercent, Math.round((numGrazing / numFarmSize) * 100)) : 0;
 
   return (
-    <AppShell userName={currentUser?.name || "Keziah Wanjiku"} userRole={currentUser?.farmerProfile?.jobTitle || "Farm Owner"}>
+    <AppShell userName={currentUser?.name || "Farmer"} userRole={currentUser?.farmerProfile?.jobTitle || "Farm Owner"}>
       <div className="w-full pt-4 pb-28 px-4 md:px-8 max-w-5xl mx-auto">
         {/* Navigation Breadcrumb */}
         <div className="mb-6 flex items-center justify-between">
@@ -312,13 +317,26 @@ export default function FarmCharacteristicsPage() {
             </div>
 
             {/* Land Use Split */}
-            <div className="lg:col-span-7 bg-surface-container-low p-5 rounded-2xl space-y-4">
+            <div
+              id="q-landUse"
+              className={`lg:col-span-7 bg-surface-container-low p-5 rounded-2xl space-y-4 border transition-all ${
+                validationErrors.includes("landUse")
+                  ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                  : "border-transparent"
+              }`}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-[20px]">pie_chart</span>
                   <span className="text-sm font-semibold text-on-surface">
                     How is your land currently used?
                   </span>
+                  {validationErrors.includes("landUse") && (
+                    <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
+                      <span className="material-symbols-outlined text-[12px]">warning</span>
+                      Required
+                    </span>
+                  )}
                 </div>
                 <span className="text-xs font-medium text-on-surface-variant">
                   {numFarmSize > 0 ? `${numFarmSize} ${farmUnit} Total` : `— ${farmUnit} Total`}
@@ -362,6 +380,7 @@ export default function FarmCharacteristicsPage() {
                       onChange={(e) => {
                         const val = e.target.value === "" ? "" : parseFloat(e.target.value);
                         setCultivatedAcres(val);
+                        setValidationErrors((prev) => prev.filter((f) => f !== "landUse"));
                       }}
                       className="w-16 px-2 py-1 text-right text-xs font-bold text-primary bg-surface-container-low rounded-lg border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
                     />
@@ -386,6 +405,7 @@ export default function FarmCharacteristicsPage() {
                       onChange={(e) => {
                         const val = e.target.value === "" ? "" : parseFloat(e.target.value);
                         setGrazingAcres(val);
+                        setValidationErrors((prev) => prev.filter((f) => f !== "landUse"));
                       }}
                       className="w-16 px-2 py-1 text-right text-xs font-bold text-on-surface bg-surface-container-low rounded-lg border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
                     />
@@ -399,15 +419,27 @@ export default function FarmCharacteristicsPage() {
           {/* Land Ownership / Tenure */}
           <div
             id="q-landTenure"
-            className="space-y-4 pt-4 border-t border-surface-container-high/60 p-4 rounded-2xl"
+            className={`space-y-4 pt-4 border-t p-4 rounded-2xl transition-all ${
+              validationErrors.includes("landTenure")
+                ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                : "border-surface-container-high/60"
+            }`}
           >
-            <div>
-              <label className="text-base font-bold text-on-surface block">
-                What is your land ownership or tenure status?
-              </label>
-              <p className="text-xs text-on-surface-variant mt-0.5">
-                Select your legal tenure arrangement for the farmland.
-              </p>
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <label className="text-base font-bold text-on-surface block">
+                  What is your land ownership or tenure status?
+                </label>
+                <p className="text-xs text-on-surface-variant mt-0.5">
+                  Select your legal tenure arrangement for the farmland.
+                </p>
+              </div>
+              {validationErrors.includes("landTenure") && (
+                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="material-symbols-outlined text-[14px]">warning</span>
+                  Required
+                </span>
+              )}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
@@ -420,7 +452,10 @@ export default function FarmCharacteristicsPage() {
                   <button
                     key={item.id}
                     type="button"
-                    onClick={() => setLandTenure(item.id)}
+                    onClick={() => {
+                      setLandTenure(item.id);
+                      setValidationErrors((prev) => prev.filter((f) => f !== "landTenure"));
+                    }}
                     className={`p-3.5 rounded-xl text-left border transition-all cursor-pointer ${
                       isSelected
                         ? "bg-primary/5 border-primary shadow-xs ring-1 ring-primary"

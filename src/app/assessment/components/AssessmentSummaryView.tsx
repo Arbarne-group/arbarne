@@ -50,8 +50,25 @@ export default function AssessmentSummaryView({
   const [expandedCapIds, setExpandedCapIds] = useState<Record<string, boolean>>({});
 
   const { user: clerkUser } = useUser();
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("future_farms_user");
+      if (stored) {
+        setUserProfile(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
   const dynamicFarmId = clerkUser?.id ? `FFF-KE-PROD-${clerkUser.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD";
-  const dynamicFarmerName = clerkUser?.fullName || "Farmer";
+  const dynamicFarmerName = userProfile?.name || clerkUser?.fullName || "Farmer";
+  const dynamicFarmName = userProfile?.farmCharacteristics?.farmName || userProfile?.farmName || "My Farm";
+  const dynamicLocation = userProfile?.farmLocation?.county
+    ? `${userProfile.farmLocation.county}, ${userProfile.farmLocation.country || "Kenya"}`
+    : "Kenya";
 
   // Modals and drawers
   const [isFFVOpen, setIsFFVOpen] = useState(false);
@@ -155,6 +172,7 @@ export default function AssessmentSummaryView({
 
   // Automatic feedback for pillar based on total score
   const pillarFeedback = getPillarAutomaticFeedback(totalYes, totalQuestions);
+  const pillarPercentage = Math.round((totalYes / totalQuestions) * 100);
   const nextPillarId = pillar.id < ALL_PILLARS.length ? pillar.id + 1 : 1;
 
   // FFV Claims compilation for "Yes" answers
@@ -1271,7 +1289,7 @@ export default function AssessmentSummaryView({
               <div className="p-4 rounded-2xl bg-surface-container-lowest border border-surface-container-high grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Farm Name</span>
-                  <span className="font-bold text-on-surface">My Farm</span>
+                  <span className="font-bold text-on-surface truncate block">{dynamicFarmName}</span>
                 </div>
                 <div>
                   <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Future Farm ID</span>
@@ -1279,11 +1297,11 @@ export default function AssessmentSummaryView({
                 </div>
                 <div>
                   <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Location</span>
-                  <span className="font-bold text-on-surface">Nakuru, Kenya</span>
+                  <span className="font-bold text-on-surface truncate block">{dynamicLocation}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-on-surface-variant block">FFMI Index</span>
-                  <span className="font-bold text-emerald-800">74/100 (Structured)</span>
+                  <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Pillar Score</span>
+                  <span className="font-bold text-emerald-800">{pillarPercentage}% ({pillarFeedback.label})</span>
                 </div>
               </div>
 
@@ -1419,11 +1437,11 @@ export default function AssessmentSummaryView({
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 border-b border-surface-variant pb-3">
                   <div>
                     <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Farm Location</span>
-                    <span className="font-semibold text-on-surface">Nakuru County, Kenya</span>
+                    <span className="font-semibold text-on-surface">{dynamicLocation}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">FFMI Index</span>
-                    <span className="font-semibold text-emerald-800">74/100 (Structured Farm)</span>
+                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Pillar Score</span>
+                    <span className="font-semibold text-emerald-800">{pillarPercentage}% ({pillarFeedback.label})</span>
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Verification Scope</span>

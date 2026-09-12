@@ -268,7 +268,7 @@ export default function FarmLocationPage() {
   };
 
   return (
-    <AppShell userName={currentUser?.name || "Keziah Wanjiku"} userRole={currentUser?.farmerProfile?.jobTitle || "Farm Owner"}>
+    <AppShell userName={currentUser?.name || "Farmer"} userRole={currentUser?.farmerProfile?.jobTitle || "Farm Owner"}>
       <div className="w-full pt-4 pb-28 px-4 md:px-8 max-w-5xl mx-auto">
         {/* Navigation Breadcrumb */}
         <div className="mb-6 flex items-center justify-between">

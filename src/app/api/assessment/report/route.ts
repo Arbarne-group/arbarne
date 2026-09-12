@@ -33,19 +33,19 @@ export async function GET(request: Request) {
       },
     });
 
-    if (!assessment) {
+    if (!assessment || assessment.assessmentResponses.length === 0) {
       return NextResponse.json(
-        { error: "No assessment found for this user" },
+        { error: "No completed or in-progress assessment found for this user. Please complete an assessment before viewing the report." },
         { status: 404 }
       );
     }
 
     const farmMeta = {
-      farmName: user.farmName || "Green Horizon Agri-Farm",
-      ownerName: user.name || "Keziah Mwangi",
+      farmName: user.farmName || "Farm Name Not Specified",
+      ownerName: user.name || "Farmer",
       email: user.email,
-      valueChain: user.farmerProfile?.valueChain || "Horticulture & Crops",
-      experienceYears: user.farmerProfile?.experienceYears || "3-5 years",
+      valueChain: user.farmerProfile?.valueChain || "Not specified",
+      experienceYears: user.farmerProfile?.experienceYears || "Not specified",
       assessmentDate: assessment.createdAt.toISOString(),
       lastUpdated: assessment.updatedAt.toISOString(),
     };
@@ -64,6 +64,13 @@ export async function GET(request: Request) {
 
       const pillarRecord = assessment.pillarAssessments.find((pa) => pa.pillarId === pId);
       const pillarResponses = assessment.assessmentResponses.filter((r) => r.pillarId === pId);
+
+      if (pillarResponses.length === 0) {
+        return NextResponse.json(
+          { error: `No assessment responses found for Pillar ${pId}. Please complete Pillar ${pId} before viewing its report.` },
+          { status: 404 }
+        );
+      }
 
       let parsedCapScores: Record<string, any> = {};
       if (pillarRecord?.capabilityScores) {

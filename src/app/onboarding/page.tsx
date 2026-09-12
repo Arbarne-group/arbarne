@@ -112,7 +112,7 @@ export default function OnboardingOverviewPage() {
     }
   }, [clerkUser]);
 
-  const userName = user?.name || "Keziah Wanjiku";
+  const userName = user?.name || clerkUser?.fullName || "Farmer";
   const userRole = user?.farmerProfile?.jobTitle || "Farm Owner";
 
   // Initial cards (Phase 1)

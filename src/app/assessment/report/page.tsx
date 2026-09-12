@@ -73,25 +73,36 @@ function AssessmentReportContent() {
     userProfile?.farmCharacteristics?.farmName ||
     userProfile?.farmName ||
     reportData?.farm?.farmName ||
-    "Kariuki Green Acres";
-  const farmerName = userProfile?.name || reportData?.farm?.ownerName || "Keziah W. Kariuki";
+    "Farm Name Not Specified";
+  const farmerName =
+    userProfile?.name ||
+    clerkUser?.fullName ||
+    reportData?.farm?.ownerName ||
+    "Farmer";
   const locationCounty =
     userProfile?.farmLocation?.county ||
     userProfile?.farmLocation?.district ||
-    "Nakuru County";
+    "County Not Specified";
   const locationSubCounty =
     userProfile?.farmLocation?.subCounty ||
     userProfile?.farmLocation?.zone ||
-    "Naivasha Sub-County";
+    "Sub-County Not Specified";
   const locationCountry = userProfile?.farmLocation?.country || "Kenya";
-  const acreage = userProfile?.farmCharacteristics?.totalAcreage || "12.5";
+  const acreage =
+    userProfile?.farmCharacteristics?.totalAcreage ||
+    userProfile?.farmCharacteristics?.farmSize ||
+    "—";
   const assessmentDate = reportData?.farm?.assessmentDate
     ? new Date(reportData.farm.assessmentDate).toLocaleDateString("en-GB", {
         day: "numeric",
         month: "long",
         year: "numeric",
       })
-    : "18 October 2025";
+    : new Date().toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
 
   // Document Reference
   const docRef = useMemo(() => {
@@ -119,6 +130,29 @@ function AssessmentReportContent() {
         <p className="text-xs text-slate-500 mt-1">
           Compiling evaluation criteria, maturity verifications, and tailored gap recommendations.
         </p>
+      </div>
+    );
+  }
+
+  if (!reportData || reportData.error) {
+    return (
+      <div className="min-h-screen bg-surface-container-low flex flex-col items-center justify-center p-6 text-center">
+        <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center mb-4 shadow-xs">
+          <span className="material-symbols-outlined text-3xl">lock</span>
+        </div>
+        <h2 className="text-xl font-bold text-on-surface mb-2">Report Locked: Assessment Incomplete</h2>
+        <p className="text-sm text-on-surface-variant max-w-md mb-6 leading-relaxed">
+          {reportData?.error || "You have not completed any assessment questions yet. You must complete at least one capability pillar before generating, downloading, or reviewing your report."}
+        </p>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/assessment"
+            className="px-6 py-2.5 rounded-full bg-primary hover:bg-primary-container text-white font-semibold text-sm transition-all shadow-xs inline-flex items-center gap-2"
+          >
+            <span className="material-symbols-outlined text-base">arrow_back</span>
+            Go to Assessment
+          </Link>
+        </div>
       </div>
     );
   }
