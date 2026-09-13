@@ -595,12 +595,13 @@ export async function syncNeonAssessmentToSheetsFast(
       timestamp,
     ];
 
-    // Read Overview tab rows in single call
+    // Read Assessment Overview, Pillar Log, Question Responses, and Reports Generated in single call
     const batchGetResult = await batchGetSheetValues(
       [
         "'Assessment Overview'!C3:C",
         "'Pillar Submissions Log'!C3:C",
         "'Detailed Question Responses'!B3:B",
+        "'Reports Generated'!D3:D",
       ],
       id
     );
@@ -617,6 +618,7 @@ export async function syncNeonAssessmentToSheetsFast(
     const overviewEmails = extractRows("Assessment Overview");
     const pillarLogRows = extractRows("Pillar Submissions Log");
     const questionRows = extractRows("Detailed Question Responses");
+    const reportsEmails = extractRows("Reports Generated");
 
     const batchUpdates: Array<{ range: string; values: any[][] }> = [];
 
@@ -710,6 +712,51 @@ export async function syncNeonAssessmentToSheetsFast(
       batchUpdates.push({
         range: `'Detailed Question Responses'!A${nextQRow}:O${endRow}`,
         values: questionResponseRows,
+      });
+    }
+
+    // 4. Reports Generated (18 columns: A:R)
+    const reportTitle = pillarId
+      ? `Pillar 0${pillarId} Diagnostic & Action Report: ${ALL_PILLARS.find((p) => p.id === pillarId)?.name || ""}`
+      : "Comprehensive 8-Pillar Farm Readiness & Diagnostic Report";
+    const evaluatedScope = pillarId
+      ? `Pillar ${pillarId}: ${ALL_PILLARS.find((p) => p.id === pillarId)?.name || ""}`
+      : "All 8 Pillars (200 Questions)";
+
+    const reportRow = [
+      timestamp,
+      resolved.assignedId,
+      resolved.fullName,
+      resolved.email,
+      resolved.phone,
+      resolved.farmName,
+      resolved.locationSearch,
+      pillarId ? "SINGLE_PILLAR_DIAGNOSTIC" : "CONSOLIDATED_8_PILLAR",
+      reportTitle,
+      evaluatedScope,
+      `${Math.round(overallScore)}%`,
+      maturity.label,
+      yesCount,
+      noCount,
+      "Install sub-metering on irrigation solar pumps and initiate GlobalGAP spray logs",
+      "Consolidate outgrower acreage and transition borehole pumps to solar hybrid",
+      "PDF Ready / Printable Web Dossier",
+      "Farmer Self-Assessment + System Baseline",
+    ];
+
+    const reportIdx = reportsEmails.indexOf(emailLower);
+    if (reportIdx >= 0) {
+      const row = reportIdx + 3;
+      batchUpdates.push({
+        range: `'Reports Generated'!A${row}:R${row}`,
+        values: [reportRow],
+      });
+    } else {
+      const row = reportsEmails.length + 3;
+      reportsEmails.push(emailLower);
+      batchUpdates.push({
+        range: `'Reports Generated'!A${row}:R${row}`,
+        values: [reportRow],
       });
     }
 

@@ -4,7 +4,7 @@ import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { PILLAR_BRANDS } from "@/data/brandColors";
 import { getMaturityTier } from "@/lib/assessmentScoring";
-import { syncReportGenerationToSheet } from "@/lib/googleSheets";
+import { syncNeonAssessmentToSheetsFast } from "@/lib/neonRealtimeSync";
 
 export const dynamic = "force-dynamic";
 
@@ -182,8 +182,8 @@ export async function GET(request: Request) {
         })),
       };
 
-      // Synchronize single-pillar report generation to Google Sheets in background
-      syncReportGenerationToSheet(user.email, String(pId)).catch((err) => {
+      // Synchronize single-pillar report generation to Google Sheets in background via fast Neon sync
+      syncNeonAssessmentToSheetsFast(user.email, pId).catch((err: any) => {
         console.warn("[GoogleSheets] Single pillar report sync background error:", err?.message || err);
       });
 
@@ -302,9 +302,9 @@ export async function GET(request: Request) {
       },
     };
 
-    // Synchronize comprehensive 8-pillar report generation to Google Sheets in background
-    syncReportGenerationToSheet(user.email, "all").catch((err) => {
-      console.warn("[GoogleSheets] Comprehensive report sync background error:", err?.message || err);
+    // Synchronize comprehensive report generation to Google Sheets via fast Neon batch sync
+    syncNeonAssessmentToSheetsFast(user.email, pillarParam ? Number(pillarParam) : undefined).catch((err) => {
+      console.warn("[GoogleSheets] Fast Neon assessment report sync error:", err?.message || err);
     });
 
     return NextResponse.json({
