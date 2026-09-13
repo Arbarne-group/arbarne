@@ -32,6 +32,14 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        farmName: user.farmName,
+        futureFarmId: user.futureFarmId,
+      },
       subscription: subscription
         ? {
             ...subscription,
@@ -48,6 +56,8 @@ export async function GET(request: Request) {
         currency: o.currency,
         status: o.status,
         paymentMethod: o.paymentMethod,
+        phoneNumber: o.phoneNumber,
+        mpesaReceiptNumber: o.mpesaReceiptNumber,
         date: o.createdAt,
         reference: o.paystackReference,
       })),
@@ -63,11 +73,28 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { action, email } = body; // action: "cancel" | "manage_card"
+    const { action, email } = body; // action: "cancel" | "manage_card" | "update_phone"
 
     const user = await getOrCreateCurrentUser(email || undefined);
     if (!user) {
       return NextResponse.json({ error: "User unauthenticated" }, { status: 401 });
+    }
+
+    if (action === "update_phone") {
+      const { phone } = body;
+      if (!phone) {
+        return NextResponse.json({ error: "Phone number is required" }, { status: 400 });
+      }
+      const cleanPhone = String(phone).trim();
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { phone: cleanPhone },
+      });
+      return NextResponse.json({
+        success: true,
+        message: "M-Pesa phone number updated successfully.",
+        phone: cleanPhone,
+      });
     }
 
     const subscription = await prisma.subscription.findFirst({
@@ -110,7 +137,7 @@ export async function POST(request: Request) {
       return NextResponse.json({
         success: true,
         manageUrl: null,
-        message: "Card update link not required in test environment.",
+        message: "No card update link available for current payment profile.",
       });
     }
 
