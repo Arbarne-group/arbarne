@@ -32,13 +32,8 @@ function VerifyContent() {
     ? certId || `FFF-CERT-${pillarId ? `P${pillarId}` : "CORE"}-${farmId}`
     : reportId || `FFF-REP-${farmId}`;
 
-  // Link to view the actual authenticated document
-  const documentViewUrl = isCertificate
-    ? `/assessment/certificate?pillar=${pillarId || 2}`
-    : `/assessment/report?pillar=${pillarId || "all"}`;
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col items-center justify-between px-3 sm:px-6 md:px-10 py-4 sm:py-8 font-sans selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen min-h-[100dvh] bg-slate-50 text-slate-800 flex flex-col items-center justify-between px-3 sm:px-6 md:px-10 pt-4 sm:pt-8 pb-20 sm:pb-12 pb-[max(5rem,env(safe-area-inset-bottom))] font-sans selection:bg-emerald-100 selection:text-emerald-900">
       {/* Top Header - Mobile Responsive */}
       <header className="max-w-2xl w-full flex flex-col xs:flex-row sm:flex-row items-center justify-between gap-3 pb-4 sm:pb-6 border-b border-slate-200">
         <Link href="/" className="flex items-center gap-2.5">
@@ -249,34 +244,24 @@ function VerifyContent() {
           </div>
         </div>
 
-        {/* Card Footer Actions - Mobile Friendly Stack */}
-        <div className="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-          <Link
-            href={documentViewUrl}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer order-1 sm:order-none"
+        {/* Card Footer Actions - Clean 2-button Mobile-Friendly Bar */}
+        <div className="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="w-full sm:w-auto px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-xs cursor-pointer active:scale-98"
           >
-            <span className="material-symbols-outlined text-[16px]">visibility</span>
-            <span>{isCertificate ? "View Official Certificate" : "View Diagnostic Report"}</span>
-          </Link>
+            <span className="material-symbols-outlined text-[18px]">print</span>
+            <span>Print Verification Proof</span>
+          </button>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            <button
-              type="button"
-              onClick={() => window.print()}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-semibold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"
-            >
-              <span className="material-symbols-outlined text-[16px]">print</span>
-              <span>Print Proof</span>
-            </button>
-
-            <a
-              href={`mailto:arbarnegroup@gmail.com?subject=Verification%20Inquiry%20${encodeURIComponent(docReference)}`}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-xs transition flex items-center justify-center gap-1.5 text-center"
-            >
-              <span className="material-symbols-outlined text-[16px]">mail</span>
-              <span>Contact Verifier</span>
-            </a>
-          </div>
+          <a
+            href={`mailto:arbarnegroup@gmail.com?subject=Verification%20Inquiry%20${encodeURIComponent(docReference)}`}
+            className="w-full sm:w-auto px-5 py-3 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-semibold text-xs transition flex items-center justify-center gap-2 shadow-2xs text-center active:scale-98"
+          >
+            <span className="material-symbols-outlined text-[18px]">mail</span>
+            <span>Contact Verifier</span>
+          </a>
         </div>
       </main>
 
