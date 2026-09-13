@@ -61,6 +61,16 @@ export async function POST(request: Request) {
     const userId = order.userId;
     const plan = getPlanById(order.planType);
 
+    const isMobileMoney =
+      verification.channel === "mobile_money" ||
+      order.paymentMethod === "MPESA" ||
+      verification.data?.channel === "mobile_money";
+
+    const phoneFromMeta =
+      (verification as any).metadata?.phone ||
+      (verification as any).data?.metadata?.phone ||
+      order.phoneNumber;
+
     // 3. Update Order status
     const updatedOrder = await prisma.order.update({
       where: { id: order.id },
@@ -68,10 +78,24 @@ export async function POST(request: Request) {
         status: "COMPLETED",
         amount: verification.amount || order.amount,
         currency: verification.currency || "KES",
+        paymentMethod: isMobileMoney ? "MPESA" : (order.paymentMethod || "CARD"),
+        phoneNumber: phoneFromMeta || order.phoneNumber,
+        mpesaReceiptNumber: isMobileMoney
+          ? (verification.data?.reference || verification.data?.id ? `MPESA_${verification.data.id || reference}` : reference)
+          : order.mpesaReceiptNumber,
         paystackTransactionId: verification.data?.id ? String(verification.data.id) : null,
         updatedAt: new Date(),
       },
     });
+
+    if (phoneFromMeta) {
+      try {
+        await prisma.user.update({
+          where: { id: userId },
+          data: { phone: phoneFromMeta },
+        });
+      } catch {}
+    }
 
     // 4. Create or update Subscription record
     const now = new Date();
@@ -86,6 +110,11 @@ export async function POST(request: Request) {
       where: { userId },
       orderBy: { createdAt: "desc" },
     });
+
+    const cardLast4 = isMobileMoney ? null : (verification.authorization?.last4 || existingSub?.cardLast4 || null);
+    const cardBrand = isMobileMoney ? null : (verification.authorization?.brand || existingSub?.cardBrand || null);
+    const cardExpMonth = isMobileMoney ? null : (verification.authorization?.exp_month || existingSub?.cardExpMonth || null);
+    const cardExpYear = isMobileMoney ? null : (verification.authorization?.exp_year || existingSub?.cardExpYear || null);
 
     let subscription;
     if (existingSub) {
@@ -102,11 +131,11 @@ export async function POST(request: Request) {
           currentPeriodStart: now,
           currentPeriodEnd: oneMonthAhead,
           nextPaymentDate: oneMonthAhead,
-          authorizationCode: verification.authorization?.authorization_code || existingSub.authorizationCode,
-          cardLast4: verification.authorization?.last4 || existingSub.cardLast4,
-          cardBrand: verification.authorization?.brand || existingSub.cardBrand,
-          cardExpMonth: verification.authorization?.exp_month || existingSub.cardExpMonth,
-          cardExpYear: verification.authorization?.exp_year || existingSub.cardExpYear,
+          authorizationCode: isMobileMoney ? null : (verification.authorization?.authorization_code || existingSub.authorizationCode),
+          cardLast4,
+          cardBrand,
+          cardExpMonth,
+          cardExpYear,
         },
       });
     } else {
@@ -124,11 +153,11 @@ export async function POST(request: Request) {
           currentPeriodStart: now,
           currentPeriodEnd: oneMonthAhead,
           nextPaymentDate: oneMonthAhead,
-          authorizationCode: verification.authorization?.authorization_code,
-          cardLast4: verification.authorization?.last4,
-          cardBrand: verification.authorization?.brand,
-          cardExpMonth: verification.authorization?.exp_month,
-          cardExpYear: verification.authorization?.exp_year,
+          authorizationCode: isMobileMoney ? null : verification.authorization?.authorization_code,
+          cardLast4,
+          cardBrand,
+          cardExpMonth,
+          cardExpYear,
         },
       });
     }

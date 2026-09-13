@@ -368,11 +368,16 @@ export default function PricingPage() {
 
           {/* Secure Notice & Billing Portal link */}
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-surface-variant text-xs text-on-surface-variant">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <span className="material-symbols-outlined text-primary text-[18px]">
                 lock
               </span>
-              <span>Encrypted checkout via Paystack. Card &amp; M-Pesa supported.</span>
+              <img
+                src="/images/mpesa-logo.png"
+                alt="M-PESA"
+                className="h-4.5 w-auto object-contain"
+              />
+              <span>Encrypted checkout via Paystack. M-Pesa &amp; Card supported.</span>
             </div>
             <Link
               href="/billing"

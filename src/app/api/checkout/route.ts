@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
+import { getPlanById } from "@/lib/paystack";
 
 export async function POST(request: Request) {
   try {
@@ -18,16 +19,80 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found or unauthenticated" }, { status: 401 });
     }
 
+    const plan = getPlanById(planType);
+    const parsedAmount = parseFloat(amount) || plan.amount;
+
     // Create Order record
     const order = await prisma.order.create({
       data: {
         userId: user.id,
-        planType,
-        amount: parseFloat(amount),
-        paymentMethod,
-        phoneNumber: phoneNumber || null,
+        planType: plan.id,
+        amount: parsedAmount,
+        currency: "KES",
+        paymentMethod: paymentMethod.toUpperCase().includes("MPESA") ? "MPESA" : paymentMethod,
+        phoneNumber: phoneNumber || user.phone || null,
         status: "COMPLETED",
+        mpesaReceiptNumber: paymentMethod.toUpperCase().includes("MPESA")
+          ? `MPESA_${Date.now().toString().slice(-6)}`
+          : null,
       },
+    });
+
+    if (phoneNumber && !user.phone) {
+      try {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { phone: String(phoneNumber).trim() },
+        });
+      } catch {}
+    }
+
+    // Activate or update Subscription
+    const now = new Date();
+    const oneMonthAhead = new Date(now);
+    oneMonthAhead.setMonth(oneMonthAhead.getMonth() + 1);
+
+    const existingSub = await prisma.subscription.findFirst({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+    });
+
+    let subscription;
+    if (existingSub) {
+      subscription = await prisma.subscription.update({
+        where: { id: existingSub.id },
+        data: {
+          planId: plan.id,
+          status: "ACTIVE",
+          amount: plan.amount,
+          currency: "KES",
+          interval: plan.interval,
+          currentPeriodStart: now,
+          currentPeriodEnd: oneMonthAhead,
+          nextPaymentDate: oneMonthAhead,
+        },
+      });
+    } else {
+      subscription = await prisma.subscription.create({
+        data: {
+          userId: user.id,
+          planId: plan.id,
+          planCode: plan.defaultPlanCode,
+          subscriptionCode: `SUB_${paymentMethod.toUpperCase()}_${order.id.slice(-6)}_${Date.now().toString().slice(-4)}`,
+          status: "ACTIVE",
+          amount: plan.amount,
+          currency: "KES",
+          interval: plan.interval,
+          currentPeriodStart: now,
+          currentPeriodEnd: oneMonthAhead,
+          nextPaymentDate: oneMonthAhead,
+        },
+      });
+    }
+
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { subscriptionId: subscription.id },
     });
 
     // Generate or update comprehensive assessment scores

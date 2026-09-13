@@ -42,8 +42,8 @@ export default function DashboardPage() {
   const [newActionText, setNewActionText] = useState("");
   const [showAddAction, setShowAddAction] = useState(false);
 
-  // Recommendations / Action Items
   const [actions, setActions] = useState<ActionItem[]>([]);
+  const [subscription, setSubscription] = useState<any>(null);
 
   useEffect(() => {
     const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
@@ -95,6 +95,15 @@ export default function DashboardPage() {
         })
         .catch(console.error)
         .finally(() => setLoading(false));
+
+      fetch(`/api/billing/subscription?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((bData) => {
+          if (bData.subscription) {
+            setSubscription(bData.subscription);
+          }
+        })
+        .catch(console.error);
 
       fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
         .then((res) => res.json())
@@ -440,13 +449,30 @@ export default function DashboardPage() {
                 Farm progression across 8 Pillars (P1–P8) and 40 underlying Capabilities (1.1–8.5).
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="px-3 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed text-xs font-mono font-bold">
                 ID: {farmIdentifier}
               </span>
               <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
                 {verifiedPillarsCount}/8 Pillars Completed
               </span>
+              {subscription?.status === "ACTIVE" ? (
+                <Link
+                  href="/billing"
+                  className="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-bold hover:bg-emerald-100 transition-colors flex items-center gap-1.5 shadow-xs"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>{subscription.planName}</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/billing#available-plans"
+                  className="px-3 py-1 rounded-full bg-primary/15 hover:bg-primary/25 text-primary text-xs font-bold transition-colors flex items-center gap-1"
+                >
+                  <span className="material-symbols-outlined text-[14px]">bolt</span>
+                  <span>View Plans</span>
+                </Link>
+              )}
             </div>
           </div>
 

@@ -265,11 +265,17 @@ export default function BillingPortalPage() {
 
                     <div>
                       <span className="text-on-surface-variant block mb-0.5">Payment Method</span>
-                      <span className="text-sm font-bold text-emerald-700 flex items-center gap-1 mt-0.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
-                        M-Pesa Mobile Money
-                      </span>
-                      <span className="text-[11px] text-on-surface-variant block">
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <img
+                          src="/images/mpesa-logo.png"
+                          alt="M-PESA"
+                          className="h-4.5 w-auto object-contain"
+                        />
+                        <span className="text-xs font-bold text-emerald-800">
+                          M-Pesa Mobile Money
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-on-surface-variant block mt-0.5">
                         Paystack Secure
                       </span>
                     </div>
@@ -373,9 +379,13 @@ export default function BillingPortalPage() {
                 <div className="p-6 md:p-7 rounded-3xl bg-surface-container-lowest border border-surface-container-high/60 shadow-sm space-y-5">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-surface-container-high/40">
                     <div className="flex items-center gap-3">
-                      {/* Safaricom M-Pesa Green Badge */}
-                      <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black shadow-xs">
-                        <span className="material-symbols-outlined text-[22px]">phone_android</span>
+                      {/* Official Safaricom M-Pesa Logo Badge */}
+                      <div className="h-12 px-3.5 py-1.5 rounded-2xl bg-white border border-emerald-200 flex items-center justify-center shadow-xs">
+                        <img
+                          src="/images/mpesa-logo.png"
+                          alt="M-PESA"
+                          className="h-8 w-auto object-contain"
+                        />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
@@ -643,9 +653,13 @@ export default function BillingPortalPage() {
                     <span className="px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-xs uppercase tracking-wider">
                       Assessment Tiers
                     </span>
-                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      M-Pesa Supported
+                    <span className="text-xs font-bold text-emerald-800 bg-white border border-emerald-300 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-xs">
+                      <img
+                        src="/images/mpesa-logo.png"
+                        alt="M-PESA"
+                        className="h-4 w-auto object-contain"
+                      />
+                      <span>M-Pesa Supported</span>
                     </span>
                   </div>
                   <h2 className="text-2xl md:text-3xl font-extrabold text-on-surface mt-2">
@@ -737,8 +751,13 @@ export default function BillingPortalPage() {
                         Select 1 Pillar — KES 100
                       </Link>
                     )}
-                    <span className="text-[11px] text-center text-on-surface-variant block">
-                      Pay via M-Pesa or Card
+                    <span className="text-[11px] text-center text-on-surface-variant flex items-center justify-center gap-1.5 pt-1">
+                      <img
+                        src="/images/mpesa-logo.png"
+                        alt="M-PESA"
+                        className="h-3.5 w-auto object-contain"
+                      />
+                      <span>Pay via M-Pesa or Card</span>
                     </span>
                   </div>
                 </div>
@@ -818,8 +837,13 @@ export default function BillingPortalPage() {
                         Select 4 Pillars — KES 500
                       </Link>
                     )}
-                    <span className="text-[11px] text-center text-on-surface-variant block">
-                      Pay via M-Pesa or Card
+                    <span className="text-[11px] text-center text-on-surface-variant flex items-center justify-center gap-1.5 pt-1">
+                      <img
+                        src="/images/mpesa-logo.png"
+                        alt="M-PESA"
+                        className="h-3.5 w-auto object-contain"
+                      />
+                      <span>Pay via M-Pesa or Card</span>
                     </span>
                   </div>
                 </div>
@@ -908,9 +932,13 @@ export default function BillingPortalPage() {
                         <span>Unlock Full 8 Pillars — KES 1,000</span>
                       </Link>
                     )}
-                    <span className="text-[11px] text-center text-emerald-800 font-semibold block flex items-center justify-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                      Instant M-Pesa STK Push on Checkout
+                    <span className="text-[11px] text-center text-emerald-900 font-bold flex items-center justify-center gap-1.5 pt-1">
+                      <img
+                        src="/images/mpesa-logo.png"
+                        alt="M-PESA"
+                        className="h-4.5 w-auto object-contain"
+                      />
+                      <span>Instant M-Pesa STK Push on Checkout</span>
                     </span>
                   </div>
                 </div>

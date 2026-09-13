@@ -175,7 +175,7 @@ function CheckoutContent() {
                     <img
                       alt="M-Pesa"
                       className="h-7 object-contain"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHcZ--zOAZIaqKU3S45BkNvc8Xy_P3a--CB0gwn466ssefMYTRS5Bdm0fVc52lrWrTGMMTVxTjPco0pQqJUZ7tbFrjmliK4ofdWxWySVTx9uiR6u-xIlYhGXxeL-Df8fZemuH85s2-iNgC4M50e8yGoxo5Ax5Ss53cXgzAg278AeUa5jvU3a62Ds39W3wpWg2d2pZYjWQAqyGnCwZHSt91oYYjm8txxW3I4nycpSpR2_nr2YfelYE"
+                      src="/images/mpesa-logo.png"
                     />
                     <span className="font-semibold text-sm text-on-background">
                       M-Pesa
@@ -202,17 +202,17 @@ function CheckoutContent() {
                     className="sr-only"
                   />
                   <div
-                    className={`h-full border-2 rounded-2xl p-4 flex items-center justify-center gap-2.5 transition-all ${
+                    className={`h-full border-2 rounded-2xl p-4 flex items-center justify-center gap-3 transition-all ${
                       paymentMethod === "card"
                         ? "border-primary bg-primary-container/10 shadow-sm"
                         : "border-outline-variant hover:border-primary/40"
                     }`}
                   >
-                    <span className="material-symbols-outlined text-outline text-[22px]">
+                    <span className="material-symbols-outlined text-primary text-xl">
                       credit_card
                     </span>
                     <span className="font-semibold text-sm text-on-background">
-                      Credit / Debit Card
+                      Debit / Credit Card
                     </span>
                     {paymentMethod === "card" && (
                       <div className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center bg-primary">
@@ -226,9 +226,16 @@ function CheckoutContent() {
               {/* M-Pesa Form */}
               {paymentMethod === "mpesa" && (
                 <div className="space-y-4">
-                  <p className="text-xs text-on-surface-variant">
-                    Enter your Safaricom M-Pesa phone number to receive an instant PIN prompt on your handset.
-                  </p>
+                  <div className="flex items-center gap-3 p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
+                    <img
+                      src="/images/mpesa-logo.png"
+                      alt="M-PESA"
+                      className="h-6 w-auto object-contain shrink-0"
+                    />
+                    <p className="text-xs text-emerald-900 font-medium">
+                      Enter your Safaricom M-Pesa phone number to receive an instant PIN prompt on your handset.
+                    </p>
+                  </div>
                   <div>
                     <label className="text-xs font-semibold text-on-background block mb-1.5">
                       M-Pesa Mobile Number
