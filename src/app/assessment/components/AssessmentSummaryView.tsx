@@ -82,6 +82,16 @@ export default function AssessmentSummaryView({
   const [submissionNotes, setSubmissionNotes] = useState("");
   const [showReportModal, setShowReportModal] = useState(false);
   const [showCertificateModal, setShowCertificateModal] = useState(false);
+
+  // Print isolation: isolate certificate and hide all page background elements during print
+  useEffect(() => {
+    if (showCertificateModal) {
+      document.body.classList.add("printing-certificate");
+      return () => {
+        document.body.classList.remove("printing-certificate");
+      };
+    }
+  }, [showCertificateModal]);
   const [selectedCapForDetail, setSelectedCapForDetail] = useState<{
     id: string;
     code: string;
@@ -1819,187 +1829,244 @@ export default function AssessmentSummaryView({
       {/* MODAL 4: FUTURE FARMS VERIFIED CERTIFICATE (EVIDENCE-VERIFIED)             */}
       {/* ========================================================================= */}
       {showCertificateModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
-          <div className="bg-surface rounded-3xl max-w-2xl w-full border-2 border-emerald-600/40 shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
-            {/* Certificate Header Banner */}
-            <div className="p-6 bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 text-white text-center relative">
+        <div
+          id="certificate-modal-container"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-y-auto animate-in fade-in duration-200 print:bg-transparent print:p-0 print:static print:backdrop-blur-none"
+        >
+          <div className="bg-surface rounded-3xl max-w-3xl w-full border border-surface-variant shadow-2xl flex flex-col max-h-[94vh] overflow-hidden print:max-h-none print:overflow-visible print:border-none print:shadow-none print:rounded-none print:w-full print:max-w-none">
+            {/* Modal Top Control Bar - STRICTLY HIDDEN ON PRINT */}
+            <div className="p-3.5 sm:p-4 bg-emerald-950 text-white flex items-center justify-between no-print print:hidden shrink-0">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-emerald-800 text-emerald-300 flex items-center justify-center shadow-xs">
+                  <span className="material-symbols-outlined text-[18px]">verified</span>
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-white m-0 uppercase tracking-wider">
+                    Official Verification Certificate (FFV)
+                  </h4>
+                  <p className="text-[10px] text-emerald-300/80 m-0">
+                    Certificate Ref: <span className="font-mono text-white font-semibold">{certRefId}</span>
+                  </p>
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={() => setShowCertificateModal(false)}
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center cursor-pointer"
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center cursor-pointer transition-colors"
+                title="Close modal"
               >
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
-              
-              {/* Prominent Logo */}
-              <div className="mb-2">
-                <Image
-                  src="/logo.webp"
-                  alt="Future Farms"
-                  width={180}
-                  height={45}
-                  priority
-                  unoptimized
-                  className="h-9 w-auto object-contain mx-auto drop-shadow-md brightness-0 invert"
-                />
-              </div>
-
-              <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-200">
-                Official Certification of Capability
-              </span>
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white m-0 mt-1">
-                Future Farm Verification (FFV) Certificate
-              </h2>
-              <p className="text-xs text-emerald-200 mt-1 m-0">
-                Certificate Ref: <strong>{certRefId}</strong>
-              </p>
             </div>
 
-            {/* Certificate Body */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-5 text-xs text-on-surface bg-surface-container-lowest/40">
-              {/* Brand Watermark / Secondary Logo */}
-              <div className="flex items-center justify-center pt-1 pb-1 border-b border-surface-variant/40">
-                <Image
-                  src="/logo.webp"
-                  alt="Future Farms Logo"
-                  width={140}
-                  height={36}
-                  priority
-                  unoptimized
-                  className="h-7 w-auto object-contain"
-                />
-              </div>
+            {/* Scrollable container for preview on screen */}
+            <div className="flex-1 overflow-y-auto p-3 sm:p-5 md:p-6 bg-slate-100 dark:bg-slate-900/80 print:p-0 print:bg-white print:overflow-visible">
+              {/* THE PRINTABLE CERTIFICATE CARD - EXACTLY 1 LOGO, PROFESSIONAL & PRESTIGIOUS */}
+              <div
+                id="printable-certificate"
+                className="printable-certificate bg-white text-slate-900 mx-auto w-full max-w-2xl sm:max-w-3xl p-5 sm:p-8 relative border-4 border-double border-emerald-800 shadow-xl print:shadow-none print:border-4 print:border-double print:border-emerald-800 print:max-w-none print:w-full"
+                style={{ boxSizing: "border-box" }}
+              >
+                {/* Inner Ornamental Border with Corner Accents */}
+                <div className="border border-amber-600/40 p-4 sm:p-6 relative bg-[#fdfdfa]">
+                  {/* Corner Ornaments */}
+                  <div className="absolute top-1.5 left-1.5 w-3.5 h-3.5 border-t-2 border-l-2 border-amber-700 pointer-events-none" />
+                  <div className="absolute top-1.5 right-1.5 w-3.5 h-3.5 border-t-2 border-r-2 border-amber-700 pointer-events-none" />
+                  <div className="absolute bottom-1.5 left-1.5 w-3.5 h-3.5 border-b-2 border-l-2 border-amber-700 pointer-events-none" />
+                  <div className="absolute bottom-1.5 right-1.5 w-3.5 h-3.5 border-b-2 border-r-2 border-amber-700 pointer-events-none" />
 
-              {/* Certification Statement */}
-              <div className="text-center max-w-lg mx-auto py-1">
-                <p className="text-xs text-on-surface-variant leading-relaxed m-0 italic">
-                  This formally certifies that the agricultural enterprise identified below has undergone structured evidence verification under the Future Farms Systems Capability and Maturity Framework.
-                </p>
-              </div>
-
-              {/* Certificate Details Table */}
-              <div className="p-5 rounded-2xl bg-surface border border-emerald-200/80 shadow-xs space-y-3">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 border-b border-surface-variant pb-3">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Farm Name</span>
-                    <strong className="text-sm text-on-surface">{dynamicFarmName}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Future Farm ID</span>
-                    <strong className="text-sm text-emerald-700 font-mono">{dynamicFarmId}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Owner / Manager</span>
-                    <strong className="text-sm text-on-surface">{dynamicFarmerName}</strong>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 border-b border-surface-variant pb-3">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Farm Location</span>
-                    <span className="font-semibold text-on-surface">{dynamicLocation}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Pillar Score</span>
-                    <span className="font-semibold text-emerald-800">{pillarPercentage}% ({pillarFeedback.label})</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Verification Scope</span>
-                    <span className="font-semibold text-on-surface">Pillar {pillar.id} Focused FFV</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 border-b border-surface-variant pb-3">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Verified Pillar</span>
-                    <strong className="text-on-surface">{pillar.name}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Verified Pillar Score</span>
-                    <strong className="text-emerald-700">{verifiedPillarScore}/25 ({pillarFeedback.label})</strong>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Evidence Basis</span>
-                    <span className="text-on-surface">Digital records, DEM, Visit</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Verification Method</span>
-                    <span className="text-on-surface">Digital &amp; On-Farm Hybrid</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Issue Date</span>
-                    <span className="text-on-surface">{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Validity / Cycle</span>
-                    <span className="font-bold text-amber-800">90 Days (Reassessment due)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* QR Verification Code & Signatory */}
-              <div className="p-4 rounded-2xl bg-surface border border-outline-variant/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-1 rounded-xl bg-white border border-outline-variant shrink-0 shadow-xs">
-                    <ScannableQrCode
-                      value={certificateVerifyUrl}
-                      size={64}
-                      alt="Scan to authenticate certificate"
+                  {/* SINGLE PROMINENT LOGO - NO DUPLICATE */}
+                  <div className="flex justify-center mb-3">
+                    <Image
+                      src="/logo.webp"
+                      alt="Future Farms"
+                      width={170}
+                      height={42}
+                      priority
+                      unoptimized
+                      className="h-9 sm:h-11 w-auto object-contain drop-shadow-2xs"
                     />
                   </div>
-                  <div>
-                    <span className="text-[11px] font-bold text-on-surface block">
-                      Scan QR to Authenticate Certificate
+
+                  {/* Institutional Authority & Accreditation Header */}
+                  <div className="text-center space-y-0.5">
+                    <span className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.25em] text-emerald-900 block font-sans">
+                      Future Farms Systems • Verification &amp; Accreditation Council
                     </span>
-                    <span className="text-[10px] text-on-surface-variant leading-tight block">
-                      Enables financiers, buyers, and partners to verify farm credentials online.
+                    <p className="text-[9px] text-slate-500 uppercase tracking-widest font-semibold m-0">
+                      Administered by Arbarne Group Ltd • National Agricultural Accreditation Protocol
+                    </p>
+                  </div>
+
+                  {/* Ornamental Gold Divider */}
+                  <div className="flex items-center justify-center gap-2.5 my-3">
+                    <div className="h-[1px] w-12 sm:w-24 bg-gradient-to-r from-transparent to-amber-600/70" />
+                    <span className="material-symbols-outlined text-amber-600 text-[14px]">stars</span>
+                    <div className="h-[1px] w-12 sm:w-24 bg-gradient-to-l from-transparent to-amber-600/70" />
+                  </div>
+
+                  {/* Certificate Title */}
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-black text-emerald-950 tracking-tight uppercase text-center m-0">
+                    Certificate of Agricultural Capability
+                  </h2>
+                  <p className="text-[10px] sm:text-[11px] font-bold text-amber-700 uppercase tracking-[0.2em] text-center mt-1 m-0">
+                    Future Farm Verification (FFV) • Official Accreditation Record
+                  </p>
+
+                  {/* Formal Certification Statement */}
+                  <p className="text-[11px] sm:text-xs text-slate-600 text-center max-w-xl mx-auto mt-3 leading-relaxed font-serif italic m-0">
+                    This is to formally certify that the agricultural enterprise identified below has undergone structured evidence verification under the Future Farms Systems Capability and Maturity Framework, satisfying accredited operational criteria.
+                  </p>
+
+                  {/* Accredited Farm Enterprise Box */}
+                  <div className="my-4 py-2.5 px-4 bg-emerald-50/70 rounded-xl border border-emerald-900/20 text-center">
+                    <span className="text-[9px] uppercase font-bold text-emerald-800 tracking-widest block">
+                      Accredited Enterprise
                     </span>
-                    <Link
-                      href={certificateVerifyUrl}
-                      target="_blank"
-                      className="text-[10px] font-semibold text-emerald-700 hover:underline inline-flex items-center gap-1 mt-0.5"
-                    >
-                      <span>Open Verification Portal</span>
-                      <span className="material-symbols-outlined text-[11px]">open_in_new</span>
-                    </Link>
+                    <h3 className="text-lg sm:text-xl font-bold font-serif text-slate-900 mt-0.5 m-0 tracking-tight">
+                      {dynamicFarmName}
+                    </h3>
+                    <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-slate-600 mt-1">
+                      <span>Lead Operator: <strong className="text-slate-800">{dynamicFarmerName}</strong></span>
+                      <span className="text-slate-300">•</span>
+                      <span>Location: <strong className="text-slate-800">{dynamicLocation}</strong></span>
+                      <span className="text-slate-300">•</span>
+                      <span>Farm ID: <strong className="font-mono text-emerald-800">{dynamicFarmId}</strong></span>
+                    </div>
+                  </div>
+
+                  {/* Verified Pillar & Capability Details */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 rounded-xl bg-white border border-slate-200/90 text-left shadow-2xs">
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                        Verified Pillar
+                      </span>
+                      <strong className="text-xs text-slate-900 block mt-0.5 leading-snug">
+                        Pillar {pillar.id}: {pillar.name}
+                      </strong>
+                    </div>
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                        Capability Score
+                      </span>
+                      <strong className="text-xs text-emerald-800 block mt-0.5 font-bold">
+                        {verifiedPillarScore}/25 ({pillarPercentage}%)
+                      </strong>
+                      <span className="text-[10px] text-emerald-700 font-semibold">{pillarFeedback.label}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                        Verification Method
+                      </span>
+                      <span className="text-[11px] text-slate-700 font-medium block mt-0.5 leading-snug">
+                        Digital &amp; On-Farm Hybrid
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                        Certificate Ref
+                      </span>
+                      <strong className="text-[10px] text-slate-800 font-mono block mt-0.5 truncate">
+                        {certRefId}
+                      </strong>
+                      <span className="text-[9px] text-slate-500 block">Cycle: 90-Day Review</span>
+                    </div>
+                  </div>
+
+                  {/* Authentication, Seal & Signatory Footer */}
+                  <div className="pt-3.5 border-t border-slate-200 mt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    {/* Left: Scannable QR Code */}
+                    <div className="flex items-center gap-3">
+                      <div className="p-1 bg-white border border-slate-300 rounded-xl shadow-2xs shrink-0">
+                        <ScannableQrCode
+                          value={certificateVerifyUrl}
+                          size={64}
+                          alt="Scan to authenticate certificate"
+                        />
+                      </div>
+                      <div className="text-left">
+                        <span className="text-[10px] font-bold text-slate-800 block uppercase tracking-tight">
+                          Official Verification QR
+                        </span>
+                        <span className="text-[9px] text-slate-500 leading-tight block mt-0.5 max-w-[190px]">
+                          Scan to verify live credential authenticity and audited records online.
+                        </span>
+                        <Link
+                          href={certificateVerifyUrl}
+                          target="_blank"
+                          className="text-[9px] font-semibold text-emerald-700 hover:underline inline-flex items-center gap-0.5 mt-1 no-print print:hidden"
+                        >
+                          <span>Verify Online</span>
+                          <span className="material-symbols-outlined text-[10px]">open_in_new</span>
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Center: Tamper-proof Medallion Badge */}
+                    <div className="hidden sm:flex flex-col items-center justify-center shrink-0 px-3 py-1.5 rounded-2xl border border-amber-500/40 bg-amber-50/60 shadow-2xs">
+                      <div className="flex items-center gap-1 text-amber-700">
+                        <span className="material-symbols-outlined text-[16px]">verified</span>
+                        <span className="text-[9px] font-black uppercase tracking-wider">FFV Verified</span>
+                      </div>
+                      <span className="text-[8px] text-amber-800/80 font-mono tracking-widest mt-0.5">TAMPER-PROOF</span>
+                    </div>
+
+                    {/* Right: Authorized Signatory */}
+                    <div className="text-center sm:text-right">
+                      <span className="text-[9px] uppercase font-bold text-slate-400 block tracking-wider">
+                        Authorized Issuing Signatory
+                      </span>
+                      <div className="my-0.5">
+                        <span className="font-serif italic text-sm text-emerald-950 font-bold block">
+                          Dr. Angela Kamau
+                        </span>
+                      </div>
+                      <span className="text-[9px] text-slate-600 block font-medium">
+                        Head of Verification • Future Farms Standards Board
+                      </span>
+                      <span className="text-[9px] text-slate-500 block">
+                        Arbarne Group Ltd • <span className="text-emerald-700 font-medium">arbarnegroup@gmail.com</span>
+                      </span>
+                      <span className="text-[8px] text-slate-400 block mt-0.5">
+                        Issued: {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Statutory Disclaimer */}
+                  <div className="mt-3 pt-2 border-t border-slate-200/60 text-[8px] sm:text-[9px] text-slate-400 text-center leading-relaxed">
+                    <strong>Notice:</strong> This certificate formally attests to verified agricultural capability under the Future Farms Framework. Continuous compliance is subject to periodic verification. Accredited by Arbarne Group Ltd (arbarnegroup@gmail.com).
                   </div>
                 </div>
-
-                <div className="text-right sm:text-right border-t sm:border-t-0 pt-2 sm:pt-0">
-                  <span className="text-[10px] uppercase font-bold text-on-surface-variant block">Authorized Signatory</span>
-                  <strong className="text-xs text-on-surface block">Dr. Angela Kamau</strong>
-                  <span className="text-[10px] text-on-surface-variant block">Future Farms Verification Board • Arbarne Group</span>
-                  <a href="mailto:arbarnegroup@gmail.com" className="text-[10px] text-emerald-700 font-semibold hover:underline block mt-0.5">
-                    arbarnegroup@gmail.com
-                  </a>
-                </div>
-              </div>
-
-              {/* Statutory Disclaimer */}
-              <div className="p-3 rounded-xl bg-surface-container-high/60 text-[10px] text-on-surface-variant leading-relaxed">
-                <strong>Disclaimer / Scope Statement:</strong> FFV verifies capabilities under the Future Farms Framework and does not replace statutory, regulatory or sector-specific certifications. Accredited by Arbarne Group.
               </div>
             </div>
 
-            {/* Certificate Footer */}
-            <div className="p-4 border-t border-surface-container-high bg-surface flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs flex items-center gap-1.5 cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[16px]">print</span>
-                Print Official Certificate
-              </button>
+            {/* Modal Bottom Action Bar - STRICTLY HIDDEN ON PRINT */}
+            <div className="p-3.5 sm:p-4 border-t border-surface-container-high bg-surface flex flex-wrap items-center justify-between gap-2.5 no-print print:hidden shrink-0">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs flex items-center gap-2 transition cursor-pointer shadow-xs"
+                >
+                  <span className="material-symbols-outlined text-[16px]">print</span>
+                  Print Official Certificate (PDF)
+                </button>
+                <Link
+                  href={`/assessment/certificate?pillar=${pillar.id}`}
+                  target="_blank"
+                  className="px-3.5 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[15px]">open_in_new</span>
+                  Open Standalone Page
+                </Link>
+              </div>
               <button
                 type="button"
                 onClick={() => setShowCertificateModal(false)}
-                className="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-bold text-xs cursor-pointer"
               >
-                Close Certificate
+                Close
               </button>
             </div>
           </div>

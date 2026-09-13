@@ -79,7 +79,7 @@ export default function Sidebar({
 
   return (
     <nav
-      className={`h-full fixed left-0 top-0 hidden md:flex flex-col bg-surface-container-lowest border-r border-surface-variant z-40 transition-all duration-300 ease-in-out select-none ${
+      className={`h-full fixed left-0 top-0 hidden md:flex flex-col bg-surface-container-lowest border-r border-surface-variant z-40 transition-all duration-300 ease-in-out select-none no-print print:hidden ${
         collapsed ? "w-20" : "w-64"
       }`}
     >

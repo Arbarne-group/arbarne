@@ -192,7 +192,7 @@ export default function AppShell({
 
         {/* Floating Redirect Alert Banner */}
         {redirectNotice && (
-          <div className="mx-4 mt-3 p-3.5 rounded-xl bg-primary/10 border border-primary/30 text-primary text-xs font-semibold flex items-center justify-between shadow-xs animate-fadeIn shrink-0">
+          <div className="mx-4 mt-3 p-3.5 rounded-xl bg-primary/10 border border-primary/30 text-primary text-xs font-semibold flex items-center justify-between shadow-xs animate-fadeIn shrink-0 no-print print:hidden">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px]">lock</span>
               <span>{redirectNotice}</span>
