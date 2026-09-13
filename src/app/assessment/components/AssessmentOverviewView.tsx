@@ -138,7 +138,7 @@ export default function AssessmentOverviewView({
             </p>
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">
-            {hasDoneAnyAssessment ? (
+            {completedPillarsCount === 8 ? (
               <Link
                 href="/assessment/report?pillar=all"
                 className="px-5 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-label-sm text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
@@ -147,15 +147,41 @@ export default function AssessmentOverviewView({
                 Download 8-Pillar Report (PDF)
               </Link>
             ) : (
-              <button
-                type="button"
-                disabled
-                title="Complete at least one assessment pillar to unlock the report"
-                className="px-5 py-2 rounded-full bg-surface-variant/60 text-on-surface-variant/40 font-label-sm text-xs font-bold cursor-not-allowed flex items-center gap-1.5 border border-outline-variant/30 select-none"
+              <Link
+                href="/assessment/report?pillar=all"
+                title={`All 8 pillars required for full report (${completedPillarsCount}/8 completed). Click to view progress and available individual reports.`}
+                className="px-5 py-2 rounded-full bg-surface-variant/70 hover:bg-surface-variant text-on-surface-variant font-label-sm text-xs font-bold flex items-center gap-1.5 border border-outline-variant/40 transition-colors cursor-pointer"
               >
-                <span className="material-symbols-outlined text-sm">lock</span>
-                Download 8-Pillar Report (PDF)
-              </button>
+                <span className="material-symbols-outlined text-sm text-amber-700">lock</span>
+                <span>8-Pillar Report</span>
+                <span className="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-mono border border-amber-300">
+                  {completedPillarsCount}/8 Done
+                </span>
+              </Link>
+            )}
+
+            {completedPillarsCount > 0 && (
+              <div className="relative inline-flex items-center">
+                <select
+                  aria-label="Download Individual Pillar Report"
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      window.location.href = `/assessment/report?pillar=${e.target.value}`;
+                    }
+                  }}
+                  defaultValue=""
+                  className="px-3.5 py-2 rounded-full bg-surface border border-outline-variant/70 hover:border-emerald-600 text-slate-700 font-label-sm text-xs font-semibold shadow-xs cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-600 transition"
+                >
+                  <option value="" disabled>
+                    Pillar Reports ({completedPillarsCount}) ▾
+                  </option>
+                  {ALL_PILLARS.filter((p) => pillarProgress[p.id]?.completed).map((p) => (
+                    <option key={p.id} value={String(p.id)}>
+                      Pillar {p.id}: {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
 
             {hasDoneAnyAssessment ? (
@@ -422,17 +448,30 @@ export default function AssessmentOverviewView({
 
                     <div className="flex items-center justify-between text-xs text-on-surface-variant pt-2.5 border-t border-outline-variant/20 mt-auto">
                       <span className="font-mono text-[11px]">Cap. {pillar.id}.1–{pillar.id}.5</span>
-                      {isLockedCooldown ? (
-                        <span className="font-semibold text-amber-800 text-[11px] flex items-center gap-1">
-                          <span>View Summary</span>
-                          <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
-                        </span>
-                      ) : isReassessReady ? (
-                        <span className="font-semibold text-emerald-700 text-[11px] group-hover:underline">
-                          Retake Assessment →
-                        </span>
-                      ) : status?.completed ? (
-                        <span className="font-semibold text-primary text-[11px]">Completed</span>
+                      {status?.completed ? (
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href={`/assessment/report?pillar=${pillar.id}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-2xs transition-colors"
+                            title={`Download Pillar ${pillar.id} Diagnostic Report (PDF)`}
+                          >
+                            <span className="material-symbols-outlined text-[13px]">picture_as_pdf</span>
+                            <span>Report</span>
+                          </Link>
+                          {isLockedCooldown ? (
+                            <span className="font-semibold text-amber-800 text-[11px] flex items-center gap-0.5">
+                              <span>Summary</span>
+                              <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
+                            </span>
+                          ) : isReassessReady ? (
+                            <span className="font-semibold text-emerald-700 text-[11px] group-hover:underline">
+                              Retake →
+                            </span>
+                          ) : (
+                            <span className="font-semibold text-primary text-[11px]">Summary →</span>
+                          )}
+                        </div>
                       ) : (
                         <span className="text-primary font-semibold text-[11px] group-hover:underline">Start Pillar →</span>
                       )}
@@ -448,7 +487,10 @@ export default function AssessmentOverviewView({
         <div className="mt-8 flex justify-center md:justify-end border-t border-outline-variant/50 pt-8">
           <button
             type="button"
-            onClick={() => onSelectPillar(2)} // Default opens Pillar 2 as requested in mockups
+            onClick={() => {
+              const nextPillar = ALL_PILLARS.find((p) => !pillarProgress[p.id]?.completed)?.id || 1;
+              onSelectPillar(nextPillar);
+            }}
             className="bg-[#009924] text-on-primary font-label-sm text-label-sm px-10 py-4 rounded-xl shadow-level-1 hover:shadow-level-2 transition-all duration-200 flex items-center gap-3 w-full md:w-auto justify-center font-semibold group cursor-pointer"
           >
             Start / Continue Assessment

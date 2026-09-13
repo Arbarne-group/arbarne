@@ -51,6 +51,24 @@ export async function GET(request: Request) {
       lastUpdated: assessment.updatedAt.toISOString(),
     };
 
+    // Calculate completion status of all pillars
+    const completedPillarsInfo = ALL_PILLARS.map((p) => {
+      const pa = assessment.pillarAssessments.find((item) => item.pillarId === p.id);
+      const pResponses = assessment.assessmentResponses.filter((r) => r.pillarId === p.id);
+      const isCompleted = Boolean(pa?.isCompleted || pResponses.length >= 25);
+      const yesCount = pResponses.filter((r) => r.answer === "yes").length;
+      return {
+        id: p.id,
+        name: p.name,
+        completed: isCompleted,
+        answeredCount: pResponses.length,
+        score: pa?.score ?? (pResponses.length > 0 ? Math.round((yesCount / 25) * 100) : 0),
+      };
+    });
+
+    const completedPillars = completedPillarsInfo.filter((p) => p.completed);
+    const completedPillarIds = completedPillars.map((p) => p.id);
+
     // -------------------------------------------------------------
     // Case 1: Single Pillar Report (pillarId: 1 - 8)
     // -------------------------------------------------------------
@@ -60,16 +78,30 @@ export async function GET(request: Request) {
       const brand = PILLAR_BRANDS[pId];
 
       if (!pillarMeta) {
-        return NextResponse.json({ error: "Invalid pillarId" }, { status: 400 });
+        return NextResponse.json(
+          { error: "Invalid pillarId", completedPillars: completedPillarIds, completedPillarsInfo },
+          { status: 400 }
+        );
       }
 
       const pillarRecord = assessment.pillarAssessments.find((pa) => pa.pillarId === pId);
       const pillarResponses = assessment.assessmentResponses.filter((r) => r.pillarId === pId);
+      const isPillarDone = Boolean(pillarRecord?.isCompleted || pillarResponses.length >= 25);
 
-      if (pillarResponses.length === 0) {
+      if (!isPillarDone) {
         return NextResponse.json(
-          { error: `No assessment responses found for Pillar ${pId}. Please complete Pillar ${pId} before viewing its report.` },
-          { status: 404 }
+          {
+            success: false,
+            error: `Pillar ${pId} (${pillarMeta.name}) is incomplete (${pillarResponses.length}/25 questions answered). You must complete all questions for Pillar ${pId} before viewing or downloading its individual report.`,
+            isLocked: true,
+            pillarId: pId,
+            pillarName: pillarMeta.name,
+            answeredCount: pillarResponses.length,
+            totalRequired: 25,
+            completedPillars: completedPillarIds,
+            completedPillarsInfo,
+          },
+          { status: 403 }
         );
       }
 
@@ -107,7 +139,7 @@ export async function GET(request: Request) {
           maturityStage: tier.label,
           maturityDescription: tier.description,
           guidingQuestion: pillarMeta.guidingQuestion,
-          isCompleted: pillarRecord?.isCompleted || pillarResponses.length >= 25,
+          isCompleted: true,
           capabilityScores: parsedCapScores,
         },
         capabilityBreakdown: pillarMeta.capabilities.map((c) => {
@@ -154,12 +186,34 @@ export async function GET(request: Request) {
         console.warn("[GoogleSheets] Single pillar report sync background error:", err?.message || err);
       });
 
-      return NextResponse.json({ success: true, report: pillarReport });
+      return NextResponse.json({
+        success: true,
+        report: pillarReport,
+        completedPillars: completedPillarIds,
+        completedPillarsInfo,
+        totalCompletedPillars: completedPillars.length,
+        isAllCompleted: completedPillars.length === 8,
+      });
     }
 
     // -------------------------------------------------------------
-    // Case 2: Overall Farm Transformation Report (Strictly Assessed Pillars)
+    // Case 2: Overall Farm Transformation Report (Strictly requires all 8 pillars)
     // -------------------------------------------------------------
+    if (completedPillars.length < 8) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: `The comprehensive 8-pillar report requires completing all 8 framework pillars. You have currently completed ${completedPillars.length} of 8 pillars. You can download individual reports for any completed pillars below.`,
+          isLocked: true,
+          completedCount: completedPillars.length,
+          totalRequired: 8,
+          completedPillars: completedPillarIds,
+          completedPillarsInfo,
+        },
+        { status: 403 }
+      );
+    }
+
     const allYes = assessment.assessmentResponses.filter((r) => r.answer === "yes");
     const allNo = assessment.assessmentResponses.filter((r) => r.answer === "no");
 
@@ -182,17 +236,17 @@ export async function GET(request: Request) {
         gapCount: pNo,
         totalQuestions: pResponses.length || 25,
         maturityStage: tier.label,
-        isCompleted: pa?.isCompleted || (pResponses.length >= 25),
-        isAssessed,
+        isCompleted: true,
+        isAssessed: true,
       };
     });
 
-    const activeAssessedPillars = pillarSummaries.filter((p) => p.isAssessed);
+    const activeAssessedPillars = pillarSummaries;
 
-    // Strict calculation: Overall score is the average of ONLY the assessed pillars
-    const computedOverallScore = activeAssessedPillars.length > 0
-      ? Math.round(activeAssessedPillars.reduce((acc, p) => acc + p.score, 0) / activeAssessedPillars.length)
-      : 0;
+    // Overall score is the average of all 8 pillars
+    const computedOverallScore = Math.round(
+      pillarSummaries.reduce((acc, p) => acc + p.score, 0) / 8
+    );
     const overallTier = getMaturityTier(computedOverallScore);
 
     // Group cross-pillar gaps by priority
@@ -221,9 +275,9 @@ export async function GET(request: Request) {
         overallFfmiScore: computedOverallScore,
         maturityTier: overallTier.label,
         maturityDescription: overallTier.description,
-        totalAssessedPillars: activeAssessedPillars.length,
+        totalAssessedPillars: 8,
         totalPillarsInFramework: 8,
-        totalQuestions: activeAssessedPillars.length * 25,
+        totalQuestions: 8 * 25,
         answeredCount: assessment.assessmentResponses.length,
         totalVerified: allYes.length,
         totalActionableGaps: allNo.length,
@@ -252,7 +306,14 @@ export async function GET(request: Request) {
       console.warn("[GoogleSheets] Comprehensive report sync background error:", err?.message || err);
     });
 
-    return NextResponse.json({ success: true, report: overallReport });
+    return NextResponse.json({
+      success: true,
+      report: overallReport,
+      completedPillars: completedPillarIds,
+      completedPillarsInfo,
+      totalCompletedPillars: 8,
+      isAllCompleted: true,
+    });
   } catch (error: any) {
     console.error("Error generating assessment report:", error);
     return NextResponse.json(

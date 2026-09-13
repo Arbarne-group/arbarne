@@ -36,6 +36,17 @@ function AssessmentReportContent() {
   const [reportData, setReportData] = useState<any>(null);
   const [activeEmail, setActiveEmail] = useState<string>("");
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [completedPillars, setCompletedPillars] = useState<number[]>([]);
+  const [completedPillarsInfo, setCompletedPillarsInfo] = useState<any[]>([]);
+  const [errorState, setErrorState] = useState<{
+    error: string;
+    isLocked?: boolean;
+    completedCount?: number;
+    totalRequired?: number;
+    completedPillars?: number[];
+    pillarId?: number;
+    answeredCount?: number;
+  } | null>(null);
 
   // Load user profile & assessment report
   useEffect(() => {
@@ -56,18 +67,66 @@ function AssessmentReportContent() {
       })
       .catch(console.error);
 
+    // Fetch assessment status to track all completed pillars
+    fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.pillarStatus) {
+          const completedIds: number[] = [];
+          const info = ALL_PILLARS.map((p) => {
+            const ps = data.pillarStatus[p.id];
+            const isDone = Boolean(ps?.isCompleted);
+            if (isDone) completedIds.push(p.id);
+            return {
+              id: p.id,
+              name: p.name,
+              completed: isDone,
+              score: ps?.score,
+            };
+          });
+          setCompletedPillars(completedIds);
+          setCompletedPillarsInfo(info);
+        }
+      })
+      .catch(console.error);
+
     // Fetch assessment report data from API
     const reportUrl = `/api/assessment/report?email=${encodeURIComponent(email)}&pillarId=${pillarParam}`;
     fetch(reportUrl)
-      .then((res) => res.json())
-      .then((data) => {
+      .then(async (res) => {
+        const data = await res.json();
+        if (data.completedPillars && Array.isArray(data.completedPillars)) {
+          setCompletedPillars(data.completedPillars);
+        }
+        if (data.completedPillarsInfo) {
+          setCompletedPillarsInfo(data.completedPillarsInfo);
+        }
+
         if (data.success && data.report) {
           setReportData(data.report);
+          setErrorState(null);
+        } else {
+          setReportData(null);
+          setErrorState({
+            error: data.error || "Report is currently unavailable.",
+            isLocked: Boolean(data.isLocked),
+            completedCount: data.completedCount ?? (data.completedPillars?.length || 0),
+            totalRequired: data.totalRequired ?? 8,
+            completedPillars: data.completedPillars || [],
+            pillarId: data.pillarId,
+            answeredCount: data.answeredCount,
+          });
         }
       })
-      .catch(console.error)
+      .catch((err) => {
+        console.error(err);
+        setReportData(null);
+        setErrorState({
+          error: "Failed to connect to assessment report service. Please try again.",
+        });
+      })
       .finally(() => setLoading(false));
-  }, [pillarParam, emailParam]);
+  }, [pillarParam, emailParam, clerkUser]);
 
   // Farm and Farmer Profile details
   const farmName =
@@ -173,24 +232,108 @@ function AssessmentReportContent() {
     );
   }
 
-  if (!reportData || reportData.error) {
+  if (!reportData || errorState) {
+    const is8PillarLocked = isAllPillars;
+    const completedCount = errorState?.completedCount ?? completedPillars.length;
+    const targetPillarMeta = pillarId ? ALL_PILLARS.find((p) => p.id === pillarId) : null;
+
     return (
-      <div className="min-h-screen bg-surface-container-low flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center mb-4 shadow-xs">
-          <span className="material-symbols-outlined text-3xl">lock</span>
-        </div>
-        <h2 className="text-xl font-bold text-on-surface mb-2">Report Locked: Assessment Incomplete</h2>
-        <p className="text-sm text-on-surface-variant max-w-md mb-6 leading-relaxed">
-          {reportData?.error || "You have not completed any assessment questions yet. You must complete at least one capability pillar before generating, downloading, or reviewing your report."}
-        </p>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/assessment"
-            className="px-6 py-2.5 rounded-full bg-primary hover:bg-primary-container text-white font-semibold text-sm transition-all shadow-xs inline-flex items-center gap-2"
-          >
-            <span className="material-symbols-outlined text-base">arrow_back</span>
-            Go to Assessment
-          </Link>
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 sm:p-6 text-slate-800">
+        <div className="max-w-xl w-full bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center mx-auto mb-5 shadow-xs">
+            <span className="material-symbols-outlined text-3xl">
+              {errorState?.isLocked ? "lock" : "info"}
+            </span>
+          </div>
+
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200 mb-3">
+            <span className="material-symbols-outlined text-sm">lock</span>
+            {is8PillarLocked
+              ? `All 8 Pillars Required (${completedCount}/8 Completed)`
+              : `Pillar ${pillarId} Incomplete`}
+          </span>
+
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
+            {is8PillarLocked
+              ? "Full 8-Pillar Report Locked"
+              : `Pillar 0${pillarId} Report Locked: ${targetPillarMeta?.name || ""}`}
+          </h2>
+
+          <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+            {errorState?.error ||
+              (is8PillarLocked
+                ? "The comprehensive 8-pillar report requires completing all 8 framework pillars. You have not completed all pillars yet."
+                : `Please complete all assessment questions for Pillar ${pillarId} before generating its individual report.`)}
+          </p>
+
+          {/* Progress bar if 8-pillar report */}
+          {is8PillarLocked && (
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 mb-6 text-left">
+              <div className="flex justify-between items-center text-xs font-bold text-slate-700 mb-2">
+                <span>Pillars Completed</span>
+                <span className="text-emerald-800 font-mono">
+                  {completedCount} of 8 ({Math.round((completedCount / 8) * 100)}%)
+                </span>
+              </div>
+              <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-emerald-600 rounded-full transition-all duration-500"
+                  style={{ width: `${(completedCount / 8) * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* If there are completed pillars, show links to download individual reports */}
+          {completedPillars.length > 0 && (
+            <div className="mb-6 text-left border-t border-slate-100 pt-5">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-emerald-700 text-sm">check_circle</span>
+                  Available Individual Reports ({completedPillars.length})
+                </h3>
+                <span className="text-[11px] text-slate-400">Click to download</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {completedPillars.map((pId) => {
+                  const pMeta = ALL_PILLARS.find((p) => p.id === pId);
+                  if (!pMeta) return null;
+                  return (
+                    <Link
+                      key={pId}
+                      href={`/assessment/report?pillar=${pId}`}
+                      className="p-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 bg-white transition-all flex items-center justify-between group shadow-2xs"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center shrink-0">
+                          P{pId}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-slate-800 truncate group-hover:text-emerald-800">
+                            {pMeta.name}
+                          </p>
+                          <span className="text-[10px] text-slate-500">Individual PDF</span>
+                        </div>
+                      </div>
+                      <span className="material-symbols-outlined text-slate-400 group-hover:text-emerald-700 text-sm shrink-0">
+                        download
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <Link
+              href="/assessment"
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs transition-all shadow-xs inline-flex items-center justify-center gap-2"
+            >
+              <span className="material-symbols-outlined text-base">arrow_back</span>
+              Return to Assessment Hub
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -297,28 +440,38 @@ function AssessmentReportContent() {
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-2">
-            {/* View Switcher: Pillar vs Full */}
-            <div className="inline-flex rounded-lg p-0.5 bg-slate-100 border border-slate-200 text-xs">
-              <Link
-                href={`/assessment/report?pillar=${pillarId || 2}`}
-                className={`px-2 py-1 rounded-md font-semibold transition text-[11px] sm:text-xs ${
-                  !isAllPillars
-                    ? "bg-white text-emerald-800 shadow-xs"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
+            {/* View Switcher: Individual Completed Pillars vs Full 8-Pillar */}
+            <div className="relative inline-flex items-center">
+              <select
+                aria-label="Select Assessment Report"
+                value={isAllPillars ? "all" : String(pillarId)}
+                onChange={(e) => {
+                  router.push(`/assessment/report?pillar=${e.target.value}`);
+                }}
+                className="bg-slate-100 hover:bg-slate-200/80 text-slate-800 text-xs font-semibold rounded-lg border border-slate-300 py-1.5 pl-2.5 pr-7 focus:outline-none focus:ring-1 focus:ring-emerald-600 transition cursor-pointer appearance-none"
               >
-                Pillar {pillarId || 2}
-              </Link>
-              <Link
-                href="/assessment/report?pillar=all"
-                className={`px-2 py-1 rounded-md font-semibold transition text-[11px] sm:text-xs ${
-                  isAllPillars
-                    ? "bg-white text-emerald-800 shadow-xs"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                Full 8-Pillar
-              </Link>
+                <option value="all">
+                  {completedPillars.length === 8
+                    ? "Full 8-Pillar Report (Completed)"
+                    : `Full 8-Pillar Report (Locked • ${completedPillars.length}/8)`}
+                </option>
+                {completedPillars.map((pId) => {
+                  const pMeta = ALL_PILLARS.find((p) => p.id === pId);
+                  return (
+                    <option key={pId} value={String(pId)}>
+                      Pillar {pId}: {pMeta?.name || `Pillar ${pId}`}
+                    </option>
+                  );
+                })}
+                {!isAllPillars && pillarId && !completedPillars.includes(pillarId) && (
+                  <option value={String(pillarId)} disabled>
+                    Pillar {pillarId} (Incomplete)
+                  </option>
+                )}
+              </select>
+              <span className="material-symbols-outlined pointer-events-none absolute right-1.5 text-slate-500 text-base">
+                expand_more
+              </span>
             </div>
 
             <button
