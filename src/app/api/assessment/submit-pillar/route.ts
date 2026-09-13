@@ -3,7 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { computeAssessmentResults, getMaturityTier } from "@/lib/assessmentScoring";
-import { syncUserAssessmentToSheet, syncReportGenerationToSheet } from "@/lib/googleSheets";
+import { syncReportGenerationToSheet } from "@/lib/googleSheets";
+import { triggerNeonRealtimeAssessmentSync } from "@/lib/neonRealtimeSync";
 
 const QUESTION_MAP = new Map<string, {
   pillarId: number;
@@ -220,10 +221,8 @@ export async function POST(request: Request) {
       },
     });
 
-    // 8. Asynchronously sync to Google Spreadsheet (Assessment Overview, Pillar Submissions Log, Detailed Question Responses, and Reports Generated)
-    syncUserAssessmentToSheet(email, numPillarId).catch((err) => {
-      console.warn("[GoogleSheets] Assessment sync warning:", err?.message || err);
-    });
+    // 8. Ultra-fast non-blocking real-time sync to Google Sheets (Assessment Overview, Pillar Submissions Log, Detailed Question Responses)
+    triggerNeonRealtimeAssessmentSync(email, numPillarId);
 
     syncReportGenerationToSheet(email, String(numPillarId)).catch((err) => {
       console.warn("[GoogleSheets] Pillar completion report sync warning:", err?.message || err);

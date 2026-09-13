@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { computeAssessmentResults, getMaturityTier } from "@/lib/assessmentScoring";
-import { syncUserAssessmentToSheet } from "@/lib/googleSheets";
+import { triggerNeonRealtimeAssessmentSync } from "@/lib/neonRealtimeSync";
 
 // Map question ID to its canonical question metadata for fast lookup
 const QUESTION_MAP = new Map<string, {
@@ -228,10 +228,8 @@ export async function POST(request: Request) {
       },
     });
 
-    // 7. Asynchronously sync to Google Spreadsheet (1lia89URlWwsngU0E7Kd5zyQTzm-SBWlQj2Lsu08b1wg)
-    syncUserAssessmentToSheet(email, pillarId ? Number(pillarId) : undefined).catch((err) => {
-      console.warn("Google Sheets assessment sync warning:", err?.message || err);
-    });
+    // 7. Ultra-fast non-blocking real-time sync to Google Sheets (1lia89URlWwsngU0E7Kd5zyQTzm-SBWlQj2Lsu08b1wg)
+    triggerNeonRealtimeAssessmentSync(email, pillarId ? Number(pillarId) : undefined);
 
     return NextResponse.json({
       success: true,

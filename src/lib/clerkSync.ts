@@ -1,6 +1,6 @@
 import { createClerkClient } from "@clerk/backend";
 import { prisma } from "@/lib/prisma";
-import { recordUserToSheet, syncUserOnboardingToSheet } from "@/lib/googleSheets";
+import { syncNeonUsersToSheetsFast } from "@/lib/neonRealtimeSync";
 import { generateUniqueFutureFarmId } from "@/lib/idGenerator";
 
 /**
@@ -144,27 +144,32 @@ export async function syncClerkUsersToDatabaseAndSheet(): Promise<{
           });
         }
 
-        // Record and sync to Google Sheet
-        const res = await recordUserToSheet(dbUser, { id: cu.id });
-        if (res.success) {
-          syncedUsers.push({
-            email,
-            name: fullName,
-            futureFarmId: dbUser.futureFarmId,
-          });
-          await syncUserOnboardingToSheet(dbUser).catch(() => {});
-        } else if (res.error) {
-          errors.push(`${email}: ${res.error}`);
-        }
+        syncedUsers.push({
+          email,
+          name: fullName,
+          futureFarmId: dbUser.futureFarmId,
+        });
       } catch (err: any) {
         errors.push(`${email}: ${err.message}`);
       }
     }
 
+    // High-speed batch sync all users from Neon Lakebase Postgres to Google Sheets in ONE call
+    let syncedToSheetCount = 0;
+    try {
+      const batchRes = await syncNeonUsersToSheetsFast();
+      syncedToSheetCount = batchRes.totalProcessed;
+      if (batchRes.errors.length > 0) {
+        errors.push(...batchRes.errors);
+      }
+    } catch (sheetErr: any) {
+      errors.push(`Google Sheets sync error: ${sheetErr.message}`);
+    }
+
     return {
       clerkTotal: clerkUsers.length,
       importedToDb: importedCount,
-      syncedToSheet: syncedUsers.length,
+      syncedToSheet: syncedToSheetCount,
       users: syncedUsers,
       errors,
     };

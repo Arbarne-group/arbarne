@@ -110,7 +110,7 @@ export const DEFAULT_ASSESSMENT_SPREADSHEET_ID = "1lia89URlWwsngU0E7Kd5zyQTzm-SB
 /**
  * Resilient fetch wrapper with exponential backoff on HTTP 429 / 503 and network errors
  */
-async function fetchSheetsWithRetry(
+export async function fetchSheetsWithRetry(
   url: string,
   options: RequestInit,
   maxRetries = 4,

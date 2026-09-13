@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
-import { syncUserOnboardingToSheet } from "@/lib/googleSheets";
+import { triggerNeonRealtimeSync } from "@/lib/neonRealtimeSync";
 
 export const dynamic = "force-dynamic";
 
@@ -511,10 +511,8 @@ export async function POST(request: Request) {
     });
 
     if (updatedUser) {
-      // Sync database entries to Google Spreadsheet in background
-      syncUserOnboardingToSheet(updatedUser).catch((err) => {
-        console.error("Google Sheets onboarding sync background error:", err);
-      });
+      // Ultra-fast non-blocking debounced real-time sync directly from Neon Lakebase Postgres
+      triggerNeonRealtimeSync(updatedUser.id);
     }
 
     const stageInfo = updatedUser ? computeOnboardingStage(updatedUser) : null;
