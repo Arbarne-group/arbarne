@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
@@ -34,11 +35,31 @@ function CheckoutContent() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("future_farms_user");
+      if (stored) {
+        const u = JSON.parse(stored);
+        if (u.phone) {
+          const stripped = u.phone.replace(/^\+254/, "").replace(/^254/, "").replace(/^0/, "").trim();
+          setPhoneNumber(stripped);
+        }
+      }
+    } catch {}
+  }, []);
+
   const handlePayment = async () => {
     setProcessing(true);
     setError(null);
 
     const userEmail = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+
+    let cleanPhone = phoneNumber.trim().replace(/\s+/g, "");
+    if (cleanPhone.startsWith("0")) {
+      cleanPhone = `+254${cleanPhone.slice(1)}`;
+    } else if (cleanPhone && !cleanPhone.startsWith("+") && !cleanPhone.startsWith("254")) {
+      cleanPhone = `+254${cleanPhone}`;
+    }
 
     try {
       const res = await fetch("/api/billing/initialize", {
@@ -47,7 +68,8 @@ function CheckoutContent() {
         body: JSON.stringify({
           email: userEmail,
           planId: plan,
-          isSubscription: true,
+          isSubscription: paymentMethod === "card",
+          phone: cleanPhone,
           channels: paymentMethod === "mpesa" ? ["mobile_money", "card"] : ["card", "mobile_money"],
           callbackUrl: `${window.location.origin}/checkout/verify`,
         }),
@@ -62,6 +84,17 @@ function CheckoutContent() {
         if (data.authorizationUrl.startsWith("/")) {
           router.push(data.authorizationUrl);
         } else {
+          // Open Paystack popup modal if available in browser
+          if (typeof window !== "undefined" && (window as any).PaystackPop && data.accessCode) {
+            try {
+              const popup = new (window as any).PaystackPop();
+              popup.resumeTransaction(data.accessCode);
+              setProcessing(false);
+              return;
+            } catch (e) {
+              console.warn("Paystack popup failed to resume, redirecting to checkout URL:", e);
+            }
+          }
           window.location.href = data.authorizationUrl;
         }
         return;
@@ -79,6 +112,7 @@ function CheckoutContent() {
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col">
+      <Script src="https://js.paystack.co/v1/inline.js" strategy="afterInteractive" />
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-12">
         {/* Back link */}
         <div className="mb-6">

@@ -28,9 +28,18 @@ export async function POST(request: Request) {
 
     const plan = getPlanById(planId);
 
-    // Ensure plan is registered on Paystack if subscribing
+    // In Kenya, M-Pesa mobile money is the primary payment method.
+    // Paystack limitation: Attaching `planCode` automatically restricts payments to Card only.
+    // Therefore, if mobile_money is requested, do not attach `planCode` to Paystack initialize.
+    const effectiveChannels: string[] =
+      Array.isArray(channels) && channels.length > 0
+        ? channels
+        : ["mobile_money", "card"];
+
+    const isMobileMoneySelected = effectiveChannels.includes("mobile_money");
+
     let planCode: string | undefined = undefined;
-    if (isSubscription) {
+    if (isSubscription && !isMobileMoneySelected) {
       const sync = await createOrSyncPaystackPlan(plan);
       planCode = sync.planCode;
     }
@@ -50,12 +59,13 @@ export async function POST(request: Request) {
       planId: plan.id,
       planCode,
       callbackUrl: finalCallbackUrl,
-      channels: channels || ["card", "mobile_money"],
+      channels: effectiveChannels,
       metadata: {
         userId: user.id,
         futureFarmId: user.futureFarmId,
         planId: plan.id,
-        isSubscription,
+        isSubscription: Boolean(isSubscription && planCode),
+        phone: body.phone || user.phone || undefined,
       },
     });
 

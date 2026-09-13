@@ -257,7 +257,11 @@ export async function initializePaystackTransaction(params: {
       },
     };
 
-    if (params.planCode) {
+    // Paystack limitation: Attaching `plan` forces recurring card tokenization and
+    // strictly suppresses Mobile Money (M-Pesa) on the checkout UI.
+    // If mobile_money is among the requested channels, do not pass `plan`.
+    const allowsMobileMoney = params.channels && params.channels.includes("mobile_money");
+    if (params.planCode && !allowsMobileMoney) {
       payload.plan = params.planCode;
     }
 
