@@ -8,6 +8,8 @@ import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 interface OnboardingUser {
   name?: string;
+  phone?: string;
+  farmName?: string;
   farmerProfile?: {
     jobTitle?: string;
   };
@@ -27,6 +29,8 @@ export default function FarmCharacteristicsPage() {
   const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
+  const [farmName, setFarmName] = useState("");
+  const [phone, setPhone] = useState("");
   const [farmSize, setFarmSize] = useState<number | "">("");
   const [farmUnit, setFarmUnit] = useState<"Acres" | "Hectares">("Acres");
   const [cultivatedAcres, setCultivatedAcres] = useState<number | "">("");
@@ -46,6 +50,8 @@ export default function FarmCharacteristicsPage() {
       .then((data) => {
         if (data.user) {
           setCurrentUser(data.user);
+          if (data.user.farmName) setFarmName(data.user.farmName);
+          if (data.user.phone) setPhone(data.user.phone);
         }
         if (data.user?.farmCharacteristics) {
           const char = data.user.farmCharacteristics;
@@ -80,6 +86,8 @@ export default function FarmCharacteristicsPage() {
   const handleSave = async (navigateNext: boolean = true) => {
     if (navigateNext) {
       const missing: string[] = [];
+      if (!farmName.trim()) missing.push("farmName");
+      if (!phone.trim()) missing.push("phone");
       if (farmSize === "" || Number(farmSize) <= 0) missing.push("farmSize");
       if (cultivatedAcres === "" || isNaN(Number(cultivatedAcres)) || Number(cultivatedAcres) < 0) missing.push("landUse");
       if (grazingAcres === "" || isNaN(Number(grazingAcres)) || Number(grazingAcres) < 0) {
@@ -115,6 +123,8 @@ export default function FarmCharacteristicsPage() {
           step: "characteristics",
           email,
           data: {
+            farmName: farmName.trim(),
+            phone: phone.trim(),
             farmSize: numFarmSize,
             farmUnit,
             cultivatedAcres: numCultivated,
@@ -129,7 +139,7 @@ export default function FarmCharacteristicsPage() {
       if (resData.user) {
         localStorage.setItem("future_farms_user", JSON.stringify(resData.user));
       }
-      setSaveFeedback("Characteristics saved!");
+      setSaveFeedback("Characteristics & Farm Details saved!");
       setTimeout(() => setSaveFeedback(null), 2500);
 
       if (navigateNext) {
@@ -237,6 +247,113 @@ export default function FarmCharacteristicsPage() {
 
         {/* Main Form Container */}
         <div className="bg-surface-container-lowest rounded-3xl shadow-sm border border-surface-container-high/60 p-6 md:p-8 space-y-8">
+          {/* Farm Identity Details: Farm Name & Phone Number */}
+          <div className="bg-surface-container-low p-5 sm:p-6 rounded-2xl border border-primary/20 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
+                <span className="material-symbols-outlined text-[20px]">badge</span>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-on-surface tracking-tight uppercase">
+                  Farm Identity &amp; Contact Credentials
+                </h3>
+                <p className="text-xs text-on-surface-variant">
+                  These verified credentials will be reflected on your database record, spreadsheets, diagnostic reports, and accredited certificates.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              {/* Farm Name Input */}
+              <div
+                id="q-farmName"
+                className={`flex flex-col gap-1.5 p-4 rounded-xl bg-surface-container-lowest border transition-all ${
+                  validationErrors.includes("farmName")
+                    ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                    : "border-surface-container-high/60"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-on-surface flex items-center gap-1" htmlFor="field-char-farm-name">
+                    <span>Farm / Agribusiness Name</span>
+                    <span className="text-red-500">*</span>
+                  </label>
+                  {validationErrors.includes("farmName") && (
+                    <span className="text-[11px] font-semibold text-red-600 bg-red-100 px-2 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
+                      <span className="material-symbols-outlined text-[13px]">warning</span>
+                      Required
+                    </span>
+                  )}
+                </div>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                    agriculture
+                  </span>
+                  <input
+                    id="field-char-farm-name"
+                    type="text"
+                    value={farmName}
+                    onChange={(e) => {
+                      setFarmName(e.target.value);
+                      if (e.target.value.trim()) {
+                        setValidationErrors((prev) => prev.filter((f) => f !== "farmName"));
+                      }
+                    }}
+                    placeholder="e.g. Simba Ridge Demonstration Farm"
+                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50"
+                  />
+                </div>
+                <span className="text-[10px] text-on-surface-variant">
+                  Official name used on accreditation records and certificates
+                </span>
+              </div>
+
+              {/* Phone Number Input */}
+              <div
+                id="q-phone"
+                className={`flex flex-col gap-1.5 p-4 rounded-xl bg-surface-container-lowest border transition-all ${
+                  validationErrors.includes("phone")
+                    ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                    : "border-surface-container-high/60"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-on-surface flex items-center gap-1" htmlFor="field-char-phone">
+                    <span>Farmer Contact / Phone Number</span>
+                    <span className="text-red-500">*</span>
+                  </label>
+                  {validationErrors.includes("phone") && (
+                    <span className="text-[11px] font-semibold text-red-600 bg-red-100 px-2 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
+                      <span className="material-symbols-outlined text-[13px]">warning</span>
+                      Required
+                    </span>
+                  )}
+                </div>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                    call
+                  </span>
+                  <input
+                    id="field-char-phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      if (e.target.value.trim()) {
+                        setValidationErrors((prev) => prev.filter((f) => f !== "phone"));
+                      }
+                    }}
+                    placeholder="e.g. +254 712 345 678"
+                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50"
+                  />
+                </div>
+                <span className="text-[10px] text-on-surface-variant">
+                  Used for SMS assessment alerts and verification dispatch
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Farm Size & Land Use */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Farm Size Input */}

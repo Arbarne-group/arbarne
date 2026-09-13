@@ -114,6 +114,23 @@ export async function POST(request: Request) {
       );
     }
 
+    // Persist farmName and phone directly to the User model whenever supplied
+    if (data && (data.farmName !== undefined || data.phone !== undefined)) {
+      const userUpdates: { farmName?: string; phone?: string } = {};
+      if (typeof data.farmName === "string" && data.farmName.trim()) {
+        userUpdates.farmName = data.farmName.trim();
+      }
+      if (typeof data.phone === "string" && data.phone.trim()) {
+        userUpdates.phone = data.phone.trim();
+      }
+      if (Object.keys(userUpdates).length > 0) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: userUpdates,
+        });
+      }
+    }
+
     switch (step) {
       case 1:
       case "1":

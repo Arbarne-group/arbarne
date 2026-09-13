@@ -340,6 +340,11 @@ export default function OnboardingOverviewPage() {
                     <h2 className="font-title-md text-title-md text-on-surface font-bold text-lg sm:text-[22px]">
                       {userName}
                     </h2>
+                    {user?.farmName && (
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 text-xs font-bold border border-emerald-300 dark:border-emerald-800">
+                        {user.farmName}
+                      </span>
+                    )}
                     <span className="px-2.5 py-0.5 rounded-full bg-primary-container/10 text-primary text-xs font-semibold">
                       {userRole}
                     </span>
@@ -360,7 +365,7 @@ export default function OnboardingOverviewPage() {
                   <span className="material-symbols-outlined text-primary text-[20px]">phone_iphone</span>
                   <div>
                     <span className="text-xs text-on-surface-variant block">Phone Number</span>
-                    <span className="font-semibold">{user?.phone || "+254 712 345 678"}</span>
+                    <span className="font-semibold">{user?.phone || "Phone Not Set"}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

@@ -17,6 +17,7 @@ function VerifyContent() {
   const farmName = searchParams.get("farmName") || searchParams.get("farm") || "Verified Agricultural Enterprise";
   const farmerName = searchParams.get("farmerName") || searchParams.get("farmer") || "Farm Manager";
   const location = searchParams.get("location") || "Kenya";
+  const phone = searchParams.get("phone") || "";
   const scoreParam = searchParams.get("score") || "";
   const tierParam = searchParams.get("tier") || "";
   const issueDate = searchParams.get("date") || new Date().toLocaleDateString("en-US", {
@@ -99,6 +100,11 @@ function VerifyContent() {
               <span className="text-slate-500 text-[11px] block mt-0.5">
                 Owner / Manager: <strong className="text-slate-700">{farmerName}</strong>
               </span>
+              {phone && (
+                <span className="text-slate-500 text-[11px] block mt-0.5 font-mono">
+                  Contact: <strong className="text-slate-700">{phone}</strong>
+                </span>
+              )}
             </div>
 
             <div className="min-w-0">

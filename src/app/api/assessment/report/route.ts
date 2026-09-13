@@ -44,6 +44,7 @@ export async function GET(request: Request) {
       farmName: user.farmName || "Farm Name Not Specified",
       ownerName: user.name || "Farmer",
       email: user.email,
+      phone: user.phone || "",
       officialEmail: "arbarnegroup@gmail.com",
       valueChain: user.farmerProfile?.valueChain || "Not specified",
       experienceYears: user.farmerProfile?.experienceYears || "Not specified",

@@ -8,6 +8,8 @@ import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 export default function FarmManagementPage() {
   const router = useRouter();
+  const [farmName, setFarmName] = useState("");
+  const [phone, setPhone] = useState("");
   const [mgmtAbility, setMgmtAbility] = useState("");
   const [operationsResponsible, setOperationsResponsible] = useState("");
   const [otherOperator, setOtherOperator] = useState("");
@@ -22,6 +24,10 @@ export default function FarmManagementPage() {
     fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
+        if (data.user) {
+          if (data.user.farmName) setFarmName(data.user.farmName);
+          if (data.user.phone) setPhone(data.user.phone);
+        }
         if (data.user?.farmManagement) {
           const fm = data.user.farmManagement;
           if (fm.mgmtAbility) setMgmtAbility(fm.mgmtAbility);
@@ -73,6 +79,8 @@ export default function FarmManagementPage() {
           step: 2,
           email,
           data: {
+            farmName: farmName.trim(),
+            phone: phone.trim(),
             mgmtAbility,
             operationsResponsible,
             opsResponsibility: operationsResponsible,
@@ -200,6 +208,71 @@ export default function FarmManagementPage() {
         )}
 
         <div className="space-y-8">
+          {/* Farm Identity & Contact Credentials */}
+          <div className="bg-surface-container-low p-5 sm:p-6 rounded-3xl border border-primary/20 space-y-4 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
+                <span className="material-symbols-outlined text-[20px]">badge</span>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-on-surface tracking-tight uppercase">
+                  Farm Identity &amp; Contact Credentials
+                </h3>
+                <p className="text-xs text-on-surface-variant">
+                  These verified credentials will be reflected on your database record, spreadsheets, diagnostic reports, and accredited certificates.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              {/* Farm Name Input */}
+              <div className="flex flex-col gap-1.5 p-4 rounded-xl bg-surface-container-lowest border border-surface-variant/40">
+                <label className="text-xs font-bold text-on-surface flex items-center gap-1" htmlFor="field-step2-farm-name">
+                  <span>Farm / Agribusiness Name</span>
+                </label>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                    agriculture
+                  </span>
+                  <input
+                    id="field-step2-farm-name"
+                    type="text"
+                    value={farmName}
+                    onChange={(e) => setFarmName(e.target.value)}
+                    placeholder="e.g. Simba Ridge Demonstration Farm"
+                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50"
+                  />
+                </div>
+                <span className="text-[10px] text-on-surface-variant">
+                  Official name used on accreditation records and certificates
+                </span>
+              </div>
+
+              {/* Phone Number Input */}
+              <div className="flex flex-col gap-1.5 p-4 rounded-xl bg-surface-container-lowest border border-surface-variant/40">
+                <label className="text-xs font-bold text-on-surface flex items-center gap-1" htmlFor="field-step2-phone">
+                  <span>Farmer Contact / Phone Number</span>
+                </label>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                    call
+                  </span>
+                  <input
+                    id="field-step2-phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="e.g. +254 712 345 678"
+                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50"
+                  />
+                </div>
+                <span className="text-[10px] text-on-surface-variant">
+                  Used for SMS assessment alerts and verification dispatch
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Question 6: Ability Level */}
           <section
             id="q-mgmtAbility"

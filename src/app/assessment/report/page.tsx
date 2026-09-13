@@ -130,10 +130,11 @@ function AssessmentReportContent() {
 
   // Farm and Farmer Profile details
   const farmName =
-    userProfile?.farmCharacteristics?.farmName ||
     userProfile?.farmName ||
+    userProfile?.farmCharacteristics?.farmName ||
     reportData?.farm?.farmName ||
-    "Farm Name Not Specified";
+    (userProfile?.name ? `${userProfile.name}'s Farm` : "Farm Name Not Specified");
+  const farmerPhone = userProfile?.phone || reportData?.farm?.phone || "";
   const farmerName =
     userProfile?.name ||
     clerkUser?.fullName ||
@@ -180,6 +181,9 @@ function AssessmentReportContent() {
     params.set("type", "report");
     params.set("reportId", docRef);
     params.set("farm", farmName);
+    if (farmerName) params.set("farmer", farmerName);
+    if (farmerPhone) params.set("phone", farmerPhone);
+    params.set("location", `${locationSubCounty}, ${locationCounty}`);
     params.set("pillar", isAllPillars ? "all" : String(pillarId));
     params.set(
       "score",
@@ -197,7 +201,7 @@ function AssessmentReportContent() {
     );
     params.set("date", assessmentDate);
     return `${origin}/verify?${params.toString()}`;
-  }, [docRef, farmName, isAllPillars, pillarId, reportData, assessmentDate]);
+  }, [docRef, farmName, farmerName, farmerPhone, locationSubCounty, locationCounty, isAllPillars, pillarId, reportData, assessmentDate]);
 
   // Cross-pillar gaps list memoization (no dummy data)
   const allGapsList = useMemo(() => {
@@ -625,6 +629,7 @@ function AssessmentReportContent() {
                   </span>
                   <p className="font-bold text-slate-900 mt-0.5 text-sm">{farmName}</p>
                   <p className="text-slate-500">{farmerName}</p>
+                  {farmerPhone && <p className="text-slate-500 text-[11px] font-mono mt-0.5">{farmerPhone}</p>}
                 </div>
                 <div>
                   <span className="text-slate-400 uppercase tracking-wider font-semibold block text-[10px]">
@@ -1237,6 +1242,7 @@ function AssessmentReportContent() {
                   <span className="text-slate-400 block uppercase text-[9px] font-bold">Farm Enterprise</span>
                   <span className="font-bold text-slate-800">{farmName}</span>
                   <span className="text-slate-500 block text-[11px]">{farmerName}</span>
+                  {farmerPhone && <span className="text-slate-500 block text-[10px] font-mono">{farmerPhone}</span>}
                 </div>
                 <div>
                   <span className="text-slate-400 block uppercase text-[9px] font-bold">Location &amp; Zone</span>

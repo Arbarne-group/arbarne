@@ -91,20 +91,28 @@ function CertificatePageContent() {
     );
   }, [userProfile, clerkUser]);
 
+  const dynamicFarmerPhone = useMemo(() => {
+    return userProfile?.phone || "";
+  }, [userProfile]);
+
   const dynamicFarmName = useMemo(() => {
     return (
       userProfile?.farmName ||
+      userProfile?.farmCharacteristics?.farmName ||
       userProfile?.enterpriseName ||
-      "Future Farms Commercial Agribusiness"
+      (dynamicFarmerName !== "Farmer" ? `${dynamicFarmerName}'s Farm` : "Future Farms Enterprise")
     );
-  }, [userProfile]);
+  }, [userProfile, dynamicFarmerName]);
 
   const dynamicLocation = useMemo(() => {
+    const loc = userProfile?.farmLocation;
+    const parts = [loc?.subcounty, loc?.county, loc?.country || "Kenya"].filter(Boolean);
+    if (parts.length > 0) return parts.join(", ");
     return (
       userProfile?.county ||
       userProfile?.location ||
       userProfile?.region ||
-      "Nakuru County, Kenya"
+      "Kenya"
     );
   }, [userProfile]);
 
@@ -138,7 +146,7 @@ function CertificatePageContent() {
   const certRefId = `FFF-CERT-P${pillar.id}-${dynamicFarmId}`;
 
   const certificateVerifyUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/verify?type=certificate&certId=${encodeURIComponent(certRefId)}&pillar=${pillar.id}&farmId=${encodeURIComponent(dynamicFarmId)}&farmName=${encodeURIComponent(dynamicFarmName)}&farmerName=${encodeURIComponent(dynamicFarmerName)}&location=${encodeURIComponent(dynamicLocation)}&score=${encodeURIComponent(`${verifiedPillarScore}/25`)}&tier=${encodeURIComponent(pillarFeedback.label)}`
+    ? `${window.location.origin}/verify?type=certificate&certId=${encodeURIComponent(certRefId)}&pillar=${pillar.id}&farmId=${encodeURIComponent(dynamicFarmId)}&farmName=${encodeURIComponent(dynamicFarmName)}&farmerName=${encodeURIComponent(dynamicFarmerName)}${dynamicFarmerPhone ? `&phone=${encodeURIComponent(dynamicFarmerPhone)}` : ""}&location=${encodeURIComponent(dynamicLocation)}&score=${encodeURIComponent(`${verifiedPillarScore}/25`)}&tier=${encodeURIComponent(pillarFeedback.label)}`
     : `https://futurefarms.africa/verify?type=certificate&certId=${certRefId}`;
 
   const handlePrint = () => {
@@ -269,6 +277,12 @@ function CertificatePageContent() {
             </h3>
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-slate-600 mt-1">
               <span>Lead Operator: <strong className="text-slate-800">{dynamicFarmerName}</strong></span>
+              {dynamicFarmerPhone && (
+                <>
+                  <span className="text-slate-300">•</span>
+                  <span>Contact: <strong className="text-slate-800 font-mono">{dynamicFarmerPhone}</strong></span>
+                </>
+              )}
               <span className="text-slate-300">•</span>
               <span>Location: <strong className="text-slate-800">{dynamicLocation}</strong></span>
               <span className="text-slate-300">•</span>

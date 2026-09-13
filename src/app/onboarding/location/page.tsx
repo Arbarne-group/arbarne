@@ -8,6 +8,8 @@ import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 interface OnboardingUser {
   name?: string;
+  phone?: string;
+  farmName?: string;
   farmerProfile?: {
     jobTitle?: string;
   };
@@ -53,6 +55,8 @@ export default function FarmLocationPage() {
   const [currentUser, setCurrentUser] = useState<OnboardingUser | null>(null);
 
   // State
+  const [farmName, setFarmName] = useState("");
+  const [phone, setPhone] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [county, setCounty] = useState("");
   const [subcounty, setSubcounty] = useState("");
@@ -75,6 +79,8 @@ export default function FarmLocationPage() {
       .then((data) => {
         if (data.user) {
           setCurrentUser(data.user);
+          if (data.user.farmName) setFarmName(data.user.farmName);
+          if (data.user.phone) setPhone(data.user.phone);
         }
         if (data.user?.farmLocation) {
           const loc = data.user.farmLocation;
@@ -209,6 +215,8 @@ export default function FarmLocationPage() {
   const handleSave = async (navigateNext: boolean = true) => {
     if (navigateNext) {
       const missing: string[] = [];
+      if (!farmName.trim()) missing.push("farmName");
+      if (!phone.trim()) missing.push("phone");
       if (!locationSearch.trim()) missing.push("locationSearch");
       if (!county.trim()) missing.push("county");
       if (!subcounty.trim()) missing.push("subcounty");
@@ -237,6 +245,8 @@ export default function FarmLocationPage() {
           step: "location",
           email,
           data: {
+            farmName: farmName.trim(),
+            phone: phone.trim(),
             locationSearch,
             county,
             subcounty,
@@ -251,7 +261,7 @@ export default function FarmLocationPage() {
       if (resData.user) {
         localStorage.setItem("future_farms_user", JSON.stringify(resData.user));
       }
-      setSaveFeedback("Location saved!");
+      setSaveFeedback("Location & Farm Details saved!");
       setTimeout(() => setSaveFeedback(null), 2500);
 
       if (navigateNext) {
@@ -366,6 +376,113 @@ export default function FarmLocationPage() {
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-low text-secondary text-xs font-semibold w-fit">
               <span className="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
               <span>Verified &amp; Confidential</span>
+            </div>
+          </div>
+
+          {/* Farm Identity Details: Farm Name & Phone Number */}
+          <div className="bg-surface-container-low p-5 sm:p-6 rounded-2xl border border-primary/20 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
+                <span className="material-symbols-outlined text-[20px]">badge</span>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-on-surface tracking-tight uppercase">
+                  Farm Identity &amp; Contact Credentials
+                </h3>
+                <p className="text-xs text-on-surface-variant">
+                  These official credentials will be reflected on your database record, spreadsheets, diagnostic reports, and accredited certificates.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              {/* Farm Name Input */}
+              <div
+                id="q-farmName"
+                className={`flex flex-col gap-1.5 p-4 rounded-xl bg-surface-container-lowest border transition-all ${
+                  validationErrors.includes("farmName")
+                    ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                    : "border-surface-container-high/60"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-on-surface flex items-center gap-1" htmlFor="field-farm-name">
+                    <span>Farm / Agribusiness Name</span>
+                    <span className="text-red-500">*</span>
+                  </label>
+                  {validationErrors.includes("farmName") && (
+                    <span className="text-[11px] font-semibold text-red-600 bg-red-100 px-2 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
+                      <span className="material-symbols-outlined text-[13px]">warning</span>
+                      Required
+                    </span>
+                  )}
+                </div>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                    agriculture
+                  </span>
+                  <input
+                    id="field-farm-name"
+                    type="text"
+                    value={farmName}
+                    onChange={(e) => {
+                      setFarmName(e.target.value);
+                      if (e.target.value.trim()) {
+                        setValidationErrors((prev) => prev.filter((f) => f !== "farmName"));
+                      }
+                    }}
+                    placeholder="e.g. Simba Ridge Farm, Green Valley Agribusiness"
+                    className="w-full pl-10 pr-3 py-2.5 bg-transparent text-on-surface text-sm rounded-lg outline-none focus:ring-2 focus:ring-primary transition-all placeholder:text-on-surface-variant/50 font-medium"
+                  />
+                </div>
+                <span className="text-[10px] text-on-surface-variant leading-tight">
+                  Official farm name for certified diagnostic reports &amp; accredited FFV certificates.
+                </span>
+              </div>
+
+              {/* Phone Number Input */}
+              <div
+                id="q-phone"
+                className={`flex flex-col gap-1.5 p-4 rounded-xl bg-surface-container-lowest border transition-all ${
+                  validationErrors.includes("phone")
+                    ? "border-2 border-red-400 bg-red-50/20 ring-2 ring-red-300"
+                    : "border-surface-container-high/60"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-on-surface flex items-center gap-1" htmlFor="field-phone">
+                    <span>Farmer Contact / Phone Number</span>
+                    <span className="text-red-500">*</span>
+                  </label>
+                  {validationErrors.includes("phone") && (
+                    <span className="text-[11px] font-semibold text-red-600 bg-red-100 px-2 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
+                      <span className="material-symbols-outlined text-[13px]">warning</span>
+                      Required
+                    </span>
+                  )}
+                </div>
+                <div className="relative flex items-center">
+                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                    phone_iphone
+                  </span>
+                  <input
+                    id="field-phone"
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      if (e.target.value.trim()) {
+                        setValidationErrors((prev) => prev.filter((f) => f !== "phone"));
+                      }
+                    }}
+                    placeholder="e.g. +254 712 345 678"
+                    className="w-full pl-10 pr-3 py-2.5 bg-transparent text-on-surface text-sm rounded-lg outline-none focus:ring-2 focus:ring-primary transition-all placeholder:text-on-surface-variant/50 font-mono font-medium"
+                  />
+                </div>
+                <span className="text-[10px] text-on-surface-variant leading-tight">
+                  Used for official verification records, SMS alerts &amp; registry updates.
+                </span>
+              </div>
             </div>
           </div>
 

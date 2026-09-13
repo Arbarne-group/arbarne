@@ -314,7 +314,7 @@ export function resolveProfileWithDashboardFallback(userRecord: any) {
   };
 
   const formatPhone = (p: string | null | undefined) => {
-    const raw = val(p, userRecord.phone, fp.phone);
+    const raw = val(p, userRecord.phone, loc.phone, char.phone, fp.phone);
     if (!raw) return "";
     return raw.startsWith("+") ? `'${raw}` : raw;
   };
@@ -322,7 +322,7 @@ export function resolveProfileWithDashboardFallback(userRecord: any) {
   const fullName = val(userRecord.name, fp.fullName, "Farmer");
   const email = val(userRecord.email, "");
   const phone = formatPhone(userRecord.phone);
-  const farmName = val(userRecord.farmName, loc.farmName, "");
+  const farmName = val(userRecord.farmName, loc.farmName, char.farmName, "");
 
   // Location & Coordinates
   const locationSearch = val(loc.locationSearch, loc.county ? `${loc.county}, Kenya` : null, "");

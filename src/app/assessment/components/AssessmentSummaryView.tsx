@@ -64,11 +64,27 @@ export default function AssessmentSummaryView({
     } catch (e) {
       console.error(e);
     }
-  }, []);
+
+    const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+    if (email) {
+      fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) {
+            setUserProfile(data.user);
+            localStorage.setItem("future_farms_user", JSON.stringify(data.user));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [clerkUser]);
 
   const dynamicFarmId = clerkUser?.id ? `FFF-KE-PROD-${clerkUser.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD";
   const dynamicFarmerName = userProfile?.name || clerkUser?.fullName || "Farmer";
-  const dynamicFarmName = userProfile?.farmCharacteristics?.farmName || userProfile?.farmName || "My Farm";
+  const dynamicFarmName =
+    userProfile?.farmName ||
+    userProfile?.farmCharacteristics?.farmName ||
+    (userProfile?.name ? `${userProfile.name}'s Farm` : "My Farm");
   const dynamicLocation = userProfile?.farmLocation?.county
     ? `${userProfile.farmLocation.county}, ${userProfile.farmLocation.country || "Kenya"}`
     : "Kenya";
