@@ -205,7 +205,7 @@ function CertificatePageContent() {
       {/* THE PRINTABLE CERTIFICATE DOCUMENT - EXACTLY 1 LOGO, PROFESSIONAL & PRESTIGIOUS */}
       <main
         id="printable-certificate"
-        className="printable-certificate bg-white text-slate-900 mx-auto w-full max-w-3xl p-3 sm:p-6 md:p-10 relative border-4 border-double border-emerald-800 shadow-2xl print:shadow-none print:border-4 print:border-double print:border-emerald-800 print:max-w-none print:w-full print:m-0"
+        className="printable-certificate bg-white text-slate-900 mx-auto w-full max-w-3xl p-3 sm:p-6 md:p-10 relative border-4 border-double border-emerald-800 shadow-2xl print:shadow-none print:border-4 print:border-double print:border-emerald-800 print:max-w-none print:w-full print:m-0 shrink-0 flex-none h-auto"
         style={{ boxSizing: "border-box" }}
       >
         {/* Inner Ornamental Border with Corner Accents */}

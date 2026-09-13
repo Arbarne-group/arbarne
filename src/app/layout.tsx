@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${outfit.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${outfit.variable} min-h-full antialiased`} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -48,7 +48,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="h-full bg-background font-sans text-on-background selection:bg-primary-container selection:text-on-primary-container flex flex-col"
+        className="min-h-full bg-background font-sans text-on-background selection:bg-primary-container selection:text-on-primary-container flex flex-col"
         suppressHydrationWarning
       >
         <ClerkProvider>

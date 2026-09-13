@@ -33,9 +33,9 @@ function VerifyContent() {
     : reportId || `FFF-REP-${farmId}`;
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-slate-50 text-slate-800 flex flex-col items-center justify-between px-3 sm:px-6 md:px-10 pt-4 sm:pt-8 pb-20 sm:pb-12 pb-[max(5rem,env(safe-area-inset-bottom))] font-sans selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="w-full min-h-screen min-h-[100dvh] h-auto bg-slate-50 text-slate-800 flex flex-col items-center justify-start px-3 sm:px-6 md:px-10 pt-4 sm:pt-8 pb-32 sm:pb-16 pb-[max(7rem,env(safe-area-inset-bottom))] font-sans selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden overflow-y-visible">
       {/* Top Header - Mobile Responsive */}
-      <header className="max-w-2xl w-full flex flex-col xs:flex-row sm:flex-row items-center justify-between gap-3 pb-4 sm:pb-6 border-b border-slate-200">
+      <header className="max-w-2xl w-full flex flex-col xs:flex-row sm:flex-row items-center justify-between gap-3 pb-4 sm:pb-6 border-b border-slate-200 shrink-0 flex-none">
         <Link href="/" className="flex items-center gap-2.5">
           <Image
             src="/logo.webp"
@@ -53,10 +53,10 @@ function VerifyContent() {
         </span>
       </header>
 
-      {/* Main Verification Card - Mobile Responsive with zero horizontal overflow */}
-      <main className="max-w-2xl w-full my-4 sm:my-8 bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl overflow-hidden animate-in fade-in duration-200">
+      {/* Main Verification Card - Naturally expanding length with zero flex clipping */}
+      <main className="max-w-2xl w-full my-4 sm:my-8 bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xl shrink-0 flex-none h-auto overflow-hidden animate-in fade-in duration-200">
         {/* Verification Status Banner */}
-        <div className="bg-gradient-to-r from-emerald-800 via-emerald-900 to-emerald-950 p-4 sm:p-6 md:p-8 text-white relative overflow-hidden">
+        <div className="bg-gradient-to-r from-emerald-800 via-emerald-900 to-emerald-950 p-4 sm:p-6 md:p-8 text-white relative overflow-hidden rounded-t-2xl sm:rounded-t-3xl shrink-0">
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
@@ -86,7 +86,7 @@ function VerifyContent() {
         </div>
 
         {/* Credential Data Summary */}
-        <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 text-xs text-slate-700">
+        <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 text-xs text-slate-700 h-auto">
           {/* Farm Information Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-slate-50 border border-slate-200">
             <div className="min-w-0">
@@ -115,7 +115,7 @@ function VerifyContent() {
           </div>
 
           {/* Scope & Assessment Metrics */}
-          <div className="border border-slate-200 rounded-xl sm:rounded-2xl p-4 sm:p-5 space-y-4">
+          <div className="border border-slate-200 rounded-xl sm:rounded-2xl p-4 sm:p-5 space-y-4 bg-white">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
               <div>
                 <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
@@ -133,30 +133,30 @@ function VerifyContent() {
             </div>
 
             {/* Metrics Row 1: Pillar Name, Score, Standard */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-              <div className="min-w-0">
-                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+              <div className="min-w-0 p-3 sm:p-0 rounded-xl sm:rounded-none bg-slate-50 sm:bg-transparent border sm:border-0 border-slate-200/70">
+                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
                   Verification Scope
                 </span>
                 <span className="font-semibold text-slate-900 block mt-0.5 text-xs sm:text-sm leading-snug">
                   {pillar ? `Pillar ${pillar.id}: ${pillar.name}` : "Comprehensive 8-Pillar Framework"}
                 </span>
               </div>
-              <div className="min-w-0">
-                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block">
+              <div className="min-w-0 p-3 sm:p-0 rounded-xl sm:rounded-none bg-emerald-50/70 sm:bg-transparent border sm:border-0 border-emerald-200/80">
+                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
                   Verified Score &amp; Tier
                 </span>
                 <span className="font-bold text-emerald-700 block mt-0.5 text-xs sm:text-sm leading-snug">
                   {scoreParam ? `${scoreParam}` : isCertificate ? "Evidence Verified (22/25)" : "Assessment Complete"}
                 </span>
                 {tierParam && (
-                  <span className="text-slate-600 font-medium block text-[11px] mt-0.5">
+                  <span className="text-slate-700 font-medium block text-[11px] mt-0.5">
                     {tierParam}
                   </span>
                 )}
               </div>
-              <div className="min-w-0">
-                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block">
+              <div className="min-w-0 p-3 sm:p-0 rounded-xl sm:rounded-none bg-slate-50 sm:bg-transparent border sm:border-0 border-slate-200/70">
+                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
                   Audit Protocol
                 </span>
                 <span className="font-semibold text-slate-900 block mt-0.5 text-xs sm:text-sm leading-snug">
@@ -166,17 +166,17 @@ function VerifyContent() {
             </div>
 
             {/* Metrics Row 2: Issue Date, Validity, Cycle */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 border-t border-slate-100 pt-3">
-              <div>
-                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 border-t border-slate-100 pt-3.5">
+              <div className="min-w-0 p-3 sm:p-0 rounded-xl sm:rounded-none bg-slate-50 sm:bg-transparent border sm:border-0 border-slate-200/70">
+                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
                   Issue Date
                 </span>
                 <span className="font-medium text-slate-800 block mt-0.5 text-xs sm:text-sm">
                   {issueDate}
                 </span>
               </div>
-              <div>
-                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block">
+              <div className="min-w-0 p-3 sm:p-0 rounded-xl sm:rounded-none bg-emerald-50/70 sm:bg-transparent border sm:border-0 border-emerald-200/80">
+                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
                   Validity Status
                 </span>
                 <span className="font-bold text-emerald-800 block mt-0.5 text-xs sm:text-sm flex items-center gap-1.5">
@@ -184,8 +184,8 @@ function VerifyContent() {
                   Valid (Active Cycle)
                 </span>
               </div>
-              <div>
-                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block">
+              <div className="min-w-0 p-3 sm:p-0 rounded-xl sm:rounded-none bg-amber-50/70 sm:bg-transparent border sm:border-0 border-amber-200/80">
+                <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
                   Reassessment Cycle
                 </span>
                 <span className="font-semibold text-amber-800 block mt-0.5 text-xs sm:text-sm">
@@ -205,15 +205,15 @@ function VerifyContent() {
               digital records, operational evidence, and hybrid verification under Arbarne Group accreditation.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
-              <div className="flex items-center gap-1.5 text-[11px] text-emerald-800 font-semibold">
+              <div className="flex items-center gap-1.5 text-[11px] text-emerald-800 font-semibold p-2 sm:p-0 rounded-lg bg-white/60 sm:bg-transparent">
                 <span className="material-symbols-outlined text-[15px] text-emerald-600 shrink-0">check_circle</span>
                 <span>Digital Records Audited</span>
               </div>
-              <div className="flex items-center gap-1.5 text-[11px] text-emerald-800 font-semibold">
+              <div className="flex items-center gap-1.5 text-[11px] text-emerald-800 font-semibold p-2 sm:p-0 rounded-lg bg-white/60 sm:bg-transparent">
                 <span className="material-symbols-outlined text-[15px] text-emerald-600 shrink-0">check_circle</span>
                 <span>Cryptographic Hash Confirmed</span>
               </div>
-              <div className="flex items-center gap-1.5 text-[11px] text-emerald-800 font-semibold">
+              <div className="flex items-center gap-1.5 text-[11px] text-emerald-800 font-semibold p-2 sm:p-0 rounded-lg bg-white/60 sm:bg-transparent">
                 <span className="material-symbols-outlined text-[15px] text-emerald-600 shrink-0">check_circle</span>
                 <span>Standards Board Endorsed</span>
               </div>
@@ -245,7 +245,7 @@ function VerifyContent() {
         </div>
 
         {/* Card Footer Actions - Clean 2-button Mobile-Friendly Bar */}
-        <div className="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-b-2xl sm:rounded-b-3xl shrink-0">
           <button
             type="button"
             onClick={() => window.print()}
@@ -266,7 +266,7 @@ function VerifyContent() {
       </main>
 
       {/* Footer */}
-      <footer className="text-center text-[11px] sm:text-xs text-slate-400 pt-3 sm:pt-4 px-2">
+      <footer className="w-full max-w-2xl text-center text-[11px] sm:text-xs text-slate-400 pt-4 pb-12 sm:pb-8 px-2 shrink-0 flex-none">
         Future Farms Verification (FFV) • An Arbarne Group Agricultural Intelligence Platform • Contact:{" "}
         <a href="mailto:arbarnegroup@gmail.com" className="text-emerald-700 font-semibold hover:underline break-all">
           arbarnegroup@gmail.com
