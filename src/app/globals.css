@@ -282,3 +282,27 @@ body {
   }
 }
 
+/* Global Print Media Reset: Ensure multi-page documents paginate without cutoff */
+@media print {
+  html,
+  body {
+    overflow: visible !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    position: static !important;
+    display: block !important;
+  }
+
+  body * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+

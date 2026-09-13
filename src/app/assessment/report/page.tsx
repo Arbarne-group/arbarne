@@ -342,25 +342,38 @@ function AssessmentReportContent() {
   return (
     <div className="bg-slate-100 text-slate-800 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900 min-h-screen pb-16">
       {/* ─────────────────────────────────────────────────────────────
-          PRINT STYLES: Publication-Grade A4 Output (No URL / Header Clutter)
+          PRINT STYLES: Publication-Grade Multi-Page A4 Output
           ───────────────────────────────────────────────────────────── */}
       <style jsx global>{`
         @page {
           size: A4 portrait;
-          margin: 0; /* Suppresses browser-generated headers (URL, title) and footers (date, URL) */
+          margin: 12mm 12mm 12mm 12mm; /* Standard page margins so every page prints completely without cutoff */
         }
         @media print {
           html, body {
             margin: 0 !important;
             padding: 0 !important;
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
+            overflow: visible !important;
+            overflow-x: visible !important;
+            overflow-y: visible !important;
+            display: block !important;
+            position: static !important;
             background-color: #ffffff !important;
             color: #0f172a !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
           }
-          .no-print {
+
+          .no-print,
+          header.no-print,
+          nav,
+          aside {
             display: none !important;
           }
+
           /* Strip URL href display */
           a[href]:after {
             content: none !important;
@@ -369,38 +382,77 @@ function AssessmentReportContent() {
             text-decoration: none !important;
             color: inherit !important;
           }
+
+          /* Main canvas wrapper unconstrained */
+          main {
+            display: block !important;
+            position: static !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+          }
+
           .report-sheet-container {
+            display: block !important;
+            position: static !important;
             box-shadow: none !important;
             border: none !important;
-            margin: 0 auto !important;
+            margin: 0 !important;
             width: 100% !important;
             max-width: 100% !important;
             border-radius: 0 !important;
-            padding: 10mm 14mm 8mm 14mm !important;
+            padding: 0 !important;
             background: #ffffff !important;
+            overflow: visible !important;
+            overflow-x: visible !important;
+            overflow-y: visible !important;
+            height: auto !important;
+            min-height: 0 !important;
+            max-height: none !important;
           }
+
+          /* Prevent any nested element from clipping overflow across page breaks */
+          div, article, section, table, tbody, thead, tr, td {
+            overflow: visible !important;
+            overflow-x: visible !important;
+            overflow-y: visible !important;
+          }
+
           .print-page-break {
             break-before: page !important;
             page-break-before: always !important;
             margin-top: 0 !important;
-            padding-top: 6mm !important;
+            padding-top: 5mm !important;
           }
-          .print-break-inside-avoid {
-            break-inside: avoid !important;
-            page-break-inside: avoid !important;
-          }
-          table {
-            page-break-inside: auto !important;
-          }
+
+          .print-break-inside-avoid,
           tr {
             break-inside: avoid !important;
             page-break-inside: avoid !important;
           }
+
+          table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            page-break-inside: auto !important;
+            break-inside: auto !important;
+          }
+
           thead {
             display: table-header-group !important;
           }
+
           tfoot {
             display: table-footer-group !important;
+          }
+
+          /* Decorative top accent bar */
+          .report-sheet-container > div:first-child {
+            position: relative !important;
+            height: 4px !important;
+            margin-bottom: 6px !important;
           }
         }
       `}</style>
@@ -518,7 +570,7 @@ function AssessmentReportContent() {
           /* TEMPLATE 2: COMPREHENSIVE 8-PILLAR ASSESSMENT REPORT                      */
           /* Criteria-based scoring (No percentages or progress bars)                  */
           /* ========================================================================= */
-          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden relative p-4 sm:p-6 md:p-10 space-y-6 print:space-y-0">
+          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden print:overflow-visible relative p-4 sm:p-6 md:p-10 space-y-6 print:space-y-0 print:border-none print:shadow-none print:p-0">
             {/* Top Decorative Gradient Accent Bar */}
             <div className="h-2.5 w-full bg-gradient-to-r from-emerald-700 via-emerald-500 to-amber-500 absolute top-0 left-0" />
 
@@ -721,7 +773,7 @@ function AssessmentReportContent() {
             {/* ══════════════════════════════════════════════════════════════════════
                 PAGE 2: 8-PILLAR CAPABILITY PERFORMANCE MATRIX
                 ══════════════════════════════════════════════════════════════════════ */}
-            <section className="space-y-3 print-page-break print-break-inside-avoid">
+            <section className="space-y-3 print-page-break">
               {/* Print Mini-Header for Page 2 */}
               <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
                 <div className="flex items-center space-x-2">
@@ -754,7 +806,7 @@ function AssessmentReportContent() {
                 </span>
               </div>
 
-              <div className="border border-slate-200 rounded-xl overflow-hidden shadow-xs">
+              <div className="border border-slate-200 rounded-xl overflow-hidden print:overflow-visible print:border-none shadow-xs">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
@@ -893,7 +945,7 @@ function AssessmentReportContent() {
             {/* ══════════════════════════════════════════════════════════════════════
                 PAGE 3: PRIORITY ACTIONABLE INTERVENTIONS
                 ══════════════════════════════════════════════════════════════════════ */}
-            <section className="space-y-3 print-page-break print-break-inside-avoid">
+            <section className="space-y-3 print-page-break">
               {/* Print Mini-Header for Page 3 */}
               <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
                 <div className="flex items-center space-x-2">
@@ -931,7 +983,7 @@ function AssessmentReportContent() {
                   {allGapsList.slice(0, 6).map((gap: any, idx: number) => (
                     <div
                       key={gap.questionId || idx}
-                      className="p-3 border border-amber-200 bg-amber-50/30 rounded-xl flex items-start justify-between gap-3 shadow-xs"
+                      className="p-3 border border-amber-200 bg-amber-50/30 rounded-xl flex items-start justify-between gap-3 shadow-xs print-break-inside-avoid"
                     >
                       <div className="flex items-start space-x-2.5">
                         <span className="w-6 h-6 rounded-lg bg-amber-100 text-amber-900 font-bold flex items-center justify-center shrink-0 font-mono text-xs mt-0.5">
@@ -977,7 +1029,7 @@ function AssessmentReportContent() {
             {/* ══════════════════════════════════════════════════════════════════════
                 PAGE 4: TRANSFORMATION ROADMAP & OFFICIAL VERIFICATION
                 ══════════════════════════════════════════════════════════════════════ */}
-            <section className="space-y-3.5 print-page-break print-break-inside-avoid">
+            <section className="space-y-3.5 print-page-break">
               {/* Print Mini-Header for Page 4 */}
               <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
                 <div className="flex items-center space-x-2">
@@ -1106,7 +1158,7 @@ function AssessmentReportContent() {
           /* TEMPLATE 1: SINGLE PILLAR ASSESSMENT REPORT (Pillar 1 - 8)                */
           /* Criteria-based scoring (No percentages or progress bars)                  */
           /* ========================================================================= */
-          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden relative p-4 sm:p-6 md:p-10 space-y-7">
+          <article className="report-sheet-container max-w-5xl w-full bg-white shadow-xl rounded-xl border border-slate-200 overflow-hidden print:overflow-visible relative p-4 sm:p-6 md:p-10 space-y-7 print:space-y-0 print:border-none print:shadow-none print:p-0">
             {/* Top Decorative Band */}
             <div className="w-full h-2.5 bg-gradient-to-r from-emerald-700 via-emerald-500 to-amber-500 absolute top-0 left-0" />
 
@@ -1249,7 +1301,7 @@ function AssessmentReportContent() {
             </section>
 
             {/* Section 2: Capability Checklist & Question Breakdown Table (Criteria-Based, No Percentages) */}
-            <section data-purpose="capability-questions-breakdown" className="space-y-3 print-page-break print-break-inside-avoid">
+            <section data-purpose="capability-questions-breakdown" className="space-y-3 print-page-break">
               {/* Print Mini-Header for Page 2 */}
               <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
                 <div className="flex items-center space-x-2">
@@ -1280,7 +1332,7 @@ function AssessmentReportContent() {
                 </span>
               </div>
 
-              <div className="border border-slate-200 rounded-xl overflow-hidden shadow-xs">
+              <div className="border border-slate-200 rounded-xl overflow-hidden print:overflow-visible print:border-none shadow-xs">
                 <table className="min-w-full text-left text-xs divide-y divide-slate-200">
                   <thead className="bg-slate-50 text-[11px] uppercase font-bold text-slate-500 tracking-wider">
                     <tr>
@@ -1371,7 +1423,7 @@ function AssessmentReportContent() {
             </section>
 
             {/* Section 3: Actionable Recommendations for Identified Gaps */}
-            <section data-purpose="identified-gap-recommendations" className="space-y-3 print-page-break print-break-inside-avoid">
+            <section data-purpose="identified-gap-recommendations" className="space-y-3 print-page-break">
               {/* Print Mini-Header for Page 3 */}
               <div className="hidden print:flex items-center justify-between pb-2 mb-3 border-b border-slate-200 text-[10px] text-slate-500">
                 <div className="flex items-center space-x-2">
@@ -1420,7 +1472,7 @@ function AssessmentReportContent() {
                     {singlePillarGaps.map((gap: any, idx: number) => (
                       <div
                         key={gap.questionId || idx}
-                        className="border border-slate-200 bg-white rounded-xl p-4 transition-all hover:border-emerald-300 shadow-xs"
+                        className="border border-slate-200 bg-white rounded-xl p-4 transition-all hover:border-emerald-300 shadow-xs print-break-inside-avoid"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-start space-x-3">
