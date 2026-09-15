@@ -66,8 +66,11 @@ function CertificatePageContent() {
       fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
         .then((res) => res.json())
         .then((data) => {
+          if (data.user) {
+            setUserProfile((prev: any) => ({ ...prev, ...data.user }));
+          }
           if (data.answers && Object.keys(data.answers).length > 0) {
-            setPillarAnswers((prev) => ({ ...localAnswers, ...data.answers, ...prev }));
+            setPillarAnswers((prev) => ({ ...localAnswers, ...prev, ...data.answers }));
           }
         })
         .catch(console.error)
@@ -124,6 +127,7 @@ function CertificatePageContent() {
   }, [userProfile]);
 
   const dynamicFarmId = useMemo(() => {
+    if (userProfile?.futureFarmId) return userProfile.futureFarmId;
     if (userProfile?.farmId) return userProfile.farmId;
     if (activeEmail) {
       let hash = 0;

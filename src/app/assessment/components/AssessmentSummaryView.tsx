@@ -74,7 +74,10 @@ export default function AssessmentSummaryView({
     noCount: number;
     maturityLevel: string;
     capabilityScores: any;
+    totalQuestions?: number;
   } | null>(null);
+  const [dbResponses, setDbResponses] = useState<any[]>([]);
+  const [loadingDb, setLoadingDb] = useState(true);
   const [expandedCapIds, setExpandedCapIds] = useState<Record<string, boolean>>({});
 
   const { user: clerkUser } = useUser();
@@ -96,7 +99,7 @@ export default function AssessmentSummaryView({
         .then((res) => res.json())
         .then((data) => {
           if (data.user) {
-            setUserProfile(data.user);
+            setUserProfile((prev: any) => ({ ...prev, ...data.user }));
             localStorage.setItem("future_farms_user", JSON.stringify(data.user));
           }
         })
@@ -104,15 +107,21 @@ export default function AssessmentSummaryView({
     }
   }, [clerkUser]);
 
-  const dynamicFarmId = clerkUser?.id ? `FFF-KE-PROD-${clerkUser.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD";
+  const dynamicFarmId =
+    userProfile?.futureFarmId ||
+    userProfile?.farmId ||
+    (clerkUser?.id ? `FFF-KE-PROD-${clerkUser.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD");
   const dynamicFarmerName = userProfile?.name || clerkUser?.fullName || "Farmer";
   const dynamicFarmName =
     userProfile?.farmName ||
     userProfile?.farmCharacteristics?.farmName ||
+    userProfile?.farmerProfile?.farmName ||
     (userProfile?.name ? `${userProfile.name}'s Farm` : "My Farm");
   const dynamicLocation = userProfile?.farmLocation?.county
     ? `${userProfile.farmLocation.county}, ${userProfile.farmLocation.country || "Kenya"}`
-    : "Kenya";
+    : userProfile?.county
+    ? `${userProfile.county}, Kenya`
+    : userProfile?.location || "Kenya";
 
   // Modals and drawers
   const [isFFVOpen, setIsFFVOpen] = useState(false);
@@ -211,7 +220,10 @@ export default function AssessmentSummaryView({
     // Fetch authenticated user's actual verified responses from database
     async function loadApiResponses() {
       const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
-      if (!email) return;
+      if (!email) {
+        setLoadingDb(false);
+        return;
+      }
 
       try {
         const res = await fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`);
@@ -219,13 +231,25 @@ export default function AssessmentSummaryView({
           const data = await res.json();
           if (isCancelled) return;
 
+          if (data.user) {
+            setUserProfile((prev: any) => ({ ...prev, ...data.user }));
+            try {
+              localStorage.setItem("future_farms_user", JSON.stringify(data.user));
+            } catch (e) {}
+          }
+
           if (data.pillarStatus && data.pillarStatus[pillarId]) {
             setDbPillarStatus(data.pillarStatus[pillarId]);
           }
 
+          if (data.responses && Array.isArray(data.responses)) {
+            setDbResponses(data.responses);
+          }
+
           if (data.answers && Object.keys(data.answers).length > 0) {
             setAnswers((prev) => {
-              const merged = { ...data.answers, ...localCombined, ...prev };
+              // Database answers are the single source of truth
+              const merged = { ...localCombined, ...prev, ...data.answers };
               try {
                 localStorage.setItem("future_farms_assessment_answers", JSON.stringify(merged));
                 const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
@@ -238,7 +262,11 @@ export default function AssessmentSummaryView({
           }
         }
       } catch (err) {
-        console.error("Failed to load assessment responses from API:", err);
+        console.error("Failed to load assessment responses from database API:", err);
+      } finally {
+        if (!isCancelled) {
+          setLoadingDb(false);
+        }
       }
     }
 
@@ -265,11 +293,25 @@ export default function AssessmentSummaryView({
     setVerifierEvMethods((prev) => ({ ...initialMethods, ...prev }));
   }, [pillar, answers]);
 
-  // Compute capability scores with status tiers & feedback
+  // Compute capability scores with status tiers & feedback extracted from DB or verified answers
   const capabilityScores = useMemo(() => {
     return pillar.capabilities.map((cap) => {
-      const yesCount = cap.questions.filter((q) => answers[q.id] === "yes").length;
-      const total = cap.questions.length || 5;
+      // Prioritize capability score stored in database
+      const dbCapScore =
+        dbPillarStatus?.capabilityScores?.[cap.id] ||
+        dbPillarStatus?.capabilityScores?.[cap.number] ||
+        (Array.isArray(dbPillarStatus?.capabilityScores)
+          ? (dbPillarStatus.capabilityScores as any[]).find((c: any) => c.id === cap.id || c.capabilityId === cap.id)
+          : null);
+
+      const yesCount =
+        dbCapScore?.yes !== undefined
+          ? dbCapScore.yes
+          : dbCapScore?.yesCount !== undefined
+          ? dbCapScore.yesCount
+          : cap.questions.filter((q) => answers[q.id] === "yes").length;
+
+      const total = dbCapScore?.total || cap.questions.length || 5;
       const percent = Math.round((yesCount / total) * 100);
 
       const tier = getCapabilityTier(yesCount, total);
@@ -287,30 +329,82 @@ export default function AssessmentSummaryView({
         statusFeedback,
       };
     });
-  }, [pillar, answers]);
+  }, [pillar, answers, dbPillarStatus]);
 
-  const totalQuestions = pillar.capabilities.flatMap((c) => c.questions).length || 25;
+  const totalQuestions =
+    dbPillarStatus?.totalQuestions ||
+    pillar.capabilities.flatMap((c) => c.questions).length ||
+    25;
   const computedYes = capabilityScores.reduce((acc, c) => acc + c.yesCount, 0);
-  const totalYes = computedYes > 0 ? computedYes : (dbPillarStatus?.yesCount ?? 0);
+  const totalYes =
+    dbPillarStatus?.yesCount !== undefined && dbPillarStatus.yesCount > 0
+      ? dbPillarStatus.yesCount
+      : computedYes > 0
+      ? computedYes
+      : (dbPillarStatus?.yesCount ?? 0);
 
   // Canonical Pillar with rich recommendations for gaps
   const canonicalPillar = useMemo(() => {
     return CANONICAL_PILLARS.find((p) => p.id === pillarId);
   }, [pillarId]);
 
+  // Extract operational gaps directly from database responses
   const pillarGaps = useMemo(() => {
+    // 1. Primary: Extract gaps directly from verified database responses for this pillar!
+    const dbPillarGaps = dbResponses.filter(
+      (r) => Number(r.pillarId) === Number(pillarId) && r.answer === "no"
+    );
+    if (dbPillarGaps.length > 0) {
+      return dbPillarGaps.map((r) => {
+        const matchedCanonical = canonicalPillar?.capabilities
+          .flatMap((c) => c.questions)
+          .find((q) => q.id === r.questionId);
+
+        return {
+          id: r.questionId,
+          question: r.questionText || matchedCanonical?.question || "",
+          recommendation:
+            r.recommendation ||
+            matchedCanonical?.recommendation ||
+            "Implement recommended farm management practice",
+          whyItMatters:
+            r.whyItMatters ||
+            matchedCanonical?.whyItMatters ||
+            "Strengthens operational and agronomic resilience",
+          quickWin:
+            r.quickWin ||
+            matchedCanonical?.quickWin ||
+            "Begin recording practice details",
+          supportAvailable:
+            r.supportAvailable ||
+            matchedCanonical?.supportAvailable ||
+            "Future Farms agronomic advisory",
+          priority: r.priority || matchedCanonical?.priority || "Medium",
+          capabilityName: r.capabilityName || matchedCanonical?.capabilityName || "",
+        };
+      });
+    }
+
+    // 2. Fallback: Map canonical pillar questions with answers dictionary
     if (!canonicalPillar) return [];
     return canonicalPillar.capabilities
       .flatMap((c) => c.questions)
       .filter((q) => answers[q.id] === "no");
-  }, [canonicalPillar, answers]);
+  }, [canonicalPillar, answers, dbResponses, pillarId]);
 
   // Gauge calculation
   const clampedRatio = Math.max(0, Math.min(1, totalYes / totalQuestions));
   const dashOffset = (125.6 * (1 - clampedRatio)).toFixed(1);
 
-  // Automatic feedback for pillar based on total score
-  const pillarFeedback = getPillarAutomaticFeedback(totalYes, totalQuestions);
+  // Automatic feedback for pillar based on total score and database maturity
+  const pillarFeedback = useMemo(() => {
+    const feedback = getPillarAutomaticFeedback(totalYes, totalQuestions);
+    if (dbPillarStatus?.maturityLevel) {
+      feedback.label = dbPillarStatus.maturityLevel;
+    }
+    return feedback;
+  }, [totalYes, totalQuestions, dbPillarStatus]);
+
   const pillarPercentage = Math.round((totalYes / totalQuestions) * 100);
   const nextPillarId = pillar.id < ALL_PILLARS.length ? pillar.id + 1 : 1;
 
@@ -320,8 +414,8 @@ export default function AssessmentSummaryView({
     return allPillarQIds.filter((qId) => answers[qId] === "yes" || answers[qId] === "no").length;
   }, [pillar, answers]);
   const isPillarCompleted =
-    (answeredPillarQuestionsCount >= totalQuestions && totalQuestions > 0) ||
-    Boolean(dbPillarStatus?.isCompleted);
+    Boolean(dbPillarStatus?.isCompleted) ||
+    (answeredPillarQuestionsCount >= totalQuestions && totalQuestions > 0);
 
   // FFV Claims compilation for "Yes" answers using authentic canonical requirements
   const ffvCapabilityClaims = useMemo(() => {
@@ -581,7 +675,7 @@ export default function AssessmentSummaryView({
     }
   };
 
-  if (!mounted) {
+  if (!mounted || (loadingDb && totalYes === 0 && Object.keys(answers).length === 0)) {
     return (
       <div className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
@@ -589,7 +683,7 @@ export default function AssessmentSummaryView({
             progress_activity
           </span>
           <span className="font-label-sm text-sm text-on-surface-variant font-medium">
-            Loading assessment summary...
+            Extracting verified diagnostic results from database...
           </span>
         </div>
       </div>

@@ -117,13 +117,44 @@ export async function GET(request: Request) {
       daysRemainingFull = canReassessFull ? 0 : Math.ceil((eligibleFullTime - now) / (24 * 60 * 60 * 1000));
     }
 
+    const userSummary = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      futureFarmId: user.futureFarmId || (user as any).farmId || "FFF-KE-PROD",
+      farmName:
+        user.farmCharacteristics?.farmName ||
+        user.farmerProfile?.farmName ||
+        (user.name ? `${user.name}'s Farm` : "My Farm"),
+      county: user.farmLocation?.county || "",
+      location: user.farmLocation?.county
+        ? `${user.farmLocation.county}, ${user.farmLocation.country || "Kenya"}`
+        : "Kenya",
+    };
+
+    const responses = assessment.assessmentResponses.map((r: any) => ({
+      pillarId: r.pillarId,
+      capabilityId: r.capabilityId,
+      capabilityName: r.capabilityName,
+      questionId: r.questionId,
+      questionText: r.questionText,
+      answer: r.answer,
+      recommendation: r.recommendation,
+      whyItMatters: r.whyItMatters,
+      quickWin: r.quickWin,
+      supportAvailable: r.supportAvailable,
+      priority: r.priority,
+    }));
+
     return NextResponse.json({
       success: true,
       assessmentId: assessment.id,
       overallScore: assessment.overallScore,
       maturityLevel: assessment.maturityLevel,
       status: assessment.status,
+      user: userSummary,
       answers,
+      responses,
       pillarStatus,
       isFullAssessmentComplete,
       canReassessFull,

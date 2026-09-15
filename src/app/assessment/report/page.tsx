@@ -71,6 +71,9 @@ function AssessmentReportContent() {
     fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
       .then((data) => {
+        if (data.user) {
+          setUserProfile((prev: any) => ({ ...prev, ...data.user }));
+        }
         if (data.pillarStatus) {
           const completedIds: number[] = [];
           const info = ALL_PILLARS.map((p) => {

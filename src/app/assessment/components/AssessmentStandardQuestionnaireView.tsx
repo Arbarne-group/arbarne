@@ -39,14 +39,10 @@ export default function AssessmentStandardQuestionnaireView({
   const [cooldownStatus, setCooldownStatus] = useState<{
     isCompleted: boolean;
     canReassess: boolean;
-    nextEligibleDate?: string | null;
-    daysRemaining?: number;
-  }>({
-    isCompleted: false,
-    canReassess: true,
-    nextEligibleDate: null,
-    daysRemaining: 0,
-  });
+    nextEligibleDate: string | null;
+    daysRemaining: number;
+  }>({ isCompleted: false, canReassess: true, nextEligibleDate: null, daysRemaining: 0 });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const activeEmail = user?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
 
@@ -150,7 +146,7 @@ export default function AssessmentStandardQuestionnaireView({
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!isCurrentPageComplete) {
       setValidationError(
         `Please answer all questions on this page before proceeding (${unansweredQuestions.length} question${
@@ -179,6 +175,7 @@ export default function AssessmentStandardQuestionnaireView({
         onComplete(pillarId, answers);
         return;
       }
+      setIsSubmitting(true);
       try {
         localStorage.setItem(
           "future_farms_assessment_answers",
@@ -187,13 +184,19 @@ export default function AssessmentStandardQuestionnaireView({
         const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
         localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
         const email = activeEmail;
-        fetch("/api/assessment/submit-pillar", {
+        const res = await fetch("/api/assessment/submit-pillar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, pillarId, answers }),
-        }).catch((e) => console.error("Error submitting pillar to API:", e));
+        });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          console.warn("[Questionnaire] Database submission notice:", errData);
+        }
       } catch (e) {
-        console.error(e);
+        console.error("Error submitting pillar to database API:", e);
+      } finally {
+        setIsSubmitting(false);
       }
       onComplete(pillarId, answers);
     }
@@ -419,21 +422,30 @@ export default function AssessmentStandardQuestionnaireView({
             <button
               type="button"
               onClick={handleNext}
+              disabled={isSubmitting}
               className={`flex items-center justify-center gap-2 px-6 sm:px-8 py-3 font-label-sm text-label-sm font-semibold rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer w-full sm:w-auto ${
-                isCurrentPageComplete
+                isSubmitting
+                  ? "bg-primary/70 text-white cursor-wait opacity-80"
+                  : isCurrentPageComplete
                   ? "bg-[#009924] hover:bg-primary-container text-white hover:shadow-md"
                   : "bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80 border border-outline-variant"
               }`}
             >
               <span>
-                {currentCapIndex === pillar.capabilities.length - 1
+                {isSubmitting
+                  ? "Submitting to Database..."
+                  : currentCapIndex === pillar.capabilities.length - 1
                   ? `Submit Pillar 0${pillar.id} Assessment`
                   : isCurrentPageComplete
                   ? "Next"
                   : `Next (${unansweredQuestions.length} remaining)`}
               </span>
-              <span className="material-symbols-outlined text-[20px]">
-                {currentCapIndex === pillar.capabilities.length - 1 ? "send" : "chevron_right"}
+              <span className={`material-symbols-outlined text-[20px] ${isSubmitting ? "animate-spin" : ""}`}>
+                {isSubmitting
+                  ? "progress_activity"
+                  : currentCapIndex === pillar.capabilities.length - 1
+                  ? "send"
+                  : "chevron_right"}
               </span>
             </button>
           </div>
