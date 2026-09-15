@@ -105,10 +105,10 @@ function VerifyContent() {
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
             </Link>
             <Link
-              href="/billing"
+              href="/dashboard"
               className="px-5 py-3 rounded-xl border border-surface-container-high hover:bg-surface-container text-sm font-semibold text-on-surface transition-all inline-flex items-center justify-center gap-2"
             >
-              <span>View Billing &amp; Invoices</span>
+              <span>Go to My Farm Dashboard</span>
             </Link>
           </div>
         </div>

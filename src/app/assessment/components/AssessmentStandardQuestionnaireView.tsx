@@ -69,7 +69,20 @@ export default function AssessmentStandardQuestionnaireView({
             });
           }
           if (data.answers && Object.keys(data.answers).length > 0) {
-            setAnswers((prev) => ({ ...data.answers, ...prev }));
+            setAnswers((prev) => {
+              const combined = { ...data.answers, ...prev };
+              try {
+                localStorage.setItem(
+                  "future_farms_assessment_answers",
+                  JSON.stringify(combined)
+                );
+                const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
+                localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...combined }));
+              } catch (err) {
+                console.error(err);
+              }
+              return combined;
+            });
           }
         })
         .catch(console.error);
@@ -99,6 +112,8 @@ export default function AssessmentStandardQuestionnaireView({
         "future_farms_assessment_answers",
         JSON.stringify(updated)
       );
+      const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
+      localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...updated }));
     } catch (e) {
       console.error(e);
     }
@@ -117,6 +132,8 @@ export default function AssessmentStandardQuestionnaireView({
         "future_farms_assessment_answers",
         JSON.stringify(answers)
       );
+      const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
+      localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
       const email = activeEmail;
       fetch("/api/assessment/save-progress", {
         method: "POST",
@@ -167,6 +184,8 @@ export default function AssessmentStandardQuestionnaireView({
           "future_farms_assessment_answers",
           JSON.stringify(answers)
         );
+        const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
+        localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
         const email = activeEmail;
         fetch("/api/assessment/submit-pillar", {
           method: "POST",

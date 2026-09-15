@@ -39,7 +39,6 @@ export default function Sidebar({
     { label: "Overview", href: "/onboarding", icon: "dashboard" },
     { label: "My Farm", href: "/dashboard", icon: "agriculture" },
     { label: "Assessment", href: "/assessment", icon: "fact_check" },
-    { label: "Billing & Plans", href: "/billing", icon: "credit_card" },
     { label: "Digital Learning", href: "/learning", icon: "school", badge: "Soon" },
     { label: "Opportunity Desk", href: "/opportunities", icon: "lightbulb", badge: "Soon" },
     { label: "Service Desk", href: "/service-desk", icon: "support_agent", badge: "Soon" },

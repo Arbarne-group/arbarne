@@ -49,7 +49,32 @@ export default function AssessmentSummaryView({
 }: AssessmentSummaryViewProps) {
   const pillar = getPillarById(pillarId);
   const [mounted, setMounted] = useState(false);
-  const [answers, setAnswers] = useState<Record<string, "yes" | "no">>({});
+  const [answers, setAnswers] = useState<Record<string, "yes" | "no">>(() => {
+    if (propAnswers && Object.keys(propAnswers).length > 0) {
+      return propAnswers;
+    }
+    if (typeof window !== "undefined") {
+      try {
+        const savedPillar = localStorage.getItem("future_farms_assessment_answers");
+        const savedAll = localStorage.getItem("future_farms_all_answers");
+        const parsedPillar = savedPillar ? JSON.parse(savedPillar) : {};
+        const parsedAll = savedAll ? JSON.parse(savedAll) : {};
+        const merged = { ...parsedAll, ...parsedPillar };
+        if (Object.keys(merged).length > 0) return merged;
+      } catch (e) {
+        console.error("Failed to parse cached answers:", e);
+      }
+    }
+    return {};
+  });
+  const [dbPillarStatus, setDbPillarStatus] = useState<{
+    score: number;
+    isCompleted: boolean;
+    yesCount: number;
+    noCount: number;
+    maturityLevel: string;
+    capabilityScores: any;
+  } | null>(null);
   const [expandedCapIds, setExpandedCapIds] = useState<Record<string, boolean>>({});
 
   const { user: clerkUser } = useUser();
@@ -160,39 +185,85 @@ export default function AssessmentSummaryView({
     loadEvidences();
   }, [pillarId, clerkUser]);
 
-  // Safely load answers after client-side mount
+  // Safely load answers after client-side mount & sync from Neon DB API
   useEffect(() => {
     setMounted(true);
-    let loadedAnswers: Record<string, "yes" | "no"> = {};
+    let isCancelled = false;
 
+    let localCombined: Record<string, "yes" | "no"> = {};
     if (propAnswers && Object.keys(propAnswers).length > 0) {
-      loadedAnswers = propAnswers;
-    } else {
+      localCombined = { ...propAnswers };
+    }
+    try {
+      const savedPillar = localStorage.getItem("future_farms_assessment_answers");
+      const savedAll = localStorage.getItem("future_farms_all_answers");
+      const parsedPillar = savedPillar ? JSON.parse(savedPillar) : {};
+      const parsedAll = savedAll ? JSON.parse(savedAll) : {};
+      localCombined = { ...parsedAll, ...parsedPillar, ...localCombined };
+    } catch (e) {
+      console.error("Error reading local answers:", e);
+    }
+
+    if (Object.keys(localCombined).length > 0) {
+      setAnswers((prev) => ({ ...localCombined, ...prev }));
+    }
+
+    // Fetch authenticated user's actual verified responses from database
+    async function loadApiResponses() {
+      const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+      if (!email) return;
+
       try {
-        const saved = localStorage.getItem("future_farms_assessment_answers");
-        if (saved) {
-          loadedAnswers = JSON.parse(saved);
+        const res = await fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (isCancelled) return;
+
+          if (data.pillarStatus && data.pillarStatus[pillarId]) {
+            setDbPillarStatus(data.pillarStatus[pillarId]);
+          }
+
+          if (data.answers && Object.keys(data.answers).length > 0) {
+            setAnswers((prev) => {
+              const merged = { ...data.answers, ...localCombined, ...prev };
+              try {
+                localStorage.setItem("future_farms_assessment_answers", JSON.stringify(merged));
+                const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
+                localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...merged }));
+              } catch (err) {
+                console.error(err);
+              }
+              return merged;
+            });
+          }
         }
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error("Failed to load assessment responses from API:", err);
       }
     }
-    setAnswers(loadedAnswers);
 
-    // Initial claim statuses
+    loadApiResponses();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [propAnswers, pillarId, clerkUser]);
+
+  // Update claim statuses whenever answers or pillar changes
+  useEffect(() => {
     const initialStatuses: Record<string, FFVClaimStatus> = {};
     const initialMethods: Record<string, string> = {};
     pillar.capabilities.forEach((c) => {
       c.questions.forEach((q) => {
-        if (loadedAnswers[q.id] === "yes") {
+        if (answers[q.id] === "yes") {
           initialStatuses[q.id] = "not_submitted";
           initialMethods[q.id] = "DIG";
         }
       });
     });
-    setClaimStatuses(initialStatuses);
-    setVerifierEvMethods(initialMethods);
-  }, [propAnswers, pillarId, pillar]);
+    setClaimStatuses((prev) => ({ ...initialStatuses, ...prev }));
+    setVerifierEvMethods((prev) => ({ ...initialMethods, ...prev }));
+  }, [pillar, answers]);
 
   // Compute capability scores with status tiers & feedback
   const capabilityScores = useMemo(() => {
@@ -219,7 +290,8 @@ export default function AssessmentSummaryView({
   }, [pillar, answers]);
 
   const totalQuestions = pillar.capabilities.flatMap((c) => c.questions).length || 25;
-  const totalYes = capabilityScores.reduce((acc, c) => acc + c.yesCount, 0);
+  const computedYes = capabilityScores.reduce((acc, c) => acc + c.yesCount, 0);
+  const totalYes = computedYes > 0 ? computedYes : (dbPillarStatus?.yesCount ?? 0);
 
   // Canonical Pillar with rich recommendations for gaps
   const canonicalPillar = useMemo(() => {
@@ -242,12 +314,14 @@ export default function AssessmentSummaryView({
   const pillarPercentage = Math.round((totalYes / totalQuestions) * 100);
   const nextPillarId = pillar.id < ALL_PILLARS.length ? pillar.id + 1 : 1;
 
-  // Pillar assessment completion check (must have answered all 25 questions in the pillar)
+  // Pillar assessment completion check (must have answered all 25 questions in the pillar or completed in DB)
   const answeredPillarQuestionsCount = useMemo(() => {
     const allPillarQIds = pillar.capabilities.flatMap((c) => c.questions.map((q) => q.id));
     return allPillarQIds.filter((qId) => answers[qId] === "yes" || answers[qId] === "no").length;
   }, [pillar, answers]);
-  const isPillarCompleted = answeredPillarQuestionsCount >= totalQuestions && totalQuestions > 0;
+  const isPillarCompleted =
+    (answeredPillarQuestionsCount >= totalQuestions && totalQuestions > 0) ||
+    Boolean(dbPillarStatus?.isCompleted);
 
   // FFV Claims compilation for "Yes" answers using authentic canonical requirements
   const ffvCapabilityClaims = useMemo(() => {
@@ -660,36 +734,14 @@ export default function AssessmentSummaryView({
               {isPillarCompleted ? (
                 <button
                   type="button"
-                  onClick={() => setIsFFVOpen(true)}
+                  onClick={() => setShowCertificateModal(true)}
                   className="px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-[18px]">verified</span>
-                  <span>Start Pillar Verification</span>
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    alert(`Please answer all ${totalQuestions} questions for Pillar ${pillar.id} before accessing the verification studio (${answeredPillarQuestionsCount}/${totalQuestions} answered).`);
-                  }}
-                  title={`Complete all ${totalQuestions} questions in this pillar to unlock verification`}
-                  className="px-5 py-3 rounded-xl bg-surface-container-high border border-outline-variant/60 text-on-surface-variant font-bold text-xs flex items-center justify-center gap-2 cursor-not-allowed opacity-85"
-                >
-                  <span className="material-symbols-outlined text-[18px] text-amber-600">lock</span>
-                  <span>Verification Locked ({answeredPillarQuestionsCount}/{totalQuestions})</span>
-                </button>
-              )}
-              {isPillarCompleted ? (
-                <button
-                  type="button"
-                  onClick={() => setShowCertificateModal(true)}
-                  className="px-4 py-2 rounded-xl bg-surface border border-emerald-600/30 hover:bg-emerald-50/50 text-emerald-800 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <span className="material-symbols-outlined text-[16px]">workspace_premium</span>
+                  <span className="material-symbols-outlined text-[18px]">workspace_premium</span>
                   <span>View FFV Certificate</span>
                 </button>
               ) : (
-                <div className="text-[10px] text-center text-amber-800 bg-amber-50 rounded-lg px-2.5 py-1 border border-amber-200">
+                <div className="text-[11px] font-semibold text-center text-amber-800 bg-amber-50 rounded-xl px-4 py-2.5 border border-amber-200">
                   Complete assessment to unlock certificate
                 </div>
               )}
@@ -853,15 +905,27 @@ export default function AssessmentSummaryView({
           </div>
 
           {pillarGaps.length === 0 ? (
-            <div className="bg-surface rounded-2xl p-8 border border-primary/20 text-center space-y-2">
-              <span className="material-symbols-outlined text-primary text-4xl">verified</span>
-              <h4 className="text-base font-bold text-on-surface">
-                Outstanding! Zero Operational Gaps
-              </h4>
-              <p className="text-xs text-on-surface-variant max-w-md mx-auto">
-                You have verified all 25 diagnostic capabilities for this pillar. Your farm demonstrates advanced operating maturity in this area.
-              </p>
-            </div>
+            isPillarCompleted && totalYes === totalQuestions ? (
+              <div className="bg-surface rounded-2xl p-8 border border-primary/20 text-center space-y-2">
+                <span className="material-symbols-outlined text-primary text-4xl">verified</span>
+                <h4 className="text-base font-bold text-on-surface">
+                  Outstanding! Zero Operational Gaps
+                </h4>
+                <p className="text-xs text-on-surface-variant max-w-md mx-auto">
+                  You have verified all 25 diagnostic capabilities for this pillar. Your farm demonstrates advanced operating maturity in this area.
+                </p>
+              </div>
+            ) : (
+              <div className="bg-surface rounded-2xl p-6 border border-surface-container-high text-center space-y-2">
+                <span className="material-symbols-outlined text-on-surface-variant text-3xl">pending_actions</span>
+                <h4 className="text-sm font-bold text-on-surface">
+                  No Operational Gaps Recorded
+                </h4>
+                <p className="text-xs text-on-surface-variant max-w-md mx-auto">
+                  Diagnostic responses are loading or no &ldquo;No&rdquo; answers were recorded for this pillar. Complete or review your responses to generate development tasks.
+                </p>
+              </div>
+            )
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {pillarGaps.map((q) => (
@@ -943,10 +1007,16 @@ export default function AssessmentSummaryView({
         <div className="flex flex-col items-center gap-md w-full max-w-sm mb-12">
           <button
             type="button"
-            onClick={() => onContinueToNextPillar(nextPillarId)}
+            onClick={() => {
+              if (pillar.id >= ALL_PILLARS.length) {
+                onBackToHub();
+              } else {
+                onContinueToNextPillar(nextPillarId);
+              }
+            }}
             className="w-full bg-primary text-on-primary font-label-sm text-label-sm py-4 rounded-xl shadow-sm hover:shadow-md hover:bg-surface-tint transition-all active:scale-[0.98] font-bold cursor-pointer"
           >
-            {pillar.id === ALL_PILLARS.length
+            {pillar.id >= ALL_PILLARS.length
               ? "Return to Assessment Hub"
               : `Continue to Pillar ${nextPillarId}`}
           </button>
@@ -2129,42 +2199,18 @@ export default function AssessmentSummaryView({
               <strong className="text-on-surface block">Next Recommended Steps:</strong>
               <ul className="list-disc pl-4 space-y-1 text-on-surface-variant">
                 <li>Log completed farm practices into the My Future Farm task manager.</li>
-                <li>Submit evidence in the FFV studio to unlock an accredited verified rating.</li>
+                <li>Maintain documented farm practices for ongoing operational excellence.</li>
                 <li>Schedule your 90-day reassessment to measure operational growth.</li>
               </ul>
             </div>
 
             <div className="flex items-center justify-end gap-2 pt-2">
-              {isPillarCompleted ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedCapForDetail(null);
-                    setIsFFVOpen(true);
-                  }}
-                  className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs cursor-pointer"
-                >
-                  Verify In FFV Studio
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedCapForDetail(null);
-                    setIsFFVOpen(true);
-                  }}
-                  className="px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-bold text-xs border border-amber-500/30 flex items-center gap-1.5 cursor-pointer"
-                >
-                  <span className="material-symbols-outlined text-[15px]">lock</span>
-                  <span>Verification Locked ({answeredPillarQuestionsCount}/{totalQuestions})</span>
-                </button>
-              )}
               <button
                 type="button"
                 onClick={() => setSelectedCapForDetail(null)}
-                className="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-xs cursor-pointer shadow-xs transition-all"
               >
-                Close
+                Close Action Plan
               </button>
             </div>
           </div>

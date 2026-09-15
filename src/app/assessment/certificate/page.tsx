@@ -15,10 +15,10 @@ function CertificatePageContent() {
   const router = useRouter();
   const { user: clerkUser } = useUser();
 
-  const pillarParam = searchParams.get("pillar") || "2";
+  const pillarParam = searchParams.get("pillar") || "1";
   const emailParam = searchParams.get("email") || "";
-  const pillarId = Math.max(1, Math.min(8, Number(pillarParam) || 2));
-  const pillar = useMemo(() => getPillarById(pillarId) || ALL_PILLARS[1], [pillarId]);
+  const pillarId = Math.max(1, Math.min(8, Number(pillarParam) || 1));
+  const pillar = useMemo(() => getPillarById(pillarId) || ALL_PILLARS[0], [pillarId]);
 
   const [loading, setLoading] = useState(true);
   const [activeEmail, setActiveEmail] = useState("");
@@ -40,27 +40,34 @@ function CertificatePageContent() {
       }
     } catch (e) {}
 
-    // Load answers from localStorage or API
+    // Load answers from localStorage
+    let localAnswers: Record<string, "yes" | "no"> = {};
     try {
       const savedAll = localStorage.getItem("future_farms_all_answers");
       const savedPillar = localStorage.getItem("future_farms_assessment_answers");
-      let loaded: Record<string, "yes" | "no"> = {};
-      if (savedAll) {
-        const parsed = JSON.parse(savedAll);
-        if (parsed[pillarId]) loaded = parsed[pillarId];
-      } else if (savedPillar) {
-        loaded = JSON.parse(savedPillar);
-      }
-      setPillarAnswers(loaded);
+      const parsedAll = savedAll ? JSON.parse(savedAll) : {};
+      const parsedPillar = savedPillar ? JSON.parse(savedPillar) : {};
+      localAnswers = { ...parsedAll, ...parsedPillar };
+      setPillarAnswers(localAnswers);
     } catch (e) {}
 
-    // Fetch user details from server
+    // Fetch user details & verified responses from server
     if (email) {
       fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.user) {
             setUserProfile(data.user);
+          }
+        })
+        .catch(console.error);
+
+      // Fetch verified responses from API
+      fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.answers && Object.keys(data.answers).length > 0) {
+            setPillarAnswers((prev) => ({ ...localAnswers, ...data.answers, ...prev }));
           }
         })
         .catch(console.error)
@@ -130,10 +137,14 @@ function CertificatePageContent() {
   }, [userProfile, activeEmail]);
 
   // Calculate score for this pillar
-  const totalQuestions = pillar.capabilities.flatMap((c) => c.questions).length || 25;
-  const totalYes = Object.values(pillarAnswers).filter((a) => a === "yes").length;
-  // If user completed answers, use them; else show base verified score
-  const verifiedPillarScore = totalYes > 0 ? totalYes : 19;
+  const pillarQIds = useMemo(() => {
+    return new Set(pillar.capabilities.flatMap((c) => c.questions.map((q) => q.id)));
+  }, [pillar]);
+  const totalQuestions = pillarQIds.size || 25;
+  const answeredPillarQuestions = Object.entries(pillarAnswers).filter(([qId]) => pillarQIds.has(qId));
+  const totalYes = answeredPillarQuestions.filter(([_, a]) => a === "yes").length;
+  // If user answered questions for this pillar, use actual score; else fallback to 19 base score
+  const verifiedPillarScore = answeredPillarQuestions.length > 0 ? totalYes : 19;
   const pillarPercentage = Math.round((verifiedPillarScore / totalQuestions) * 100);
 
   const pillarFeedback = useMemo(() => {

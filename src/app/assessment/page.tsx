@@ -17,7 +17,7 @@ function AssessmentPageContent() {
   const { user: clerkUser } = useUser();
 
   const initialView = searchParams.get("view") || "overview";
-  const initialPillar = Number(searchParams.get("pillar")) || 2; // Default to Pillar 2 as highlighted in mockups
+  const initialPillar = Number(searchParams.get("pillar")) || 1;
 
   const [currentView, setCurrentView] = useState<"overview" | "focus" | "summary">(
     initialView === "focus" || initialView === "summary" ? initialView : "overview"
@@ -101,6 +101,7 @@ function AssessmentPageContent() {
     pillarId: number,
     answers: Record<string, "yes" | "no">
   ) => {
+    setSelectedPillarId(pillarId);
     setCurrentAnswers(answers);
     setCurrentView("summary");
     router.push(`/assessment?view=summary&pillar=${pillarId}`);

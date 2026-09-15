@@ -379,13 +379,6 @@ export default function PricingPage() {
               />
               <span>Encrypted checkout via Paystack. M-Pesa &amp; Card supported.</span>
             </div>
-            <Link
-              href="/billing"
-              className="font-bold text-primary hover:underline flex items-center gap-1"
-            >
-              <span>Already a subscriber? Access Billing Portal</span>
-              <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-            </Link>
           </div>
         </div>
       </div>

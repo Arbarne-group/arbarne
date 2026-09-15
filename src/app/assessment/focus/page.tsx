@@ -10,14 +10,23 @@ function FocusPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const pillarId = Number(searchParams.get("pillar")) || 2;
+  const pillarId = Number(searchParams.get("pillar")) || 1;
   const pillar = getPillarById(pillarId);
 
   const handleExit = () => {
     router.push("/assessment");
   };
 
-  const handleComplete = (completedPillarId: number) => {
+  const handleComplete = (completedPillarId: number, answers?: Record<string, "yes" | "no">) => {
+    if (answers && typeof window !== "undefined") {
+      try {
+        localStorage.setItem("future_farms_assessment_answers", JSON.stringify(answers));
+        const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
+        localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
+      } catch (e) {
+        console.error(e);
+      }
+    }
     router.push(`/assessment/summary?pillar=${completedPillarId}`);
   };
 

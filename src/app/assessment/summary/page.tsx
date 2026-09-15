@@ -10,7 +10,7 @@ function SummaryPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const pillarId = Number(searchParams.get("pillar")) || 2;
+  const pillarId = Number(searchParams.get("pillar")) || 1;
   const pillar = getPillarById(pillarId);
 
   const handleBackToHub = () => {
@@ -18,7 +18,11 @@ function SummaryPageContent() {
   };
 
   const handleContinue = (nextPillarId: number) => {
-    router.push(`/assessment/focus?pillar=${nextPillarId}`);
+    if (pillarId >= 8) {
+      router.push("/assessment");
+    } else {
+      router.push(`/assessment/focus?pillar=${nextPillarId}`);
+    }
   };
 
   return (

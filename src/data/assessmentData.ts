@@ -232,7 +232,7 @@ export const ALL_PILLARS: AssessmentPillar[] = rawData.pillars.map(
 // Helper function to get pillar by ID (1-8)
 export function getPillarById(pillarId: number): AssessmentPillar {
   const found = ALL_PILLARS.find((p) => p.id === Number(pillarId));
-  return found || ALL_PILLARS[1]; // default to Pillar 2 if not found
+  return found || ALL_PILLARS[0]; // default to Pillar 1 if not found
 }
 
 // Pre-seeded answers for Pillar 2 to match the exact design mockup (14/25 = 56%)

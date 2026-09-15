@@ -69,10 +69,11 @@ export default function AssessmentOverviewView({
       }
 
       try {
+        const savedAll = localStorage.getItem("future_farms_all_answers");
         const savedAnswers = localStorage.getItem("future_farms_assessment_answers");
-        if (savedAnswers) {
-          answers = { ...answers, ...JSON.parse(savedAnswers) };
-        }
+        const parsedAll = savedAll ? JSON.parse(savedAll) : {};
+        const parsedPillar = savedAnswers ? JSON.parse(savedAnswers) : {};
+        answers = { ...parsedAll, ...parsedPillar, ...answers };
       } catch (e) {
         console.error(e);
       }
