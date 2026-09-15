@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { computeAssessmentResults, getMaturityTier } from "@/lib/assessmentScoring";
-import { triggerNeonRealtimeAssessmentSync } from "@/lib/neonRealtimeSync";
+import { triggerNeonRealtimeAssessmentSync, syncNeonAssessmentToSheetsFast } from "@/lib/neonRealtimeSync";
 
 const QUESTION_MAP = new Map<string, {
   pillarId: number;
@@ -222,6 +223,13 @@ export async function POST(request: Request) {
 
     // 8. Ultra-fast non-blocking real-time sync to Google Sheets (Assessment Overview, Pillar Submissions Log, Detailed Question Responses, and Reports Generated)
     triggerNeonRealtimeAssessmentSync(email, numPillarId);
+    after(async () => {
+      try {
+        await syncNeonAssessmentToSheetsFast(email, numPillarId);
+      } catch (syncErr: any) {
+        console.error("[SubmitPillar] Sheet sync error:", syncErr.message);
+      }
+    });
 
     return NextResponse.json({
       success: true,

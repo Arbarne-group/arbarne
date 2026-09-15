@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import {
   syncNeonUsersToSheetsFast,
   syncNeonAssessmentToSheetsFast,
+  syncAllNeonAssessmentsToSheetsFast,
 } from "@/lib/neonRealtimeSync";
 
 export const dynamic = "force-dynamic";
@@ -82,10 +83,12 @@ export async function GET(req: NextRequest) {
     if (type === "all" || type === "assessment") {
       if (email) {
         results.assessment = await syncNeonAssessmentToSheetsFast(email);
+      } else if (!targetUserIds) {
+        results.assessment = await syncAllNeonAssessmentsToSheetsFast();
       } else {
         // Sync assessments for the resolved users
         const assessmentsToSync = await prisma.assessment.findMany({
-          where: targetUserIds ? { userId: { in: targetUserIds } } : undefined,
+          where: { userId: { in: targetUserIds } },
           include: { user: { select: { email: true } } },
         });
 

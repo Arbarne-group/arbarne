@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { computeAssessmentResults, getMaturityTier } from "@/lib/assessmentScoring";
-import { triggerNeonRealtimeAssessmentSync } from "@/lib/neonRealtimeSync";
+import { triggerNeonRealtimeAssessmentSync, syncNeonAssessmentToSheetsFast } from "@/lib/neonRealtimeSync";
 
 // Map question ID to its canonical question metadata for fast lookup
 const QUESTION_MAP = new Map<string, {
@@ -230,6 +231,13 @@ export async function POST(request: Request) {
 
     // 7. Ultra-fast non-blocking real-time sync to Google Sheets (1lia89URlWwsngU0E7Kd5zyQTzm-SBWlQj2Lsu08b1wg)
     triggerNeonRealtimeAssessmentSync(email, pillarId ? Number(pillarId) : undefined);
+    after(async () => {
+      try {
+        await syncNeonAssessmentToSheetsFast(email, pillarId ? Number(pillarId) : undefined);
+      } catch (syncErr: any) {
+        console.error("[SaveProgress] Sheet sync error:", syncErr.message);
+      }
+    });
 
     return NextResponse.json({
       success: true,

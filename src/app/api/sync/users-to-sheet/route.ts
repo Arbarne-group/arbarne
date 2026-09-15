@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { syncAllUnsentAssessmentsToSheet } from "@/lib/googleSheets";
-import { syncNeonUsersToSheetsFast } from "@/lib/neonRealtimeSync";
+import { syncNeonUsersToSheetsFast, syncAllNeonAssessmentsToSheetsFast } from "@/lib/neonRealtimeSync";
 import { syncClerkUsersToDatabaseAndSheet } from "@/lib/clerkSync";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +18,7 @@ export async function GET(req: NextRequest) {
 
     const clerkResult = await syncClerkUsersToDatabaseAndSheet();
     const onboardingResult = await syncNeonUsersToSheetsFast();
-    const assessmentResult = await syncAllUnsentAssessmentsToSheet();
+    const assessmentResult = await syncAllNeonAssessmentsToSheetsFast();
 
     return NextResponse.json({
       success: true,

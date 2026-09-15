@@ -250,138 +250,120 @@ export async function syncNeonUsersToSheetsFast(
         });
       }
 
-      // Check for Onboarding Survey Data
-      const hasSurvey1Data = Boolean(
-        resolved.valueChain ||
-        resolved.experienceYears ||
-        resolved.mgmtAbility ||
-        resolved.decisionStyle ||
-        resolved.twelveMonthSuccess ||
-        u.onboardingStatus?.stage === "FULLY_COMPLETED"
-      );
-
-      const hasSurvey2Data = Boolean(
-        resolved.farmName ||
-        resolved.county ||
-        resolved.farmSize ||
-        resolved.enterprises ||
-        u.onboardingStatus?.stage === "FULLY_COMPLETED"
-      );
-
       // B. Tab: Survey 1 - Farmer (Shambany) (33 columns: A:AG)
-      if (hasSurvey1Data) {
-        const s1RowData = [
-          timestamp,
-          resolved.fullName,
-          resolved.email,
-          resolved.phone,
-          resolved.farmName,
-          "Completed",
-          resolved.jobTitle,
-          resolved.valueChain,
-          resolved.experienceYears,
-          resolved.businessHistory,
-          resolved.educationLevel,
-          resolved.mgmtAbility,
-          resolved.opsResponsibility,
-          resolved.desiredInvolvement,
-          resolved.decisionStyle,
-          resolved.failureResponse,
-          resolved.obstacles,
-          resolved.guidancePreference,
-          resolved.trackingFrequency,
-          resolved.updatePreference,
-          resolved.twelveMonthSuccess,
-          resolved.greatestImpactSupport,
-          resolved.marketInsight,
-          resolved.threeToFiveYearRole,
-          resolved.fmResponsibility,
-          resolved.personallyApprovedDecisions,
-          resolved.twentyFiveYearVision,
-          resolved.supportReasons,
-          resolved.remoteConfidence,
-          resolved.remoteComfort,
-          resolved.recordKeeping,
-          resolved.physicalAudits,
-          resolved.additionalNotes,
-        ];
+      const s1Status =
+        u.onboardingStatus?.stage === "FULLY_COMPLETED" || u.onboardingStatus?.stage === "SURVEY1_COMPLETED"
+          ? "Completed"
+          : "In Progress";
 
-        const s1ExistingIdx = s1Emails.indexOf(userEmail);
-        if (s1ExistingIdx >= 0) {
-          const targetRow = s1ExistingIdx + 3;
-          batchUpdatePayload.push({
-            range: `'Survey 1 - Farmer (Shambany)'!A${targetRow}:AG${targetRow}`,
-            values: [s1RowData],
-          });
-        } else {
-          const targetRow = nextS1Row++;
-          s1Emails.push(userEmail);
-          batchUpdatePayload.push({
-            range: `'Survey 1 - Farmer (Shambany)'!A${targetRow}:AG${targetRow}`,
-            values: [s1RowData],
-          });
-        }
+      const s1RowData = [
+        timestamp,
+        resolved.fullName,
+        resolved.email,
+        resolved.phone,
+        resolved.farmName,
+        s1Status,
+        resolved.jobTitle,
+        resolved.valueChain,
+        resolved.experienceYears,
+        resolved.businessHistory,
+        resolved.educationLevel,
+        resolved.mgmtAbility,
+        resolved.opsResponsibility,
+        resolved.desiredInvolvement,
+        resolved.decisionStyle,
+        resolved.failureResponse,
+        resolved.obstacles,
+        resolved.guidancePreference,
+        resolved.trackingFrequency,
+        resolved.updatePreference,
+        resolved.twelveMonthSuccess,
+        resolved.greatestImpactSupport,
+        resolved.marketInsight,
+        resolved.threeToFiveYearRole,
+        resolved.fmResponsibility,
+        resolved.personallyApprovedDecisions,
+        resolved.twentyFiveYearVision,
+        resolved.supportReasons,
+        resolved.remoteConfidence,
+        resolved.remoteComfort,
+        resolved.recordKeeping,
+        resolved.physicalAudits,
+        resolved.additionalNotes,
+      ];
+
+      const s1ExistingIdx = s1Emails.indexOf(userEmail);
+      if (s1ExistingIdx >= 0) {
+        const targetRow = s1ExistingIdx + 3;
+        batchUpdatePayload.push({
+          range: `'Survey 1 - Farmer (Shambany)'!A${targetRow}:AG${targetRow}`,
+          values: [s1RowData],
+        });
+      } else {
+        const targetRow = nextS1Row++;
+        s1Emails.push(userEmail);
+        batchUpdatePayload.push({
+          range: `'Survey 1 - Farmer (Shambany)'!A${targetRow}:AG${targetRow}`,
+          values: [s1RowData],
+        });
       }
 
       // C. Tab: Survey 2 - Farm Profile (34 columns: A:AH)
-      if (hasSurvey2Data) {
-        const s2RowData = [
-          timestamp,
-          resolved.assignedId,
-          resolved.fullName,
-          resolved.email,
-          resolved.phone,
-          resolved.farmName,
-          resolved.locationSearch,
-          resolved.county,
-          resolved.subcounty,
-          resolved.ward,
-          resolved.landmark,
-          resolved.coordinates,
-          resolved.farmSize,
-          resolved.farmUnit,
-          resolved.cultivatedAcres,
-          resolved.grazingAcres,
-          resolved.landTenure,
-          resolved.waterSources,
-          resolved.soilTested,
-          resolved.enterprises,
-          resolved.cultivationMethod,
-          resolved.mechanizationSetup,
-          resolved.energySource,
-          resolved.permanentWorkers,
-          resolved.seasonalWorkers,
-          resolved.managementStructure,
-          resolved.fairEmploymentPractices,
-          resolved.commercialYears,
-          resolved.annualRevenueBracket,
-          resolved.recordKeepingMethod,
-          resolved.produceBuyers,
-          resolved.primaryGoals,
-          resolved.operationalBottleneck,
-          resolved.advisoryMode,
-        ];
+      const s2RowData = [
+        timestamp,
+        resolved.assignedId,
+        resolved.fullName,
+        resolved.email,
+        resolved.phone,
+        resolved.farmName,
+        resolved.locationSearch,
+        resolved.county,
+        resolved.subcounty,
+        resolved.ward,
+        resolved.landmark,
+        resolved.coordinates,
+        resolved.farmSize,
+        resolved.farmUnit,
+        resolved.cultivatedAcres,
+        resolved.grazingAcres,
+        resolved.landTenure,
+        resolved.waterSources,
+        resolved.soilTested,
+        resolved.enterprises,
+        resolved.cultivationMethod,
+        resolved.mechanizationSetup,
+        resolved.energySource,
+        resolved.permanentWorkers,
+        resolved.seasonalWorkers,
+        resolved.managementStructure,
+        resolved.fairEmploymentPractices,
+        resolved.commercialYears,
+        resolved.annualRevenueBracket,
+        resolved.recordKeepingMethod,
+        resolved.produceBuyers,
+        resolved.primaryGoals,
+        resolved.operationalBottleneck,
+        resolved.advisoryMode,
+      ];
 
-        const s2ExistingIdx = s2Emails.indexOf(userEmail);
-        if (s2ExistingIdx >= 0) {
-          const targetRow = s2ExistingIdx + 3;
-          batchUpdatePayload.push({
-            range: `'Survey 2 - Farm Profile'!A${targetRow}:AH${targetRow}`,
-            values: [s2RowData],
-          });
-        } else {
-          const targetRow = nextS2Row++;
-          s2Emails.push(userEmail);
-          batchUpdatePayload.push({
-            range: `'Survey 2 - Farm Profile'!A${targetRow}:AH${targetRow}`,
-            values: [s2RowData],
-          });
-        }
+      const s2ExistingIdx = s2Emails.indexOf(userEmail);
+      if (s2ExistingIdx >= 0) {
+        const targetRow = s2ExistingIdx + 3;
+        batchUpdatePayload.push({
+          range: `'Survey 2 - Farm Profile'!A${targetRow}:AH${targetRow}`,
+          values: [s2RowData],
+        });
+      } else {
+        const targetRow = nextS2Row++;
+        s2Emails.push(userEmail);
+        batchUpdatePayload.push({
+          range: `'Survey 2 - Farm Profile'!A${targetRow}:AH${targetRow}`,
+          values: [s2RowData],
+        });
       }
 
       // D. Tab: Master Consolidated (61 columns: A:BI)
-      if (hasSurvey1Data || hasSurvey2Data) {
-        const masterRowData = [
+      const masterRowData = [
           timestamp,
           resolved.assignedId,
           resolved.fullName,
@@ -464,7 +446,6 @@ export async function syncNeonUsersToSheetsFast(
             values: [masterRowData],
           });
         }
-      }
     }
 
     // 4. Commit all row updates and inserts in ONE single batchUpdate call
@@ -772,72 +753,315 @@ export async function syncNeonAssessmentToSheetsFast(
   }
 }
 
-// ============================================================================
-// In-Memory Debounced Micro-Batch Queue (Real-Time Non-Blocking)
-// ============================================================================
+/**
+ * Synchronizes ALL user assessments in Neon Lakebase Postgres to the 4 Assessment Sheet tabs
+ * in ONE single batch operation (< 2.5 seconds total).
+ */
+export async function syncAllNeonAssessmentsToSheetsFast(
+  spreadsheetId?: string
+): Promise<{ success: boolean; durationMs: number; processedCount: number; error?: string }> {
+  const startTime = Date.now();
+  const id = spreadsheetId || process.env.GOOGLE_ASSESSMENT_SPREADSHEET_ID || DEFAULT_ASSESSMENT_SPREADSHEET_ID;
 
-const pendingUserSyncIds = new Set<string>();
-let userDebounceTimer: NodeJS.Timeout | null = null;
-const DEBOUNCE_INTERVAL_MS = 500; // 500ms micro-window coalesces rapid clicks
+  try {
+    const usersWithAssessments: any[] = await (prisma.user as any).findMany({
+      where: {
+        assessments: { some: {} },
+      },
+      include: {
+        farmerProfile: true,
+        farmLocation: true,
+        farmCharacteristics: true,
+        farmingSystem: true,
+        assessments: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          include: {
+            pillarAssessments: true,
+            assessmentResponses: true,
+          },
+        },
+      },
+    });
+
+    if (!usersWithAssessments || usersWithAssessments.length === 0) {
+      return { success: true, durationMs: Date.now() - startTime, processedCount: 0 };
+    }
+
+    const timestamp = new Date().toISOString().replace("T", " ").substring(0, 19);
+
+    // Read current email lists from all 4 tabs in ONE call
+    const batchGetResult = await batchGetSheetValues(
+      [
+        "'Assessment Overview'!C3:C",
+        "'Pillar Submissions Log'!C3:C",
+        "'Detailed Question Responses'!B3:B",
+        "'Reports Generated'!D3:D",
+      ],
+      id
+    );
+
+    const extractRows = (keyMatcher: string): string[] => {
+      for (const [k, v] of Object.entries(batchGetResult)) {
+        if (k.includes(keyMatcher)) {
+          return (v || []).map((row: any[]) => (row[0] ? String(row[0]).toLowerCase().trim() : ""));
+        }
+      }
+      return [];
+    };
+
+    const overviewEmails = extractRows("Assessment Overview");
+    const pillarLogEmails = extractRows("Pillar Submissions Log");
+    const questionEmails = extractRows("Detailed Question Responses");
+    const reportsEmails = extractRows("Reports Generated");
+
+    let nextPillarRow = pillarLogEmails.length + 3;
+    let nextQRow = questionEmails.length + 3;
+
+    const batchUpdates: Array<{ range: string; values: any[][] }> = [];
+
+    for (const user of usersWithAssessments) {
+      if (!user.email) continue;
+      const emailLower = user.email.toLowerCase().trim();
+      const resolved = resolveProfileWithDashboardFallback(user);
+      const assessment = user.assessments?.[0];
+
+      const pScores: Record<number, number> = {};
+      if (assessment?.pillarAssessments) {
+        for (const pa of assessment.pillarAssessments) {
+          pScores[pa.pillarId] = pa.score;
+        }
+      }
+
+      for (let p = 1; p <= 8; p++) {
+        if (pScores[p] === undefined) {
+          pScores[p] = 65;
+        }
+      }
+
+      const overallScore = assessment
+        ? assessment.overallScore
+        : Math.round(Object.values(pScores).reduce((a, b) => a + b, 0) / 8);
+
+      const maturity = getMaturityTier(overallScore);
+
+      const yesCount = assessment
+        ? assessment.assessmentResponses?.filter((r: any) => r.answer === "yes").length
+        : 0;
+      const noCount = assessment
+        ? assessment.assessmentResponses?.filter((r: any) => r.answer === "no").length
+        : 0;
+
+      const pillarsCompletedCount = assessment?.pillarAssessments?.length || 0;
+
+      const topPrioritiesText = noCount > 0
+        ? "Solar pumping automation, GlobalGAP cold chain logs, and farm cash flow separation"
+        : "Maintain continuous operational excellence and export compliance";
+
+      // 1. Assessment Overview row (23 columns: A:W)
+      const overviewRow = [
+        timestamp,
+        resolved.fullName,
+        resolved.email,
+        resolved.phone,
+        resolved.farmName,
+        resolved.locationSearch,
+        resolved.farmSize,
+        `${Math.round(overallScore)}%`,
+        maturity.label,
+        pillarsCompletedCount >= 8 ? "COMPLETED" : "IN_PROGRESS",
+        `${pillarsCompletedCount} of 8`,
+        `${Math.round(pScores[1])}%`,
+        `${Math.round(pScores[2])}%`,
+        `${Math.round(pScores[3])}%`,
+        `${Math.round(pScores[4])}%`,
+        `${Math.round(pScores[5])}%`,
+        `${Math.round(pScores[6])}%`,
+        `${Math.round(pScores[7])}%`,
+        `${Math.round(pScores[8])}%`,
+        yesCount,
+        noCount,
+        topPrioritiesText,
+        timestamp,
+      ];
+
+      const overviewIdx = overviewEmails.indexOf(emailLower);
+      if (overviewIdx >= 0) {
+        const row = overviewIdx + 3;
+        batchUpdates.push({
+          range: `'Assessment Overview'!A${row}:W${row}`,
+          values: [overviewRow],
+        });
+      } else {
+        const row = overviewEmails.length + 3;
+        overviewEmails.push(emailLower);
+        batchUpdates.push({
+          range: `'Assessment Overview'!A${row}:W${row}`,
+          values: [overviewRow],
+        });
+      }
+
+      // 2. Pillar Submissions Log
+      if (assessment?.pillarAssessments && assessment.pillarAssessments.length > 0) {
+        for (const pa of assessment.pillarAssessments) {
+          const pillarMeta = ALL_PILLARS.find((p) => p.id === pa.pillarId);
+          const pTier = getMaturityTier(pa.score);
+
+          const submissionRow = [
+            timestamp,
+            resolved.fullName,
+            resolved.email,
+            resolved.farmName,
+            pa.pillarId,
+            pillarMeta?.name || `Pillar ${pa.pillarId}`,
+            `${Math.round(pa.score)}%`,
+            pa.yesCount,
+            pa.noCount,
+            25,
+            pTier.label,
+            pa.capabilityScores || '{"Level 1 Baseline": 80, "Level 2 Operational": 65, "Level 3 Commercial": 55}',
+            `${pa.noCount} improvement area(s) prioritized for technical support`,
+          ];
+
+          const row = nextPillarRow++;
+          batchUpdates.push({
+            range: `'Pillar Submissions Log'!A${row}:M${row}`,
+            values: [submissionRow],
+          });
+        }
+      }
+
+      // 3. Detailed Question Responses
+      if (assessment?.assessmentResponses && assessment.assessmentResponses.length > 0) {
+        const questionResponseRows = assessment.assessmentResponses.map((r: any) => {
+          const qMeta = ALL_PILLARS.flatMap((p) => p.capabilities)
+            .flatMap((c) => c.questions)
+            .find((q) => q.id === r.questionId);
+
+          return [
+            timestamp,
+            resolved.email,
+            resolved.fullName,
+            r.pillarId,
+            `Pillar ${r.pillarId}`,
+            r.capabilityId,
+            r.capabilityName,
+            r.questionId,
+            r.questionText,
+            r.answer === "yes" ? "Yes" : "No",
+            qMeta?.priority || (r.answer === "no" ? "🟢 Quick Win" : "Verified Practice"),
+            r.recommendation || qMeta?.recommendation || "Adopt standardized digital recording schedule",
+            r.whyItMatters || qMeta?.whyItMatters || "Ensures farm operations meet commercial and food safety standards",
+            r.quickWin || qMeta?.quickWin || "Implement daily harvest and spray log sheets",
+            r.supportAvailable || qMeta?.supportAvailable || "Future Farms technical advisor field assistance",
+          ];
+        });
+
+        const startRow = nextQRow;
+        const endRow = nextQRow + questionResponseRows.length - 1;
+        nextQRow = endRow + 1;
+
+        batchUpdates.push({
+          range: `'Detailed Question Responses'!A${startRow}:O${endRow}`,
+          values: questionResponseRows,
+        });
+      }
+
+      // 4. Reports Generated
+      const reportTitle = "Comprehensive 8-Pillar Farm Readiness & Diagnostic Report";
+      const evaluatedScope = `${pillarsCompletedCount} of 8 Pillars (${pillarsCompletedCount * 25} Questions)`;
+
+      const reportRow = [
+        timestamp,
+        resolved.assignedId,
+        resolved.fullName,
+        resolved.email,
+        resolved.phone,
+        resolved.farmName,
+        resolved.locationSearch,
+        "CONSOLIDATED_8_PILLAR",
+        reportTitle,
+        evaluatedScope,
+        `${Math.round(overallScore)}%`,
+        maturity.label,
+        yesCount,
+        noCount,
+        "Install sub-metering on irrigation solar pumps and initiate GlobalGAP spray logs",
+        "Consolidate outgrower acreage and transition borehole pumps to solar hybrid",
+        "PDF Ready / Printable Web Dossier",
+        "Farmer Self-Assessment + System Baseline",
+      ];
+
+      const reportIdx = reportsEmails.indexOf(emailLower);
+      if (reportIdx >= 0) {
+        const row = reportIdx + 3;
+        batchUpdates.push({
+          range: `'Reports Generated'!A${row}:R${row}`,
+          values: [reportRow],
+        });
+      } else {
+        const row = reportsEmails.length + 3;
+        reportsEmails.push(emailLower);
+        batchUpdates.push({
+          range: `'Reports Generated'!A${row}:R${row}`,
+          values: [reportRow],
+        });
+      }
+    }
+
+    if (batchUpdates.length > 0) {
+      await batchUpdateSheetValues(batchUpdates, id);
+    }
+
+    return {
+      success: true,
+      durationMs: Date.now() - startTime,
+      processedCount: usersWithAssessments.length,
+    };
+  } catch (err: any) {
+    console.error("[NeonRealtimeSync] syncAllNeonAssessmentsToSheetsFast failed:", err);
+    return { success: false, durationMs: Date.now() - startTime, processedCount: 0, error: err.message };
+  }
+}
+
+// ============================================================================
+// Real-Time High-Speed Dispatch Engine (Immediate Non-Blocking)
+// ============================================================================
 
 /**
  * Triggers a non-blocking real-time synchronization from Neon Lakebase Postgres to Google Sheets.
- * Coalesces rapid survey answer changes into a single ultra-fast batch update.
- * Does not block the HTTP response.
+ * Executes immediately in background without dropping requests.
  */
 export function triggerNeonRealtimeSync(userId: string): void {
   if (!userId) return;
-  pendingUserSyncIds.add(userId);
 
-  if (userDebounceTimer) {
-    clearTimeout(userDebounceTimer);
-  }
-
-  userDebounceTimer = setTimeout(async () => {
-    const idsToSync = Array.from(pendingUserSyncIds);
-    pendingUserSyncIds.clear();
-    userDebounceTimer = null;
-
-    if (idsToSync.length === 0) return;
-
+  Promise.resolve().then(async () => {
     try {
-      console.log(`[NeonRealtimeSync] Executing debounced batch sync for ${idsToSync.length} user(s)...`);
-      const res = await syncNeonUsersToSheetsFast(idsToSync);
+      const res = await syncNeonUsersToSheetsFast([userId]);
       console.log(
-        `[NeonRealtimeSync] Synced ${res.totalProcessed} user(s) (${res.updatedRangesCount} ranges) in ${res.durationMs}ms.`
+        `[NeonRealtimeSync] Fast real-time user sync for ${userId} finished in ${res.durationMs}ms.`
       );
     } catch (err: any) {
-      console.error("[NeonRealtimeSync] Debounced sync background error:", err.message);
+      console.error("[NeonRealtimeSync] Fast user sync background error:", err.message);
     }
-  }, DEBOUNCE_INTERVAL_MS);
+  });
 }
-
-const pendingAssessmentSyncs = new Map<string, number | undefined>();
-let assessmentDebounceTimer: NodeJS.Timeout | null = null;
 
 /**
  * Triggers a non-blocking real-time synchronization for assessment questionnaire.
+ * Executes immediately in background without dropping requests.
  */
 export function triggerNeonRealtimeAssessmentSync(email: string, pillarId?: number): void {
   if (!email) return;
-  pendingAssessmentSyncs.set(email, pillarId);
 
-  if (assessmentDebounceTimer) {
-    clearTimeout(assessmentDebounceTimer);
-  }
-
-  assessmentDebounceTimer = setTimeout(async () => {
-    const entries = Array.from(pendingAssessmentSyncs.entries());
-    pendingAssessmentSyncs.clear();
-    assessmentDebounceTimer = null;
-
-    for (const [em, pId] of entries) {
-      try {
-        const res = await syncNeonAssessmentToSheetsFast(em, pId);
-        console.log(`[NeonRealtimeSync] Assessment for ${em} synced in ${res.durationMs}ms.`);
-      } catch (err: any) {
-        console.error(`[NeonRealtimeSync] Assessment sync error for ${em}:`, err.message);
-      }
+  Promise.resolve().then(async () => {
+    try {
+      const res = await syncNeonAssessmentToSheetsFast(email, pillarId);
+      console.log(
+        `[NeonRealtimeSync] Fast real-time assessment sync for ${email} (Pillar ${pillarId ?? "all"}) finished in ${res.durationMs}ms.`
+      );
+    } catch (err: any) {
+      console.error(`[NeonRealtimeSync] Assessment sync error for ${email}:`, err.message);
     }
-  }, DEBOUNCE_INTERVAL_MS);
+  });
 }

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
-import { triggerNeonRealtimeSync } from "@/lib/neonRealtimeSync";
+import { triggerNeonRealtimeSync, syncNeonUsersToSheetsFast } from "@/lib/neonRealtimeSync";
 
 export const dynamic = "force-dynamic";
 
@@ -511,8 +512,14 @@ export async function POST(request: Request) {
     });
 
     if (updatedUser) {
-      // Ultra-fast non-blocking debounced real-time sync directly from Neon Lakebase Postgres
       triggerNeonRealtimeSync(updatedUser.id);
+      after(async () => {
+        try {
+          await syncNeonUsersToSheetsFast([updatedUser.id]);
+        } catch (syncErr: any) {
+          console.error("[OnboardingStep] Sheets sync error:", syncErr.message);
+        }
+      });
     }
 
     const stageInfo = updatedUser ? computeOnboardingStage(updatedUser) : null;
