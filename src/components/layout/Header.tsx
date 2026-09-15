@@ -129,9 +129,9 @@ export default function Header({
         </div>
       </header>
 
-      {/* Desktop Top Nav Bar - Exact h-20 aligning seamlessly with Sidebar */}
+      
       <div className="hidden md:flex justify-between items-center px-6 h-20 bg-surface border-b border-surface-variant sticky top-0 z-30 transition-all shrink-0 no-print print:hidden">
-        {/* Left Side: Toggle Sidebar & Context */}
+        
         <div className="flex items-center gap-3">
           {onToggleCollapse && (
             <button
