@@ -1,3 +1,4 @@
+
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -22,16 +23,20 @@ export default clerkMiddleware(
     if (pathname === "/login") {
       return NextResponse.redirect(new URL("/sign-in", req.url));
     }
+
     if (pathname === "/signup") {
       return NextResponse.redirect(new URL("/sign-up", req.url));
     }
 
-    // Authenticated users landing on root / should be taken to /onboarding
+    // Root / → Sign In for visitors, Onboarding for authenticated users
     if (pathname === "/") {
       const authObj = await auth();
+
       if (authObj.userId) {
         return NextResponse.redirect(new URL("/onboarding", req.url));
       }
+
+      return NextResponse.redirect(new URL("/sign-in", req.url));
     }
 
     // Enforce authentication on all private routes
