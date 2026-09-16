@@ -1,48 +1,44 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
+}
+
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
-}
-
 model User {
-  id           String   @id @default(cuid())
-  futureFarmId String?  @unique
-  name         String
-  email        String   @unique
-  passwordHash String
-  phone        String?
-  farmName     String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  farmerProfile   FarmerProfile?
-  farmManagement  FarmManagement?
-  operatingStyle  OperatingStyle?
-  digitalPlatform DigitalPlatform?
-  aspiration      Aspiration?
-
-  farmLocation        FarmLocation?
-  farmCharacteristics FarmCharacteristics?
-  farmingSystem       FarmingSystem?
+  id                  String               @id @default(cuid())
+  futureFarmId        String?              @unique
+  name                String
+  email               String               @unique
+  passwordHash        String
+  phone               String?
+  farmName            String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  aspiration          Aspiration?
+  assessments         Assessment[]
   businessExperience  BusinessExperience?
+  digitalPlatform     DigitalPlatform?
+  farmCharacteristics FarmCharacteristics?
+  farmLocation        FarmLocation?
+  farmManagement      FarmManagement?
+  farmerProfile       FarmerProfile?
+  farmingSystem       FarmingSystem?
   goalsPriorities     GoalsPriorities?
   householdLabour     HouseholdLabour?
   onboardingStatus    OnboardingStatus?
-
-  orders          Order[]
-  subscriptions   Subscription[]
-  assessments     Assessment[]
+  operatingStyle      OperatingStyle?
+  orders              Order[]
+  subscriptions       Subscription[]
 }
 
 model FarmerProfile {
   id              String   @id @default(cuid())
   userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   jobTitle        String?
   valueChain      String?
   experienceYears String?
@@ -51,12 +47,12 @@ model FarmerProfile {
   education       String?
   otherEducation  String?
   updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model FarmManagement {
   id                    String   @id @default(cuid())
   userId                String   @unique
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   mgmtAbility           String?
   operationsResponsible String?
   opsResponsibility     String?
@@ -64,12 +60,12 @@ model FarmManagement {
   otherOperator         String?
   desiredInvolvement    String?
   updatedAt             DateTime @updatedAt
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model OperatingStyle {
   id                    String   @id @default(cuid())
   userId                String   @unique
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   decisionStyle         String?
   failureResponse       String?
   obstacles             String?
@@ -80,12 +76,12 @@ model OperatingStyle {
   updatePreference      String?
   communicationChannels String?
   updatedAt             DateTime @updatedAt
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model DigitalPlatform {
   id                 String   @id @default(cuid())
   userId             String   @unique
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   supportReasons     String?
   otherSupportReason String?
   remoteConfidence   String?
@@ -94,12 +90,12 @@ model DigitalPlatform {
   physicalAudits     String?
   additionalNotes    String?
   updatedAt          DateTime @updatedAt
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Aspiration {
   id                          String   @id @default(cuid())
   userId                      String   @unique
-  user                        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   twelveMonthSuccess          String?
   greatestImpactSupport       String?
   marketInsight               String?
@@ -110,12 +106,12 @@ model Aspiration {
   personallyApprovedDecisions String?
   twentyFiveYearVision        String?
   updatedAt                   DateTime @updatedAt
+  user                        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model FarmLocation {
   id             String   @id @default(cuid())
   userId         String   @unique
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   locationSearch String?
   county         String?
   subcounty      String?
@@ -124,12 +120,12 @@ model FarmLocation {
   latitude       Float?
   longitude      Float?
   updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model FarmCharacteristics {
   id              String   @id @default(cuid())
   userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   farmSize        Float?
   farmUnit        String?  @default("Acres")
   cultivatedAcres Float?
@@ -138,65 +134,65 @@ model FarmCharacteristics {
   waterSources    String?
   soilTested      String?
   updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model FarmingSystem {
   id                 String   @id @default(cuid())
   userId             String   @unique
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   enterprises        String?
   cultivationMethod  String?
   mechanizationSetup String?
   energySource       String?
   updatedAt          DateTime @updatedAt
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model BusinessExperience {
   id                   String   @id @default(cuid())
   userId               String   @unique
-  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   commercialYears      String?
   annualRevenueBracket String?
   recordKeepingMethod  String?
   produceBuyers        String?
   updatedAt            DateTime @updatedAt
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model GoalsPriorities {
   id                    String   @id @default(cuid())
   userId                String   @unique
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   goals                 String?
   operationalBottleneck String?
   advisoryMode          String?
   updatedAt             DateTime @updatedAt
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model HouseholdLabour {
-  id                       String   @id @default(cuid())
-  userId                   String   @unique
-  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  permanentWorkers         Int?     @default(0)
-  seasonalWorkers          Int?     @default(0)
-  managementStructure      String?
-  fairEmploymentPractices  String?
-  updatedAt                DateTime @updatedAt
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  permanentWorkers        Int?     @default(0)
+  seasonalWorkers         Int?     @default(0)
+  managementStructure     String?
+  fairEmploymentPractices String?
+  updatedAt               DateTime @updatedAt
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model OnboardingStatus {
   id              String    @id @default(cuid())
   userId          String    @unique
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   stage           String    @default("INITIAL_IN_PROGRESS")
   profileApproved Boolean   @default(false)
   completedAt     DateTime?
   updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Order {
   id                    String        @id @default(cuid())
   userId                String
-  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   planType              String
   amount                Float
   currency              String        @default("KES")
@@ -210,62 +206,61 @@ model Order {
   paystackTransactionId String?
   planCode              String?
   subscriptionId        String?
-  subscription          Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
   createdAt             DateTime      @default(now())
   updatedAt             DateTime?     @updatedAt
+  subscription          Subscription? @relation(fields: [subscriptionId], references: [id])
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Subscription {
-  id                String    @id @default(cuid())
-  userId            String
-  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planId            String
-  planCode          String?
-  subscriptionCode  String?   @unique
-  emailToken        String?
-  customerCode      String?
-  status            String    @default("ACTIVE")
-  amount            Float
-  currency          String    @default("KES")
-  interval          String    @default("monthly")
-  currentPeriodStart DateTime @default(now())
+  id                 String    @id @default(cuid())
+  userId             String
+  planId             String
+  planCode           String?
+  subscriptionCode   String?   @unique
+  emailToken         String?
+  customerCode       String?
+  status             String    @default("ACTIVE")
+  amount             Float
+  currency           String    @default("KES")
+  interval           String    @default("monthly")
+  currentPeriodStart DateTime  @default(now())
   currentPeriodEnd   DateTime?
   nextPaymentDate    DateTime?
-  authorizationCode String?
-  cardLast4         String?
-  cardBrand         String?
-  cardExpMonth      String?
-  cardExpYear       String?
-  orders            Order[]
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  authorizationCode  String?
+  cardLast4          String?
+  cardBrand          String?
+  cardExpMonth       String?
+  cardExpYear        String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  orders             Order[]
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([status])
 }
 
 model Assessment {
-  id            String   @id @default(cuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  overallScore  Int      @default(0)
-  maturityLevel String   @default("Emerging")
-  pillarScores  String   @default("[]")
-  radarData     String   @default("[]")
-  priorityAreas String   @default("[]")
-  status        String   @default("IN_PROGRESS")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now()) @updatedAt
-
-  pillarAssessments   PillarAssessment[]
+  id                  String               @id @default(cuid())
+  userId              String
+  overallScore        Int                  @default(0)
+  maturityLevel       String               @default("Emerging")
+  pillarScores        String               @default("[]")
+  radarData           String               @default("[]")
+  priorityAreas       String               @default("[]")
+  status              String               @default("IN_PROGRESS")
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @default(now()) @updatedAt
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   assessmentResponses AssessmentResponse[]
   ffvEvidences        FfvEvidence[]
+  pillarAssessments   PillarAssessment[]
 }
 
 model PillarAssessment {
   id               String     @id @default(cuid())
   assessmentId     String
-  assessment       Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   pillarId         Int
   pillarName       String
   score            Float      @default(0)
@@ -277,6 +272,7 @@ model PillarAssessment {
   isCompleted      Boolean    @default(false)
   completedAt      DateTime?
   updatedAt        DateTime   @default(now()) @updatedAt
+  assessment       Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 
   @@unique([assessmentId, pillarId])
   @@index([assessmentId, pillarId])
@@ -285,7 +281,6 @@ model PillarAssessment {
 model AssessmentResponse {
   id               String     @id @default(cuid())
   assessmentId     String
-  assessment       Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   pillarId         Int
   capabilityId     String
   capabilityName   String?
@@ -298,28 +293,29 @@ model AssessmentResponse {
   supportAvailable String?
   priority         String?
   updatedAt        DateTime   @default(now()) @updatedAt
+  assessment       Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 
   @@unique([assessmentId, questionId])
   @@index([assessmentId, pillarId])
 }
 
 model FfvEvidence {
-  id           String      @id @default(cuid())
+  id           String     @id @default(cuid())
   assessmentId String
-  assessment   Assessment  @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   pillarId     Int
   capabilityId String
   questionId   String
   claimText    String?
-  evidenceType String      @default("digital") // "digital", "demonstration", "visit"
+  evidenceType String     @default("digital")
   fileName     String?
   fileType     String?
   fileSize     Int?
-  fileData     String?     @db.Text
+  fileData     String?
   notes        String?
-  status       String      @default("submitted") // "submitted", "verified", "rejected"
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @default(now()) @updatedAt
+  status       String     @default("submitted")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
 
   @@unique([assessmentId, questionId])
   @@index([assessmentId, pillarId])

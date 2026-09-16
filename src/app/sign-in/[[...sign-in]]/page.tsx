@@ -112,7 +112,8 @@ export default function SignInPage() {
               {/* Heading */}
               <h1
                 key={`title-${currentSlide}`}
-                className="text-4xl font-semibold leading-[1.08] tracking-tight xl:text-6xl animate-[slideUp_650ms_ease-out]"
+                style={{ fontFamily: "Georgia, serif" }}
+                className="text-4xl  font-semibold leading-[1.08] tracking-tight xl:text-6xl animate-[slideUp_650ms_ease-out]"
               >
                 {slide.title}
               </h1>
@@ -177,19 +178,31 @@ export default function SignInPage() {
           </div>
         </section>
 
-        
-        <section className="flex min-h-screen items-center justify-center bg-primary lg:bg-white  px-6 py-12">
-          <div className="w-full max-w-md">
-            
-            <div className="mb-10 text-center lg:hidden mx-auto">
-              <div className="flex items-center gap-3 z-10">
-                <Image
-                  src="/images/auth-logo.png"
-                  alt="Logo"
-                  width={300}
-                  height={100}
-                />
-              </div>
+        <section className=" relative flex min-h-screen items-center justify-center overflow-hidden bg-primary px-5 py-8 sm:px-8 sm:py-12 lg:bg-white lg:px-10 lg:py-12 ">
+          <div className="pointer-events-none absolute inset-0 lg:hidden">
+            {" "}
+            <div className="absolute -right-32 -top-32 h-72 w-72 rounded-full bg-white/[0.05]" />{" "}
+            <div className="absolute -bottom-32 -left-32 h-72 w-72 rounded-full bg-white/[0.04]" />{" "}
+            <div
+              className="absolute inset-0 opacity-[0.035]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+                backgroundSize: "36px 36px",
+              }}
+            />{" "}
+          </div>
+          <div className=" relative z-10 w-full max-w-90 sm:max-w-100 lg:max-w-md ">
+            <div className=" mb-4 flex justify-center sm:mb-10 lg:hidden">
+              {" "}
+              <Image
+                src="/images/auth-logo.png"
+                alt="Future Farms"
+                width={220}
+                height={10}
+                priority
+                className=" h-auto w-62.5 object-contain sm:w-52.5 "
+              />{" "}
             </div>
 
             {/* Clerk */}
@@ -199,7 +212,7 @@ export default function SignInPage() {
             />
 
             {/* Trust / privacy message */}
-            <p className="mt-8 text-center text-sm leading-5 text-gray-500">
+            <p className="mt-8 text-center text-sm leading-5 text-gray-200 lg:text-gray-500">
               By continuing, you agree to use the Future Farms platform
               responsibly to assess and improve your farm system.
             </p>
