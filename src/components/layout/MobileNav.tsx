@@ -19,19 +19,26 @@ export default function MobileNav({
   const isSurvey1 = onboardingStage === "INITIAL_IN_PROGRESS";
   const isSurvey2 = onboardingStage === "INITIAL_COMPLETED" || onboardingStage === "ADDITIONAL_COMPLETED";
 
+  const isItemLocked = (itemHref: string) => {
+    if (isSurvey1 || isSurvey2) return itemHref !== "/onboarding";
+    if (itemHref === "/dashboard" && completedPillarsCount < 1) return true;
+    return false;
+  };
+
+  const isMyFarmUnlocked = !isItemLocked("/dashboard");
+
   const navItems = [
     { label: "Overview", href: "/onboarding", icon: "dashboard" },
     { label: "My Farm", href: "/dashboard", icon: "agriculture" },
     { label: "Assess", href: "/assessment", icon: "fact_check", highlight: true },
     { label: "Learn", href: "/learning", icon: "school" },
     { label: "Opps", href: "/opportunities", icon: "lightbulb" },
-  ];
-
-  const isItemLocked = (itemHref: string) => {
-    if (isSurvey1 || isSurvey2) return itemHref !== "/onboarding";
-    if (itemHref === "/dashboard" && completedPillarsCount < 1) return true;
-    return false;
-  };
+  ].filter((item) => {
+    if (item.href === "/onboarding" && isMyFarmUnlocked) {
+      return false;
+    }
+    return true;
+  });
 
   const handleItemClick = (e: React.MouseEvent, itemHref: string) => {
     if ((isSurvey1 || isSurvey2) && itemHref !== "/onboarding") {

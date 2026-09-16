@@ -35,20 +35,6 @@ export default function Sidebar({
     ? "/assessment"
     : "/dashboard";
 
-  const navItems = [
-    { label: "Overview", href: "/onboarding", icon: "dashboard" },
-    { label: "My Farm", href: "/dashboard", icon: "agriculture" },
-    { label: "Assessment", href: "/assessment", icon: "fact_check" },
-    { label: "Digital Learning", href: "/learning", icon: "school", badge: "Soon" },
-    { label: "Opportunity Desk", href: "/opportunities", icon: "lightbulb", badge: "Soon" },
-    { label: "Service Desk", href: "/service-desk", icon: "support_agent", badge: "Soon" },
-  ];
-
-  const bottomItems = [
-    { label: "Help Center", href: "/help", icon: "help" },
-    { label: "Contact Us", href: "/contact", icon: "mail" },
-  ];
-
   // Helper to determine if an individual item is locked
   const isItemLocked = (itemHref: string) => {
     if (isSurvey1 || isSurvey2) {
@@ -62,6 +48,27 @@ export default function Sidebar({
     }
     return false;
   };
+
+  const isMyFarmUnlocked = !isItemLocked("/dashboard");
+
+  const navItems = [
+    { label: "Overview", href: "/onboarding", icon: "dashboard" },
+    { label: "My Farm", href: "/dashboard", icon: "agriculture" },
+    { label: "Assessment", href: "/assessment", icon: "fact_check" },
+    { label: "Digital Learning", href: "/learning", icon: "school", badge: "Soon" },
+    { label: "Opportunity Desk", href: "/opportunities", icon: "lightbulb", badge: "Soon" },
+    { label: "Service Desk", href: "/service-desk", icon: "support_agent", badge: "Soon" },
+  ].filter((item) => {
+    if (item.href === "/onboarding" && isMyFarmUnlocked) {
+      return false;
+    }
+    return true;
+  });
+
+  const bottomItems = [
+    { label: "Help Center", href: "/help", icon: "help" },
+    { label: "Contact Us", href: "/contact", icon: "mail" },
+  ];
 
   const handleItemClick = (e: React.MouseEvent, itemHref: string) => {
     if ((isSurvey1 || isSurvey2) && itemHref !== "/onboarding") {
