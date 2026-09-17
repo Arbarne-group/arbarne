@@ -598,7 +598,7 @@ export default function OnboardingOverviewPage() {
               </div>
 
               
-              <div className="w-full md:w-150 h-70 md:h-70 relative z-10 shrink-0 group">
+              <div className="w-full md:w-140 h-70 md:h-70 relative z-10 shrink-0 group">
 
                 {/* Images */}
                 <div className="relative w-full h-full overflow-hidden rounded-2xl shadow-sm border border-surface-container-high/60">
