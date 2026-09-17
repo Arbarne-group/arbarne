@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowLeft } from "lucide-react";
 
 interface OnboardingUser {
   name?: string;
@@ -132,14 +133,12 @@ export default function FarmingSystemPage() {
         <div className="flex items-center justify-between">
           <Link
             href="/onboarding/characteristics"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
             Back to Farm Characteristics
           </Link>
-          <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-            Stage 3 of 5: Production Profile
-          </span>
+         
         </div>
 
         {/* Title Banner with Stage Badge */}
@@ -148,7 +147,7 @@ export default function FarmingSystemPage() {
             <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight mt-1">
               Farming System
             </h1>
-            <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
+            <p className="text-sm md:text-md text-on-surface-variant leading-relaxed">
               Tell us about your crops, livestock, farming practices, and power sources so we can customize agronomy advice, equipment rebates, and supplier connections.
             </p>
           </div>
@@ -167,7 +166,7 @@ export default function FarmingSystemPage() {
                   strokeWidth="4"
                 />
                 <circle
-                  className="text-primary"
+                  className="text-secondary"
                   cx="24"
                   cy="24"
                   fill="transparent"
@@ -179,13 +178,13 @@ export default function FarmingSystemPage() {
                   strokeWidth="4"
                 />
               </svg>
-              <span className="absolute text-xs font-bold text-primary">3/5</span>
+              <span className="absolute text-sm font-bold text-secondary">3/5</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">
                 Stage 3 of 5
               </span>
-              <span className="text-xs font-bold text-on-surface">Production Profile</span>
+              <span className="text-sm font-bold text-on-surface">Production Profile</span>
               <span className="text-[11px] text-on-surface-variant">Next: Business Experience</span>
             </div>
           </div>
@@ -216,18 +215,16 @@ export default function FarmingSystemPage() {
                   1. What do you grow and raise on your farm?
                   <span className="text-error text-sm">*</span>
                 </h3>
-                <p className="text-xs text-on-surface-variant mt-0.5">
-                  Choose all crops and animals raised for market or household consumption.
-                </p>
+               
               </div>
               {validationErrors.includes("enterprises") && (
-                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                   <span className="material-symbols-outlined text-[14px]">warning</span>
                   Required
                 </span>
               )}
             </div>
-            <span className="text-xs font-semibold text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full w-fit">
+            <span className="text-sm font-semibold text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full w-fit">
               Select all that apply
             </span>
           </div>
@@ -270,29 +267,23 @@ export default function FarmingSystemPage() {
                   onClick={() => toggleEnterprise(item.id)}
                   className={`p-4 rounded-2xl cursor-pointer shadow-xs transition-all hover:shadow-md flex items-start justify-between gap-4 border ${
                     isSelected
-                      ? "border-primary bg-primary/5"
+                      ? "border-secondary bg-secondary/5"
                       : "border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low/50"
                   }`}
                 >
                   <div className="flex items-start gap-3.5">
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs ${
-                        isSelected ? "bg-primary text-white" : "bg-surface-container-high text-on-surface-variant"
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
-                    </div>
+                    
                     <div>
                       <h4 className="text-sm font-bold text-on-surface leading-snug">{item.title}</h4>
-                      <p className={`text-xs font-semibold mt-0.5 ${isSelected ? "text-primary" : "text-on-surface-variant"}`}>
+                      <p className={`text-sm font-semibold mt-0.5 ${isSelected ? "text-secondary" : "text-on-surface-variant"}`}>
                         {item.sub}
                       </p>
-                      <p className="text-xs text-on-surface-variant mt-1">{item.desc}</p>
+                      {/* <p className="text-sm text-on-surface-variant mt-1">{item.desc}</p> */}
                     </div>
                   </div>
                   <div
                     className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                      isSelected ? "bg-primary text-white" : "border border-outline-variant"
+                      isSelected ? "bg-secondary text-white" : "border border-outline-variant"
                     }`}
                   >
                     {isSelected && <span className="material-symbols-outlined text-[16px]">check</span>}
@@ -303,7 +294,7 @@ export default function FarmingSystemPage() {
           </div>
         </div>
 
-        {/* Section 2: Primary Cultivation & Production Methods */}
+        {/* Section 2: secondary Cultivation & Production Methods */}
         <div
           id="q-cultivationMethod"
           className={`bg-surface-container-lowest rounded-3xl border shadow-sm p-6 md:p-8 space-y-4 transition-all ${
@@ -315,15 +306,13 @@ export default function FarmingSystemPage() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-on-surface flex items-center gap-1.5">
-                2. Primary Cultivation &amp; Production Methods
+                2. Secondary Cultivation &amp; Production Methods
                 <span className="text-error text-sm">*</span>
               </h3>
-              <p className="text-xs text-on-surface-variant mt-0.5">
-                Select the primary method used to cultivate your plots.
-              </p>
+              
             </div>
             {validationErrors.includes("cultivationMethod") && (
-              <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+              <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                 <span className="material-symbols-outlined text-[14px]">warning</span>
                 Required
               </span>
@@ -367,23 +356,15 @@ export default function FarmingSystemPage() {
                   }}
                   className={`p-4 rounded-2xl cursor-pointer shadow-xs transition-all flex items-center justify-between border ${
                     isSelected
-                      ? "border-primary bg-primary/5"
+                      ? "border-secondary bg-secondary/5"
                       : "border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low/50"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                        isSelected ? "bg-primary text-white" : "bg-surface-container-high text-on-surface-variant"
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-                    </div>
+                    
                     <div>
                       <span className="text-sm font-bold text-on-surface block leading-tight">{item.title}</span>
-                      <span className={`text-xs ${isSelected ? "text-primary font-semibold" : "text-on-surface-variant"}`}>
-                        {item.sub}
-                      </span>
+                     
                     </div>
                   </div>
                   <input
@@ -394,7 +375,7 @@ export default function FarmingSystemPage() {
                       setCultivationMethod(item.id);
                       setValidationErrors((prev) => prev.filter((f) => f !== "cultivationMethod"));
                     }}
-                    className="w-4 h-4 text-primary accent-primary cursor-pointer"
+                    className="w-4 h-4 text-secondary accent-secondary cursor-pointer"
                   />
                 </label>
               );
@@ -417,12 +398,10 @@ export default function FarmingSystemPage() {
                 3. Farm Mechanization &amp; Tools
                 <span className="text-error text-sm">*</span>
               </h3>
-              <p className="text-xs text-on-surface-variant mt-0.5">
-                Indicate your predominant equipment setup for tillage, planting, and harvesting.
-              </p>
+             
             </div>
             {validationErrors.includes("mechanizationSetup") && (
-              <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+              <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                 <span className="material-symbols-outlined text-[14px]">warning</span>
                 Required
               </span>
@@ -466,7 +445,7 @@ export default function FarmingSystemPage() {
                   }}
                   className={`p-4 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 border ${
                     isSelected
-                      ? "border-primary bg-primary/5 shadow-xs"
+                      ? "border-secondary bg-secondary/5 shadow-xs"
                       : "border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low/50"
                   }`}
                 >
@@ -478,18 +457,18 @@ export default function FarmingSystemPage() {
                       setMechanizationSetup(item.id);
                       setValidationErrors((prev) => prev.filter((f) => f !== "mechanizationSetup"));
                     }}
-                    className="mt-1 w-4 h-4 text-primary accent-primary cursor-pointer"
+                    className="mt-1 w-4 h-4 text-secondary accent-secondary cursor-pointer"
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className={`material-symbols-outlined text-[20px] ${isSelected ? "text-primary" : "text-on-surface-variant"}`}>
+                        <span className={`material-symbols-outlined text-[20px] ${isSelected ? "text-secondary" : "text-on-surface-variant"}`}>
                           {item.icon}
                         </span>
                         <span className="text-sm font-bold text-on-surface leading-snug">{item.title}</span>
                       </div>
                     </div>
-                    <p className="text-xs text-on-surface-variant mt-1">{item.desc}</p>
+                    <p className="text-sm text-on-surface-variant mt-1">{item.desc}</p>
                   </div>
                 </label>
               );
@@ -512,12 +491,10 @@ export default function FarmingSystemPage() {
                 4. Energy &amp; Pumping Source for Farm Operations
                 <span className="text-error text-sm">*</span>
               </h3>
-              <p className="text-xs text-on-surface-variant mt-0.5">
-                Determine operational costs and evaluate renewable energy subsidy grants.
-              </p>
+              
             </div>
             {validationErrors.includes("energySource") && (
-              <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+              <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                 <span className="material-symbols-outlined text-[14px]">warning</span>
                 Required
               </span>
@@ -562,27 +539,21 @@ export default function FarmingSystemPage() {
                   }}
                   className={`p-4 rounded-2xl cursor-pointer shadow-xs transition-all flex items-start justify-between gap-3 border ${
                     isSelected
-                      ? "border-primary bg-primary/5"
+                      ? "border-secondary bg-secondary/5"
                       : "border-surface-container-high bg-surface-container-lowest hover:bg-surface-container-low/50"
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <div
                       className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                        isSelected ? "bg-primary text-white" : "bg-surface-container-high text-on-surface-variant"
+                        isSelected ? "bg-secondary text-white" : "bg-surface-container-high text-on-surface-variant"
                       }`}
                     >
                       <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
                     </div>
                     <div className="space-y-1">
                       <span className="text-sm font-bold text-on-surface leading-snug">{item.title}</span>
-                      {item.rebatePill && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-primary-container text-[11px] font-bold">
-                          <span className="material-symbols-outlined text-[13px]">eco</span>
-                          {item.rebatePill}
-                        </span>
-                      )}
-                      <p className="text-xs text-on-surface-variant">{item.desc}</p>
+                     
                     </div>
                   </div>
                   <input
@@ -593,7 +564,7 @@ export default function FarmingSystemPage() {
                       setEnergySource(item.id);
                       setValidationErrors((prev) => prev.filter((f) => f !== "energySource"));
                     }}
-                    className="mt-1 w-4 h-4 text-primary accent-primary cursor-pointer"
+                    className="mt-1 w-4 h-4 text-secondary accent-secondary cursor-pointer"
                   />
                 </label>
               );
@@ -606,14 +577,14 @@ export default function FarmingSystemPage() {
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link
               href="/onboarding/characteristics"
-              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              className="text-sm md:text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1"
             >
-              <span>&larr;</span>
+              <ArrowLeft className="w-4 h-4" />
               <span>Back to Characteristics</span>
             </Link>
 
             {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
+              <span className="text-sm font-semibold text-secondary bg-secondary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
                 <span className="material-symbols-outlined text-[14px]">check_circle</span>
                 {saveFeedback}
               </span>
@@ -621,26 +592,13 @@ export default function FarmingSystemPage() {
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
-                <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => handleSave(false)}
-              disabled={saving}
-              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
-            >
-              <span className="material-symbols-outlined text-[16px]">save</span>
-              <span>Save Draft</span>
-            </button>
+            
+            
             <button
               type="button"
               onClick={() => handleSave(true)}
               disabled={saving}
-              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-secondary text-white font-semibold text-sm md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               <span>{saving ? "Saving..." : "Save & Continue"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

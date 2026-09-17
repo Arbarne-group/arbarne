@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowLeft } from "lucide-react";
 
 interface OnboardingUser {
   name?: string;
@@ -284,27 +285,23 @@ export default function FarmLocationPage() {
         <div className="mb-6 flex items-center justify-between">
           <Link
             href="/onboarding"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-secondary transition-colors"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+             <ArrowLeft className="w-4 h-4" />
+              
             Back to Overview
           </Link>
-          <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-            Stage 1 of 5: Geographic Profile
-          </span>
+          
         </div>
 
         {/* Top Heroic Context Strip */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-6">
           <div className="flex flex-col gap-1.5 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-secondary-container/40 text-secondary rounded-full w-fit text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-              <span>Phase 2: Geographic &amp; Field Details</span>
-            </div>
+            
             <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight mt-1">
               Farm Location
             </h1>
-            <p className="text-xs md:text-sm text-on-surface-variant max-w-xl leading-relaxed">
+            <p className="text-sm md:text-sm text-on-surface-variant max-w-xl leading-relaxed">
               Tell us where your farm is located so we can provide local micro-climate forecasts, soil nutrient composition, and connect you directly with regional aggregate buyers.
             </p>
           </div>
@@ -323,7 +320,7 @@ export default function FarmLocationPage() {
                   strokeWidth="4"
                 />
                 <circle
-                  className="text-primary"
+                  className="text-secondary"
                   cx="24"
                   cy="24"
                   fill="transparent"
@@ -335,10 +332,10 @@ export default function FarmLocationPage() {
                   strokeWidth="4"
                 />
               </svg>
-              <span className="absolute text-xs font-bold text-primary">1/5</span>
+              <span className="absolute text-xs font-bold text-secondary">1/5</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">
                 Stage 1 of 5
               </span>
               <span className="text-xs font-bold text-on-surface">Geographic Profile</span>
@@ -358,40 +355,17 @@ export default function FarmLocationPage() {
 
         {/* Main Content Container */}
         <div className="bg-surface-container-lowest rounded-3xl shadow-sm border border-surface-container-high/60 p-6 md:p-8 flex flex-col gap-8">
-          {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-surface-container-high/60 gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center font-bold">
-                <span className="material-symbols-outlined text-[22px]">pin_drop</span>
-              </div>
-              <div>
-                <h2 className="text-lg md:text-xl font-bold text-on-surface tracking-tight">
-                  FARM LOCATION &amp; DETAILS
-                </h2>
-                <p className="text-xs text-on-surface-variant">
-                  Georeferenced accuracy unlocks certified agronomic support
-                </p>
-              </div>
-            </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-low text-secondary text-xs font-semibold w-fit">
-              <span className="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
-              <span>Verified &amp; Confidential</span>
-            </div>
-          </div>
+          
 
           {/* Farm Identity Details: Farm Name & Phone Number */}
-          <div className="bg-surface-container-low p-5 sm:p-6 rounded-2xl border border-primary/20 space-y-4">
+          <div className="bg-surface-container-low p-5 sm:p-6 rounded-2xl border border-secondary/20 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
-                <span className="material-symbols-outlined text-[20px]">badge</span>
-              </div>
+              
               <div>
                 <h3 className="text-sm font-bold text-on-surface tracking-tight uppercase">
                   Farm Identity &amp; Contact Credentials
                 </h3>
-                <p className="text-xs text-on-surface-variant">
-                  These official credentials will be reflected on your database record, spreadsheets, diagnostic reports, and accredited certificates.
-                </p>
+                
               </div>
             </div>
 
@@ -418,7 +392,7 @@ export default function FarmLocationPage() {
                   )}
                 </div>
                 <div className="relative flex items-center">
-                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                  <span className="material-symbols-outlined text-secondary absolute left-3 pointer-events-none text-[20px]">
                     agriculture
                   </span>
                   <input
@@ -432,12 +406,10 @@ export default function FarmLocationPage() {
                       }
                     }}
                     placeholder="e.g. Simba Ridge Farm, Green Valley Agribusiness"
-                    className="w-full pl-10 pr-3 py-2.5 bg-transparent text-on-surface text-sm rounded-lg outline-none focus:ring-2 focus:ring-primary transition-all placeholder:text-on-surface-variant/50 font-medium"
+                    className="w-full pl-10 pr-3 py-2.5 bg-transparent text-on-surface text-sm rounded-lg  focus:ring-2 focus:ring-secondary transition-all placeholder:text-on-surface-variant/50 font-medium"
                   />
                 </div>
-                <span className="text-[10px] text-on-surface-variant leading-tight">
-                  Official farm name for certified diagnostic reports &amp; accredited FFV certificates.
-                </span>
+               
               </div>
 
               {/* Phone Number Input */}
@@ -462,7 +434,7 @@ export default function FarmLocationPage() {
                   )}
                 </div>
                 <div className="relative flex items-center">
-                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                  <span className="material-symbols-outlined text-secondary absolute left-3 pointer-events-none text-[20px]">
                     phone_iphone
                   </span>
                   <input
@@ -476,12 +448,10 @@ export default function FarmLocationPage() {
                       }
                     }}
                     placeholder="e.g. +254 712 345 678"
-                    className="w-full pl-10 pr-3 py-2.5 bg-transparent text-on-surface text-sm rounded-lg outline-none focus:ring-2 focus:ring-primary transition-all placeholder:text-on-surface-variant/50 font-mono font-medium"
+                    className="w-full pl-10 pr-3 py-2.5 bg-transparent text-on-surface text-sm rounded-lg outline-none focus:ring-2 focus:ring-secondary transition-all placeholder:text-on-surface-variant/50 font-mono font-medium"
                   />
                 </div>
-                <span className="text-[10px] text-on-surface-variant leading-tight">
-                  Used for official verification records, SMS alerts &amp; registry updates.
-                </span>
+                
               </div>
             </div>
           </div>
@@ -508,7 +478,7 @@ export default function FarmLocationPage() {
             </div>
             <div className="relative flex flex-col md:flex-row items-stretch gap-2.5">
               <div className="relative flex-1 flex items-center">
-                <span className="material-symbols-outlined text-primary absolute left-4 pointer-events-none text-[22px]">
+                <span className="material-symbols-outlined text-secondary absolute left-4 pointer-events-none text-[22px]">
                   location_searching
                 </span>
                 <input
@@ -522,8 +492,8 @@ export default function FarmLocationPage() {
                     }
                   }}
                   placeholder="e.g., Mai Mahiu, Naivasha or village name"
-                  className={`w-full pl-12 pr-4 py-3.5 bg-surface-container-lowest text-on-surface text-sm rounded-xl shadow-xs outline-none focus:ring-2 focus:ring-primary transition-all ${
-                    gpsLocated ? "bg-primary-fixed/20" : ""
+                  className={`w-full pl-12 pr-4 py-3.5 bg-surface-container-lowest text-on-surface text-sm rounded-xl shadow-xs outline-none focus:ring-2 focus:ring-secondary transition-all ${
+                    gpsLocated ? "bg-secondary-fixed/20" : ""
                   }`}
                 />
               </div>
@@ -532,7 +502,7 @@ export default function FarmLocationPage() {
                 type="button"
                 onClick={handleUseCurrentLocation}
                 disabled={detectingGps}
-                className="px-5 py-3.5 bg-primary text-white rounded-xl text-xs md:text-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary/90 shadow-sm transition-all active:scale-[0.98] cursor-pointer disabled:opacity-75"
+                className="px-5 py-3.5 bg-secondary text-white rounded-xl text-xs md:text-sm font-semibold flex items-center justify-center gap-2 hover:bg-secondary/90 shadow-sm transition-all active:scale-[0.98] cursor-pointer disabled:opacity-75"
               >
                 {detectingGps ? (
                   <>
@@ -561,9 +531,9 @@ export default function FarmLocationPage() {
             )}
 
             {coordinates && (
-              <div className="flex flex-wrap items-center gap-2 py-1 text-xs text-primary font-medium animate-fadeIn">
-                <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-lg border border-primary/20">
-                  <span className="material-symbols-outlined text-[16px] text-primary">gps_fixed</span>
+              <div className="flex flex-wrap items-center gap-2 py-1 text-xs text-secondary font-medium animate-fadeIn">
+                <span className="inline-flex items-center gap-1.5 bg-secondary/10 text-secondary px-3 py-1.5 rounded-lg border border-secondary/20">
+                  <span className="material-symbols-outlined text-[16px] text-secondary">gps_fixed</span>
                   <span>
                     Lat: {coordinates.latitude.toFixed(5)}°, Lng: {coordinates.longitude.toFixed(5)}°
                   </span>
@@ -576,17 +546,14 @@ export default function FarmLocationPage() {
               </div>
             )}
 
-            <div className="flex items-center gap-2 text-on-surface-variant text-xs mt-1">
-              <span className="material-symbols-outlined text-[16px] text-primary">info</span>
-              <span>You can simply type the nearest town or trading center. We never publish your private coordinates.</span>
-            </div>
+            
           </div>
 
           {/* 2. Structured Location Grid */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <span className="text-base font-bold text-on-surface">Administrative Division</span>
-              <span className="text-xs text-on-surface-variant">Auto-filled from map &amp; GPS</span>
+              {/* <span className="text-xs text-on-surface-variant">Auto-filled from map &amp; GPS</span> */}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* County */}
@@ -614,7 +581,7 @@ export default function FarmLocationPage() {
                         setSubcounty(subs[0]);
                       }
                     }}
-                    className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer border ${
+                    className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-secondary transition-colors cursor-pointer border ${
                       validationErrors.includes("county") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
                     }`}
                   >
@@ -659,7 +626,7 @@ export default function FarmLocationPage() {
                             setValidationErrors((prev) => prev.filter((f) => f !== "subcounty"));
                           }
                         }}
-                        className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-primary transition-colors cursor-pointer border ${
+                        className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface appearance-none outline-none focus:ring-2 focus:ring-secondary transition-colors cursor-pointer border ${
                           validationErrors.includes("subcounty") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
                         }`}
                       >
@@ -695,7 +662,7 @@ export default function FarmLocationPage() {
                         }
                       }}
                       placeholder="Enter sub-county or division"
-                      className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-colors border ${
+                      className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-secondary transition-colors border ${
                         validationErrors.includes("subcounty") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
                       }`}
                     />
@@ -723,7 +690,7 @@ export default function FarmLocationPage() {
                       setValidationErrors((prev) => prev.filter((f) => f !== "ward"));
                     }
                   }}
-                  className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-colors border ${
+                  className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-secondary transition-colors border ${
                     validationErrors.includes("ward") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
                   }`}
                 />
@@ -749,7 +716,7 @@ export default function FarmLocationPage() {
                       setValidationErrors((prev) => prev.filter((f) => f !== "landmark"));
                     }
                   }}
-                  className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-primary transition-colors border ${
+                  className={`w-full bg-surface-container-low px-4 py-3 rounded-xl text-sm text-on-surface outline-none focus:ring-2 focus:ring-secondary transition-colors border ${
                     validationErrors.includes("landmark") ? "border-red-400 ring-1 ring-red-300" : "border-transparent"
                   }`}
                 />
@@ -764,41 +731,22 @@ export default function FarmLocationPage() {
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link
               href="/onboarding"
-              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1"
             >
-              <span>&larr;</span>
+              <ArrowLeft className="w-4 h-4" />
               <span>Back to Overview</span>
             </Link>
 
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
-                <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
+            
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
-                <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => handleSave(false)}
-              disabled={saving}
-              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
-            >
-              <span className="material-symbols-outlined text-[16px]">save</span>
-              <span>Save Draft</span>
-            </button>
+            
             <button
               type="button"
               onClick={() => handleSave(true)}
               disabled={saving}
-              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-secondary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               <span>{saving ? "Saving..." : "Save & Continue"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

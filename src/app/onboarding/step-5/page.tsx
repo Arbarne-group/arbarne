@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowLeft } from "lucide-react";
 
 export default function DigitalPlatformsPage() {
   const router = useRouter();
@@ -152,13 +153,14 @@ export default function DigitalPlatformsPage() {
         <div className="mb-8">
           <Link
             href="/onboarding"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors mb-4"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-secondary transition-colors mb-4"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+             <ArrowLeft className="w-4 h-4" />
+              
             Back to Overview
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">
+            <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-bold tracking-wide uppercase">
               Section 5 of 5
             </span>
             <span className="text-xs text-on-surface-variant font-medium">Questions 22 – 27</span>
@@ -190,7 +192,7 @@ export default function DigitalPlatformsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-semibold text-on-surface">
                 22. What could be your main reason for considering professional farm management support?
               </h2>
@@ -201,9 +203,7 @@ export default function DigitalPlatformsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Select the primary catalyst driving your interest in professionalized management.
-            </p>
+            
 
             <div className="space-y-2.5 mb-3">
               {supportReasonOptions.map((opt) => {
@@ -218,13 +218,13 @@ export default function DigitalPlatformsPage() {
                     }}
                     className={`w-full text-left rounded-2xl border p-4 flex items-center justify-between gap-3 cursor-pointer transition-all ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
                     <span
                       className={`text-sm font-semibold ${
-                        isSelected ? "text-primary" : "text-on-surface"
+                        isSelected ? "text-secondary" : "text-on-surface"
                       }`}
                     >
                       {opt}
@@ -232,7 +232,7 @@ export default function DigitalPlatformsPage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -255,7 +255,7 @@ export default function DigitalPlatformsPage() {
                       setValidationErrors((prev) => prev.filter((f) => f !== "otherSupportReason"));
                     }
                   }}
-                  className={`w-full rounded-xl border px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface ${
+                  className={`w-full rounded-xl border px-4 py-3 text-sm focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none bg-surface ${
                     validationErrors.includes("otherSupportReason")
                       ? "border-red-400 ring-2 ring-red-300"
                       : "border-outline-variant"
@@ -274,7 +274,7 @@ export default function DigitalPlatformsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-semibold text-on-surface">
                 23. What would make you feel confident that your farm is being managed well even when you are not physically present?
               </h2>
@@ -285,9 +285,7 @@ export default function DigitalPlatformsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Describe the visibility, alerts, or reports that give you complete peace of mind.
-            </p>
+            
             <textarea
               rows={3}
               value={remoteConfidence}
@@ -298,7 +296,7 @@ export default function DigitalPlatformsPage() {
                 }
               }}
               placeholder="E.g., Weekly video walkthroughs, geotagged photo proof of work, digital inventory reconciliations..."
-              className={`w-full rounded-2xl border bg-surface p-4 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none text-sm text-on-surface placeholder:text-on-surface-variant/40 ${
+              className={`w-full rounded-2xl border bg-surface p-4 focus:ring-1 focus:ring-secondary focus:border-secondary focus:outline-none transition-all resize-none text-sm text-on-surface placeholder:text-on-surface-variant/40 ${
                 validationErrors.includes("remoteConfidence") ? "border-red-400 ring-2 ring-red-300" : "border-outline-variant"
               }`}
             />
@@ -313,7 +311,7 @@ export default function DigitalPlatformsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 24. Are you comfortable with your Farm Manager using remote solutions to digitally plan, monitor, verify, and report farm operations?
               </h3>
@@ -324,9 +322,7 @@ export default function DigitalPlatformsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Our framework uses cloud-connected task dispatch and telemetry.
-            </p>
+           
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {remoteComfortOptions.map((opt) => {
@@ -341,13 +337,13 @@ export default function DigitalPlatformsPage() {
                     }}
                     className={`text-left rounded-2xl border p-4 flex items-center justify-between gap-3 cursor-pointer transition-all ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
                     <span
                       className={`text-sm font-semibold ${
-                        isSelected ? "text-primary" : "text-on-surface"
+                        isSelected ? "text-secondary" : "text-on-surface"
                       }`}
                     >
                       {opt}
@@ -355,7 +351,7 @@ export default function DigitalPlatformsPage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -376,7 +372,7 @@ export default function DigitalPlatformsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 25. Are you willing to maintain accurate farm, financial, production, and operational records as part of the management service?
               </h3>
@@ -387,9 +383,7 @@ export default function DigitalPlatformsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Record-keeping accuracy is required for benchmarking and index scoring.
-            </p>
+            
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {recordKeepingOptions.map((opt) => {
@@ -404,13 +398,13 @@ export default function DigitalPlatformsPage() {
                     }}
                     className={`text-left rounded-2xl border p-4 flex items-center justify-between gap-3 cursor-pointer transition-all ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
                     <span
                       className={`text-sm font-semibold ${
-                        isSelected ? "text-primary" : "text-on-surface"
+                        isSelected ? "text-secondary" : "text-on-surface"
                       }`}
                     >
                       {opt}
@@ -418,7 +412,7 @@ export default function DigitalPlatformsPage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -439,7 +433,7 @@ export default function DigitalPlatformsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 26. Are you comfortable with a Farm Manager conducting periodic physical operational audits to verify farm records and performance?
               </h3>
@@ -450,10 +444,7 @@ export default function DigitalPlatformsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Physical ground audits ensure verification integrity across all 8 pillars.
-            </p>
-
+           
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {auditOptions.map((opt) => {
                 const isSelected = physicalAudits === opt;
@@ -467,13 +458,13 @@ export default function DigitalPlatformsPage() {
                     }}
                     className={`text-left rounded-2xl border p-4 flex items-center justify-between gap-3 cursor-pointer transition-all ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
                     <span
                       className={`text-sm font-semibold ${
-                        isSelected ? "text-primary" : "text-on-surface"
+                        isSelected ? "text-secondary" : "text-on-surface"
                       }`}
                     >
                       {opt}
@@ -481,7 +472,7 @@ export default function DigitalPlatformsPage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -495,18 +486,16 @@ export default function DigitalPlatformsPage() {
 
           {/* Question 27: Additional Notes */}
           <section className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-surface-variant/40">
-            <h2 className="text-base font-semibold text-on-surface mb-1">
+            <h2 className="text-base font-semibold text-on-surface mb-3">
               27. Is there anything else we should understand about you, your farm, or the kind of support you are looking for?
             </h2>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Share any additional context, specialized crops, unique constraints, or personal goals.
-            </p>
+            
             <textarea
               rows={3}
               value={additionalNotes}
               onChange={(e) => setAdditionalNotes(e.target.value)}
               placeholder="Please share any additional details, concerns, or specific aspirations for your farm..."
-              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none text-sm text-on-surface placeholder:text-on-surface-variant/40"
+              className="w-full rounded-2xl border border-outline-variant bg-surface p-4 focus:ring-1 focus:ring-secondary focus:border-secondary focus:outline-none transition-all resize-none text-sm text-on-surface placeholder:text-on-surface-variant/40"
             />
           </section>
         </div>
@@ -516,41 +505,24 @@ export default function DigitalPlatformsPage() {
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link
               href="/onboarding/step-4"
-              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1"
             >
-              <span>&larr;</span>
+               <ArrowLeft className="w-4 h-4" />
+              
               <span>Back to Step 4</span>
             </Link>
 
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
-                <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
+            
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
-                <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => handleSave(false)}
-              disabled={saving}
-              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
-            >
-              <span className="material-symbols-outlined text-[16px]">save</span>
-              <span>Save Draft</span>
-            </button>
+            
+            
             <button
               type="button"
               onClick={() => handleSave(true)}
               disabled={saving}
-              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-secondary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               <span>{saving ? "Saving..." : "Save & Complete Survey"}</span>
               <span className="material-symbols-outlined text-[18px]">check_circle</span>

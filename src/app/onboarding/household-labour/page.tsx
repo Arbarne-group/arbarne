@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowLeft } from "lucide-react";
 
 interface OnboardingUser {
   name?: string;
@@ -220,14 +221,12 @@ export default function HouseholdLabourPage() {
         <div className="flex items-center justify-between">
           <Link
             href="/onboarding/business-experience"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+            <ArrowLeft className="w-4 h-4" />
             Back to Business Experience
           </Link>
-          <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-            Stage 5 of 5: Human Capital Profile
-          </span>
+        
         </div>
 
         {/* Top Header */}
@@ -236,7 +235,7 @@ export default function HouseholdLabourPage() {
             <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight mt-1">
               Household &amp; Labour
             </h1>
-            <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
+            <p className="text-sm md:text-md text-on-surface-variant leading-relaxed">
               Detail your farm&apos;s workforce structure, seasonal labor reliance, and household management to assess human capital readiness and ethical workforce standards.
             </p>
           </div>
@@ -255,7 +254,7 @@ export default function HouseholdLabourPage() {
                   strokeWidth="4"
                 />
                 <circle
-                  className="text-primary"
+                  className="text-secondary"
                   cx="24"
                   cy="24"
                   fill="transparent"
@@ -267,13 +266,13 @@ export default function HouseholdLabourPage() {
                   strokeWidth="4"
                 />
               </svg>
-              <span className="absolute text-xs font-bold text-primary">5/5</span>
+              <span className="absolute text-sm font-bold text-secondary">5/5</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">
                 Stage 5 of 5
               </span>
-              <span className="text-xs font-bold text-on-surface">Human Capital</span>
+              <span className="text-sm font-bold text-on-surface">Human Capital</span>
               <span className="text-[11px] text-on-surface-variant">Next: Farm Profile</span>
             </div>
           </div>
@@ -282,7 +281,7 @@ export default function HouseholdLabourPage() {
         {/* Main Questionnaire Card */}
         <div className="bg-surface-container-lowest rounded-3xl border border-surface-container-high/60 shadow-sm p-6 md:p-8 flex flex-col gap-8">
           {validationErrors.length > 0 && (
-            <div className="p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+            <div className="p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-sm">
               <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
               <span className="font-semibold">
                 Please complete all required questions on this page before continuing ({validationErrors.length} required field{validationErrors.length > 1 ? "s" : ""} remaining).
@@ -303,13 +302,13 @@ export default function HouseholdLabourPage() {
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-bold text-on-surface">1. Farm Workforce &amp; Labour Size</h3>
                 {validationErrors.includes("workforce") && (
-                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                     <span className="material-symbols-outlined text-[14px]">warning</span>
                     Required
                   </span>
                 )}
               </div>
-              <p className="text-xs text-on-surface-variant">
+              <p className="text-sm text-on-surface-variant">
                 Detail full-time permanent personnel and seasonal hands hired during peak activities.
               </p>
             </div>
@@ -324,15 +323,15 @@ export default function HouseholdLabourPage() {
                       Full-time
                     </span>
                   </div>
-                  <p className="text-xs text-on-surface-variant">
+                  <p className="text-sm text-on-surface-variant">
                     Permanent year-round team managing daily farm tasks, irrigation, and security.
                   </p>
                 </div>
 
-                <div className="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between shadow-xs border border-surface-container-high/60 gap-3">
+                <div className="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between shadow-sm border border-surface-container-high/60 gap-3">
                   <div className="flex flex-col">
                     <span className="text-[11px] text-outline uppercase font-semibold">Staff Count</span>
-                    <span className="text-xs text-on-surface-variant font-medium">
+                    <span className="text-sm text-on-surface-variant font-medium">
                       {permanentWorkers === ""
                         ? "Enter or click + to set"
                         : `${permanentWorkers} permanent worker${permanentWorkers === 1 ? "" : "s"}`}
@@ -363,7 +362,7 @@ export default function HouseholdLabourPage() {
                           setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
                         }
                       }}
-                      className="w-14 text-center py-1 text-base font-bold text-primary bg-surface-container-low rounded-xl border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="w-14 text-center py-1 text-base font-bold text-secondary bg-surface-container-low rounded-xl border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-secondary"
                     />
                     <button
                       type="button"
@@ -373,7 +372,7 @@ export default function HouseholdLabourPage() {
                         setPermanentWorkers(cur + 1);
                         setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
                       }}
-                      className="w-9 h-9 rounded-xl bg-primary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
+                      className="w-9 h-9 rounded-xl bg-secondary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-sm active:scale-95 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[18px]">add</span>
                     </button>
@@ -386,19 +385,19 @@ export default function HouseholdLabourPage() {
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm font-bold text-on-surface">Seasonal / Casual Workers during harvest</span>
-                    <span className="px-2 py-0.5 rounded-lg text-[11px] font-semibold bg-primary/10 text-primary">
+                    <span className="px-2 py-0.5 rounded-lg text-[11px] font-semibold bg-secondary/10 text-secondary">
                       Peak Season
                     </span>
                   </div>
-                  <p className="text-xs text-on-surface-variant">
+                  <p className="text-sm text-on-surface-variant">
                     Short-term hands recruited during harvesting, weeding, and packing periods.
                   </p>
                 </div>
 
-                <div className="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between shadow-xs border border-surface-container-high/60 gap-3">
+                <div className="bg-surface-container-lowest rounded-xl p-4 flex items-center justify-between shadow-sm border border-surface-container-high/60 gap-3">
                   <div className="flex flex-col">
-                    <span className="text-[11px] text-outline uppercase font-semibold">Seasonal Influx</span>
-                    <span className="text-xs text-on-surface-variant font-medium">
+                    <span className="text-[11px] text-outline uppercase font-semibold">Staff Count</span>
+                    <span className="text-sm text-on-surface-variant font-medium">
                       {seasonalWorkers === ""
                         ? "Enter or click + to set"
                         : `${seasonalWorkers} peak harvest hand${seasonalWorkers === 1 ? "" : "s"}`}
@@ -429,7 +428,7 @@ export default function HouseholdLabourPage() {
                           setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
                         }
                       }}
-                      className="w-14 text-center py-1 text-base font-bold text-primary bg-surface-container-low rounded-xl border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="w-14 text-center py-1 text-base font-bold text-secondary bg-surface-container-low rounded-xl border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-secondary"
                     />
                     <button
                       type="button"
@@ -439,7 +438,7 @@ export default function HouseholdLabourPage() {
                         setSeasonalWorkers(cur + 1);
                         setValidationErrors((prev) => prev.filter((k) => k !== "workforce"));
                       }}
-                      className="w-9 h-9 rounded-xl bg-primary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer"
+                      className="w-9 h-9 rounded-xl bg-secondary text-white hover:opacity-90 flex items-center justify-center transition-all shadow-sm active:scale-95 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[18px]">add</span>
                     </button>
@@ -462,14 +461,14 @@ export default function HouseholdLabourPage() {
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-bold text-on-surface">2. Day-to-Day Farm Management</h3>
                 {validationErrors.includes("managementStructure") && (
-                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                     <span className="material-symbols-outlined text-[14px]">warning</span>
                     Required
                   </span>
                 )}
               </div>
-              <p className="text-xs text-on-surface-variant">
-                Select the primary operational decision maker and leadership model on your farm.
+              <p className="text-sm text-on-surface-variant">
+                Select the secondary operational decision maker and leadership model on your farm.
               </p>
             </div>
 
@@ -502,30 +501,30 @@ export default function HouseholdLabourPage() {
                       setManagementStructure(item.id);
                       setValidationErrors((prev) => prev.filter((k) => k !== "managementStructure"));
                     }}
-                    className={`relative flex flex-col p-5 rounded-2xl cursor-pointer shadow-xs transition-all border ${
+                    className={`relative flex flex-col p-5 rounded-2xl cursor-pointer shadow-sm transition-all border ${
                       isSelected
-                        ? "bg-primary/5 border-primary shadow-sm"
+                        ? "bg-secondary/5 border-secondary shadow-sm"
                         : "bg-surface-container-low border-transparent hover:bg-surface-container"
                     }`}
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div
                         className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                          isSelected ? "bg-primary text-white" : "bg-surface-container-highest text-on-surface-variant"
+                          isSelected ? "bg-secondary text-white" : "bg-surface-container-highest text-on-surface-variant"
                         }`}
                       >
                         <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
                       </div>
                       <div
                         className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
-                          isSelected ? "bg-primary text-white shadow-xs" : "bg-surface-variant text-transparent"
+                          isSelected ? "bg-secondary text-white shadow-sm" : "bg-surface-variant text-transparent"
                         }`}
                       >
                         <span className="material-symbols-outlined text-[16px]">check</span>
                       </div>
                     </div>
                     <span className="text-sm font-bold text-on-surface mb-1">{item.title}</span>
-                    <span className="text-xs text-on-surface-variant leading-relaxed">{item.desc}</span>
+                    <span className="text-sm text-on-surface-variant leading-relaxed">{item.desc}</span>
                   </label>
                 );
               })}
@@ -545,13 +544,13 @@ export default function HouseholdLabourPage() {
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-bold text-on-surface">3. Fair Employment &amp; Inclusion Practices</h3>
                 {validationErrors.includes("fairEmploymentPractices") && (
-                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                     <span className="material-symbols-outlined text-[14px]">warning</span>
                     Required
                   </span>
                 )}
               </div>
-              <p className="text-xs text-on-surface-variant">
+              <p className="text-sm text-on-surface-variant">
                 Ethical workforce standards, worker well-being, and social sustainability measures.
               </p>
             </div>
@@ -581,14 +580,14 @@ export default function HouseholdLabourPage() {
                     onClick={() => togglePractice(practice.id)}
                     className={`flex items-start gap-3.5 p-4 rounded-2xl cursor-pointer transition-all border ${
                       isSelected
-                        ? "bg-surface-container-lowest border-primary shadow-xs"
+                        ? "bg-surface-container-lowest border-secondary shadow-sm"
                         : "bg-surface-container-low border-transparent hover:bg-surface-container"
                     }`}
                   >
                     <div className="pt-0.5">
                       <div
-                        className={`w-5 h-5 rounded-lg flex items-center justify-center transition-all shadow-xs ${
-                          isSelected ? "bg-primary text-white" : "bg-surface-variant text-transparent"
+                        className={`w-5 h-5 rounded-lg flex items-center justify-center transition-all shadow-sm ${
+                          isSelected ? "bg-secondary text-white" : "bg-surface-variant text-transparent"
                         }`}
                       >
                         <span className="material-symbols-outlined text-[16px]">check</span>
@@ -596,7 +595,7 @@ export default function HouseholdLabourPage() {
                     </div>
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-on-surface leading-snug">{practice.title}</span>
-                      <span className="text-xs text-on-surface-variant mt-1">{practice.desc}</span>
+                      <span className="text-sm text-on-surface-variant mt-1">{practice.desc}</span>
                     </div>
                   </label>
                 );
@@ -610,40 +609,21 @@ export default function HouseholdLabourPage() {
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link
               href="/onboarding/business-experience"
-              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              className="text-sm md:text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1"
             >
-              <span>&larr;</span>
-              <span>Back to Business Exp.</span>
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Business Exp</span>
             </Link>
 
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
-                <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
+           
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto justify-end">
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              {saveFeedback && (
-                <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
-                  <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                  {saveFeedback}
-                </span>
-              )}
-              <button
-                type="button"
-                onClick={() => handleSave(false)}
-                disabled={saving}
-                className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
-              >
-                <span className="material-symbols-outlined text-[16px]">save</span>
-                <span>Save Draft</span>
-              </button>
+              
               <Link
-                href="/onboarding/farm-profile"
-                className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface-variant hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-surface"
+                href="/onboarding"
+                className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-secondary text-on-surface-variant hover:text-secondary font-semibold text-sm md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-surface"
               >
                 <span>View Profile</span>
                 <span className="material-symbols-outlined text-[16px]">visibility</span>
@@ -653,9 +633,9 @@ export default function HouseholdLabourPage() {
               type="button"
               onClick={handleSaveAndStartAssessment}
               disabled={saving}
-              className="w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="w-full sm:w-auto px-5 sm:px-6 py-2.5 rounded-xl bg-secondary text-white font-semibold text-sm md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
-              <span>{saving ? "Saving..." : "Finish Survey & Take Assessment"}</span>
+              <span>{saving ? "Saving..." : "Save Profile"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
             </button>
           </div>

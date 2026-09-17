@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowLeft } from "lucide-react";
 
 interface OnboardingUser {
   name?: string;
@@ -132,14 +133,12 @@ export default function BusinessExperiencePage() {
         <div className="flex items-center justify-between">
           <Link
             href="/onboarding/farming-system"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+           <ArrowLeft className="w-4 h-4" />
             Back to Farming System
           </Link>
-          <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-            Stage 4 of 5: Commercial Profile
-          </span>
+         
         </div>
 
         {/* Top Header */}
@@ -148,7 +147,7 @@ export default function BusinessExperiencePage() {
             <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight mt-1">
               Business Experience
             </h1>
-            <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
+            <p className="text-sm md:text-md text-on-surface-variant leading-relaxed">
               Help us understand your commercial track record, market outlets, and bookkeeping to match you with appropriate financing and buyers.
             </p>
           </div>
@@ -167,7 +166,7 @@ export default function BusinessExperiencePage() {
                   strokeWidth="4"
                 />
                 <circle
-                  className="text-primary"
+                  className="text-secondary"
                   cx="24"
                   cy="24"
                   fill="transparent"
@@ -179,13 +178,11 @@ export default function BusinessExperiencePage() {
                   strokeWidth="4"
                 />
               </svg>
-              <span className="absolute text-xs font-bold text-primary">4/5</span>
+              <span className="absolute text-sm font-bold text-secondary">4/5</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
-                Stage 4 of 5
-              </span>
-              <span className="text-xs font-bold text-on-surface">Commercial Profile</span>
+              
+              <span className="text-sm font-bold text-on-surface">Commercial Profile</span>
               <span className="text-[11px] text-on-surface-variant">Next: Household &amp; Labour</span>
             </div>
           </div>
@@ -194,7 +191,7 @@ export default function BusinessExperiencePage() {
         {/* Questionnaire Bento Card */}
         <div className="bg-surface-container-lowest rounded-3xl border border-surface-container-high/60 shadow-sm p-6 md:p-8 space-y-8">
           {validationErrors.length > 0 && (
-            <div className="p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+            <div className="p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-sm">
               <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
               <span className="font-semibold">
                 Please complete all required questions on this page before continuing ({validationErrors.length} required field{validationErrors.length > 1 ? "s" : ""} remaining).
@@ -202,25 +199,7 @@ export default function BusinessExperiencePage() {
             </div>
           )}
 
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-surface-container-high/60">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center font-bold">
-                <span className="material-symbols-outlined text-[22px]">storefront</span>
-              </div>
-              <div>
-                <h2 className="text-lg md:text-xl font-bold text-on-surface tracking-tight leading-snug">
-                  BUSINESS &amp; SALES EXPERIENCE
-                </h2>
-                <p className="text-xs text-on-surface-variant">
-                  Commercial farming background, market channels, and record keeping
-                </p>
-              </div>
-            </div>
-            <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container-low text-secondary text-xs font-semibold w-fit">
-              <span className="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
-              <span>Verified &amp; Confidential</span>
-            </div>
-          </div>
+         
 
           {/* Question 1: Commercial Duration */}
           <div
@@ -233,18 +212,18 @@ export default function BusinessExperiencePage() {
           >
             <div className="flex items-center justify-between">
               <label className="text-sm font-bold text-on-surface flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center text-xs text-primary font-bold">
+                <span >
                   1
                 </span>
                 <span>How long have you been farming commercially?</span>
                 {validationErrors.includes("commercialYears") && (
-                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                     <span className="material-symbols-outlined text-[14px]">warning</span>
                     Required
                   </span>
                 )}
               </label>
-              <span className="text-xs text-on-surface-variant">Select one</span>
+              
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-1.5 bg-surface-container-low rounded-2xl">
@@ -263,9 +242,9 @@ export default function BusinessExperiencePage() {
                       setCommercialYears(opt.id);
                       setValidationErrors((prev) => prev.filter((k) => k !== "commercialYears"));
                     }}
-                    className={`py-3 px-3 rounded-xl text-xs font-semibold transition-all text-center flex items-center justify-center gap-1 cursor-pointer ${
+                    className={`py-3 px-3 rounded-xl text-sm font-semibold transition-all text-center flex items-center justify-center gap-1 cursor-pointer ${
                       isSelected
-                        ? "bg-surface-container-lowest text-primary shadow-xs"
+                        ? "bg-surface-container-lowest text-secondary shadow-sm"
                         : "text-on-surface-variant hover:text-on-surface"
                     }`}
                   >
@@ -288,18 +267,18 @@ export default function BusinessExperiencePage() {
           >
             <div className="flex items-center justify-between">
               <label className="text-sm font-bold text-on-surface flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center text-xs text-primary font-bold">
+                <span >
                   2
                 </span>
                 <span>What is your estimated annual farm sales / revenue?</span>
                 {validationErrors.includes("annualRevenueBracket") && (
-                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                     <span className="material-symbols-outlined text-[14px]">warning</span>
                     Required
                   </span>
                 )}
               </label>
-              <span className="text-xs text-on-surface-variant">Select bracket</span>
+              
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -335,18 +314,18 @@ export default function BusinessExperiencePage() {
                     }}
                     className={`p-4 rounded-2xl transition-all cursor-pointer flex items-center justify-between border ${
                       isSelected
-                        ? "bg-primary/5 border-primary shadow-xs"
+                        ? "bg-secondary/5 border-secondary shadow-sm"
                         : "bg-surface-container-low border-transparent hover:bg-surface-container"
                     }`}
                   >
                     <div className="space-y-0.5">
-                      <span className={`text-sm font-bold block ${isSelected ? "text-primary" : "text-on-surface"}`}>
+                      <span className={`text-sm font-bold block ${isSelected ? "text-secondary" : "text-on-surface"}`}>
                         {bracket.title}
                       </span>
-                      <p className="text-xs text-on-surface-variant">{bracket.sub}</p>
+                      <p className="text-sm text-on-surface-variant">{bracket.sub}</p>
                     </div>
                     {isSelected ? (
-                      <span className="material-symbols-outlined text-primary text-[22px] fill">check_circle</span>
+                      <span className="material-symbols-outlined text-secondary text-[22px] fill">check_circle</span>
                     ) : (
                       <div className="w-5 h-5 rounded-full border-2 border-outline-variant" />
                     )}
@@ -355,14 +334,14 @@ export default function BusinessExperiencePage() {
               })}
             </div>
 
-            {annualRevenueBracket && (
+            {/* {annualRevenueBracket && (
               <div className="p-3.5 rounded-2xl bg-secondary-container/25 flex items-center gap-2.5 text-secondary border border-secondary-container animate-fadeIn">
                 <span className="material-symbols-outlined text-[18px]">verified</span>
-                <span className="text-xs font-semibold">
+                <span className="text-sm font-semibold">
                   Qualifies for cooperative and SME seasonal input financing &amp; asset leasing
                 </span>
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Question 3: Record Keeping */}
@@ -376,18 +355,18 @@ export default function BusinessExperiencePage() {
           >
             <div className="flex items-center justify-between">
               <label className="text-sm font-bold text-on-surface flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center text-xs text-primary font-bold">
+                <span >
                   3
                 </span>
                 <span>How do you currently keep farm records?</span>
                 {validationErrors.includes("recordKeepingMethod") && (
-                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                     <span className="material-symbols-outlined text-[14px]">warning</span>
                     Required
                   </span>
                 )}
               </label>
-              <span className="text-xs text-on-surface-variant">Select primary method</span>
+              
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -427,27 +406,27 @@ export default function BusinessExperiencePage() {
                     }}
                     className={`p-4 rounded-2xl transition-all cursor-pointer flex items-start gap-3 border ${
                       isSelected
-                        ? "bg-primary/5 border-primary shadow-xs"
+                        ? "bg-secondary/5 border-secondary shadow-sm"
                         : "bg-surface-container-low border-transparent hover:bg-surface-container"
                     }`}
                   >
                     <div
                       className={`w-9 h-9 rounded-xl flex items-center justify-center mt-0.5 shrink-0 ${
-                        isSelected ? "bg-primary text-white" : "bg-surface-container-highest text-on-surface-variant"
+                        isSelected ? "bg-secondary text-white" : "bg-surface-container-highest text-on-surface-variant"
                       }`}
                     >
                       <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm font-bold ${isSelected ? "text-primary" : "text-on-surface"}`}>
+                        <span className={`text-sm font-bold ${isSelected ? "text-secondary" : "text-on-surface"}`}>
                           {item.title}
                         </span>
                         {isSelected && (
-                          <span className="material-symbols-outlined text-primary text-[18px] fill">check_circle</span>
+                          <span className="material-symbols-outlined text-secondary text-[18px] fill">check_circle</span>
                         )}
                       </div>
-                      <p className="text-xs text-on-surface-variant mt-0.5">{item.desc}</p>
+                      <p className="text-sm text-on-surface-variant mt-0.5">{item.desc}</p>
                     </div>
                   </div>
                 );
@@ -455,7 +434,7 @@ export default function BusinessExperiencePage() {
             </div>
           </div>
 
-          {/* Question 4: Primary Produce Buyers */}
+          {/* Question 4: secondary Produce Buyers */}
           <div
             id="q-produceBuyers"
             className={`space-y-3 pt-2 p-4 rounded-2xl transition-all ${
@@ -466,18 +445,18 @@ export default function BusinessExperiencePage() {
           >
             <div className="flex items-center justify-between">
               <label className="text-sm font-bold text-on-surface flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center text-xs text-primary font-bold">
+                <span >
                   4
                 </span>
-                <span>Primary Produce Buyers &amp; Sales Channels</span>
+                <span>secondary Produce Buyers &amp; Sales Channels</span>
                 {validationErrors.includes("produceBuyers") && (
-                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                     <span className="material-symbols-outlined text-[14px]">warning</span>
                     Required
                   </span>
                 )}
               </label>
-              <span className="text-xs text-primary font-semibold">Select all that apply</span>
+              
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -492,7 +471,7 @@ export default function BusinessExperiencePage() {
                   id: "wholesale_market",
                   title: "Local Open-Air Wholesale Market",
                   tag: "Spot cash",
-                  desc: "Direct sales at open markets in regional towns (Wakulima, Naivasha, Karatina)",
+                  desc: "Direct sales at open markets in regional towns ",
                 },
                 {
                   id: "brokers_gate",
@@ -514,7 +493,7 @@ export default function BusinessExperiencePage() {
                     onClick={() => toggleBuyer(channel.id)}
                     className={`flex items-start gap-3.5 p-4 rounded-2xl transition-all cursor-pointer border ${
                       isSelected
-                        ? "bg-secondary-container/25 border-secondary shadow-xs"
+                        ? "bg-secondary-container/25 border-secondary shadow-sm"
                         : "bg-surface-container-low border-transparent hover:bg-surface-container"
                     }`}
                   >
@@ -530,11 +509,9 @@ export default function BusinessExperiencePage() {
                         <span className={`text-sm font-bold ${isSelected ? "text-secondary" : "text-on-surface"}`}>
                           {channel.title}
                         </span>
-                        <span className="text-[11px] font-semibold text-outline-variant bg-surface-container-lowest px-2 py-0.5 rounded">
-                          {channel.tag}
-                        </span>
+                       
                       </div>
-                      <p className="text-xs text-on-surface-variant mt-1">{channel.desc}</p>
+                      <p className="text-sm text-on-surface-variant mt-1">{channel.desc}</p>
                     </div>
                   </div>
                 );
@@ -548,41 +525,22 @@ export default function BusinessExperiencePage() {
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link
               href="/onboarding/farming-system"
-              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              className="text-sm md:text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1"
             >
-              <span>&larr;</span>
+              <ArrowLeft className="w-4 h-4" />
               <span>Back to Farming System</span>
             </Link>
 
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
-                <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
+            
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
-                <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => handleSave(false)}
-              disabled={saving}
-              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
-            >
-              <span className="material-symbols-outlined text-[16px]">save</span>
-              <span>Save Draft</span>
-            </button>
+            
             <button
               type="button"
               onClick={() => handleSave(true)}
               disabled={saving}
-              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-secondary text-white font-semibold text-sm md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               <span>{saving ? "Saving..." : "Save & Continue"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

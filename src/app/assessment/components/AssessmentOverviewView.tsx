@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { ALL_PILLARS, AssessmentPillar } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowRight } from "lucide-react";
 
 interface PillarProgressItem {
   completed: boolean;
@@ -126,9 +127,9 @@ export default function AssessmentOverviewView({
 
   return (
     <div className="flex-1 p-margin-mobile md:p-margin-desktop bg-surface-container-low min-h-full">
-      <div className="max-w-[1280px] mx-auto flex flex-col gap-8">
+      <div className="max-w-[1280px] mx-auto flex flex-col gap-8 ">
         {/* Page Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 ">
           <div>
             <h1 className="font-display-lg text-headline-lg-mobile md:text-headline-lg font-bold text-on-surface mb-2">
               Assessment Overview
@@ -142,7 +143,7 @@ export default function AssessmentOverviewView({
             {completedPillarsCount === 8 ? (
               <Link
                 href="/assessment/report?pillar=all"
-                className="px-5 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-label-sm text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+                className="px-5 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-label-md text-sm font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
                 Download 8-Pillar Report (PDF)
@@ -151,7 +152,7 @@ export default function AssessmentOverviewView({
               <Link
                 href="/assessment/report?pillar=all"
                 title={`All 8 pillars required for full report (${completedPillarsCount}/8 completed). Click to view progress and available individual reports.`}
-                className="px-5 py-2 rounded-full bg-surface-variant/70 hover:bg-surface-variant text-on-surface-variant font-label-sm text-xs font-bold flex items-center gap-1.5 border border-outline-variant/40 transition-colors cursor-pointer"
+                className="px-5 py-2 rounded-full bg-surface-variant/70 hover:bg-surface-variant text-on-surface-variant font-label-md text-sm font-bold flex items-center gap-1.5 border border-outline-variant/40 transition-colors cursor-pointer"
               >
                 <span className="material-symbols-outlined text-sm text-amber-700">lock</span>
                 <span>8-Pillar Report</span>
@@ -161,50 +162,7 @@ export default function AssessmentOverviewView({
               </Link>
             )}
 
-            {completedPillarsCount > 0 && (
-              <div className="relative inline-flex items-center">
-                <select
-                  aria-label="Download Individual Pillar Report"
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      window.location.href = `/assessment/report?pillar=${e.target.value}`;
-                    }
-                  }}
-                  defaultValue=""
-                  className="px-3.5 py-2 rounded-full bg-surface border border-outline-variant/70 hover:border-emerald-600 text-slate-700 font-label-sm text-xs font-semibold shadow-xs cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-600 transition"
-                >
-                  <option value="" disabled>
-                    Pillar Reports ({completedPillarsCount}) ▾
-                  </option>
-                  {ALL_PILLARS.filter((p) => pillarProgress[p.id]?.completed).map((p) => (
-                    <option key={p.id} value={String(p.id)}>
-                      Pillar {p.id}: {p.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {hasDoneAnyAssessment ? (
-              <button
-                type="button"
-                onClick={() => setShowHistoryModal(true)}
-                className="px-5 py-2 border border-outline text-primary font-label-sm text-xs font-semibold rounded-full hover:bg-surface-variant transition-colors flex items-center gap-2 cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-sm">history</span>
-                Assessment History
-              </button>
-            ) : (
-              <button
-                type="button"
-                disabled
-                title="No assessment history available yet"
-                className="px-5 py-2 border border-outline-variant/30 text-on-surface-variant/40 font-label-sm text-xs font-semibold rounded-full cursor-not-allowed flex items-center gap-2 select-none"
-              >
-                <span className="material-symbols-outlined text-sm">lock</span>
-                Assessment History
-              </button>
-            )}
+            
           </div>
         </div>
 
@@ -219,7 +177,7 @@ export default function AssessmentOverviewView({
             <span className="font-display-lg text-display-lg font-bold text-on-surface">
               40
             </span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant text-center">
+            <span className="font-label-md text-label-md text-on-surface-variant text-center">
               Capabilities
             </span>
           </div>
@@ -233,7 +191,7 @@ export default function AssessmentOverviewView({
             <span className="font-display-lg text-display-lg font-bold text-on-surface">
               8
             </span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant text-center">
+            <span className="font-label-md text-label-md text-on-surface-variant text-center">
               Pillars
             </span>
           </div>
@@ -250,7 +208,7 @@ export default function AssessmentOverviewView({
                 min
               </span>
             </span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant text-center">
+            <span className="font-label-md text-label-md text-on-surface-variant text-center">
               Per Pillar (7m each)
             </span>
           </div>
@@ -276,66 +234,13 @@ export default function AssessmentOverviewView({
             <span className="font-title-md text-title-md font-semibold text-on-surface mt-2 text-center">
               {assessmentStatus}
             </span>
-            <span className="font-label-sm text-label-sm text-on-surface-variant text-center">
+            <span className="font-label-md text-label-md text-on-surface-variant text-center">
               Status
             </span>
           </div>
         </div>
 
-        {/* 90-Day Reassessment Cycle Notice */}
-        <div
-          className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs ${
-            fullCooldown.isFullAssessmentComplete
-              ? "bg-emerald-50/60 border-emerald-300/80"
-              : "bg-surface-container-low border-primary/20"
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <div
-              className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                fullCooldown.isFullAssessmentComplete
-                  ? "bg-emerald-100 text-emerald-800"
-                  : "bg-primary/10 text-primary"
-              }`}
-            >
-              <span className="material-symbols-outlined text-[20px]">
-                {fullCooldown.isFullAssessmentComplete ? "verified" : "calendar_month"}
-              </span>
-            </div>
-            <div>
-              <h4 className="text-xs md:text-sm font-bold text-on-surface">
-                {fullCooldown.isFullAssessmentComplete
-                  ? "Full 8-Pillar Farm Assessment Completed"
-                  : "Individual Pillar Assessments (~7 min per pillar)"}
-              </h4>
-              <p className="text-[11px] md:text-xs text-on-surface-variant">
-                {fullCooldown.isFullAssessmentComplete
-                  ? fullCooldown.canReassessFull
-                    ? "Your 90-day cooldown cycle has elapsed! You may now retake the diagnostic to benchmark operational improvements."
-                    : `Next comprehensive reassessment unlocks in ${fullCooldown.daysRemainingFull} days (on ${new Date(
-                        fullCooldown.nextEligibleDateFull!
-                      ).toLocaleDateString("en-GB")}). You can download your official PDF report anytime.`
-                  : "Assess each pillar individually at your own pace. Once submitted, each pillar and the full assessment can only be repeated after 3 months (90 days) to track genuine capability transition."}
-              </p>
-            </div>
-          </div>
-          <span
-            className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 self-start sm:self-auto ${
-              fullCooldown.isFullAssessmentComplete
-                ? fullCooldown.canReassessFull
-                  ? "bg-emerald-100 text-emerald-800"
-                  : "bg-amber-100 text-amber-900 border border-amber-300"
-                : "bg-primary/10 text-primary"
-            }`}
-          >
-            {fullCooldown.isFullAssessmentComplete
-              ? fullCooldown.canReassessFull
-                ? "Reassessment Available"
-                : `Cooldown: ${fullCooldown.daysRemainingFull}d Left`
-              : "3-Month Reassessment Rule"}
-          </span>
-        </div>
-
+       
         {/* The 8 Pillars Section */}
         <div className="mt-2">
           <div className="flex justify-between items-center mb-6">
@@ -343,14 +248,14 @@ export default function AssessmentOverviewView({
               <h2 className="font-title-md text-headline-lg-mobile font-semibold text-on-surface">
                 The 8 Pillars
               </h2>
-              <p className="text-xs text-on-surface-variant">
+              <p className="text-sm text-on-surface-variant">
                 Progression across 8 pillars (P1–P8) and 40 capabilities (1.1–8.5).
               </p>
             </div>
             <button
               type="button"
               onClick={() => onSelectPillar(1)}
-              className="text-primary font-label-sm text-label-sm hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-secondary font-label-md text-label-md hover:underline flex items-center gap-1 cursor-pointer"
             >
               View all pillars{" "}
               <span className="material-symbols-outlined text-sm">
@@ -377,20 +282,20 @@ export default function AssessmentOverviewView({
               return (
                 <div
                   key={pillar.id}
-                  onClick={() => onSelectPillar(pillar.id, isLockedCooldown)}
+                  onClick={() => onSelectPillar(pillar.id)}
                   className="bg-surface rounded-2xl p-5 shadow-level-1 border border-outline-variant/50 hover:shadow-level-2 transition-all flex flex-col justify-between hover:-translate-y-1 cursor-pointer group h-full relative overflow-hidden"
                 >
                   <div className="flex justify-between items-start mb-3">
                     {/* Enhanced Interesting Pillar Icon */}
                     <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-xs transition-transform group-hover:scale-105"
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-transform group-hover:scale-105"
                       style={{
                         background: `linear-gradient(135deg, ${pillar.accentColor}25 0%, ${pillar.accentColor}45 100%)`,
                         border: `1.5px solid ${pillar.accentColor}66`,
                       }}
                     >
                       <span
-                        className="material-symbols-outlined text-[28px] drop-shadow-xs"
+                        className="material-symbols-outlined text-[28px] drop-shadow-sm"
                         style={{ color: pillar.accentColor }}
                       >
                         {pillar.icon}
@@ -398,24 +303,15 @@ export default function AssessmentOverviewView({
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                      {isLockedCooldown ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                          <span className="material-symbols-outlined text-[13px]">lock_clock</span>
-                          <span>{status.daysRemaining}d Cooldown</span>
-                        </span>
-                      ) : isReassessReady ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                          <span className="material-symbols-outlined text-[13px]">lock_open</span>
-                          <span>Reassess</span>
-                        </span>
-                      ) : status?.completed ? (
-                        <span className="material-symbols-outlined text-primary text-[18px]">
+                      <span className="font-label-md text-sm font-bold text-on-surface-variant bg-surface-variant px-2 py-0.5 rounded-full">
+                        P{pillar.id}
+                      </span>
+                      {isLockedCooldown && status?.completed ? (
+                        <span className="material-symbols-outlined text-secondary text-[18px]">
                           check_circle
                         </span>
                       ) : null}
-                      <span className="font-label-sm text-xs font-bold text-on-surface-variant bg-surface-variant px-2 py-0.5 rounded-full">
-                        P{pillar.id}
-                      </span>
+                      
                     </div>
                   </div>
 
@@ -424,57 +320,33 @@ export default function AssessmentOverviewView({
                       <h3 className="font-title-md text-title-md font-semibold text-on-surface leading-snug mb-1 group-hover:text-primary transition-colors">
                         {pillar.name}
                       </h3>
-                      <p className="text-[11px] text-on-surface-variant/80 line-clamp-2 mb-3">
+                      <p className="text-[14px] text-gray-600 line-clamp-2 mb-3">
                         {pillar.principle}
                       </p>
 
-                      {/* Pillar Progression / Score & Feedback */}
-                      {status?.score !== undefined ? (
-                        <div className="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/30 mb-3">
-                          <div className="flex justify-between items-center text-xs mb-1">
-                            <span className="text-on-surface-variant font-medium">Progression Score:</span>
-                            <span className="font-bold text-primary">{status.score}%</span>
-                          </div>
-                          <p className="text-[11px] text-on-surface-variant line-clamp-2 leading-relaxed italic">
-                            &ldquo;{feedbackSnippet}&rdquo;
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="p-2 rounded-xl bg-surface-container-low/60 border border-outline-variant/20 mb-3 text-[11px] text-on-surface-variant flex items-center gap-1.5">
-                          <span className="material-symbols-outlined text-[15px] text-primary">timer</span>
-                          <span>Est. ~7 min • 5 Capabilities</span>
-                        </div>
-                      )}
+                     
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-on-surface-variant pt-2.5 border-t border-outline-variant/20 mt-auto">
-                      <span className="font-mono text-[11px]">Cap. {pillar.id}.1–{pillar.id}.5</span>
+                    <div className="flex items-center justify-between text-sm text-on-surface-variant pt-2.5 border-t border-outline-variant/20 mt-auto">
+                      <span className="font-mono text-[12px]">Cap. {pillar.id}.1–{pillar.id}.5</span>
                       {status?.completed ? (
                         <div className="flex items-center gap-2">
-                          <Link
-                            href={`/assessment/report?pillar=${pillar.id}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-2xs transition-colors"
-                            title={`Download Pillar ${pillar.id} Diagnostic Report (PDF)`}
-                          >
-                            <span className="material-symbols-outlined text-[13px]">picture_as_pdf</span>
-                            <span>Report</span>
-                          </Link>
+                          
                           {isLockedCooldown ? (
-                            <span className="font-semibold text-amber-800 text-[11px] flex items-center gap-0.5">
+                            <span className="font-semibold text-amber-800 text-[12px] flex items-center gap-0.5">
                               <span>Summary</span>
-                              <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
+                              <ArrowRight size={14} className="text-amber-800" />
                             </span>
                           ) : isReassessReady ? (
-                            <span className="font-semibold text-emerald-700 text-[11px] group-hover:underline">
-                              Retake →
+                            <span className="font-semibold text-emerald-700 text-[12px] group-hover:underline">
+                              Start Assessment
                             </span>
                           ) : (
-                            <span className="font-semibold text-primary text-[11px]">Summary →</span>
+                            <span className="font-semibold text-primary text-[12px]">Summary </span>
                           )}
                         </div>
                       ) : (
-                        <span className="text-primary font-semibold text-[11px] group-hover:underline">Start Pillar →</span>
+                        <span className="text-primary font-semibold text-[12px] group-hover:underline">Start Pillar </span>
                       )}
                     </div>
                   </div>
@@ -492,7 +364,7 @@ export default function AssessmentOverviewView({
               const nextPillar = ALL_PILLARS.find((p) => !pillarProgress[p.id]?.completed)?.id || 1;
               onSelectPillar(nextPillar);
             }}
-            className="bg-[#009924] text-on-primary font-label-sm text-label-sm px-10 py-4 rounded-xl shadow-level-1 hover:shadow-level-2 transition-all duration-200 flex items-center gap-3 w-full md:w-auto justify-center font-semibold group cursor-pointer"
+            className="bg-[#009924] text-on-primary font-label-md text-label-md px-10 py-4 rounded-xl shadow-level-1 hover:shadow-level-2 transition-all duration-200 flex items-center gap-3 w-full md:w-auto justify-center font-semibold group cursor-pointer"
           >
             Start / Continue Assessment
             <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
@@ -504,7 +376,7 @@ export default function AssessmentOverviewView({
 
       {/* Assessment History Modal */}
       {showHistoryModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-surface rounded-2xl max-w-md w-full p-6 shadow-level-2 border border-outline-variant">
             <div className="flex items-center justify-between pb-4 border-b border-outline-variant/30">
               <div className="flex items-center gap-2">
@@ -536,7 +408,7 @@ export default function AssessmentOverviewView({
                   <p className="font-semibold text-sm text-on-surface">
                     No Assessment History Recorded Yet
                   </p>
-                  <p className="text-xs text-on-surface-variant max-w-xs mx-auto">
+                  <p className="text-sm text-on-surface-variant max-w-sm mx-auto">
                     Complete any of the 8 capability pillars to see your benchmark scores and assessment logs here.
                   </p>
                 </div>
@@ -555,7 +427,7 @@ export default function AssessmentOverviewView({
                         <p className="font-bold text-sm text-on-surface truncate">
                           Pillar {p.id}: {p.name}
                         </p>
-                        <p className="text-xs text-on-surface-variant">
+                        <p className="text-sm text-on-surface-variant">
                           {prog.completed
                             ? `Completed all 25 questions • Score: ${prog.score ?? 0}%`
                             : `In Progress • ${prog.answeredCount} of 25 answered (${prog.score ?? 0}%)`}
@@ -571,7 +443,7 @@ export default function AssessmentOverviewView({
                         )}
                       </div>
                       <span
-                        className={`px-2.5 py-1 text-xs font-bold rounded-full shrink-0 ${
+                        className={`px-2.5 py-1 text-sm font-bold rounded-full shrink-0 ${
                           prog.completed
                             ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
                             : "bg-amber-50 text-amber-800 border border-amber-200"

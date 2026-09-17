@@ -266,7 +266,7 @@ export default function AssessmentStandardQuestionnaireView({
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-amber-600 text-lg">lock_clock</span>
                 <span>
-                  <strong>3-Month Cooldown Active:</strong> Completed on{" "}
+                   Completed on{" "}
                   {cooldownStatus.nextEligibleDate
                     ? new Date(
                         new Date(cooldownStatus.nextEligibleDate).getTime() -

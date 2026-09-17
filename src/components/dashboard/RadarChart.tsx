@@ -89,7 +89,7 @@ export default function RadarChart({
         pointLabels: {
           font: {
             family: "'Outfit', sans-serif",
-            size: 10,
+            size: 13,
             weight: 500,
           },
           color: "#3e4a3b",

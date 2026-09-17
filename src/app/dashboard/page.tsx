@@ -439,25 +439,25 @@ export default function DashboardPage() {
       <div className="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-background">
         <div className="max-w-[1280px] mx-auto flex flex-col gap-lg">
           {/* My Future Farm Page Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-2 border-b border-outline-variant/30">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-2 ">
             <div>
               <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[26px]">agriculture</span>
+                {/* <span className="material-symbols-outlined text-primary text-[26px]">agriculture</span> */}
                 My Future Farm
               </h1>
-              <p className="text-xs md:text-sm text-on-surface-variant">
-                Farm progression across 8 Pillars (P1–P8) and 40 underlying Capabilities (1.1–8.5).
+              <p className="text-sm md:text-sm text-on-surface-variant">
+                Farm progression across the 8 Pillars .
               </p>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="px-3 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed text-xs font-mono font-bold">
+              <span className="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-mono font-bold">
                 ID: {farmIdentifier}
               </span>
-              <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+              <span className="px-3 py-1 rounded-full bg-secondary/10 text-primary text-sm font-semibold">
                 {verifiedPillarsCount}/8 Pillars Completed
               </span>
               {subscription?.status === "ACTIVE" && (
-                <span className="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-bold flex items-center gap-1.5 shadow-xs">
+                <span className="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-800 text-sm font-bold flex items-center gap-1.5 shadow-xs">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span>{subscription.planName}</span>
                 </span>
@@ -466,9 +466,9 @@ export default function DashboardPage() {
           </div>
 
           {/* Top Section: Bento Grid for Maturity Index & Radar */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
             {/* Left Col: Maturity Index */}
-            <div className="col-span-1 lg:col-span-4 flex flex-col gap-gutter">
+            <div className="col-span-1 lg:col-span-5 flex flex-col gap-gutter ">
               <div className="bg-surface rounded-2xl p-6 shadow-ambient h-full flex flex-col justify-between hover:shadow-hover transition-shadow relative overflow-hidden group border border-outline-variant/40">
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-primary-container opacity-10 rounded-full blur-2xl group-hover:bg-primary transition-colors duration-500 pointer-events-none" />
 
@@ -476,7 +476,7 @@ export default function DashboardPage() {
                   <h3 className="font-title-md text-title-md text-on-surface-variant mb-1 font-semibold">
                     Future Farm Maturity Index
                   </h3>
-                  <p className="font-label-sm text-label-sm text-primary font-bold tracking-wider uppercase mb-6">
+                  <p className="font-label-sm text-label-sm text-secondary font-bold tracking-wider uppercase mb-6">
                     FFMI / 24
                   </p>
 
@@ -494,7 +494,7 @@ export default function DashboardPage() {
                       Classification
                     </p>
                     <span className={`inline-flex items-center px-4 py-1.5 rounded-full font-label-sm text-label-sm shadow-sm font-semibold ${
-                      hasAssessment ? "bg-primary text-on-primary" : "bg-surface-container-high text-on-surface-variant"
+                      hasAssessment ? "bg-secondary text-on-primary" : "bg-surface-container-high text-on-surface-variant"
                     }`}>
                       <span className="material-symbols-outlined text-[18px] mr-1 fill">
                         {hasAssessment ? "verified" : "hourglass_empty"}
@@ -524,7 +524,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Right Col: Radar Chart (8 Pillar Summary) */}
-            <div className="col-span-1 lg:col-span-8 bg-surface rounded-2xl p-4 sm:p-6 shadow-ambient min-h-[320px] sm:min-h-[380px] lg:h-auto flex flex-col relative overflow-hidden border border-outline-variant/40">
+            <div className="col-span-1 lg:col-span-7 bg-surface rounded-2xl p-4 sm:p-6 shadow-ambient min-h-80 sm:min-h-80 lg:h-auto flex flex-col relative overflow-hidden border border-outline-variant/40">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-title-md text-title-md text-on-surface font-bold">
                   8 Pillar Summary
@@ -642,7 +642,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Bottom Section: Lists */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
             {/* My Development Plan */}
             <div className="bg-surface rounded-2xl p-6 shadow-ambient flex flex-col border border-outline-variant/40">
               <div className="flex justify-between items-center mb-6">
@@ -650,14 +650,14 @@ export default function DashboardPage() {
                   <h3 className="font-title-md text-title-md text-on-surface font-bold">
                     My Development Plan
                   </h3>
-                  <p className="text-[11px] text-on-surface-variant">
+                  <p className="text-[13px] text-on-surface-variant">
                     {priorityGapsList.length > 0 ? "Highest-impact areas based on your assessment gaps" : "Core transformation areas"}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowAllPlanModal(true)}
-                  className="font-label-sm text-label-sm text-primary hover:underline font-semibold cursor-pointer"
+                  className="font-label-sm text-label-sm text-secondary hover:underline font-semibold cursor-pointer"
                 >
                   View All
                 </button>
@@ -676,19 +676,19 @@ export default function DashboardPage() {
                       <h4 className="font-label-sm text-label-sm text-on-surface font-semibold">
                         {item.title}
                       </h4>
-                      <p className="text-xs text-on-surface-variant">
+                      <p className="text-sm text-on-surface-variant">
                         {item.subtitle}
                       </p>
                     </div>
                     <div className="hidden sm:block px-3">
-                      <span className="text-xs px-2 py-1 bg-surface-variant text-on-surface-variant rounded-md font-medium">
+                      <span className="text-sm px-2 py-1 bg-surface-variant text-on-surface-variant rounded-md font-medium">
                         {item.transition}
                       </span>
                     </div>
                     <button
                       type="button"
                       onClick={() => router.push(`/assessment`)}
-                      className="ml-auto px-4 py-1.5 border border-primary text-primary rounded-full font-label-sm text-label-sm hover:bg-primary-container hover:text-on-primary-container transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer font-semibold"
+                      className="ml-auto px-4 py-1.5 border border-secondary text-secondary rounded-full font-label-sm text-label-sm hover:bg-primary-container hover:text-on-primary-container transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer font-semibold"
                     >
                       Audit
                     </button>
@@ -706,14 +706,14 @@ export default function DashboardPage() {
                   <h3 className="font-title-md text-title-md text-on-surface font-bold">
                     Recommended Next Actions
                   </h3>
-                  <p className="text-[11px] text-on-surface-variant">
+                  <p className="text-[13px] text-on-surface-variant">
                     Priority tasks generated from your diagnostics
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowAddAction(!showAddAction)}
-                  className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                  className="text-sm font-semibold text-secondary hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-sm">add_circle</span>
                   <span>{showAddAction ? "Cancel" : "Add Task"}</span>
@@ -727,12 +727,12 @@ export default function DashboardPage() {
                     placeholder="Enter action or goal..."
                     value={newActionText}
                     onChange={(e) => setNewActionText(e.target.value)}
-                    className="flex-1 text-xs p-2 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface focus:outline-primary"
+                    className="flex-1 text-sm p-2 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface focus:outline-primary"
                     autoFocus
                   />
                   <button
                     type="submit"
-                    className="px-3 py-1.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary/90 transition-colors cursor-pointer"
+                    className="px-3 py-1.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors cursor-pointer"
                   >
                     Add
                   </button>
@@ -749,7 +749,7 @@ export default function DashboardPage() {
                       type="checkbox"
                       checked={act.completed}
                       onChange={() => handleToggleAction(act.id)}
-                      className="mt-1 rounded text-primary focus:ring-primary border-outline-variant w-5 h-5 bg-surface transition-colors cursor-pointer"
+                      className="mt-1 rounded text-secondary focus:ring-secondary border-outline-variant w-5 h-5  transition-colors cursor-pointer"
                     />
                     <div>
                       <p
@@ -776,9 +776,129 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* Future Farms Verification (FFV) 8-Pillars Matrix */}
+          <div className="bg-surface rounded-2xl p-6 shadow-ambient border border-outline-variant/40 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="material-symbols-outlined text-primary text-[22px]">verified</span>
+                  <h3 className="font-title-md text-title-md text-on-surface font-bold">
+                    Future Farms Verification (FFV)
+                  </h3>
+                </div>
+                <p className="text-sm text-on-surface-variant max-w-xl">
+                  Actual progress across all 8 diagnostic pillars. Completing your assessments strengthens the credibility of your profile for lenders and commercial partners.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 rounded-full bg-primary/10 text-primary font-bold text-sm">
+                  {verifiedPillarsCount} of 8 pillars completed
+                </span>
+                <Link
+                  href="/assessment"
+                  className="px-4 py-2 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5 shadow-xs"
+                >
+                  <span>Go to Assessment</span>
+                  <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Status Legend */}
+            <div className="flex flex-wrap items-center gap-4 text-sm text-on-surface-variant pb-2">
+              <span className="font-semibold text-on-surface">Status Legend:</span>
+              <span className="inline-flex items-center gap-1">
+                <span className="text-outline text-base">○</span> Not Started
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="text-[#d97706] text-base">◐</span> In Progress
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="text-primary text-base font-bold">✓</span> Completed
+              </span>
+            </div>
+
+            {/* Dynamic 8 Pillars FFV Matrix */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {ALL_PILLARS.map((pillar) => {
+                const pResult = assessmentResult?.pillarScores.find((s) => s.pillarId === pillar.id);
+                const answered = pResult?.answeredCount || 0;
+                const yes = pResult?.yesCount || 0;
+                const score = pResult?.score || 0;
+
+                const isComplete = answered >= 25;
+                const isInProgress = answered > 0 && answered < 25;
+
+                const advancingCapsCount = pResult?.capabilityScores
+                  ? Object.values(pResult.capabilityScores).filter((c: any) => c.score >= 60).length
+                  : 0;
+
+                return (
+                  <div
+                    key={pillar.id}
+                    className={`p-4 rounded-xl bg-surface-container-low border flex flex-col justify-between transition-shadow hover:shadow-xs ${
+                      isComplete
+                        ? "border-primary/40"
+                        : isInProgress
+                        ? "border-[#d97706]/40"
+                        : "border-outline-variant/30"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="font-bold text-sm text-on-surface">Pillar {pillar.id}</span>
+                        {isComplete ? (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary flex items-center gap-0.5">
+                            ✓ Completed
+                          </span>
+                        ) : isInProgress ? (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#d97706]/10 text-[#d97706] flex items-center gap-0.5">
+                            ◐ In Progress
+                          </span>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-surface-container-high text-on-surface-variant">
+                            ○ Not Started
+                          </span>
+                        )}
+                      </div>
+                      <h4 className="text-sm font-bold text-on-surface mb-2 line-clamp-1">{pillar.name}</h4>
+                      <div className="space-y-1 text-sm">
+                        <p className="text-on-surface-variant flex justify-between">
+                          <span>Answered:</span>
+                          <span className="font-semibold text-on-surface">{answered}/25</span>
+                        </p>
+                        <p className={`flex justify-between font-bold ${
+                          isComplete ? "text-primary" : isInProgress ? "text-[#d97706]" : "text-on-surface-variant"
+                        }`}>
+                          <span>Score:</span>
+                          <span>{answered > 0 ? `${yes}/25 (${score}%)` : "-- / 25"}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-3 pt-2 border-t border-outline-variant/20 text-[13px] text-on-surface-variant flex justify-between items-center">
+                      <span>
+                        {isComplete
+                          ? `${advancingCapsCount}/5 Advancing`
+                          : isInProgress
+                          ? `${answered}/25 Done`
+                          : "Audit Open"}
+                      </span>
+                      <Link
+                        href="/assessment"
+                        className="text-primary font-semibold hover:underline text-[13px]"
+                      >
+                        {answered > 0 ? "Review" : "Start"} &rarr;
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Footer Info */}
-          <div className="flex flex-col sm:flex-row justify-between items-center py-4 text-xs text-on-surface-variant px-4 border-t border-outline-variant/30 gap-2">
+          <div className="flex flex-col sm:flex-row justify-between items-center py-4 text-sm text-on-surface-variant px-4 border-t border-outline-variant/30 gap-2">
             <p>Last Assessment: {lastAssessmentDate}</p>
             <p>Next Assessment Cycle: {nextAssessmentDate}</p>
           </div>
@@ -802,23 +922,23 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              <p className="text-xs text-on-surface-variant mb-6 leading-relaxed">
+              <p className="text-sm text-on-surface-variant mb-6 leading-relaxed">
                 Track your farm&apos;s capability index growth across quarterly diagnostic reviews.
               </p>
 
               <div className="space-y-4 mb-6">
                 <div className="flex items-center justify-between p-3 rounded-xl bg-primary/10 border border-primary/30">
                   <div>
-                    <span className="text-xs font-bold text-primary block">Current Verified Benchmark</span>
-                    <span className="text-[11px] text-primary/80">Stage: {farmClassification}</span>
+                    <span className="text-sm font-bold text-primary block">Current Verified Benchmark</span>
+                    <span className="text-[13px] text-primary/80">Stage: {farmClassification}</span>
                   </div>
                   <span className="text-base font-black text-primary">{ffmiScore24} / 24</span>
                 </div>
 
                 <div className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low border border-dashed border-outline-variant">
                   <div>
-                    <span className="text-xs font-bold text-on-surface-variant block">Target Projection (Next Review)</span>
-                    <span className="text-[11px] text-on-surface-variant">Target: Future-Ready Farm</span>
+                    <span className="text-sm font-bold text-on-surface-variant block">Target Projection (Next Review)</span>
+                    <span className="text-[13px] text-on-surface-variant">Target: Future-Ready Farm</span>
                   </div>
                   <span className="text-sm font-bold text-secondary">20 / 24</span>
                 </div>
@@ -828,7 +948,7 @@ export default function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowProgressModal(false)}
-                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer"
                 >
                   Close
                 </button>
@@ -855,7 +975,7 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              <p className="text-xs text-on-surface-variant mb-5">
+              <p className="text-sm text-on-surface-variant mb-5">
                 Overview of capability milestones across all 8 Future Farms transformation pillars.
               </p>
 
@@ -869,21 +989,21 @@ export default function DashboardPage() {
                       className="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 flex items-center justify-between gap-4"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0">
+                        <span className="w-6 h-6 rounded-full bg-primary/10 text-primary font-bold text-sm flex items-center justify-center shrink-0">
                           {idx + 1}
                         </span>
                         <div>
-                          <h4 className="text-xs font-bold text-on-surface">{p.name}</h4>
-                          <p className="text-[11px] text-on-surface-variant">{p.principle}</p>
+                          <h4 className="text-sm font-bold text-on-surface">{p.name}</h4>
+                          <p className="text-[13px] text-on-surface-variant">{p.principle}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-on-surface-variant">
+                        <span className="text-sm font-semibold text-on-surface-variant">
                           {answered}/25
                         </span>
                         <Link
                           href="/assessment"
-                          className="px-3 py-1.5 rounded-lg border border-primary text-primary text-xs font-semibold hover:bg-primary hover:text-white transition-colors shrink-0"
+                          className="px-3 py-1.5 rounded-lg border border-primary text-primary text-sm font-semibold hover:bg-primary hover:text-white transition-colors shrink-0"
                         >
                           {answered > 0 ? "Review" : "Audit"}
                         </Link>
@@ -897,7 +1017,7 @@ export default function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowAllPlanModal(false)}
-                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer"
                 >
                   Close Plan
                 </button>
@@ -924,13 +1044,13 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              <p className="text-xs text-on-surface-variant mb-4">
+              <p className="text-sm text-on-surface-variant mb-4">
                 Capabilities with strong benchmark adoption (Score &ge; 60%):
               </p>
 
               <div className="space-y-3 mb-6 max-h-[50vh] overflow-y-auto">
                 {strengthsList.length === 0 ? (
-                  <div className="p-6 text-center text-xs text-on-surface-variant bg-surface-container-low rounded-2xl">
+                  <div className="p-6 text-center text-sm text-on-surface-variant bg-surface-container-low rounded-2xl">
                     <span className="material-symbols-outlined text-3xl text-primary mb-2">assignment_turned_in</span>
                     <p className="font-semibold text-on-surface">No verified strengths yet</p>
                     <p className="mt-1">Answer assessment questions with &apos;Yes&apos; to highlight verified operational strengths.</p>
@@ -938,14 +1058,14 @@ export default function DashboardPage() {
                 ) : (
                   strengthsList.map((item, idx) => (
                     <div key={idx} className="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
-                      <div className="flex items-center justify-between gap-2 font-bold text-xs text-emerald-900 mb-1">
+                      <div className="flex items-center justify-between gap-2 font-bold text-sm text-emerald-900 mb-1">
                         <span className="flex items-center gap-1.5">
                           <span className="material-symbols-outlined text-emerald-700 text-sm fill">check_circle</span>
                           <span>Capability {item.capId}: {item.capName}</span>
                         </span>
                         <span className="text-emerald-700 font-extrabold">{item.score}%</span>
                       </div>
-                      <p className="text-[11px] text-emerald-800">Pillar {item.pillarId} • {item.pillarName}</p>
+                      <p className="text-[13px] text-emerald-800">Pillar {item.pillarId} • {item.pillarName}</p>
                     </div>
                   ))
                 )}
@@ -955,7 +1075,7 @@ export default function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowStrengthsModal(false)}
-                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer"
                 >
                   Done
                 </button>
@@ -982,13 +1102,13 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              <p className="text-xs text-on-surface-variant mb-4">
+              <p className="text-sm text-on-surface-variant mb-4">
                 Capabilities identified with the greatest room for operational growth (Score &lt; 60%):
               </p>
 
               <div className="space-y-3 mb-6 max-h-[50vh] overflow-y-auto">
                 {priorityGapsList.length === 0 ? (
-                  <div className="p-6 text-center text-xs text-on-surface-variant bg-surface-container-low rounded-2xl">
+                  <div className="p-6 text-center text-sm text-on-surface-variant bg-surface-container-low rounded-2xl">
                     <span className="material-symbols-outlined text-3xl text-primary mb-2">task_alt</span>
                     <p className="font-semibold text-on-surface">
                       {hasAssessment ? "No major gaps identified" : "Complete assessment to uncover gaps"}
@@ -1002,14 +1122,14 @@ export default function DashboardPage() {
                 ) : (
                   priorityGapsList.map((item, idx) => (
                     <div key={idx} className="p-3 rounded-xl bg-rose-50 border border-rose-200">
-                      <div className="flex items-center justify-between gap-2 font-bold text-xs text-rose-900 mb-1">
+                      <div className="flex items-center justify-between gap-2 font-bold text-sm text-rose-900 mb-1">
                         <span className="flex items-center gap-1.5">
                           <span className="material-symbols-outlined text-rose-700 text-sm fill">warning</span>
                           <span>Capability {item.capId}: {item.capName}</span>
                         </span>
                         <span className="text-rose-700 font-extrabold">{item.score}%</span>
                       </div>
-                      <p className="text-[11px] text-rose-800">Pillar {item.pillarId} • {item.pillarName}</p>
+                      <p className="text-[13px] text-rose-800">Pillar {item.pillarId} • {item.pillarName}</p>
                     </div>
                   ))
                 )}
@@ -1018,14 +1138,14 @@ export default function DashboardPage() {
               <div className="flex justify-between items-center pt-3 border-t border-surface-variant">
                 <Link
                   href="/assessment"
-                  className="text-xs font-bold text-primary hover:underline"
+                  className="text-sm font-bold text-primary hover:underline"
                 >
                   Go to Assessment &rarr;
                 </Link>
                 <button
                   type="button"
                   onClick={() => setShowPriorityModal(false)}
-                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer"
                 >
                   Close
                 </button>

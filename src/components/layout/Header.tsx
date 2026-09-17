@@ -133,7 +133,7 @@ export default function Header({
       <div className="hidden md:flex justify-between items-center px-6 h-20 bg-surface border-b border-surface-variant sticky top-0 z-30 transition-all shrink-0 no-print print:hidden">
         
         <div className="flex items-center gap-3">
-          {onToggleCollapse && (
+          {/* {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
               aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -144,12 +144,12 @@ export default function Header({
                 {collapsed ? "menu" : "menu_open"}
               </span>
             </button>
-          )}
-          <div className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant">
+          )} */}
+          {/* <div className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant">
             <span className="text-primary font-bold">Future Farms</span>
             <span className="text-outline-variant/60">/</span>
             <span className="text-on-surface font-medium">Cultivating African Agriculture</span>
-          </div>
+          </div> */}
         </div>
 
         {/* Right Side: Notifications & User Profile */}

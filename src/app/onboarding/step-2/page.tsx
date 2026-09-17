@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowLeft } from "lucide-react";
 
 export default function FarmManagementPage() {
   const router = useRouter();
@@ -178,13 +179,14 @@ export default function FarmManagementPage() {
         <div className="mb-8">
           <Link
             href="/onboarding"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors mb-4"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-secondary transition-colors mb-4"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+             <ArrowLeft className="w-4 h-4" />
+                         
             Back to Overview
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">
+            <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-bold tracking-wide uppercase">
               Section 2 of 5
             </span>
             <span className="text-xs text-on-surface-variant font-medium">Questions 6 – 8</span>
@@ -209,18 +211,16 @@ export default function FarmManagementPage() {
 
         <div className="space-y-8">
           {/* Farm Identity & Contact Credentials */}
-          <div className="bg-surface-container-low p-5 sm:p-6 rounded-3xl border border-primary/20 space-y-4 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+          <div className="bg-surface-container-low p-5 sm:p-6 rounded-3xl border border-secondary/20 space-y-4 shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center font-bold shrink-0">
                 <span className="material-symbols-outlined text-[20px]">badge</span>
               </div>
               <div>
                 <h3 className="text-sm font-bold text-on-surface tracking-tight uppercase">
                   Farm Identity &amp; Contact Credentials
                 </h3>
-                <p className="text-xs text-on-surface-variant">
-                  These verified credentials will be reflected on your database record, spreadsheets, diagnostic reports, and accredited certificates.
-                </p>
+               
               </div>
             </div>
 
@@ -231,21 +231,19 @@ export default function FarmManagementPage() {
                   <span>Farm / Agribusiness Name</span>
                 </label>
                 <div className="relative flex items-center">
-                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                  {/* <span className="material-symbols-outlined text-secondary absolute left-3 pointer-events-none text-[20px]">
                     agriculture
-                  </span>
+                  </span> */}
                   <input
                     id="field-step2-farm-name"
                     type="text"
                     value={farmName}
                     onChange={(e) => setFarmName(e.target.value)}
                     placeholder="e.g. Simba Ridge Demonstration Farm"
-                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50"
+                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-secondary placeholder:text-on-surface-variant/50"
                   />
                 </div>
-                <span className="text-[10px] text-on-surface-variant">
-                  Official name used on accreditation records and certificates
-                </span>
+                
               </div>
 
               {/* Phone Number Input */}
@@ -254,21 +252,19 @@ export default function FarmManagementPage() {
                   <span>Farmer Contact / Phone Number</span>
                 </label>
                 <div className="relative flex items-center">
-                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                  {/* <span className="material-symbols-outlined text-secondary absolute left-3 pointer-events-none text-[20px]">
                     call
-                  </span>
+                  </span> */}
                   <input
                     id="field-step2-phone"
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="e.g. +254 712 345 678"
-                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50"
+                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-secondary placeholder:text-on-surface-variant/50"
                   />
                 </div>
-                <span className="text-[10px] text-on-surface-variant">
-                  Used for SMS assessment alerts and verification dispatch
-                </span>
+                
               </div>
             </div>
           </div>
@@ -282,7 +278,7 @@ export default function FarmManagementPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-start justify-between gap-4 mb-1">
+            <div className="flex items-start justify-between gap-4 mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 6. Which statement best describes your current farm management ability?
               </h3>
@@ -293,9 +289,7 @@ export default function FarmManagementPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Select the statement that best aligns with your day-to-day management level.
-            </p>
+           
 
             <div className="space-y-3">
               {abilityOptions.map((opt) => {
@@ -310,7 +304,7 @@ export default function FarmManagementPage() {
                     }}
                     className={`w-full text-left rounded-2xl border p-5 flex items-start justify-between gap-4 transition-all hover:bg-surface-container-low cursor-pointer ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant"
                     }`}
                   >
@@ -318,7 +312,7 @@ export default function FarmManagementPage() {
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 shrink-0 ${
                           isSelected
-                            ? "border-primary bg-primary text-white"
+                            ? "border-secondary bg-secondary text-white"
                             : "border-outline-variant"
                         }`}
                       >
@@ -327,23 +321,15 @@ export default function FarmManagementPage() {
                       <div>
                         <h4
                           className={`font-semibold text-sm mb-1 ${
-                            isSelected ? "text-primary" : "text-on-surface"
+                            isSelected ? "text-secondary" : "text-on-surface"
                           }`}
                         >
                           {opt.title}
                         </h4>
-                        <p className="text-xs text-on-surface-variant leading-relaxed">
-                          {opt.desc}
-                        </p>
+                        
                       </div>
                     </div>
-                    <span
-                      className={`material-symbols-outlined text-[22px] shrink-0 hidden sm:block ${
-                        isSelected ? "text-primary" : "text-on-surface-variant/60"
-                      }`}
-                    >
-                      {opt.icon}
-                    </span>
+                   
                   </button>
                 );
               })}
@@ -359,7 +345,7 @@ export default function FarmManagementPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-start justify-between gap-4 mb-1">
+            <div className="flex items-start justify-between gap-4 mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 7. Who is currently responsible for day-to-day farm operations?
               </h3>
@@ -370,10 +356,7 @@ export default function FarmManagementPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Select the primary person or group managing operational execution.
-            </p>
-
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
               {operatorOptions.map((opt) => {
                 const isSelected = operationsResponsible === opt;
@@ -387,13 +370,13 @@ export default function FarmManagementPage() {
                     }}
                     className={`flex items-center justify-between p-4 rounded-2xl border text-left cursor-pointer transition-all ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
                     <span
                       className={`text-sm font-semibold ${
-                        isSelected ? "text-primary" : "text-on-surface"
+                        isSelected ? "text-secondary" : "text-on-surface"
                       }`}
                     >
                       {opt}
@@ -401,7 +384,7 @@ export default function FarmManagementPage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -424,7 +407,7 @@ export default function FarmManagementPage() {
                     setValidationErrors((prev) => prev.filter((err) => err !== "operationsResponsible"));
                   }
                 }}
-                className="w-full rounded-xl border border-outline-variant px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface"
+                className="w-full rounded-xl border border-outline-variant px-4 py-3 text-sm focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none bg-surface"
               />
             </div>
           </section>
@@ -438,7 +421,7 @@ export default function FarmManagementPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-start justify-between gap-4 mb-1">
+            <div className="flex items-start justify-between gap-4 mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 8. How involved would you like to be in the day-to-day management of your farm?
               </h3>
@@ -449,9 +432,7 @@ export default function FarmManagementPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Define your ideal future balance between operations and oversight.
-            </p>
+           
 
             <div className="flex flex-col gap-3">
               {involvementOptions.map((opt) => {
@@ -466,7 +447,7 @@ export default function FarmManagementPage() {
                     }}
                     className={`cursor-pointer rounded-2xl border p-5 flex items-center justify-between text-left gap-4 transition-all hover:bg-surface-container-low ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant"
                     }`}
                   >
@@ -474,7 +455,7 @@ export default function FarmManagementPage() {
                       <div
                         className={`w-5 h-5 rounded-full border-2 mt-0.5 shrink-0 flex items-center justify-center ${
                           isSelected
-                            ? "border-primary bg-primary text-white"
+                            ? "border-secondary bg-secondary text-white"
                             : "border-outline-variant"
                         }`}
                       >
@@ -483,21 +464,21 @@ export default function FarmManagementPage() {
                       <div>
                         <h4
                           className={`font-semibold text-sm mb-1 ${
-                            isSelected ? "text-primary" : "text-on-surface"
+                            isSelected ? "text-secondary" : "text-on-surface"
                           }`}
                         >
                           {opt.title}
                         </h4>
-                        <p className="text-xs text-on-surface-variant">{opt.desc}</p>
+                        {/* <p className="text-xs text-on-surface-variant">{opt.desc}</p> */}
                       </div>
                     </div>
-                    <span
+                    {/* <span
                       className={`material-symbols-outlined text-[24px] shrink-0 hidden sm:block ${
-                        isSelected ? "text-primary" : "text-on-surface-variant/60"
+                        isSelected ? "text-secondary" : "text-on-surface-variant/60"
                       }`}
                     >
                       {opt.icon}
-                    </span>
+                    </span> */}
                   </button>
                 );
               })}
@@ -510,14 +491,14 @@ export default function FarmManagementPage() {
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link
               href="/onboarding/step-1"
-              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1"
             >
-              <span>&larr;</span>
-              <span>Back to Step 1</span>
+               <ArrowLeft className="w-4 h-4" />
+                            <span>Back to step 1 </span>
             </Link>
 
             {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
+              <span className="text-xs font-semibold text-secondary bg-secondary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
                 <span className="material-symbols-outlined text-[14px]">check_circle</span>
                 {saveFeedback}
               </span>
@@ -526,25 +507,25 @@ export default function FarmManagementPage() {
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
             {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
+              <span className="text-xs font-semibold text-secondary bg-secondary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
                 <span className="material-symbols-outlined text-[15px]">check_circle</span>
                 {saveFeedback}
               </span>
             )}
-            <button
+            {/* <button
               type="button"
               onClick={() => handleSave(false)}
               disabled={saving}
-              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
+              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-secondary text-on-surface hover:text-secondary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
             >
               <span className="material-symbols-outlined text-[16px]">save</span>
               <span>Save Draft</span>
-            </button>
+            </button> */}
             <button
               type="button"
               onClick={() => handleSave(true)}
               disabled={saving}
-              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-secondary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               <span>{saving ? "Saving..." : "Save & Continue"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

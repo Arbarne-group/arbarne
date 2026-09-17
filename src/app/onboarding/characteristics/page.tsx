@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowLeft } from "lucide-react";
 
 interface OnboardingUser {
   name?: string;
@@ -177,14 +178,12 @@ export default function FarmCharacteristicsPage() {
         <div className="mb-6 flex items-center justify-between">
           <Link
             href="/onboarding/location"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+            <ArrowLeft className="w-4 h-4" />
             Back to Farm Location
           </Link>
-          <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
-            Stage 2 of 5: Land &amp; Resources
-          </span>
+          
         </div>
 
         {/* Top Header */}
@@ -193,7 +192,7 @@ export default function FarmCharacteristicsPage() {
             <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight mt-1">
               Farm Characteristics
             </h1>
-            <p className="text-xs md:text-sm text-on-surface-variant max-w-xl leading-relaxed">
+            <p className="text-sm md:text-sm text-on-surface-variant max-w-xl leading-relaxed">
               Tell us about your land size, ownership, water source, and soil so we can give you relevant farming recommendations.
             </p>
           </div>
@@ -212,7 +211,7 @@ export default function FarmCharacteristicsPage() {
                   strokeWidth="4"
                 />
                 <circle
-                  className="text-primary"
+                  className="text-secondary"
                   cx="24"
                   cy="24"
                   fill="transparent"
@@ -224,20 +223,20 @@ export default function FarmCharacteristicsPage() {
                   strokeWidth="4"
                 />
               </svg>
-              <span className="absolute text-xs font-bold text-primary">2/5</span>
+              <span className="absolute text-sm font-bold text-secondary">2/5</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">
                 Stage 2 of 5
               </span>
-              <span className="text-xs font-bold text-on-surface">Land &amp; Water</span>
+              <span className="text-sm font-bold text-on-surface">Land &amp; Water</span>
               <span className="text-[11px] text-on-surface-variant">Next: Farming System</span>
             </div>
           </div>
         </div>
 
         {validationErrors.length > 0 && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-xs">
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn shadow-sm">
             <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
             <span className="font-semibold">
               Please complete all required fields on this page before continuing ({validationErrors.length} required field{validationErrors.length > 1 ? "s" : ""} remaining).
@@ -248,18 +247,16 @@ export default function FarmCharacteristicsPage() {
         {/* Main Form Container */}
         <div className="bg-surface-container-lowest rounded-3xl shadow-sm border border-surface-container-high/60 p-6 md:p-8 space-y-8">
           {/* Farm Identity Details: Farm Name & Phone Number */}
-          <div className="bg-surface-container-low p-5 sm:p-6 rounded-2xl border border-primary/20 space-y-4">
+          <div className="bg-surface-container-low p-5 sm:p-6 rounded-2xl border border-secondary/20 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center font-bold shrink-0">
                 <span className="material-symbols-outlined text-[20px]">badge</span>
               </div>
               <div>
                 <h3 className="text-sm font-bold text-on-surface tracking-tight uppercase">
                   Farm Identity &amp; Contact Credentials
                 </h3>
-                <p className="text-xs text-on-surface-variant">
-                  These verified credentials will be reflected on your database record, spreadsheets, diagnostic reports, and accredited certificates.
-                </p>
+                
               </div>
             </div>
 
@@ -274,7 +271,7 @@ export default function FarmCharacteristicsPage() {
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-on-surface flex items-center gap-1" htmlFor="field-char-farm-name">
+                  <label className="text-sm font-bold text-on-surface flex items-center gap-1" htmlFor="field-char-farm-name">
                     <span>Farm / Agribusiness Name</span>
                     <span className="text-red-500">*</span>
                   </label>
@@ -286,7 +283,7 @@ export default function FarmCharacteristicsPage() {
                   )}
                 </div>
                 <div className="relative flex items-center">
-                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                  <span className="material-symbols-outlined text-secondary absolute left-3 pointer-events-none text-[20px]">
                     agriculture
                   </span>
                   <input
@@ -300,12 +297,10 @@ export default function FarmCharacteristicsPage() {
                       }
                     }}
                     placeholder="e.g. Simba Ridge Demonstration Farm"
-                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50"
+                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-sm font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-secondary placeholder:text-on-surface-variant/50"
                   />
                 </div>
-                <span className="text-[10px] text-on-surface-variant">
-                  Official name used on accreditation records and certificates
-                </span>
+                
               </div>
 
               {/* Phone Number Input */}
@@ -318,7 +313,7 @@ export default function FarmCharacteristicsPage() {
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-on-surface flex items-center gap-1" htmlFor="field-char-phone">
+                  <label className="text-sm font-bold text-on-surface flex items-center gap-1" htmlFor="field-char-phone">
                     <span>Farmer Contact / Phone Number</span>
                     <span className="text-red-500">*</span>
                   </label>
@@ -330,7 +325,7 @@ export default function FarmCharacteristicsPage() {
                   )}
                 </div>
                 <div className="relative flex items-center">
-                  <span className="material-symbols-outlined text-primary absolute left-3 pointer-events-none text-[20px]">
+                  <span className="material-symbols-outlined text-secondary absolute left-3 pointer-events-none text-[20px]">
                     call
                   </span>
                   <input
@@ -344,12 +339,10 @@ export default function FarmCharacteristicsPage() {
                       }
                     }}
                     placeholder="e.g. +254 712 345 678"
-                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-xs font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50"
+                    className="w-full pl-10 pr-3 py-2.5 bg-surface-container-low rounded-lg text-sm font-semibold text-on-surface border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-secondary placeholder:text-on-surface-variant/50"
                   />
                 </div>
-                <span className="text-[10px] text-on-surface-variant">
-                  Used for SMS assessment alerts and verification dispatch
-                </span>
+               
               </div>
             </div>
           </div>
@@ -370,17 +363,15 @@ export default function FarmCharacteristicsPage() {
                   <span>How big is your farm?</span>
                 </label>
                 {validationErrors.includes("farmSize") ? (
-                  <span className="text-xs font-semibold text-red-600">Enter valid size &gt; 0</span>
+                  <span className="text-sm font-semibold text-red-600">Enter valid size &gt; 0</span>
                 ) : (
-                  <span className="text-xs text-primary font-semibold">Total Farm Size</span>
+                  <span className="text-sm text-secondary font-semibold">Total Farm Size</span>
                 )}
               </div>
 
               <div className="flex items-stretch gap-2">
                 <div className="relative flex-1">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
-                    <span className="material-symbols-outlined text-[20px]">crop_free</span>
-                  </span>
+                 
                   <input
                     type="number"
                     step="0.1"
@@ -393,7 +384,7 @@ export default function FarmCharacteristicsPage() {
                         setValidationErrors((prev) => prev.filter((f) => f !== "farmSize"));
                       }
                     }}
-                    className={`w-full pl-11 pr-4 py-3 bg-surface-container-low rounded-xl text-on-surface text-xl font-bold outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary transition-all border ${
+                    className={`w-full pl-11 pr-4 py-3 bg-surface-container-low rounded-xl text-on-surface text-xl font-bold outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary transition-all border ${
                       validationErrors.includes("farmSize") ? "border-red-400" : "border-transparent"
                     }`}
                   />
@@ -403,9 +394,9 @@ export default function FarmCharacteristicsPage() {
                   <button
                     type="button"
                     onClick={() => setFarmUnit("Acres")}
-                    className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                       farmUnit === "Acres"
-                        ? "bg-surface-container-lowest shadow-xs text-primary"
+                        ? "bg-surface-container-lowest shadow-sm text-secondary"
                         : "text-on-surface-variant hover:text-on-surface"
                     }`}
                   >
@@ -414,9 +405,9 @@ export default function FarmCharacteristicsPage() {
                   <button
                     type="button"
                     onClick={() => setFarmUnit("Hectares")}
-                    className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                       farmUnit === "Hectares"
-                        ? "bg-surface-container-lowest shadow-xs text-primary"
+                        ? "bg-surface-container-lowest shadow-sm text-secondary"
                         : "text-on-surface-variant hover:text-on-surface"
                     }`}
                   >
@@ -425,8 +416,8 @@ export default function FarmCharacteristicsPage() {
                 </div>
               </div>
 
-              <p className="text-xs text-on-surface-variant flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-primary text-[16px]">check_circle</span>
+              <p className="text-sm text-on-surface-variant flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-secondary text-[16px]">check_circle</span>
                 <span>
                   Approx. equivalent to {hectaresEquiv} Hectares ({sqmEquiv} m²)
                 </span>
@@ -444,25 +435,25 @@ export default function FarmCharacteristicsPage() {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary text-[20px]">pie_chart</span>
+                  <span className="material-symbols-outlined text-secondary text-[20px]">pie_chart</span>
                   <span className="text-sm font-semibold text-on-surface">
                     How is your land currently used?
                   </span>
                   {validationErrors.includes("landUse") && (
-                    <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
                       <span className="material-symbols-outlined text-[12px]">warning</span>
                       Required
                     </span>
                   )}
                 </div>
-                <span className="text-xs font-medium text-on-surface-variant">
+                <span className="text-sm font-medium text-on-surface-variant">
                   {numFarmSize > 0 ? `${numFarmSize} ${farmUnit} Total` : `— ${farmUnit} Total`}
                 </span>
               </div>
 
               <div className="w-full h-4 bg-surface-variant rounded-full overflow-hidden flex shadow-inner">
                 <div
-                  className="bg-primary h-full transition-all duration-300 relative group cursor-pointer"
+                  className="bg-secondary h-full transition-all duration-300 relative group cursor-pointer"
                   style={{ width: `${cultivatedPercent}%` }}
                 >
                   <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-semibold py-1 px-2 rounded pointer-events-none transition-opacity whitespace-nowrap">
@@ -479,12 +470,12 @@ export default function FarmCharacteristicsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div className="bg-surface-container-lowest p-3 rounded-xl flex items-center justify-between border border-surface-container-high/60 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1  ">
+                <div className="bg-surface-container-lowest p-3 rounded-xl flex  md:flex-col md:items-start items-center justify-between border border-surface-container-high/60 gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="w-3 h-3 rounded-full bg-primary shrink-0" />
+                    
                     <div>
-                      <div className="text-xs font-semibold text-on-surface truncate">Cultivated / Farming</div>
+                      <div className="text-sm font-semibold text-on-surface truncate">Cultivated / Farming</div>
                       <div className="text-[11px] text-on-surface-variant">Active crop land</div>
                     </div>
                   </div>
@@ -499,17 +490,17 @@ export default function FarmCharacteristicsPage() {
                         setCultivatedAcres(val);
                         setValidationErrors((prev) => prev.filter((f) => f !== "landUse"));
                       }}
-                      className="w-16 px-2 py-1 text-right text-xs font-bold text-primary bg-surface-container-low rounded-lg border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="w-16 px-2 py-1 text-right text-sm font-bold text-secondary bg-surface-container-low rounded-lg border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-secondary"
                     />
                     <span className="text-[11px] font-semibold text-on-surface-variant">{farmUnit}</span>
                   </div>
                 </div>
 
-                <div className="bg-surface-container-lowest p-3 rounded-xl flex items-center justify-between border border-surface-container-high/60 gap-2">
+                <div className="bg-surface-container-lowest p-3 rounded-xl flex md:items-start  md:flex-col items-center justify-between border border-surface-container-high/60 gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="w-3 h-3 rounded-full bg-outline-variant shrink-0" />
+                    
                     <div>
-                      <div className="text-xs font-semibold text-on-surface truncate">Grazing / Resting</div>
+                      <div className="text-sm font-semibold text-on-surface truncate">Grazing / Resting</div>
                       <div className="text-[11px] text-on-surface-variant">Pasture &amp; other</div>
                     </div>
                   </div>
@@ -524,7 +515,7 @@ export default function FarmCharacteristicsPage() {
                         setGrazingAcres(val);
                         setValidationErrors((prev) => prev.filter((f) => f !== "landUse"));
                       }}
-                      className="w-16 px-2 py-1 text-right text-xs font-bold text-on-surface bg-surface-container-low rounded-lg border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="w-16 px-2 py-1 text-right text-sm font-bold text-on-surface bg-surface-container-low rounded-lg border border-surface-container-high focus:outline-none focus:ring-1 focus:ring-secondary"
                     />
                     <span className="text-[11px] font-semibold text-on-surface-variant">{farmUnit}</span>
                   </div>
@@ -547,12 +538,12 @@ export default function FarmCharacteristicsPage() {
                 <label className="text-base font-bold text-on-surface block">
                   What is your land ownership or tenure status?
                 </label>
-                <p className="text-xs text-on-surface-variant mt-0.5">
+                <p className="text-sm text-on-surface-variant mt-0.5">
                   Select your legal tenure arrangement for the farmland.
                 </p>
               </div>
               {validationErrors.includes("landTenure") && (
-                <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                   <span className="material-symbols-outlined text-[14px]">warning</span>
                   Required
                 </span>
@@ -575,16 +566,16 @@ export default function FarmCharacteristicsPage() {
                     }}
                     className={`p-3.5 rounded-xl text-left border transition-all cursor-pointer ${
                       isSelected
-                        ? "bg-primary/5 border-primary shadow-xs ring-1 ring-primary"
+                        ? "bg-secondary/5 border-secondary shadow-sm ring-1 ring-secondary"
                         : "bg-surface-container-low border-transparent hover:bg-surface-container"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className={`text-xs font-bold ${isSelected ? "text-primary" : "text-on-surface"}`}>
+                      <span className={`text-sm font-bold ${isSelected ? "text-secondary" : "text-on-surface"}`}>
                         {item.title}
                       </span>
                       {isSelected && (
-                        <span className="material-symbols-outlined text-primary text-[16px]">check_circle</span>
+                        <span className="material-symbols-outlined text-secondary text-[16px]">check_circle</span>
                       )}
                     </div>
                     <span className="text-[11px] text-on-surface-variant block">{item.desc}</span>
@@ -609,18 +600,18 @@ export default function FarmCharacteristicsPage() {
                   <label className="text-base font-bold text-on-surface block">
                     Where do you get water for your farm?
                   </label>
-                  <p className="text-xs text-on-surface-variant mt-0.5">
+                  <p className="text-sm text-on-surface-variant mt-0.5">
                     Select all water sources you currently use.
                   </p>
                 </div>
                 {validationErrors.includes("waterSources") && (
-                  <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                  <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                     <span className="material-symbols-outlined text-[14px]">warning</span>
                     Required
                   </span>
                 )}
               </div>
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full self-start sm:self-auto">
+              <span className="text-sm font-semibold text-secondary bg-secondary/10 px-3 py-1 rounded-full self-start sm:self-auto">
                 {waterSources.length} selected
               </span>
             </div>
@@ -631,7 +622,7 @@ export default function FarmCharacteristicsPage() {
                   id: "borehole_solar",
                   title: "Borehole / Well (with Solar Pump)",
                   badge: "Reliable Year-round",
-                  badgeColor: "bg-primary-fixed text-on-primary-fixed",
+                  badgeColor: "bg-secondary-fixed text-on-secondary-fixed",
                   desc: "Deep borehole with solar-powered pumping system.",
                   icon: "solar_power",
                 },
@@ -667,27 +658,21 @@ export default function FarmCharacteristicsPage() {
                     onClick={() => toggleWaterSource(item.id)}
                     className={`flex items-start gap-3.5 p-4 rounded-xl cursor-pointer transition-all border relative overflow-hidden ${
                       isSelected
-                        ? "bg-surface-container-lowest border-primary shadow-sm"
+                        ? "bg-surface-container-lowest border-secondary shadow-sm"
                         : "bg-surface-container-low border-transparent hover:bg-surface-container"
                     }`}
                   >
-                    {isSelected && <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-primary" />}
-                    <div
-                      className={`w-6 h-6 rounded-lg flex items-center justify-center mt-0.5 shrink-0 transition-all ${
-                        isSelected ? "bg-primary text-white" : "bg-surface-variant text-outline"
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-[16px]">check</span>
-                    </div>
+                    {isSelected && <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-secondary" />}
+                   
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1 gap-2 flex-wrap">
-                        <span className={`text-xs font-bold flex items-center gap-1.5 ${isSelected ? "text-on-surface" : "text-on-surface-variant"}`}>
-                          <span className="material-symbols-outlined text-primary text-[18px]">{item.icon}</span>
+                        <span className={`text-sm font-bold flex items-center gap-1.5 ${isSelected ? "text-on-surface" : "text-on-surface-variant"}`}>
+                          <span className="material-symbols-outlined text-secondary text-[18px]">{item.icon}</span>
                           {item.title}
                         </span>
-                        <span className={`px-2 py-0.5 rounded-full text-[11px] font-semibold ${item.badgeColor}`}>
+                        {/* <span className={`px-2 py-0.5 rounded-full text-[11px] font-semibold ${item.badgeColor}`}>
                           {item.badge}
-                        </span>
+                        </span> */}
                       </div>
                       <p className="text-[12px] text-on-surface-variant">{item.desc}</p>
                     </div>
@@ -713,13 +698,13 @@ export default function FarmCharacteristicsPage() {
                     Have you tested your soil recently?
                   </label>
                   {validationErrors.includes("soilTested") && (
-                    <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                    <span className="shrink-0 text-sm font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
                       <span className="material-symbols-outlined text-[14px]">warning</span>
                       Required
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-on-surface-variant mt-0.5">
+                <p className="text-sm text-on-surface-variant mt-0.5">
                   Soil testing helps recommend the right fertilizers and crops.
                 </p>
               </div>
@@ -731,9 +716,9 @@ export default function FarmCharacteristicsPage() {
                     setSoilTested("yes");
                     setValidationErrors((prev) => prev.filter((f) => f !== "soilTested"));
                   }}
-                  className={`px-5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`px-5 py-2 rounded-lg text-sm font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                     soilTested === "yes"
-                      ? "bg-primary text-white shadow-xs"
+                      ? "bg-secondary text-white shadow-sm"
                       : "text-on-surface-variant hover:text-on-surface"
                   }`}
                 >
@@ -746,9 +731,9 @@ export default function FarmCharacteristicsPage() {
                     setSoilTested("no");
                     setValidationErrors((prev) => prev.filter((f) => f !== "soilTested"));
                   }}
-                  className={`px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                     soilTested === "no"
-                      ? "bg-primary text-white shadow-xs"
+                      ? "bg-secondary text-white shadow-sm"
                       : "text-on-surface-variant hover:text-on-surface"
                   }`}
                 >
@@ -764,41 +749,22 @@ export default function FarmCharacteristicsPage() {
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link
               href="/onboarding/location"
-              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              className="text-sm md:text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1"
             >
-              <span>&larr;</span>
+              <ArrowLeft className="w-4 h-4" />
               <span>Back to Location</span>
             </Link>
 
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
-                <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
+           
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
-                <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => handleSave(false)}
-              disabled={saving}
-              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
-            >
-              <span className="material-symbols-outlined text-[16px]">save</span>
-              <span>Save Draft</span>
-            </button>
+            
             <button
               type="button"
               onClick={() => handleSave(true)}
               disabled={saving}
-              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-secondary text-white font-semibold text-sm md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               <span>{saving ? "Saving..." : "Save & Continue"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

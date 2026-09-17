@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowLeft } from "lucide-react";
 
 export default function AspirationsPage() {
   const router = useRouter();
@@ -166,13 +167,14 @@ export default function AspirationsPage() {
         <div className="mb-8">
           <Link
             href="/onboarding"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors mb-4"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-secondary transition-colors mb-4"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+             <ArrowLeft className="w-4 h-4" />
+              
             Back to Overview
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">
+            <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-bold tracking-wide uppercase">
               Section 4 of 5
             </span>
             <span className="text-xs text-on-surface-variant font-medium">Questions 15 – 21</span>
@@ -204,7 +206,7 @@ export default function AspirationsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <label className="block text-base font-semibold text-on-surface">
                 15. What would success look like for your farm over the next 12 months?
               </label>
@@ -215,9 +217,7 @@ export default function AspirationsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Consider areas such as production, profitability, markets, systems, workforce, technology, or expansion.
-            </p>
+           
             <textarea
               rows={3}
               value={twelveMonthSuccess}
@@ -228,7 +228,7 @@ export default function AspirationsPage() {
                 }
               }}
               placeholder="Describe your 12-month goals and operational milestones..."
-              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none ${
+              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-secondary focus:border-secondary focus:outline-none transition-all resize-none ${
                 validationErrors.includes("twelveMonthSuccess") ? "border-red-400 ring-1 ring-red-300" : "border-outline-variant"
               }`}
             />
@@ -243,7 +243,7 @@ export default function AspirationsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <label className="block text-base font-semibold text-on-surface">
                 16. What kind of support would have the greatest impact on your farm business right now?
               </label>
@@ -254,9 +254,7 @@ export default function AspirationsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Pinpoint the single most valuable technical, managerial, or financial resource needed.
-            </p>
+           
             <textarea
               rows={3}
               value={greatestImpactSupport}
@@ -267,7 +265,7 @@ export default function AspirationsPage() {
                 }
               }}
               placeholder="E.g., Automated irrigation scheduling, expert agronomist advisory, working capital financing..."
-              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none ${
+              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-secondary focus:border-secondary focus:outline-none transition-all resize-none ${
                 validationErrors.includes("greatestImpactSupport") ? "border-red-400 ring-1 ring-red-300" : "border-outline-variant"
               }`}
             />
@@ -282,7 +280,7 @@ export default function AspirationsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <label className="block text-base font-semibold text-on-surface">
                 17. What is one thing you understand about your market or customers that you believe many other farmers may not yet have recognized?
               </label>
@@ -293,9 +291,7 @@ export default function AspirationsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Share your distinctive market edge or consumer demand insight.
-            </p>
+            
             <textarea
               rows={3}
               value={marketInsight}
@@ -306,7 +302,7 @@ export default function AspirationsPage() {
                 }
               }}
               placeholder="Share your unique market understanding or customer preference observation..."
-              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none ${
+              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-secondary focus:border-secondary focus:outline-none transition-all resize-none ${
                 validationErrors.includes("marketInsight") ? "border-red-400 ring-1 ring-red-300" : "border-outline-variant"
               }`}
             />
@@ -321,7 +317,7 @@ export default function AspirationsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <label className="block text-base font-semibold text-on-surface">
                 18. What do you want your role in the farm business to look like over the next three to five years?
               </label>
@@ -332,9 +328,7 @@ export default function AspirationsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Envision your executive, strategic, or hands-on involvement as the farm scales.
-            </p>
+            
             <textarea
               rows={3}
               value={threeToFiveYearRole}
@@ -345,7 +339,7 @@ export default function AspirationsPage() {
                 }
               }}
               placeholder="E.g., Strategic oversight, investor relations, multi-site expansion..."
-              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none ${
+              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-secondary focus:border-secondary focus:outline-none transition-all resize-none ${
                 validationErrors.includes("threeToFiveYearRole") ? "border-red-400 ring-1 ring-red-300" : "border-outline-variant"
               }`}
             />
@@ -360,7 +354,7 @@ export default function AspirationsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <label className="block text-base font-semibold text-on-surface">
                   19. What would you like a professional Farm Manager to take responsibility for on your behalf?
@@ -375,14 +369,12 @@ export default function AspirationsPage() {
               <button
                 type="button"
                 onClick={toggleAll}
-                className="text-xs font-bold px-3 py-1.5 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer self-start sm:self-auto shrink-0"
+                className="text-xs font-bold px-3 py-1.5 rounded-full border border-secondary text-secondary hover:bg-secondary hover:text-white transition-colors cursor-pointer self-start sm:self-auto shrink-0"
               >
                 {isAllSelected ? "Deselect All" : "All of the above"}
               </button>
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Select all functional domains you want delegated to professional management.
-            </p>
+            
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {managerResponsibilityItems.map((item) => {
@@ -394,13 +386,13 @@ export default function AspirationsPage() {
                     onClick={() => toggleResponsibility(item)}
                     className={`flex items-center justify-between p-4 border rounded-2xl cursor-pointer text-left transition-all ${
                       isChecked
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
                     <span
                       className={`text-xs sm:text-sm font-medium ${
-                        isChecked ? "text-primary font-semibold" : "text-on-surface"
+                        isChecked ? "text-secondary font-semibold" : "text-on-surface"
                       }`}
                     >
                       {item}
@@ -408,7 +400,7 @@ export default function AspirationsPage() {
                     <div
                       className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 ml-2 transition-colors ${
                         isChecked
-                          ? "bg-primary border-primary text-white"
+                          ? "bg-secondary border-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -426,8 +418,8 @@ export default function AspirationsPage() {
                 onClick={toggleAll}
                 className={`flex items-center justify-between p-4 border rounded-2xl cursor-pointer text-left transition-all ${
                   isAllSelected
-                    ? "border-primary bg-primary text-white shadow-sm"
-                    : "border-dashed border-primary/60 bg-primary/5 hover:bg-primary/10 text-primary"
+                    ? "border-secondary bg-secondary text-white shadow-sm"
+                    : "border-dashed border-secondary/60 bg-secondary/5 hover:bg-secondary/10 text-secondary"
                 }`}
               >
                 <span className="text-xs sm:text-sm font-bold">
@@ -435,7 +427,7 @@ export default function AspirationsPage() {
                 </span>
                 <div
                   className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 ml-2 ${
-                    isAllSelected ? "bg-white text-primary border-white" : "border-primary"
+                    isAllSelected ? "bg-white text-secondary border-white" : "border-secondary"
                   }`}
                 >
                   {isAllSelected && (
@@ -455,7 +447,7 @@ export default function AspirationsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <label className="block text-base font-semibold text-on-surface">
                 20. What decisions would you always want to personally approve before they are made?
               </label>
@@ -466,9 +458,7 @@ export default function AspirationsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Define your non-negotiable approval thresholds (e.g. capital purchases, vendor contracts, hiring).
-            </p>
+            
             <textarea
               rows={3}
               value={personallyApprovedDecisions}
@@ -479,7 +469,7 @@ export default function AspirationsPage() {
                 }
               }}
               placeholder="E.g., Equipment purchases exceeding $2,000, land leasing, annual budget sign-off..."
-              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none ${
+              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-secondary focus:border-secondary focus:outline-none transition-all resize-none ${
                 validationErrors.includes("personallyApprovedDecisions") ? "border-red-400 ring-1 ring-red-300" : "border-outline-variant"
               }`}
             />
@@ -494,7 +484,7 @@ export default function AspirationsPage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <label className="block text-base font-semibold text-on-surface">
                 21. Describe your vision for African farms 25 years from now. How do you want your farm or agricultural business to contribute to that future?
               </label>
@@ -505,9 +495,7 @@ export default function AspirationsPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-4">
-              Share your transformative perspective on continental food security, sustainability, and technological leapfrogging.
-            </p>
+           
             <textarea
               rows={4}
               value={twentyFiveYearVision}
@@ -518,7 +506,7 @@ export default function AspirationsPage() {
                 }
               }}
               placeholder="Paint a vivid picture of the long-term future and your farm's lasting legacy..."
-              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-all resize-none ${
+              className={`w-full rounded-2xl border bg-surface p-4 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:ring-1 focus:ring-secondary focus:border-secondary focus:outline-none transition-all resize-none ${
                 validationErrors.includes("twentyFiveYearVision") ? "border-red-400 ring-1 ring-red-300" : "border-outline-variant"
               }`}
             />
@@ -530,41 +518,24 @@ export default function AspirationsPage() {
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link
               href="/onboarding/step-3"
-              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1"
             >
-              <span>&larr;</span>
+               <ArrowLeft className="w-4 h-4" />
+                            
               <span>Back to Step 3</span>
             </Link>
 
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
-                <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
+           
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
-                <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => handleSave(false)}
-              disabled={saving}
-              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
-            >
-              <span className="material-symbols-outlined text-[16px]">save</span>
-              <span>Save Draft</span>
-            </button>
+            
+            
             <button
               type="button"
               onClick={() => handleSave(true)}
               disabled={saving}
-              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-secondary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               <span>{saving ? "Saving..." : "Save & Continue"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

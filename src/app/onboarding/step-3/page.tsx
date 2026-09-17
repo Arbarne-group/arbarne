@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { ArrowLeft } from "lucide-react";
 
 export default function OperatingStylePage() {
   const router = useRouter();
@@ -237,13 +238,14 @@ export default function OperatingStylePage() {
         <div className="mb-8">
           <Link
             href="/onboarding"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors mb-4"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-on-surface-variant hover:text-secondary transition-colors mb-4"
           >
-            <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+             <ArrowLeft className="w-4 h-4" />
+                          
             Back to Overview
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">
+            <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-bold tracking-wide uppercase">
               Section 3 of 5
             </span>
             <span className="text-xs text-on-surface-variant font-medium">Questions 9 – 14</span>
@@ -275,7 +277,7 @@ export default function OperatingStylePage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 9. When facing an important business decision, what do you typically do first?
               </h3>
@@ -286,9 +288,7 @@ export default function OperatingStylePage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Select the option that best reflects your initial approach.
-            </p>
+            
 
             <div className="space-y-3">
               {decisionOptions.map((opt) => {
@@ -303,25 +303,15 @@ export default function OperatingStylePage() {
                     }}
                     className={`w-full text-left rounded-2xl border p-4 sm:p-5 flex items-center justify-between gap-4 transition-all hover:bg-surface-container-low cursor-pointer ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant"
                     }`}
                   >
                     <div className="flex items-center gap-3.5">
-                      <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                          isSelected
-                            ? "bg-primary text-white"
-                            : "bg-surface-container-high text-on-surface-variant"
-                        }`}
-                      >
-                        <span className="material-symbols-outlined text-[20px]">
-                          {opt.icon}
-                        </span>
-                      </div>
+                     
                       <span
                         className={`text-sm font-semibold ${
-                          isSelected ? "text-primary" : "text-on-surface"
+                          isSelected ? "text-secondary" : "text-on-surface"
                         }`}
                       >
                         {opt.title}
@@ -330,7 +320,7 @@ export default function OperatingStylePage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -351,7 +341,7 @@ export default function OperatingStylePage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 10. How do you usually respond when a plan is not working?
               </h3>
@@ -362,9 +352,7 @@ export default function OperatingStylePage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Choose the response that best describes your reaction to setbacks.
-            </p>
+           
 
             <div className="space-y-3">
               {failureOptions.map((opt) => {
@@ -379,25 +367,15 @@ export default function OperatingStylePage() {
                     }}
                     className={`w-full text-left rounded-2xl border p-4 sm:p-5 flex items-center justify-between gap-4 transition-all hover:bg-surface-container-low cursor-pointer ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant"
                     }`}
                   >
                     <div className="flex items-center gap-3.5">
-                      <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                          isSelected
-                            ? "bg-primary text-white"
-                            : "bg-surface-container-high text-on-surface-variant"
-                        }`}
-                      >
-                        <span className="material-symbols-outlined text-[20px]">
-                          {opt.icon}
-                        </span>
-                      </div>
+                      
                       <span
                         className={`text-sm font-semibold ${
-                          isSelected ? "text-primary" : "text-on-surface"
+                          isSelected ? "text-secondary" : "text-on-surface"
                         }`}
                       >
                         {opt.title}
@@ -406,7 +384,7 @@ export default function OperatingStylePage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -427,7 +405,7 @@ export default function OperatingStylePage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-semibold text-on-surface">
                   11. What is currently the biggest obstacle to growing your farm business?
@@ -439,13 +417,11 @@ export default function OperatingStylePage() {
                   </span>
                 )}
               </div>
-              <span className="text-xs font-bold bg-primary/10 text-primary px-3 py-1 rounded-full shrink-0 self-start sm:self-auto">
+              <span className="text-xs font-bold bg-secondary/10 text-secondary px-3 py-1 rounded-full shrink-0 self-start sm:self-auto">
                 Select up to three ({obstacles.length}/3)
               </span>
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Highlight the primary bottlenecks hindering your enterprise expansion.
-            </p>
+           
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-3">
               {obstacleList.map((item) => {
@@ -459,7 +435,7 @@ export default function OperatingStylePage() {
                     onClick={() => !isMaxed && toggleObstacle(item)}
                     className={`border rounded-2xl p-4 flex items-center justify-between text-left transition-all ${
                       isChecked
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm cursor-pointer"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm cursor-pointer"
                         : isMaxed
                         ? "border-outline-variant/40 opacity-40 cursor-not-allowed bg-surface-container-lowest"
                         : "border-outline-variant hover:bg-surface-container-low cursor-pointer"
@@ -467,7 +443,7 @@ export default function OperatingStylePage() {
                   >
                     <span
                       className={`text-xs sm:text-sm font-medium ${
-                        isChecked ? "text-primary font-semibold" : "text-on-surface"
+                        isChecked ? "text-secondary font-semibold" : "text-on-surface"
                       }`}
                     >
                       {item}
@@ -475,7 +451,7 @@ export default function OperatingStylePage() {
                     <div
                       className={`w-5 h-5 rounded border flex items-center justify-center shrink-0 ml-2 transition-colors ${
                         isChecked
-                          ? "bg-primary border-primary text-white"
+                          ? "bg-secondary border-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -500,7 +476,7 @@ export default function OperatingStylePage() {
                       setValidationErrors((prev) => prev.filter((f) => f !== "otherObstacle"));
                     }
                   }}
-                  className={`w-full rounded-xl border px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-surface ${
+                  className={`w-full rounded-xl border px-4 py-3 text-sm focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none bg-surface ${
                     validationErrors.includes("otherObstacle")
                       ? "border-red-400 ring-2 ring-red-300"
                       : "border-outline-variant"
@@ -519,7 +495,7 @@ export default function OperatingStylePage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 12. How do you prefer to receive professional guidance and feedback?
               </h3>
@@ -530,9 +506,7 @@ export default function OperatingStylePage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Tell us how our agronomists and platform advisors should communicate with you.
-            </p>
+            
 
             <div className="space-y-3">
               {guidanceOptions.map((opt) => {
@@ -547,13 +521,13 @@ export default function OperatingStylePage() {
                     }}
                     className={`w-full text-left rounded-2xl border p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer transition-all ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
                     <span
                       className={`text-sm font-semibold ${
-                        isSelected ? "text-primary" : "text-on-surface"
+                        isSelected ? "text-secondary" : "text-on-surface"
                       }`}
                     >
                       {opt}
@@ -561,7 +535,7 @@ export default function OperatingStylePage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -582,7 +556,7 @@ export default function OperatingStylePage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 13. How often do you currently review or track your farm&apos;s business performance?
               </h3>
@@ -593,9 +567,7 @@ export default function OperatingStylePage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Select your typical cadence for reviewing farm metrics, costs, and revenues.
-            </p>
+            
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {frequencyOptions.map((opt) => {
@@ -610,13 +582,13 @@ export default function OperatingStylePage() {
                     }}
                     className={`border rounded-2xl p-4 flex items-center justify-between text-left cursor-pointer transition-all ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
                     <span
                       className={`text-sm font-semibold ${
-                        isSelected ? "text-primary" : "text-on-surface"
+                        isSelected ? "text-secondary" : "text-on-surface"
                       }`}
                     >
                       {opt}
@@ -624,7 +596,7 @@ export default function OperatingStylePage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -645,7 +617,7 @@ export default function OperatingStylePage() {
                 : "border-surface-variant/40"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-on-surface">
                 14. How would you prefer to receive updates about your farm?
               </h3>
@@ -656,9 +628,7 @@ export default function OperatingStylePage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-on-surface-variant mb-5">
-              Select your preferred channel and format for routine farm operations digests.
-            </p>
+            
 
             <div className="space-y-3">
               {updateOptions.map((opt) => {
@@ -673,13 +643,13 @@ export default function OperatingStylePage() {
                     }}
                     className={`w-full text-left rounded-2xl border p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer transition-all ${
                       isSelected
-                        ? "border-primary bg-primary-container/10 ring-1 ring-primary shadow-sm"
+                        ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm"
                         : "border-outline-variant hover:bg-surface-container-low"
                     }`}
                   >
                     <span
                       className={`text-sm font-semibold ${
-                        isSelected ? "text-primary" : "text-on-surface"
+                        isSelected ? "text-secondary" : "text-on-surface"
                       }`}
                     >
                       {opt}
@@ -687,7 +657,7 @@ export default function OperatingStylePage() {
                     <div
                       className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
                         isSelected
-                          ? "border-primary bg-primary text-white"
+                          ? "border-secondary bg-secondary text-white"
                           : "border-outline-variant"
                       }`}
                     >
@@ -705,41 +675,24 @@ export default function OperatingStylePage() {
           <div className="flex items-center justify-between w-full sm:w-auto">
             <Link
               href="/onboarding/step-2"
-              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+              className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-secondary transition-colors flex items-center gap-1"
             >
-              <span>&larr;</span>
+               <ArrowLeft className="w-4 h-4" />
+                            
               <span>Back to Step 2</span>
             </Link>
 
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full inline-flex items-center gap-1 animate-fadeIn sm:hidden">
-                <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
+            
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-            {saveFeedback && (
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full hidden sm:inline-flex items-center gap-1 animate-fadeIn">
-                <span className="material-symbols-outlined text-[15px]">check_circle</span>
-                {saveFeedback}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => handleSave(false)}
-              disabled={saving}
-              className="flex-1 sm:flex-none px-3.5 sm:px-4 py-2.5 rounded-xl border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70 bg-surface"
-            >
-              <span className="material-symbols-outlined text-[16px]">save</span>
-              <span>Save Draft</span>
-            </button>
+            
+            
             <button
               type="button"
               onClick={() => handleSave(true)}
               disabled={saving}
-              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
+              className="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 rounded-xl bg-secondary text-white font-semibold text-xs md:text-sm btn-shadow hover-lift transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-70"
             >
               <span>{saving ? "Saving..." : "Save & Continue"}</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
