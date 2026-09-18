@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import Link from "next/link";
@@ -14,6 +15,7 @@ interface SidebarProps {
   onToggleCollapse?: () => void;
   onboardingStage?: OnboardingStage;
   completedPillarsCount?: number;
+  hasAssessmentHistory?: boolean;
 }
 
 export default function Sidebar({
@@ -22,23 +24,31 @@ export default function Sidebar({
   onToggleCollapse,
   onboardingStage = "INITIAL_IN_PROGRESS",
   completedPillarsCount = 0,
+  hasAssessmentHistory = false,
 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useClerk();
 
-  
+  /* ============================================================
+     ONBOARDING / ACCESS LOGIC
+     ============================================================ */
 
   const isInitialSurveyIncomplete =
     onboardingStage === "INITIAL_IN_PROGRESS";
 
-  const platformUnlocked =
-    !isInitialSurveyIncomplete;
+  const platformUnlocked = !isInitialSurveyIncomplete;
 
-  const dashboardUnlocked =
-    completedPillarsCount >= 1;
+  // FIX (Bug 2): My Farm should unlock on ANY assessment history,
+  // not only once a full 25/25 pillar is complete. A user who has
+  // started (or even mostly finished) an assessment but hasn't
+  // 100%-completed one whole pillar was previously locked out here
+  // even though getRouteAccess() would already let them into /dashboard.
+  const dashboardUnlocked = hasAssessmentHistory || completedPillarsCount >= 1;
 
-  
+  /* ============================================================
+     LOGO DESTINATION
+     ============================================================ */
 
   const logoHref = isInitialSurveyIncomplete
     ? "/onboarding"
@@ -46,20 +56,16 @@ export default function Sidebar({
       ? "/dashboard"
       : "/assessment";
 
-  
+  /* ============================================================
+     NAVIGATION ACCESS
+     ============================================================ */
 
-  
-
-  // Helper to determine if an individual item is locked
   const isItemLocked = (itemHref: string) => {
     if (isInitialSurveyIncomplete) {
       return itemHref !== "/onboarding";
     }
 
-    if (
-      itemHref === "/dashboard" &&
-      !dashboardUnlocked
-    ) {
+    if (itemHref === "/dashboard" && !dashboardUnlocked) {
       return true;
     }
 
@@ -68,55 +74,104 @@ export default function Sidebar({
 
   const isMyFarmUnlocked = !isItemLocked("/dashboard");
 
+  /* ============================================================
+     MAIN NAVIGATION
+     ============================================================ */
+
   const navItems = [
-    { label: "Overview", href: "/onboarding", icon: "dashboard" },
-    { label: "My Farm", href: "/dashboard", icon: "agriculture" },
-    { label: "Assessment", href: "/assessment", icon: "fact_check" },
-    { label: "Digital Learning", href: "/learning", icon: "school", badge: "Soon" },
-    { label: "Opportunity Desk", href: "/opportunities", icon: "lightbulb", badge: "Soon" },
-    { label: "Service Desk", href: "/service-desk", icon: "support_agent", badge: "Soon" },
-  ].filter((item) => {
-    if (item.href === "/onboarding" && isMyFarmUnlocked) {
-      return false;
-    }
-    return true;
-  });
+    {
+      label: "Overview",
+      href: "/onboarding",
+      icon: "dashboard",
+    },
+    {
+      label: "My Farm",
+      href: "/dashboard",
+      icon: "agriculture",
+    },
+    {
+      label: "Assessment",
+      href: "/assessment",
+      icon: "fact_check",
+    },
+    {
+      label: "Digital Learning",
+      href: "/learning",
+      icon: "school",
+      badge: "Soon",
+    },
+    {
+      label: "Opportunity Desk",
+      href: "/opportunities",
+      icon: "lightbulb",
+      badge: "Soon",
+    },
+    {
+      label: "Service Desk",
+      href: "/service-desk",
+      icon: "support_agent",
+      badge: "Soon",
+    },
+  ];
+  // FIX (Bug 1): previously this list was .filter()'d to remove
+  // "Overview" once My Farm unlocked. Overview should stay visible
+  // and accessible at all times, so the filter has been removed.
+
+  /* ============================================================
+     BOTTOM NAVIGATION
+     ============================================================ */
 
   const bottomItems = [
-    { label: "Help Center", href: "/help", icon: "help" },
-    { label: "Contact Us", href: "/contact", icon: "mail" },
+    {
+      label: "Help Center",
+      href: "#",
+      icon: "help",
+    },
+    {
+      label: "Contact Us",
+      href: "#",
+      icon: "mail",
+    },
   ];
 
-  
+  /* ============================================================
+     NAVIGATION CLICK HANDLER
+     ============================================================ */
 
   const handleItemClick = (
     e: React.MouseEvent,
     itemHref: string
   ) => {
+    /*
+     * If onboarding is incomplete, keep the user in onboarding.
+     */
     if (
       isInitialSurveyIncomplete &&
       itemHref !== "/onboarding"
     ) {
       e.preventDefault();
-
       router.push("/onboarding");
-
       return;
     }
 
+    /*
+     * My Farm requires at least one completed assessment pillar
+     * (or, now, any assessment history at all).
+     */
     if (
       itemHref === "/dashboard" &&
       !dashboardUnlocked
     ) {
       e.preventDefault();
-
       router.push("/assessment");
-
       return;
     }
   };
 
-  
+  /* ============================================================
+     ACTIVE STATE
+     ============================================================ */
+
   const isItemActive = (itemHref: string) => {
     if (itemHref === "/onboarding") {
       return pathname === "/onboarding";
@@ -133,7 +188,6 @@ export default function Sidebar({
     return pathname === itemHref;
   };
 
- 
   return (
     <nav
       className={`
@@ -144,16 +198,21 @@ export default function Sidebar({
         hidden
         md:flex
         flex-col
-        bg-surface-container-lowest
-        border-r
-        border-surface-variant
         z-40
-        transition-all
-        duration-300
-        ease-in-out
         select-none
         no-print
         print:hidden
+
+        bg-primary
+        text-on-primary
+
+        border-r
+        border-white/10
+
+        transition-all
+        duration-300
+        ease-in-out
+
         ${
           collapsed
             ? "w-20"
@@ -161,19 +220,23 @@ export default function Sidebar({
         }
       `}
     >
-
-      
+      {/* ========================================================
+          SIDEBAR HEADER
+          ======================================================== */}
 
       <div
         className={`
           h-20
           min-h-20
-          border-b
-          border-surface-variant
           flex
           items-center
-          transition-all
           shrink-0
+
+          border-b
+          border-white/10
+
+          transition-all
+
           ${
             collapsed
               ? "px-2"
@@ -181,8 +244,10 @@ export default function Sidebar({
           }
         `}
       >
+        {/* ======================================================
+            COLLAPSED HEADER
+            ====================================================== */}
 
-       
         {collapsed ? (
           <div className="w-full flex items-center justify-between gap-1">
 
@@ -195,27 +260,27 @@ export default function Sidebar({
                 justify-center
                 p-1
                 rounded-xl
-                hover:bg-surface-container-high
+                hover:bg-white/10
                 transition-colors
               "
               title="Future Farms"
             >
               <Image
-                src="/ffi-green-vertical.png"
+                src="/ffi-white-vertical.png"
                 alt="Future Farms"
-                width={42}
-                height={42}
+                width={60}
+                height={60}
                 className="
-                  h-48
+                  h-120
                   w-auto
-                  max-w-[200x]
+                  max-w-[52px]
                   object-contain
                 "
                 priority
               />
             </Link>
 
-            {/* EXPAND BUTTON */}
+            {/* Expand Button */}
             {onToggleCollapse && (
               <button
                 type="button"
@@ -224,23 +289,28 @@ export default function Sidebar({
                   w-8
                   h-8
                   rounded-lg
+
                   flex
                   items-center
                   justify-center
-                  text-on-surface-variant
-                  hover:text-primary
-                  hover:bg-surface-container-high
+
+                  text-white/75
+                  hover:text-white
+                  hover:bg-white/10
+
                   transition-colors
+
                   cursor-pointer
                   shrink-0
                 "
                 title="Expand sidebar"
                 aria-label="Expand sidebar"
               >
-                <ChevronRightIcon className="w-5 h-5 rotate-180" />
+                <ChevronRightIcon
+                  className="w-5 h-5 rotate-180"
+                />
               </button>
             )}
-
           </div>
         ) : (
 
@@ -258,25 +328,28 @@ export default function Sidebar({
                 items-center
                 pl-1
                 min-w-0
+                rounded-lg
+                hover:bg-white/10
+                transition-colors
               "
               title="Future Farms"
             >
               <Image
-                src="/ffi-green-horizontal.png"
+                src="/ffi-white-horizontal.png"
                 alt="Future Farms - An Initiative Of Arbarne Agriculture Group"
                 width={190}
                 height={48}
                 className="
-                  h-48
+                  h-50
                   w-auto
-                  max-w-[200x]
+                  max-w-[500px]
                   object-contain
                 "
                 priority
               />
             </Link>
 
-            {/* COLLAPSE BUTTON */}
+            {/* Collapse Button */}
             {onToggleCollapse && (
               <button
                 type="button"
@@ -285,23 +358,26 @@ export default function Sidebar({
                   w-9
                   h-9
                   rounded-xl
+
                   flex
                   items-center
                   justify-center
-                  text-on-surface-variant
-                  hover:text-primary
-                  hover:bg-surface-container-high
+
+                  text-white/75
+                  hover:text-white
+                  hover:bg-white/10
+
                   transition-colors
+
                   cursor-pointer
                   shrink-0
                 "
                 title="Collapse sidebar"
                 aria-label="Collapse sidebar"
               >
-               <ChevronRightIcon className="w-5 h-5 " />
+                <ChevronRightIcon className="w-5 h-5" />
               </button>
             )}
-
           </div>
         )}
       </div>
@@ -310,7 +386,27 @@ export default function Sidebar({
           MAIN NAVIGATION
           ======================================================== */}
 
-      <div className="flex-1 min-h-0 overflow-y-auto py-4 px-3 flex flex-col gap-1.5">
+      <div
+        className="
+          flex-1
+          min-h-0
+          overflow-y-auto
+
+          py-5
+          px-3
+
+          flex
+          flex-col
+          gap-1.5
+
+          bg-primary
+
+          scrollbar-thin
+          scrollbar-thumb-white/10
+          scrollbar-track-transparent
+        "
+      >
+        
 
         {navItems.map((item) => {
           const locked = isItemLocked(item.href);
@@ -343,35 +439,56 @@ export default function Sidebar({
               }
               className={`
                 rounded-xl
+
                 flex
                 items-center
-                transition-colors
+
+                transition-all
+                duration-200
+
                 text-sm
                 font-medium
+
                 relative
                 group
 
                 ${
                   collapsed
                     ? "w-12 h-12 mx-auto justify-center"
-                    : "px-4 py-3 gap-3"
+                    : "px-3.5 py-3 gap-3"
                 }
 
                 ${
                   isActive
-                    ? "bg-primary text-white font-semibold shadow-xs"
+                    ? `
+                      bg-secondary
+                      text-white
+                      font-semibold
+                      shadow-sm
+                    `
                     : locked
-                      ? "text-on-surface-variant/70 hover:bg-surface-container-high/60 cursor-pointer"
-                      : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
+                      ? `
+                        text-white/45
+                        hover:bg-white/5
+                        hover:text-white/70
+                        cursor-pointer
+                      `
+                      : `
+                        text-white/85
+                        hover:bg-white/10
+                        hover:text-white
+                      `
                 }
               `}
             >
-
-              {/* Icon */}
+             
+              
               <span
                 className={`
                   material-symbols-outlined
                   shrink-0
+
+                  transition-colors
 
                   ${
                     collapsed
@@ -383,18 +500,22 @@ export default function Sidebar({
                     isActive
                       ? "fill text-white"
                       : locked
-                        ? "text-on-surface-variant/70"
-                        : "text-on-surface-variant"
+                        ? "text-white/45"
+                        : "text-white/85"
                   }
                 `}
               >
                 {item.icon}
               </span>
 
-              {/* Label */}
+              {/* ==================================================
+                  LABEL + BADGE
+                  ================================================== */}
+
               {!collapsed && (
                 <div className="flex items-center justify-between flex-1 min-w-0">
 
+                  {/* Label */}
                   <span className="truncate whitespace-nowrap">
                     {item.label}
                   </span>
@@ -403,18 +524,23 @@ export default function Sidebar({
                   {item.badge && !locked && (
                     <span
                       className="
-                        text-[10px]
+                        text-[9px]
                         font-bold
                         uppercase
                         tracking-wider
+
                         px-1.5
                         py-0.5
+
                         rounded-full
-                        bg-surface-container-highest
-                        text-on-surface-variant/80
+
+                        bg-brand-gold/15
+                        text-brand-gold
+
                         border
-                        border-outline-variant/30
-                        ml-1.5
+                        border-brand-gold/25
+
+                        ml-2
                         shrink-0
                       "
                     >
@@ -428,8 +554,8 @@ export default function Sidebar({
                       className="
                         material-symbols-outlined
                         text-[15px]
-                        text-outline
-                        ml-1
+                        text-white/40
+                        ml-2
                         shrink-0
                       "
                       title={
@@ -441,7 +567,6 @@ export default function Sidebar({
                       lock
                     </span>
                   )}
-
                 </div>
               )}
 
@@ -455,23 +580,33 @@ export default function Sidebar({
                     absolute
                     left-full
                     ml-3
-                    px-2.5
-                    py-1.5
+
+                    px-3
+                    py-2
+
                     bg-inverse-surface
                     text-inverse-on-surface
+
                     text-xs
                     font-semibold
+
                     rounded-lg
+
                     whitespace-nowrap
+
                     opacity-0
                     pointer-events-none
+
                     group-hover:opacity-100
+
                     transition-opacity
+
                     z-50
                     shadow-lg
+
                     flex
                     items-center
-                    gap-1.5
+                    gap-2
                   "
                 >
                   <span>
@@ -481,17 +616,15 @@ export default function Sidebar({
                   {locked && (
                     <span className="text-[10px] text-amber-300 font-bold">
                       {item.href === "/dashboard"
-                        ? "(Assessment Required)"
-                        : "(Onboarding Required)"}
+                        ? "Assessment Required"
+                        : "Onboarding Required"}
                     </span>
                   )}
                 </div>
               )}
-
             </Link>
           );
         })}
-
       </div>
 
       {/* ========================================================
@@ -501,15 +634,43 @@ export default function Sidebar({
       <div
         className="
           p-3
+
           border-t
-          border-surface-variant
+          border-white/10
+
           mt-auto
+
           flex
           flex-col
           gap-1.5
+
           shrink-0
+
+          bg-primary
         "
       >
+        {/* Bottom Section Label */}
+        {!collapsed && (
+          <div
+            className="
+              px-3
+              pb-1.5
+
+              text-[10px]
+              font-bold
+              uppercase
+              tracking-[0.14em]
+
+              text-white/40
+            "
+          >
+            Support
+          </div>
+        )}
+
+        {/* ======================================================
+            HELP + CONTACT
+            ====================================================== */}
 
         {bottomItems.map((item) => {
           const isActive =
@@ -526,28 +687,60 @@ export default function Sidebar({
               }
               className={`
                 rounded-xl
+
                 flex
                 items-center
-                transition-colors
+
+                transition-all
+                duration-200
+
                 text-sm
                 font-medium
+
                 relative
                 group
 
                 ${
                   collapsed
                     ? "w-12 h-10 mx-auto justify-center"
-                    : "px-4 py-2.5 gap-3"
+                    : "px-3.5 py-2.5 gap-3"
                 }
 
                 ${
                   isActive
-                    ? "bg-primary text-white font-semibold"
-                    : "text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"
+                    ? `
+                      bg-secondary
+                      text-white
+                      font-semibold
+                    `
+                    : `
+                      text-white/75
+                      hover:bg-white/10
+                      hover:text-white
+                    `
                 }
               `}
             >
+              {/* Active Indicator */}
+              {isActive && (
+                <span
+                  className="
+                    absolute
+                    left-0
+                    top-1/2
+                    -translate-y-1/2
 
+                    w-1
+                    h-6
+
+                    rounded-r-full
+
+                    bg-white
+                  "
+                />
+              )}
+
+              {/* Icon */}
               <span
                 className={`
                   material-symbols-outlined
@@ -557,37 +750,48 @@ export default function Sidebar({
                   ${
                     isActive
                       ? "fill text-white"
-                      : "text-on-surface-variant"
+                      : "text-white/75"
                   }
                 `}
               >
                 {item.icon}
               </span>
 
+              {/* Label */}
               {!collapsed && (
                 <span className="truncate whitespace-nowrap">
                   {item.label}
                 </span>
               )}
 
+              {/* Collapsed Tooltip */}
               {collapsed && (
                 <div
                   className="
                     absolute
                     left-full
                     ml-3
-                    px-2.5
-                    py-1.5
+
+                    px-3
+                    py-2
+
                     bg-inverse-surface
                     text-inverse-on-surface
+
                     text-xs
                     font-semibold
+
                     rounded-lg
+
                     whitespace-nowrap
+
                     opacity-0
                     pointer-events-none
+
                     group-hover:opacity-100
+
                     transition-opacity
+
                     z-50
                     shadow-lg
                   "
@@ -595,10 +799,15 @@ export default function Sidebar({
                   {item.label}
                 </div>
               )}
-
             </Link>
           );
         })}
+
+        {/* ======================================================
+            DIVIDER
+            ====================================================== */}
+
+        <div className="h-px bg-white/10 my-1" />
 
         {/* ======================================================
             LOGOUT
@@ -615,55 +824,83 @@ export default function Sidebar({
               : undefined
           }
           className={`
-            text-error
+            text-white
+
             font-medium
             rounded-xl
-            hover:bg-error-container/20
-            transition-colors
+            bg-secondary
+
+            hover:bg-secondary/50
+            hover:text-white
+
+            transition-all
+            duration-200
+
             flex
             items-center
+
             text-sm
+
             relative
             group
+
             cursor-pointer
             text-left
 
             ${
               collapsed
                 ? "w-12 h-10 mx-auto justify-center"
-                : "px-4 py-2.5 gap-3 mt-1"
+                : "px-3.5 py-2.5 gap-3 mt-0.5"
             }
           `}
         >
-
-          <span className="material-symbols-outlined text-[20px] text-error shrink-0">
+          {/* Icon */}
+          <span
+            className="
+              material-symbols-outlined
+              text-[20px]
+              text-white
+              shrink-0
+            "
+          >
             logout
           </span>
 
+          {/* Label */}
           {!collapsed && (
             <span>
               Sign Out
             </span>
           )}
 
+          {/* Collapsed Tooltip */}
           {collapsed && (
             <div
               className="
                 absolute
                 left-full
                 ml-3
-                px-2.5
-                py-1.5
+
+                px-3
+                py-2
+
                 bg-inverse-surface
                 text-inverse-on-surface
+
                 text-xs
                 font-semibold
+
                 rounded-lg
+
                 whitespace-nowrap
+
                 opacity-0
                 pointer-events-none
+
                 group-hover:opacity-100
+
                 transition-opacity
+
                 z-50
                 shadow-lg
               "
@@ -671,9 +908,7 @@ export default function Sidebar({
               Sign Out
             </div>
           )}
-
         </button>
-
       </div>
     </nav>
   );

@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -7,25 +8,31 @@ import { OnboardingStage } from "@/lib/onboardingGuard";
 interface MobileNavProps {
   onboardingStage?: OnboardingStage;
   completedPillarsCount?: number;
+  hasAssessmentHistory?: boolean;
 }
 
 export default function MobileNav({
   onboardingStage = "FULLY_COMPLETED",
   completedPillarsCount = 0,
+  hasAssessmentHistory = false,
 }: MobileNavProps) {
   const pathname = usePathname();
   const router = useRouter();
 
   const isSurvey1 = onboardingStage === "INITIAL_IN_PROGRESS";
-  const isSurvey2 = onboardingStage === "INITIAL_COMPLETED" || onboardingStage === "ADDITIONAL_COMPLETED";
 
+  
   const isItemLocked = (itemHref: string) => {
-    if (isSurvey1 || isSurvey2) return itemHref !== "/onboarding";
-    if (itemHref === "/dashboard" && completedPillarsCount < 1) return true;
+    if (isSurvey1) return itemHref !== "/onboarding";
+
+    // FIX (Bug 2): unlock on any assessment history, not only once
+    // a full 25/25 pillar is complete.
+    if (itemHref === "/dashboard" && !hasAssessmentHistory && completedPillarsCount < 1) {
+      return true;
+    }
+
     return false;
   };
-
-  const isMyFarmUnlocked = !isItemLocked("/dashboard");
 
   const navItems = [
     { label: "Overview", href: "/onboarding", icon: "dashboard" },
@@ -33,20 +40,15 @@ export default function MobileNav({
     { label: "Assess", href: "/assessment", icon: "fact_check", highlight: true },
     { label: "Learn", href: "/learning", icon: "school" },
     { label: "Opps", href: "/opportunities", icon: "lightbulb" },
-  ].filter((item) => {
-    if (item.href === "/onboarding" && isMyFarmUnlocked) {
-      return false;
-    }
-    return true;
-  });
-
+  ];
+  
   const handleItemClick = (e: React.MouseEvent, itemHref: string) => {
-    if ((isSurvey1 || isSurvey2) && itemHref !== "/onboarding") {
+    if (isSurvey1 && itemHref !== "/onboarding") {
       e.preventDefault();
       router.push("/onboarding");
       return;
     }
-    if (itemHref === "/dashboard" && completedPillarsCount < 1) {
+    if (itemHref === "/dashboard" && !hasAssessmentHistory && completedPillarsCount < 1) {
       e.preventDefault();
       router.push("/assessment");
       return;
@@ -66,13 +68,7 @@ export default function MobileNav({
           return (
             <Link
               key={item.label}
-              href={
-                locked
-                  ? isSurvey1 || isSurvey2
-                    ? "/onboarding"
-                    : "/assessment"
-                  : item.href
-              }
+              href={locked ? (isSurvey1 ? "/onboarding" : "/assessment") : item.href}
               onClick={(e) => handleItemClick(e, item.href)}
               className={`flex flex-col items-center justify-center rounded-xl px-3 py-1.5 active:scale-95 transition-transform ${
                 locked
@@ -93,13 +89,7 @@ export default function MobileNav({
         return (
           <Link
             key={item.label}
-            href={
-              locked
-                ? isSurvey1 || isSurvey2
-                  ? "/onboarding"
-                  : "/assessment"
-                : item.href
-            }
+            href={locked ? (isSurvey1 ? "/onboarding" : "/assessment") : item.href}
             onClick={(e) => handleItemClick(e, item.href)}
             className={`flex flex-col items-center justify-center p-1.5 rounded-xl transition-colors relative ${
               isActive
