@@ -709,14 +709,14 @@ export default function AssessmentSummaryView({
               <span className="material-symbols-outlined text-[16px] text-emerald-700">description</span>
               Transformation Report (PDF)
             </Link>
-            <button
+            {/* <button
               type="button"
               onClick={() => setShowCertificateModal(true)}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs transition-all text-xs font-bold cursor-pointer"
             >
               <span className="material-symbols-outlined text-[16px]">verified</span>
               FFV Certificate
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -797,7 +797,7 @@ export default function AssessmentSummaryView({
         </div>
 
         {/* 1. FFV ENTRY POINT INSIDE EACH PILLAR */}
-        <div className="w-full bg-gradient-to-br from-emerald-900/10 via-emerald-800/5 to-surface rounded-2xl border border-emerald-600/30 p-5 sm:p-6 mb-8 shadow-sm">
+        {/* <div className="w-full bg-gradient-to-br from-emerald-900/10 via-emerald-800/5 to-surface rounded-2xl border border-emerald-600/30 p-5 sm:p-6 mb-8 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1.5 max-w-xl">
               <div className="flex items-center gap-2">
@@ -841,7 +841,7 @@ export default function AssessmentSummaryView({
               )}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Capability Section Header with Expand/Collapse All */}
         <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
@@ -970,7 +970,7 @@ export default function AssessmentSummaryView({
                           <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                         </button>
                       </div>
-                      <p className="text-sm text-on-surface leading-relaxed m-0">
+                      <p className="text-md text-on-surface leading-relaxed m-0">
                         {cap.statusFeedback}
                       </p>
                     </div>
@@ -989,9 +989,9 @@ export default function AssessmentSummaryView({
                 <span className="material-symbols-outlined text-amber-600">lightbulb</span>
                 <span>Recommended Actions (Question-Level Tasks)</span>
               </h2>
-              <p className="text-xs text-on-surface-variant mt-0.5 m-0">
+              {/* <p className="text-xs text-on-surface-variant mt-0.5 m-0">
                 Auto-recommended tasks tailored specifically to your operational gaps. These tasks also sync with your My Future Farm page.
-              </p>
+              </p> */}
             </div>
             <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200 self-start sm:self-auto">
               {pillarGaps.length} Actionable Tasks
@@ -1046,37 +1046,37 @@ export default function AssessmentSummaryView({
 
                   <div className="space-y-3">
                     <div>
-                      <h5 className="text-xs font-bold text-on-surface mb-1 flex items-center gap-1.5 m-0">
+                      <h5 className="text-md font-bold text-on-surface mb-1 flex items-center gap-1.5 m-0">
                         <span className="material-symbols-outlined text-[16px] text-primary">task_alt</span>
                         <span>Recommended Action Task</span>
                       </h5>
-                      <p className="text-xs text-on-surface-variant leading-relaxed bg-surface-container-low p-3 rounded-xl border border-outline-variant/40 m-0">
+                      <p className="text-sm text-on-surface-variant leading-relaxed bg-surface-container-low p-3 rounded-xl border border-outline-variant/40 m-0">
                         {q.recommendation}
                       </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="p-3 rounded-xl bg-surface-container-high border border-outline-variant/40">
-                        <h6 className="text-[11px] font-bold text-on-surface mb-1 m-0">
+                        <h6 className="text-[15px] font-bold text-on-surface mb-1 m-0">
                           Why It Matters
                         </h6>
-                        <p className="text-[11px] text-on-surface-variant leading-relaxed m-0">
+                        <p className="text-[13px] text-on-surface-variant leading-relaxed m-0">
                           {q.whyItMatters}
                         </p>
                       </div>
 
                       <div className="p-3 rounded-xl bg-primary/5 border border-primary/20">
-                        <h6 className="text-[11px] font-bold text-primary mb-1 flex items-center gap-1 m-0">
+                        <h6 className="text-[15px] font-bold text-primary mb-1 flex items-center gap-1 m-0">
                           <span className="material-symbols-outlined text-[14px]">bolt</span>
                           <span>Immediate Quick Win</span>
                         </h6>
-                        <p className="text-[11px] text-on-surface leading-relaxed m-0">
+                        <p className="text-[13px] text-on-surface leading-relaxed m-0">
                           {q.quickWin}
                         </p>
                       </div>
                     </div>
 
-                    {q.supportAvailable && (
+                    {/* {q.supportAvailable && (
                       <div className="pt-2 border-t border-surface-variant/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px]">
                         <span className="text-on-surface-variant">
                           <strong>Support Available:</strong> {q.supportAvailable}
@@ -1089,7 +1089,7 @@ export default function AssessmentSummaryView({
                           <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                         </Link>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 </div>
               ))}

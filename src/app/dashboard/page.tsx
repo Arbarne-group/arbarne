@@ -777,8 +777,8 @@ export default function DashboardPage() {
           </div>
 
           {/* Future Farms Verification (FFV) 8-Pillars Matrix */}
-          <div className="bg-surface rounded-2xl p-6 shadow-ambient border border-outline-variant/40 space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
+          <div className="">
+            {/* <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="material-symbols-outlined text-primary text-[22px]">verified</span>
@@ -803,10 +803,10 @@ export default function DashboardPage() {
                   <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </Link>
               </div>
-            </div>
+            </div> */}
 
             {/* Status Legend */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-on-surface-variant pb-2">
+            {/* <div className="flex flex-wrap items-center gap-4 text-sm text-on-surface-variant pb-2">
               <span className="font-semibold text-on-surface">Status Legend:</span>
               <span className="inline-flex items-center gap-1">
                 <span className="text-outline text-base">○</span> Not Started
@@ -817,10 +817,10 @@ export default function DashboardPage() {
               <span className="inline-flex items-center gap-1">
                 <span className="text-primary text-base font-bold">✓</span> Completed
               </span>
-            </div>
+            </div> */}
 
             {/* Dynamic 8 Pillars FFV Matrix */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {ALL_PILLARS.map((pillar) => {
                 const pResult = assessmentResult?.pillarScores.find((s) => s.pillarId === pillar.id);
                 const answered = pResult?.answeredCount || 0;
@@ -894,14 +894,11 @@ export default function DashboardPage() {
                   </div>
                 );
               })}
-            </div>
+            </div> */}
           </div>
 
-          {/* Footer Info */}
-          <div className="flex flex-col sm:flex-row justify-between items-center py-4 text-sm text-on-surface-variant px-4 border-t border-outline-variant/30 gap-2">
-            <p>Last Assessment: {lastAssessmentDate}</p>
-            <p>Next Assessment Cycle: {nextAssessmentDate}</p>
-          </div>
+          
+          
         </div>
 
         {/* Modal: View Progress Over Time */}
