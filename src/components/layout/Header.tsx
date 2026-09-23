@@ -15,6 +15,7 @@ interface HeaderProps {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   onboardingStage?: OnboardingStage;
+  hasAssessmentHistory?: boolean;
   completedPillarsCount?: number;
 }
 
@@ -24,6 +25,7 @@ export default function Header({
   userRole = "Farm Owner",
   collapsed = false,
   onToggleCollapse,
+  hasAssessmentHistory = false, 
   onboardingStage = "FULLY_COMPLETED",
   completedPillarsCount = 0,
 }: HeaderProps) {

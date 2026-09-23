@@ -303,10 +303,7 @@ export function getRouteAccess(
     };
   }
 
-  /* ============================================================
-     SURVEY 1 COMPLETE
-     ============================================================ */
-
+  
   if (
     stage === "INITIAL_COMPLETED" ||
     stage === "ADDITIONAL_COMPLETED" ||
