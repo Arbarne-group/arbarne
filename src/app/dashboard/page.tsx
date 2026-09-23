@@ -55,7 +55,7 @@ export default function DashboardPage() {
         const u = JSON.parse(cached);
         if (u) {
           const st = computeOnboardingStageFromUser(u);
-          if (st.stage !== "FULLY_COMPLETED") {
+          if (st.stage === "INITIAL_IN_PROGRESS") {
             router.replace("/onboarding");
             return;
           }
@@ -80,12 +80,12 @@ export default function DashboardPage() {
           if (data.user) {
             setUser(data.user);
             const st = computeOnboardingStageFromUser(data.user);
-            if (st.stage !== "FULLY_COMPLETED") {
+            if (st.stage === "INITIAL_IN_PROGRESS") {
               router.replace("/onboarding");
               return;
             }
           }
-          if (data.completedPillarsCount !== undefined && data.completedPillarsCount < 1) {
+          if (!data.hasAssessmentHistory) {
             const localCount = countCompletedPillarsFromAnswers(localAnswers);
             if (localCount < 1) {
               router.replace("/assessment");

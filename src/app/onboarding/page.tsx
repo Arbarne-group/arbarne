@@ -42,9 +42,7 @@ export default function OnboardingOverviewPage() {
 
   const [showProgressModal, setShowProgressModal] = useState(false);
 
-  // ============================================================
-  // HERO CAROUSEL
-  // ============================================================
+  
 
   const heroImages = [
     {
@@ -183,9 +181,7 @@ export default function OnboardingOverviewPage() {
           return;
         }
 
-        // --------------------------------------------------------
-        // Fetch latest onboarding data
-        // --------------------------------------------------------
+        
 
         const response = await fetch(
           `/api/onboarding/step?email=${encodeURIComponent(email)}`,
@@ -239,10 +235,7 @@ export default function OnboardingOverviewPage() {
     };
   }, [clerkUser]);
 
-  // ============================================================
-  // FETCH ASSESSMENT HISTORY + RESULTS
-  // ============================================================
-
+  
   useEffect(() => {
     let cancelled = false;
 
@@ -529,9 +522,7 @@ export default function OnboardingOverviewPage() {
     );
   }
 
-  // ============================================================
-  // PAGE
-  // ============================================================
+  
 
   return (
     <AppShell
@@ -820,9 +811,7 @@ export default function OnboardingOverviewPage() {
           </div>
         ) : (
 
-          /* ====================================================
-             ONBOARDING IN PROGRESS
-          ==================================================== */
+          
 
           <div className="space-y-8 animate-fadeIn">
 
@@ -959,10 +948,7 @@ export default function OnboardingOverviewPage() {
 
                     </div>
 
-                    <p className="mt-3 text-xs text-on-surface-variant leading-relaxed">
-                      Complete this first survey to unlock your
-                      farm profile sections and farm assessment.
-                    </p>
+                    
 
                   </div>
                 )}

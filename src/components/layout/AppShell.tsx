@@ -31,6 +31,7 @@ export default function AppShell({
   const [collapsed, setCollapsed] = useState(false);
   const [onboardingStage, setOnboardingStage] = useState<OnboardingStage>("FULLY_COMPLETED");
   const [completedPillarsCount, setCompletedPillarsCount] = useState<number>(0);
+  const [hasAssessmentHistory, setHasAssessmentHistory] = useState(false);
   const [userEmail, setUserEmail] = useState<string>("");
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
@@ -117,6 +118,9 @@ export default function AppShell({
         if (data.completedPillarsCount !== undefined) {
           setCompletedPillarsCount(data.completedPillarsCount);
         }
+        if (data.hasAssessmentHistory !== undefined) {
+          setHasAssessmentHistory(data.hasAssessmentHistory);
+        }
       })
       .catch(() => {})
       .finally(() => setStatusLoaded(true));
@@ -143,7 +147,10 @@ export default function AppShell({
   useEffect(() => {
     if (!statusLoaded) return;
 
-    const check = getRouteAccess(pathname, onboardingStage, { completedPillarsCount });
+    const check = getRouteAccess(pathname, onboardingStage, {
+      completedPillarsCount,
+      hasAssessmentHistory,
+    });
     if (!check.allowed && check.redirectTo && pathname !== check.redirectTo) {
       setRedirectNotice(check.message || "Please complete the required onboarding survey.");
       router.replace(check.redirectTo);
@@ -153,7 +160,14 @@ export default function AppShell({
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [pathname, onboardingStage, completedPillarsCount, statusLoaded, router]);
+  }, [
+    pathname,
+    onboardingStage,
+    completedPillarsCount,
+    hasAssessmentHistory,
+    statusLoaded,
+    router,
+  ]);
 
   const handleToggleCollapse = () => {
     setCollapsed((prev) => {
@@ -174,6 +188,7 @@ export default function AppShell({
         onToggleCollapse={handleToggleCollapse}
         onboardingStage={onboardingStage}
         completedPillarsCount={completedPillarsCount}
+        hasAssessmentHistory={hasAssessmentHistory}
       />
 
       {/* Main Content Area - Transitions smoothly between ml-64 and ml-20 */}
@@ -188,6 +203,7 @@ export default function AppShell({
           onToggleCollapse={handleToggleCollapse}
           onboardingStage={onboardingStage}
           completedPillarsCount={completedPillarsCount}
+          hasAssessmentHistory={hasAssessmentHistory}
         />
 
         {/* Floating Redirect Alert Banner */}

@@ -57,10 +57,7 @@ export default function Header({
     (typeof window !== "undefined" ? getActiveUserEmail() : "");
 
   const isSurvey1 = onboardingStage === "INITIAL_IN_PROGRESS";
-  const isSurvey2 =
-    onboardingStage === "INITIAL_COMPLETED" || onboardingStage === "ADDITIONAL_COMPLETED";
-
-  const logoHref = isSurvey1 || isSurvey2
+  const logoHref = isSurvey1
     ? "/onboarding"
     : completedPillarsCount < 1
     ? "/assessment"

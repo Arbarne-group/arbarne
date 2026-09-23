@@ -36,7 +36,7 @@ function AssessmentPageContent() {
         const u = JSON.parse(cached);
         if (u.stage) {
           setOnboardingStage(u.stage);
-          if (u.stage !== "FULLY_COMPLETED") {
+          if (u.stage === "INITIAL_IN_PROGRESS") {
             router.replace("/onboarding");
             return;
           }
@@ -48,7 +48,7 @@ function AssessmentPageContent() {
       fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
         .then((res) => res.json())
         .then((data) => {
-          if (data.stage && data.stage !== "FULLY_COMPLETED") {
+          if (data.stage === "INITIAL_IN_PROGRESS") {
             setOnboardingStage(data.stage);
             router.replace("/onboarding");
           }
@@ -120,7 +120,7 @@ function AssessmentPageContent() {
   };
 
   // If onboarding is loaded and not yet completed, show onboarding lock screen
-  if (onboardingLoaded && onboardingStage !== "FULLY_COMPLETED") {
+  if (onboardingLoaded && onboardingStage === "INITIAL_IN_PROGRESS") {
     return (
       <AssessmentNavShell headerTitle="Assessment Hub (Locked)">
         <div className="flex-1 flex items-center justify-center p-6 md:p-12">
@@ -134,10 +134,10 @@ function AssessmentPageContent() {
                 Onboarding Incomplete
               </span>
               <h2 className="text-xl md:text-2xl font-bold text-on-surface">
-                Complete Onboarding to Access Your Assessment
+                Complete the Required Onboarding Survey to Access Your Assessment
               </h2>
               <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
-                To generate an accurate maturity rating and unlock personalized recommendations, you must first complete all onboarding questionnaire sections and verify your Farm Profile.
+                Complete the first onboarding survey to unlock your assessment. The optional farm profile survey can be completed later.
               </p>
             </div>
 

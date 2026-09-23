@@ -218,6 +218,7 @@ export function getRouteAccess(
   stage: OnboardingStage,
   options?: {
     completedPillarsCount?: number;
+    hasAssessmentHistory?: boolean;
   },
 ): {
   allowed: boolean;
@@ -244,6 +245,8 @@ export function getRouteAccess(
 
   const completedPillars =
     options?.completedPillarsCount ?? 0;
+  const hasAssessmentHistory =
+    options?.hasAssessmentHistory ?? completedPillars > 0;
 
   /* ============================================================
      ROUTE IDENTIFICATION
@@ -365,12 +368,11 @@ export function getRouteAccess(
      */
 
     if (isDashboard) {
-      if (completedPillars < 1) {
+      if (!hasAssessmentHistory) {
         return {
           allowed: false,
           redirectTo: "/assessment",
-          message:
-            "Complete at least one pillar assessment to unlock your farm dashboard.",
+          message: "Take an assessment to unlock My Farm.",
         };
       }
 

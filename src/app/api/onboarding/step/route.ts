@@ -56,6 +56,7 @@ export async function GET(request: Request) {
     const stageInfo = computeOnboardingStage(user);
 
     let completedPillarsCount = 0;
+    let hasAssessmentHistory = false;
     try {
       const assessment = await prisma.assessment.findFirst({
         where: { userId: user.id },
@@ -64,6 +65,7 @@ export async function GET(request: Request) {
 
       const completedFromPillars =
         assessment?.pillarAssessments?.filter((pa) => pa.isCompleted).length || 0;
+      hasAssessmentHistory = (assessment?.assessmentResponses?.length || 0) > 0;
       const pillarResponsesCount: Record<string, number> = {};
       assessment?.assessmentResponses?.forEach((r) => {
         const match = r.questionId.match(/^P([1-8])\./i);
@@ -84,6 +86,7 @@ export async function GET(request: Request) {
       user,
       ...stageInfo,
       completedPillarsCount,
+      hasAssessmentHistory,
       hasCompletedPillarAssessment: completedPillarsCount >= 1,
     });
   } catch (error: any) {
