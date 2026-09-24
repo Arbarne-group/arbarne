@@ -362,19 +362,33 @@ export default function AssessmentOverviewView({
 
         {/* Call to Action */}
         <div className="mt-8 flex justify-center md:justify-end border-t border-outline-variant/50 pt-8">
-          <button
-            type="button"
-            onClick={() => {
-              const nextPillar = ALL_PILLARS.find((p) => !pillarProgress[p.id]?.completed)?.id || 1;
-              onSelectPillar(nextPillar);
-            }}
-            className="bg-[#009924] text-on-primary font-label-md text-label-md px-10 py-4 rounded-xl shadow-level-1 hover:shadow-level-2 transition-all duration-200 flex items-center gap-3 w-full md:w-auto justify-center font-semibold group cursor-pointer"
-          >
-            Start / Continue Assessment
-            <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
-              arrow_forward
-            </span>
-          </button>
+          {completedPillarsCount === 8 && !fullCooldown.canReassessFull ? (
+            <div className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 w-full md:w-auto">
+              <span className="material-symbols-outlined text-[20px]">hourglass_top</span>
+              <p className="text-sm">
+                <span className="font-bold">All 8 pillars complete.</span>{" "}
+                Next full reassessment available
+                {fullCooldown.daysRemainingFull > 0
+                  ? ` in ${fullCooldown.daysRemainingFull} day${fullCooldown.daysRemainingFull === 1 ? "" : "s"}`
+                  : " soon"}
+                .
+              </p>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                const nextPillar = ALL_PILLARS.find((p) => !pillarProgress[p.id]?.completed)?.id || 1;
+                onSelectPillar(nextPillar);
+              }}
+              className="bg-[#009924] text-on-primary font-label-md text-label-md px-10 py-4 rounded-xl shadow-level-1 hover:shadow-level-2 transition-all duration-200 flex items-center gap-3 w-full md:w-auto justify-center font-semibold group cursor-pointer"
+            >
+              Start / Continue Assessment
+              <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
+                arrow_forward
+              </span>
+            </button>
+          )}
         </div>
       </div>
 
