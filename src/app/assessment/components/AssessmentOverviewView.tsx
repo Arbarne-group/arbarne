@@ -345,6 +345,10 @@ export default function AssessmentOverviewView({
                             <span className="font-semibold text-primary text-[12px]">Summary </span>
                           )}
                         </div>
+                      ) : (status?.answeredCount ?? 0) > 0 ? (
+                        <span className="font-semibold text-amber-700 text-[12px] group-hover:underline">
+                          In Progress • {status?.answeredCount}/25
+                        </span>
                       ) : (
                         <span className="text-primary font-semibold text-[12px] group-hover:underline">Start Pillar </span>
                       )}
