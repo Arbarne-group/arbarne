@@ -40,6 +40,9 @@ export default function OnboardingOverviewPage() {
   // computeAssessmentResults({}) can still return a result.
   const [hasAssessmentHistory, setHasAssessmentHistory] = useState(false);
 
+  // True when not all 8 pillars are complete.
+  const [assessmentInProgress, setAssessmentInProgress] = useState(false);
+
   const [showProgressModal, setShowProgressModal] = useState(false);
 
   
@@ -248,6 +251,7 @@ export default function OnboardingOverviewPage() {
         if (!cancelled) {
           setAssessmentResult(null);
           setHasAssessmentHistory(false);
+          setAssessmentInProgress(false);
         }
 
         return;
@@ -280,6 +284,7 @@ export default function OnboardingOverviewPage() {
         ) {
           if (!cancelled) {
             setHasAssessmentHistory(true);
+            setAssessmentInProgress(!data.isFullAssessmentComplete);
 
             setAssessmentResult(
               computeAssessmentResults(data.answers),
@@ -308,6 +313,9 @@ export default function OnboardingOverviewPage() {
             ) {
               if (!cancelled) {
                 setHasAssessmentHistory(true);
+                // Local-only answers never submitted, so the
+                // assessment can't be complete.
+                setAssessmentInProgress(true);
 
                 setAssessmentResult(
                   computeAssessmentResults(parsedAnswers),
@@ -330,6 +338,7 @@ export default function OnboardingOverviewPage() {
 
         if (!cancelled) {
           setHasAssessmentHistory(false);
+          setAssessmentInProgress(false);
           setAssessmentResult(null);
         }
       } catch (error) {
@@ -354,6 +363,9 @@ export default function OnboardingOverviewPage() {
             ) {
               if (!cancelled) {
                 setHasAssessmentHistory(true);
+                // Local-only answers never submitted, so the
+                // assessment can't be complete.
+                setAssessmentInProgress(true);
 
                 setAssessmentResult(
                   computeAssessmentResults(parsedAnswers),
@@ -369,6 +381,7 @@ export default function OnboardingOverviewPage() {
 
         if (!cancelled) {
           setHasAssessmentHistory(false);
+          setAssessmentInProgress(false);
           setAssessmentResult(null);
         }
       }
@@ -561,7 +574,7 @@ export default function OnboardingOverviewPage() {
                     fact_check
                   </span>
 
-                  <span>Take Farm Assessment</span>
+                  <span>{assessmentInProgress ? "Continue Assessment" : "Take Farm Assessment"}</span>
 
                   <span className="material-symbols-outlined text-[18px]">
                     arrow_forward
