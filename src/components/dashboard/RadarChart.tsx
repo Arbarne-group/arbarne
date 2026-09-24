@@ -42,6 +42,19 @@ export default function RadarChart({
   benchmarkScores = [65, 55, 62, 60, 68, 60, 70, 55],
   showLegend = false,
 }: RadarChartProps) {
+  // Color the points against the benchmark for that pillar
+  const BELOW_COLOR = "#d97706";
+  const ABOVE_COLOR = "#006b16";
+  const EMPTY_COLOR = "#b6c2b1";
+
+  const benchmarkAt = (index: number) =>
+    index < benchmarkScores.length ? benchmarkScores[index] : undefined;
+
+  const isBelowBenchmark = (score: number, index: number) => {
+    const bench = benchmarkAt(index);
+    return score > 0 && bench !== undefined && score < bench;
+  };
+
   const data = {
     labels,
     datasets: [
@@ -50,11 +63,15 @@ export default function RadarChart({
         data: scores,
         backgroundColor: "rgba(0, 107, 22, 0.2)",
         borderColor: "#006b16",
-        pointBackgroundColor: "#006b16",
+        pointBackgroundColor: scores.map((s, i) =>
+          s <= 0 ? EMPTY_COLOR : isBelowBenchmark(s, i) ? BELOW_COLOR : ABOVE_COLOR
+        ),
         pointBorderColor: "#ffffff",
         pointHoverBackgroundColor: "#ffffff",
-        pointHoverBorderColor: "#006b16",
-        pointRadius: 4,
+        pointHoverBorderColor: scores.map((s, i) =>
+          s <= 0 ? EMPTY_COLOR : isBelowBenchmark(s, i) ? BELOW_COLOR : ABOVE_COLOR
+        ),
+        pointRadius: scores.map((s, i) => (isBelowBenchmark(s, i) ? 5.5 : 4)),
         pointHoverRadius: 6,
         borderWidth: 2,
       },
@@ -126,7 +143,18 @@ export default function RadarChart({
         displayColors: true,
         callbacks: {
           label: function (context: any) {
-            return ` ${context.dataset.label}: ${context.raw}%`;
+            const value = context.raw as number;
+            const bench =
+              context.dataset.label === "Your Score"
+                ? benchmarkAt(context.dataIndex)
+                : undefined;
+            const suffix =
+              bench !== undefined &&
+              (value as number) > 0 &&
+              (value as number) < bench
+                ? ` (below benchmark ${bench}%)`
+                : "";
+            return ` ${context.dataset.label}: ${value}%${suffix}`;
           },
         },
       },
