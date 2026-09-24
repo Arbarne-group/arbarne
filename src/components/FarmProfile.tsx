@@ -610,69 +610,56 @@ export default function FarmProfileMetadata() {
       setSaving(true);
       setError("");
 
-      const updatedUser: OnboardingUser = {
-        ...user,
-        farmName: form.farmName,
-        futureFarmId: form.futureFarmId,
-        farmLocation: {
-          ...(user.farmLocation ?? {}),
-          country: form.country,
-          county: form.county,
-          subCounty: form.subCounty,
-          locality: form.locality,
-          latitude: form.latitude,
-          longitude: form.longitude,
-        },
-        farmCharacteristics: {
-          ...(user.farmCharacteristics ?? {}),
-          yearEstablished: form.yearEstablished,
-          ownershipType: form.ownershipType,
-          farmSize: form.farmSize,
-          farmUnit: form.farmUnit,
-          cultivatedAcres: form.cultivatedAcres,
-          landTenure: form.landTenure,
-        },
-        farmingSystem: {
-          ...(user.farmingSystem ?? {}),
-          enterpriseType: form.enterpriseType,
-          crops: form.crops,
-          livestock: form.livestock,
-          productionSystem: form.productionSystem,
-          cultivationMethod: form.productionSystem,
-          irrigationMethod: form.irrigationMethod,
-          waterSource: form.waterSource,
-          energyAccess: form.energyAccess,
-          energySource: form.energyAccess,
-          storageFacilities: form.storageFacilities,
-        },
-        householdLabour: {
-          ...(user.householdLabour ?? {}),
-          permanentWorkers: form.permanentWorkers,
-          seasonalWorkers: form.seasonalWorkers,
-          familyLabour: form.familyLabour,
-        },
-        businessExperience: {
-          ...(user.businessExperience ?? {}),
-          marketType: form.marketType,
-          produceBuyers: form.buyers,
-          registrationStatus: form.registrationStatus,
-          yearsOperating: form.yearsOperating,
-          commercialYears: form.yearsOperating,
-          revenueBracket: form.revenueBracket,
-          annualRevenueBracket: form.revenueBracket,
-        },
-        aspiration: {
-          ...(user.aspiration ?? {}),
-          twelveMonthSuccess: form.twelveMonthSuccess,
-          developmentPriorities: form.developmentPriorities,
-        },
-      };
+      const email = getActiveUserEmail();
 
-      setUser(updatedUser);
+      // Only send fields the user changed, so untouched sections
+      // (and display-formatted defaults) never clobber stored data or
+      // unintentionally mark onboarding sections complete
+      const baseline = initialData(user, user.futureFarmId);
+      const changed: Record<string, unknown> = {};
+      (Object.keys(form) as (keyof FarmProfileData)[]).forEach((key) => {
+        const next = form[key];
+        const prev = baseline[key];
+        const same = Array.isArray(next) || Array.isArray(prev)
+          ? JSON.stringify(next) === JSON.stringify(prev)
+          : next === prev;
+        if (!same) changed[key] = next;
+      });
+
+      // Identity fields are never editable
+      delete changed.email;
+      delete changed.futureFarmId;
+
+      const response = await fetch("/api/onboarding/step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ step: "farm-profile", email, data: changed }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result?.success || !result?.user) {
+        throw new Error(
+          result?.error || `Failed to save farm profile (${response.status})`,
+        );
+      }
+
+      // Render what the database now holds
+      setUser(result.user);
+      try {
+        localStorage.setItem(
+          "future_farms_user",
+          JSON.stringify(result.user),
+        );
+      } catch {
+        // In-memory state is already correct (not fatal)
+      }
       setEditing(false);
     } catch (err) {
       console.error(err);
-      setError("We couldn't save your changes. Please try again.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "We couldn't save your changes. Please try again.",
+      );
     } finally {
       setSaving(false);
     }
@@ -1017,12 +1004,17 @@ export default function FarmProfileMetadata() {
                       onChange={(v) => updateField("phone", v)}
                       type="tel"
                     />
-                    <TextInput
-                      label="Email Address"
-                      value={form.email}
-                      onChange={(v) => updateField("email", v)}
-                      type="email"
-                    />
+                    <div className="block space-y-1.5">
+                      <span className="block text-[12.5px] font-semibold text-on-surface-variant">
+                        Email Address
+                      </span>
+                      <div className="w-full rounded-xl border border-outline-variant/60 bg-surface-container px-3.5 py-2.5 text-[14px] text-on-surface-variant">
+                        {form.email || "Not set"}
+                      </div>
+                      <p className="text-[11px] text-on-surface-variant/70">
+                        Managed via sign-in. Contact support to change it.
+                      </p>
+                    </div>
                   </div>
                 </div>
 

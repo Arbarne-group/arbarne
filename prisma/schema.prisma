@@ -113,6 +113,7 @@ model FarmLocation {
   id             String   @id @default(cuid())
   userId         String   @unique
   locationSearch String?
+  country        String?
   county         String?
   subcounty      String?
   ward           String?
@@ -131,6 +132,7 @@ model FarmCharacteristics {
   cultivatedAcres Float?
   grazingAcres    Float?
   landTenure      String?
+  ownershipType   String?
   waterSources    String?
   soilTested      String?
   updatedAt       DateTime @updatedAt

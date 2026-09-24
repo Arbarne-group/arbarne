@@ -107,7 +107,11 @@ export async function POST(request: Request) {
     }
 
     const currentStage = computeOnboardingStage(user);
-    if (currentStage.stage === "FULLY_COMPLETED" && step !== "confirm-profile") {
+    if (
+      currentStage.stage === "FULLY_COMPLETED" &&
+      step !== "confirm-profile" &&
+      step !== "farm-profile"
+    ) {
       return NextResponse.json(
         {
           error: "Onboarding surveys are already completed and cannot be repeated.",
@@ -472,6 +476,123 @@ export async function POST(request: Request) {
             fairEmploymentPractices: practicesVal,
           },
         });
+        break;
+      }
+
+      case "farm-profile": {
+        // Edits from the Farm Profile metadata modal (src/components/FarmProfile.tsx).
+        // Allow profile edits even after approval unlike survey steps, but do not change the onboarding stage or approval status.
+        // Only keys present in `data` are touched; absent keys keep existing values.
+        // Do not edit `email` / `futureFarmId` since they are identity fields
+        const d = data ?? {};
+        const has = (k: string) => d[k] !== undefined;
+        const text = (v: unknown) =>
+          v === undefined || v === null ? "" : String(v).trim();
+        const numOrNull = (v: unknown) => {
+          if (v === undefined || v === null || String(v).trim() === "")
+            return null;
+          const n = Number(v);
+          return Number.isFinite(n) ? n : null;
+        };
+
+        const userUpdates: { farmName?: string; phone?: string; name?: string } = {};
+        if (has("farmName") && text(d.farmName))
+          userUpdates.farmName = text(d.farmName);
+        if (has("phone") && text(d.phone))
+          userUpdates.phone = text(d.phone);
+        if (has("managerName") && text(d.managerName))
+          userUpdates.name = text(d.managerName);
+        if (Object.keys(userUpdates).length > 0) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: userUpdates,
+          });
+        }
+
+        if (has("managerRole")) {
+          await prisma.farmerProfile.upsert({
+            where: { userId: user.id },
+            create: { userId: user.id, jobTitle: text(d.managerRole) },
+            update: { jobTitle: text(d.managerRole) },
+          });
+        }
+
+        if (
+          has("country") ||
+          has("county") ||
+          has("subCounty") ||
+          has("locality") ||
+          has("latitude") ||
+          has("longitude")
+        ) {
+          const loc = user.farmLocation ?? {};
+          const locData = {
+            country: has("country") ? text(d.country) : loc.country ?? "",
+            county: has("county") ? text(d.county) : loc.county ?? "",
+            subcounty: has("subCounty") ? text(d.subCounty) : loc.subcounty ?? "",
+            ward: has("locality") ? text(d.locality) : loc.ward ?? "",
+            landmark: loc.landmark ?? "",
+            locationSearch: loc.locationSearch ?? "",
+            latitude: has("latitude") ? numOrNull(d.latitude) : loc.latitude ?? null,
+            longitude: has("longitude")
+              ? numOrNull(d.longitude)
+              : loc.longitude ?? null,
+          };
+          await prisma.farmLocation.upsert({
+            where: { userId: user.id },
+            create: { userId: user.id, ...locData },
+            update: locData,
+          });
+        }
+
+        if (
+          has("farmSize") ||
+          has("farmUnit") ||
+          has("cultivatedAcres") ||
+          has("landTenure") ||
+          has("ownershipType") ||
+          has("waterSource")
+        ) {
+          const ch = user.farmCharacteristics ?? {};
+          const charData = {
+            farmSize: has("farmSize") ? numOrNull(d.farmSize) : ch.farmSize ?? null,
+            farmUnit: has("farmUnit")
+              ? text(d.farmUnit) || "Acres"
+              : ch.farmUnit ?? "Acres",
+            cultivatedAcres: has("cultivatedAcres")
+              ? numOrNull(d.cultivatedAcres)
+              : ch.cultivatedAcres ?? null,
+            grazingAcres: ch.grazingAcres ?? null,
+            landTenure: has("landTenure") ? text(d.landTenure) : ch.landTenure ?? "",
+            ownershipType: has("ownershipType")
+              ? text(d.ownershipType)
+              : ch.ownershipType ?? "",
+            waterSources: has("waterSource")
+              ? text(d.waterSource)
+              : ch.waterSources ?? "",
+            soilTested: ch.soilTested ?? "",
+          };
+          await prisma.farmCharacteristics.upsert({
+            where: { userId: user.id },
+            create: { userId: user.id, ...charData },
+            update: charData,
+          });
+        }
+
+        if (has("energyAccess")) {
+          const fs = user.farmingSystem ?? {};
+          await prisma.farmingSystem.upsert({
+            where: { userId: user.id },
+            create: {
+              userId: user.id,
+              enterprises: fs.enterprises ?? "[]",
+              cultivationMethod: fs.cultivationMethod ?? "",
+              mechanizationSetup: fs.mechanizationSetup ?? "",
+              energySource: text(d.energyAccess),
+            },
+            update: { energySource: text(d.energyAccess) },
+          });
+        }
         break;
       }
 
