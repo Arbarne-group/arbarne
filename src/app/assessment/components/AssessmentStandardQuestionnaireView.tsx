@@ -44,6 +44,9 @@ export default function AssessmentStandardQuestionnaireView({
   }>({ isCompleted: false, canReassess: true, nextEligibleDate: null, daysRemaining: 0 });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Completed pillars under the 90-day cooldown are strictly read-only
+  const isReadOnly = cooldownStatus.isCompleted && !cooldownStatus.canReassess;
+
   const activeEmail = user?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
 
   // Load existing answers and cooldown status on mount
@@ -95,6 +98,7 @@ export default function AssessmentStandardQuestionnaireView({
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleAnswer = (questionId: string, value: "yes" | "no") => {
+    if (isReadOnly) return;
     const updated = { ...answers, [questionId]: value };
     setAnswers(updated);
     if (validationError) {
@@ -397,31 +401,33 @@ export default function AssessmentStandardQuestionnaireView({
 
                   <div className="flex gap-6">
                     {/* Yes Radio Option */}
-                    <label className="relative flex items-center cursor-pointer group">
+                    <label className={`relative flex items-center ${isReadOnly ? "cursor-default" : "cursor-pointer group"}`}>
                       <input
                         type="radio"
                         name={q.id}
                         value="yes"
                         checked={currentVal === "yes"}
                         onChange={() => handleAnswer(q.id, "yes")}
-                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer accent-[#009924]"
+                        disabled={isReadOnly}
+                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 accent-[#009924]"
                       />
-                      <span className="ml-3 font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">
+                      <span className={`ml-3 font-body-md text-body-md text-on-surface transition-colors ${isReadOnly ? "" : "group-hover:text-primary"}`}>
                         Yes
                       </span>
                     </label>
 
                     {/* No Radio Option */}
-                    <label className="relative flex items-center cursor-pointer group">
+                    <label className={`relative flex items-center ${isReadOnly ? "cursor-default" : "cursor-pointer group"}`}>
                       <input
                         type="radio"
                         name={q.id}
                         value="no"
                         checked={currentVal === "no"}
                         onChange={() => handleAnswer(q.id, "no")}
-                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer accent-[#009924]"
+                        disabled={isReadOnly}
+                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 accent-[#009924]"
                       />
-                      <span className="ml-3 font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">
+                      <span className={`ml-3 font-body-md text-body-md text-on-surface transition-colors ${isReadOnly ? "" : "group-hover:text-primary"}`}>
                         No
                       </span>
                     </label>
