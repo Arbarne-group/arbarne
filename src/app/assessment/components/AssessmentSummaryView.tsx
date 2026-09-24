@@ -1114,13 +1114,17 @@ export default function AssessmentSummaryView({
               ? "Return to Assessment Hub"
               : `Continue to Pillar ${nextPillarId}`}
           </button>
-          <button
-            type="button"
-            onClick={onBackToHub}
-            className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary underline-offset-4 cursor-pointer"
-          >
-            Back to Assessment Hub
-          </button>
+          {/* On the last pillar the primary button already returns to the
+              hub, so the secondary link would be a duplicate */}
+          {pillar.id < ALL_PILLARS.length && (
+            <button
+              type="button"
+              onClick={onBackToHub}
+              className="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary underline-offset-4 cursor-pointer"
+            >
+              Back to Assessment Hub
+            </button>
+          )}
         </div>
       </div>
 
