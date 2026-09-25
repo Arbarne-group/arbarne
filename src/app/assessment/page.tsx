@@ -67,12 +67,16 @@ function AssessmentPageContent() {
 
     if (viewParam === "focus" || viewParam === "summary" || viewParam === "overview") {
       setCurrentView(viewParam);
+    } else {
+      setCurrentView("overview");
     }
     if (pillarParam) {
       const pid = Number(pillarParam);
       if (!isNaN(pid) && pid >= 1 && pid <= 8) {
         setSelectedPillarId(pid);
       }
+    } else {
+      setSelectedPillarId(1);
     }
   }, [searchParams]);
 

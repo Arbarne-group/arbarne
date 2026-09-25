@@ -44,6 +44,9 @@ export default function AssessmentStandardQuestionnaireView({
   }>({ isCompleted: false, canReassess: true, nextEligibleDate: null, daysRemaining: 0 });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Completed pillars under the 90-day cooldown are strictly read-only
+  const isReadOnly = cooldownStatus.isCompleted && !cooldownStatus.canReassess;
+
   const activeEmail = user?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
 
   // Load existing answers and cooldown status on mount
@@ -95,6 +98,7 @@ export default function AssessmentStandardQuestionnaireView({
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleAnswer = (questionId: string, value: "yes" | "no") => {
+    if (isReadOnly) return;
     const updated = { ...answers, [questionId]: value };
     setAnswers(updated);
     if (validationError) {
@@ -115,6 +119,40 @@ export default function AssessmentStandardQuestionnaireView({
     }
   };
 
+  const persistProgress = (silent = false) => {
+    try {
+      localStorage.setItem(
+        "future_farms_assessment_answers",
+        JSON.stringify(answers)
+      );
+      const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
+      localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
+    } catch (e) {
+      console.error(e);
+    }
+    // Locked pillars are read-only server-side (90-day cooldown) so local copy is just enough
+    if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) return;
+    const email = activeEmail;
+    if (!email) return;
+    fetch("/api/assessment/save-progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, pillarId, answers }),
+    })
+      .then((res) => {
+        if (!res.ok && !silent) {
+          throw new Error(`Save failed (${res.status})`);
+        }
+      })
+      .catch((e) => {
+        console.error("Error saving progress to API:", e);
+        if (!silent) {
+          setToastMessage("Couldn't reach the server — progress kept on this device.");
+          setTimeout(() => setToastMessage(null), 3000);
+        }
+      });
+  };
+
   const handleSaveProgress = () => {
     if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) {
       setToastMessage(
@@ -124,19 +162,7 @@ export default function AssessmentStandardQuestionnaireView({
       return;
     }
     try {
-      localStorage.setItem(
-        "future_farms_assessment_answers",
-        JSON.stringify(answers)
-      );
-      const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
-      localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
-      const email = activeEmail;
-      fetch("/api/assessment/save-progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, pillarId, answers }),
-      }).catch((e) => console.error("Error saving progress to API:", e));
-
+      persistProgress();
       setToastMessage("Progress saved successfully!");
       setTimeout(() => {
         setToastMessage(null);
@@ -166,6 +192,9 @@ export default function AssessmentStandardQuestionnaireView({
     setValidationError(null);
 
     if (currentCapIndex < pillar.capabilities.length - 1) {
+      // Auto-save the draft on every page turn so progress survives
+      // reloads and other devices without tapping Save Progress.
+      persistProgress(true);
       setCurrentCapIndex((prev) => prev + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
@@ -372,31 +401,33 @@ export default function AssessmentStandardQuestionnaireView({
 
                   <div className="flex gap-6">
                     {/* Yes Radio Option */}
-                    <label className="relative flex items-center cursor-pointer group">
+                    <label className={`relative flex items-center ${isReadOnly ? "cursor-default" : "cursor-pointer group"}`}>
                       <input
                         type="radio"
                         name={q.id}
                         value="yes"
                         checked={currentVal === "yes"}
                         onChange={() => handleAnswer(q.id, "yes")}
-                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer accent-[#009924]"
+                        disabled={isReadOnly}
+                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 accent-[#009924]"
                       />
-                      <span className="ml-3 font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">
+                      <span className={`ml-3 font-body-md text-body-md text-on-surface transition-colors ${isReadOnly ? "" : "group-hover:text-primary"}`}>
                         Yes
                       </span>
                     </label>
 
                     {/* No Radio Option */}
-                    <label className="relative flex items-center cursor-pointer group">
+                    <label className={`relative flex items-center ${isReadOnly ? "cursor-default" : "cursor-pointer group"}`}>
                       <input
                         type="radio"
                         name={q.id}
                         value="no"
                         checked={currentVal === "no"}
                         onChange={() => handleAnswer(q.id, "no")}
-                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer accent-[#009924]"
+                        disabled={isReadOnly}
+                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 accent-[#009924]"
                       />
-                      <span className="ml-3 font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">
+                      <span className={`ml-3 font-body-md text-body-md text-on-surface transition-colors ${isReadOnly ? "" : "group-hover:text-primary"}`}>
                         No
                       </span>
                     </label>

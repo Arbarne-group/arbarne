@@ -140,6 +140,18 @@ export default function AssessmentOverviewView({
             </p>
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">
+            <button
+              type="button"
+              onClick={() => setShowHistoryModal(true)}
+              title="View all pillar assessments and their statuses"
+              className="px-5 py-2 rounded-full bg-surface text-on-surface font-label-md text-sm font-bold flex items-center gap-1.5 border border-outline-variant/40 hover:bg-surface-container-high transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">history</span>
+              <span>Assessment History</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-mono">
+                {completedPillarsCount}/8 Done
+              </span>
+            </button>
             {completedPillarsCount === 8 ? (
               <Link
                 href="/assessment/report?pillar=all"
@@ -331,12 +343,21 @@ export default function AssessmentOverviewView({
                       <span className="font-mono text-[12px]">Cap. {pillar.id}.1–{pillar.id}.5</span>
                       {status?.completed ? (
                         <div className="flex items-center gap-2">
-                          
+
                           {isLockedCooldown ? (
-                            <span className="font-semibold text-amber-800 text-[12px] flex items-center gap-0.5">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                // Don't trigger the card's read-only answers view.
+                                e.stopPropagation();
+                                onSelectPillar(pillar.id, true);
+                              }}
+                              title="Open the pillar summary report"
+                              className="font-semibold text-amber-800 text-[12px] flex items-center gap-0.5 cursor-pointer"
+                            >
                               <span>Summary</span>
                               <ArrowRight size={14} className="text-amber-800" />
-                            </span>
+                            </button>
                           ) : isReassessReady ? (
                             <span className="font-semibold text-emerald-700 text-[12px] group-hover:underline">
                               Start Assessment
@@ -345,6 +366,10 @@ export default function AssessmentOverviewView({
                             <span className="font-semibold text-primary text-[12px]">Summary </span>
                           )}
                         </div>
+                      ) : (status?.answeredCount ?? 0) > 0 ? (
+                        <span className="font-semibold text-amber-700 text-[12px] group-hover:underline">
+                          In Progress • {status?.answeredCount}/25
+                        </span>
                       ) : (
                         <span className="text-primary font-semibold text-[12px] group-hover:underline">Start Pillar </span>
                       )}
@@ -358,19 +383,33 @@ export default function AssessmentOverviewView({
 
         {/* Call to Action */}
         <div className="mt-8 flex justify-center md:justify-end border-t border-outline-variant/50 pt-8">
-          <button
-            type="button"
-            onClick={() => {
-              const nextPillar = ALL_PILLARS.find((p) => !pillarProgress[p.id]?.completed)?.id || 1;
-              onSelectPillar(nextPillar);
-            }}
-            className="bg-[#009924] text-on-primary font-label-md text-label-md px-10 py-4 rounded-xl shadow-level-1 hover:shadow-level-2 transition-all duration-200 flex items-center gap-3 w-full md:w-auto justify-center font-semibold group cursor-pointer"
-          >
-            Start / Continue Assessment
-            <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
-              arrow_forward
-            </span>
-          </button>
+          {completedPillarsCount === 8 && !fullCooldown.canReassessFull ? (
+            <div className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 w-full md:w-auto">
+              <span className="material-symbols-outlined text-[20px]">hourglass_top</span>
+              <p className="text-sm">
+                <span className="font-bold">All 8 pillars complete.</span>{" "}
+                Next full reassessment available
+                {fullCooldown.daysRemainingFull > 0
+                  ? ` in ${fullCooldown.daysRemainingFull} day${fullCooldown.daysRemainingFull === 1 ? "" : "s"}`
+                  : " soon"}
+                .
+              </p>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                const nextPillar = ALL_PILLARS.find((p) => !pillarProgress[p.id]?.completed)?.id || 1;
+                onSelectPillar(nextPillar);
+              }}
+              className="bg-[#009924] text-on-primary font-label-md text-label-md px-10 py-4 rounded-xl shadow-level-1 hover:shadow-level-2 transition-all duration-200 flex items-center gap-3 w-full md:w-auto justify-center font-semibold group cursor-pointer"
+            >
+              Start / Continue Assessment
+              <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
+                arrow_forward
+              </span>
+            </button>
+          )}
         </div>
       </div>
 

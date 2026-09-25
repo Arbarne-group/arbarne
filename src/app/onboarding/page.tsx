@@ -40,6 +40,20 @@ export default function OnboardingOverviewPage() {
   // computeAssessmentResults({}) can still return a result.
   const [hasAssessmentHistory, setHasAssessmentHistory] = useState(false);
 
+  // True when not all 8 pillars are complete.
+  const [assessmentInProgress, setAssessmentInProgress] = useState(false);
+
+  // Once all 8 pillars are complete, reassessment is locked for 90 days.
+  const [fullCooldown, setFullCooldown] = useState<{
+    isFullComplete: boolean;
+    canReassessFull: boolean;
+    daysRemainingFull: number;
+  }>({
+    isFullComplete: false,
+    canReassessFull: true,
+    daysRemainingFull: 0,
+  });
+
   const [showProgressModal, setShowProgressModal] = useState(false);
 
   
@@ -248,6 +262,12 @@ export default function OnboardingOverviewPage() {
         if (!cancelled) {
           setAssessmentResult(null);
           setHasAssessmentHistory(false);
+          setAssessmentInProgress(false);
+          setFullCooldown({
+            isFullComplete: false,
+            canReassessFull: true,
+            daysRemainingFull: 0,
+          });
         }
 
         return;
@@ -280,6 +300,12 @@ export default function OnboardingOverviewPage() {
         ) {
           if (!cancelled) {
             setHasAssessmentHistory(true);
+            setAssessmentInProgress(!data.isFullAssessmentComplete);
+            setFullCooldown({
+              isFullComplete: Boolean(data.isFullAssessmentComplete),
+              canReassessFull: data.canReassessFull ?? true,
+              daysRemainingFull: data.daysRemainingFull ?? 0,
+            });
 
             setAssessmentResult(
               computeAssessmentResults(data.answers),
@@ -308,6 +334,9 @@ export default function OnboardingOverviewPage() {
             ) {
               if (!cancelled) {
                 setHasAssessmentHistory(true);
+                // Local-only answers never submitted, so the
+                // assessment can't be complete.
+                setAssessmentInProgress(true);
 
                 setAssessmentResult(
                   computeAssessmentResults(parsedAnswers),
@@ -330,6 +359,12 @@ export default function OnboardingOverviewPage() {
 
         if (!cancelled) {
           setHasAssessmentHistory(false);
+          setAssessmentInProgress(false);
+          setFullCooldown({
+            isFullComplete: false,
+            canReassessFull: true,
+            daysRemainingFull: 0,
+          });
           setAssessmentResult(null);
         }
       } catch (error) {
@@ -354,6 +389,9 @@ export default function OnboardingOverviewPage() {
             ) {
               if (!cancelled) {
                 setHasAssessmentHistory(true);
+                // Local-only answers never submitted, so the
+                // assessment can't be complete.
+                setAssessmentInProgress(true);
 
                 setAssessmentResult(
                   computeAssessmentResults(parsedAnswers),
@@ -369,6 +407,12 @@ export default function OnboardingOverviewPage() {
 
         if (!cancelled) {
           setHasAssessmentHistory(false);
+          setAssessmentInProgress(false);
+          setFullCooldown({
+            isFullComplete: false,
+            canReassessFull: true,
+            daysRemainingFull: 0,
+          });
           setAssessmentResult(null);
         }
       }
@@ -553,20 +597,36 @@ export default function OnboardingOverviewPage() {
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
 
-                <Link
-                  href="/assessment"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-on-secondary hover:bg-primary-fixed transition-all shadow-sm hover:shadow-md font-label-sm text-label-sm font-semibold"
-                >
-                  <span className="material-symbols-outlined text-[18px]">
-                    fact_check
-                  </span>
+                {fullCooldown.isFullComplete && !fullCooldown.canReassessFull ? (
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-sm">
+                    <span className="material-symbols-outlined text-[18px]">
+                      hourglass_top
+                    </span>
+                    <span>
+                      <span className="font-bold">Assessment complete.</span>{" "}
+                      Reassessment available
+                      {fullCooldown.daysRemainingFull > 0
+                        ? ` in ${fullCooldown.daysRemainingFull} day${fullCooldown.daysRemainingFull === 1 ? "" : "s"}`
+                        : " soon"}
+                      .
+                    </span>
+                  </div>
+                ) : (
+                  <Link
+                    href="/assessment"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-on-secondary hover:bg-primary-fixed transition-all shadow-sm hover:shadow-md font-label-sm text-label-sm font-semibold"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">
+                      fact_check
+                    </span>
 
-                  <span>Take Farm Assessment</span>
+                    <span>{assessmentInProgress ? "Continue Assessment" : "Take Farm Assessment"}</span>
 
-                  <span className="material-symbols-outlined text-[18px]">
-                    arrow_forward
-                  </span>
-                </Link>
+                    <span className="material-symbols-outlined text-[18px]">
+                      arrow_forward
+                    </span>
+                  </Link>
+                )}
 
               </div>
             </div>
