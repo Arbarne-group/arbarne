@@ -122,7 +122,7 @@ export default function SignInPage() {
     
                 <p
                   key={`description-${currentSlide}`}
-                  className="mt-4 text-sm leading-relaxed text-white/80 animate-[slideUp_700ms_ease-out] xl:text-base"
+                  className="mt-4 text-lg leading-relaxed text-white/80 animate-[slideUp_700ms_ease-out] xl:text-base"
                 >
                   {slide.description}
                 </p>
