@@ -600,6 +600,125 @@ export default function CompleteSurveyPage() {
   const [managementStructure, setManagementStructure] = useState("");
   const [fairEmploymentPractices, setFairEmploymentPractices] = useState<string[]>([]);
 
+  /* ---------------- Local draft: survive refresh ----------------
+     Every keystroke is mirrored to localStorage. On load the draft is
+     applied AFTER server values, so unsaved edits always win and a
+     refresh never loses work. The draf is cleared on full submit. */
+  const DRAFT_KEY = "future_farms_survey_draft";
+
+  const draftSnapshot = {
+    farmName, phone,
+    jobTitle, valueChain, experienceYears, businessHistory, educationLevel, otherEducation,
+    mgmtAbility, operationsResponsible, otherOperator, desiredInvolvement,
+    decisionStyle, failureResponse, obstacles, otherObstacle, guidancePreference,
+    trackingFrequency, updatePreferences,
+    twelveMonthSuccess, greatestImpactSupport, marketInsight, threeToFiveYearRole,
+    managerResponsibilities, personallyApprovedDecisions, twentyFiveYearVision,
+    supportReasons, otherSupportReason, remoteConfidence, remoteComfort,
+    recordKeeping, physicalAudits, additionalNotes,
+    locationSearch, county, subcounty, ward, landmark, coordinates,
+    farmSize, farmUnit, cultivatedAcres, grazingAcres, landTenure, waterSources, soilTested,
+    enterprises, cultivationMethod, mechanizationSetup, energySource,
+    commercialYears, annualRevenueBracket, recordKeepingMethod, produceBuyers,
+    permanentWorkers, seasonalWorkers, managementStructure, fairEmploymentPractices,
+  };
+
+  useEffect(() => {
+    // Merge, never blind-overwrite: only fields holding a real value
+    // replace what's stored. This way the blank initial form can't wipe
+    // a previous draft, and keystrokes typed while loading are kept too.
+    try {
+      let merged: Record<string, any> = {};
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (raw) {
+          const d = JSON.parse(raw);
+          if (d && typeof d === "object") merged = d;
+        }
+      } catch {}
+      const snap = draftSnapshot as Record<string, any>;
+      Object.entries(snap).forEach(([k, v]) => {
+        const hasValue =
+          v !== "" &&
+          v !== null &&
+          v !== undefined &&
+          (!Array.isArray(v) || v.length > 0);
+        if (hasValue || !(k in merged)) merged[k] = v;
+      });
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(merged));
+    } catch {
+      // Storage full or unavailable — server save still works.
+    }
+  });
+
+  const applyDraft = (d: Record<string, any>) => {
+    const str = (v: unknown) => (typeof v === "string" && v ? v : null);
+    const arr = (v: unknown) => (Array.isArray(v) && v.length > 0 ? (v as string[]) : null);
+    const num = (v: unknown) =>
+      typeof v === "number" || v === "" ? (v as number | "") : null;
+    const put = <T,>(v: T | null, set: (x: T) => void) => {
+      if (v !== null) set(v);
+    };
+    put(str(d.farmName), setFarmName);
+    put(str(d.phone), setPhone);
+    put(str(d.jobTitle), setJobTitle);
+    put(str(d.valueChain), setValueChain);
+    put(str(d.experienceYears), setExperienceYears);
+    put(str(d.businessHistory), setBusinessHistory);
+    put(str(d.educationLevel), setEducationLevel);
+    put(str(d.otherEducation), setOtherEducation);
+    put(str(d.mgmtAbility), setMgmtAbility);
+    put(str(d.operationsResponsible), setOperationsResponsible);
+    put(str(d.otherOperator), setOtherOperator);
+    put(str(d.desiredInvolvement), setDesiredInvolvement);
+    put(str(d.decisionStyle), setDecisionStyle);
+    put(str(d.failureResponse), setFailureResponse);
+    put(arr(d.obstacles), setObstacles);
+    put(str(d.otherObstacle), setOtherObstacle);
+    put(str(d.guidancePreference), setGuidancePreference);
+    put(str(d.trackingFrequency), setTrackingFrequency);
+    put(str(d.updatePreferences), setUpdatePreferences);
+    put(str(d.twelveMonthSuccess), setTwelveMonthSuccess);
+    put(str(d.greatestImpactSupport), setGreatestImpactSupport);
+    put(str(d.marketInsight), setMarketInsight);
+    put(str(d.threeToFiveYearRole), setThreeToFiveYearRole);
+    put(arr(d.managerResponsibilities), setManagerResponsibilities);
+    put(str(d.personallyApprovedDecisions), setPersonallyApprovedDecisions);
+    put(str(d.twentyFiveYearVision), setTwentyFiveYearVision);
+    put(str(d.supportReasons), setSupportReasons);
+    put(str(d.otherSupportReason), setOtherSupportReason);
+    put(str(d.remoteConfidence), setRemoteConfidence);
+    put(str(d.remoteComfort), setRemoteComfort);
+    put(str(d.recordKeeping), setRecordKeeping);
+    put(str(d.physicalAudits), setPhysicalAudits);
+    put(str(d.additionalNotes), setAdditionalNotes);
+    put(str(d.locationSearch), setLocationSearch);
+    put(str(d.county), setCounty);
+    put(str(d.subcounty), setSubcounty);
+    put(str(d.ward), setWard);
+    put(str(d.landmark), setLandmark);
+    if (d.coordinates && typeof d.coordinates.latitude === "number") setCoordinates(d.coordinates);
+    put(num(d.farmSize), setFarmSize);
+    if (d.farmUnit === "Acres" || d.farmUnit === "Hectares") setFarmUnit(d.farmUnit);
+    put(num(d.cultivatedAcres), setCultivatedAcres);
+    put(num(d.grazingAcres), setGrazingAcres);
+    put(str(d.landTenure), setLandTenure);
+    put(arr(d.waterSources), setWaterSources);
+    put(str(d.soilTested), setSoilTested);
+    put(arr(d.enterprises), setEnterprises);
+    put(str(d.cultivationMethod), setCultivationMethod);
+    put(str(d.mechanizationSetup), setMechanizationSetup);
+    put(str(d.energySource), setEnergySource);
+    put(str(d.commercialYears), setCommercialYears);
+    put(str(d.annualRevenueBracket), setAnnualRevenueBracket);
+    put(str(d.recordKeepingMethod), setRecordKeepingMethod);
+    put(arr(d.produceBuyers), setProduceBuyers);
+    put(num(d.permanentWorkers), setPermanentWorkers);
+    put(num(d.seasonalWorkers), setSeasonalWorkers);
+    put(str(d.managementStructure), setManagementStructure);
+    put(arr(d.fairEmploymentPractices), setFairEmploymentPractices);
+  };
+
   /* ---------------- Prefill from server ---------------- */
   useEffect(() => {
     const email = getActiveUserEmail();
@@ -776,6 +895,16 @@ export default function CompleteSurveyPage() {
             } catch {}
           }
         }
+
+        // Re-apply the local draft last: it holds this browser's unsaved
+        // edits (read fresh, includes keystrokes made while fetching).
+        try {
+          const raw = localStorage.getItem(DRAFT_KEY);
+          if (raw) {
+            const draft = JSON.parse(raw);
+            if (draft && typeof draft === "object") applyDraft(draft);
+          }
+        } catch {}
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -1058,6 +1187,9 @@ export default function CompleteSurveyPage() {
       } else if (lastUser) {
         localStorage.setItem("future_farms_user", JSON.stringify(lastUser));
       }
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {}
       router.push("/assessment");
     } catch (e) {
       console.error(e);
