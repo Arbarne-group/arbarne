@@ -243,6 +243,10 @@ export function getRouteAccess(
     };
   }
 
+  // The single-page survey lives at /onboarding: until every question is
+  // submitted (FULLY_COMPLETED), the user must stay here.
+  const isCompleteSurvey = pathname === "/onboarding";
+
   const completedPillars =
     options?.completedPillarsCount ?? 0;
   const hasAssessmentHistory =
@@ -280,33 +284,29 @@ export function getRouteAccess(
     pathname === "/onboarding";
 
  
-  if (
-    stage === "INITIAL_IN_PROGRESS"
-  ) {
-    
-    if (
-      isOnboarding ||
-      isSurvey1Step
-    ) {
+  // The complete single-page survey is the only gate: until every
+  // question is submitted (FULLY_COMPLETED), the user must stay here.
+  const profileComplete = stage === "FULLY_COMPLETED";
+
+  if (!profileComplete) {
+    if (isCompleteSurvey) {
       return {
         allowed: true,
       };
     }
 
-    
-
     return {
       allowed: false,
       redirectTo: "/onboarding",
       message:
-        "Please complete the Shambany onboarding survey before accessing the platform.",
+        "Please complete all farm profile questions to unlock the platform.",
     };
   }
 
   
+  // Profile complete: the whole platform is open (step pages remain
+  // available for reviewing or editing individual sections).
   if (
-    stage === "INITIAL_COMPLETED" ||
-    stage === "ADDITIONAL_COMPLETED" ||
     stage === "FULLY_COMPLETED"
   ) {
     /*
@@ -350,8 +350,7 @@ export function getRouteAccess(
     }
 
     /*
-     * Assessment is available immediately after
-     * Survey 1.
+     * Assessment is available once the full profile is complete.
      */
 
     if (isAssessment) {
