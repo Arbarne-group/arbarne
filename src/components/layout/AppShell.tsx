@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import Sidebar from "./Sidebar";
@@ -9,6 +9,7 @@ import MobileNav from "./MobileNav";
 import ComingSoonModal from "./ComingSoonModal";
 import {
   OnboardingStage,
+  clearLocalAppData,
   computeOnboardingStageFromUser,
   countCompletedPillarsFromAnswers,
   getRouteAccess,
@@ -35,6 +36,20 @@ export default function AppShell({
   const [userEmail, setUserEmail] = useState<string>("");
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
+  const wasSignedIn = useRef(false);
+
+  // Any Clerk sign-out path (sidebar button, avatar menu) wipes local data
+  useEffect(() => {
+    if (!isLoaded) return;
+    if (user) {
+      wasSignedIn.current = true;
+      return;
+    }
+    if (wasSignedIn.current) {
+      wasSignedIn.current = false;
+      clearLocalAppData();
+    }
+  }, [user, isLoaded]);
 
   const effectiveUserName =
     userName ||

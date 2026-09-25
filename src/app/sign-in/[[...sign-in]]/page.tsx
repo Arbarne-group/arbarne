@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SignIn } from "@clerk/nextjs";
+import { clearLocalAppData } from "@/lib/onboardingGuard";
 
 const slides = [
   {
@@ -41,6 +42,11 @@ const slides = [
 
 export default function SignInPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Fresh login starts with clean storage
+  useEffect(() => {
+    clearLocalAppData();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {

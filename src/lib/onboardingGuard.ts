@@ -477,6 +477,27 @@ export function getActiveUserEmail(): string {
   return "";
 }
 
+/**
+ * Wipes all browser-stored app data (local + session storage)
+ */
+export function clearLocalAppData() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    localStorage.clear();
+  } catch (error) {
+    console.error("Error clearing local storage:", error);
+  }
+
+  try {
+    sessionStorage.clear();
+  } catch (error) {
+    console.error("Error clearing session storage:", error);
+  }
+}
+
 /* ================================================================
    SAVE ACTIVE USER SESSION
    ================================================================ */
