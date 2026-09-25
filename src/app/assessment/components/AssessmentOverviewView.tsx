@@ -140,6 +140,18 @@ export default function AssessmentOverviewView({
             </p>
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">
+            <button
+              type="button"
+              onClick={() => setShowHistoryModal(true)}
+              title="View all pillar assessments and their statuses"
+              className="px-5 py-2 rounded-full bg-surface text-on-surface font-label-md text-sm font-bold flex items-center gap-1.5 border border-outline-variant/40 hover:bg-surface-container-high transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">history</span>
+              <span>Assessment History</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-mono">
+                {completedPillarsCount}/8 Done
+              </span>
+            </button>
             {completedPillarsCount === 8 ? (
               <Link
                 href="/assessment/report?pillar=all"
@@ -331,12 +343,21 @@ export default function AssessmentOverviewView({
                       <span className="font-mono text-[12px]">Cap. {pillar.id}.1–{pillar.id}.5</span>
                       {status?.completed ? (
                         <div className="flex items-center gap-2">
-                          
+
                           {isLockedCooldown ? (
-                            <span className="font-semibold text-amber-800 text-[12px] flex items-center gap-0.5">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                // Don't trigger the card's read-only answers view.
+                                e.stopPropagation();
+                                onSelectPillar(pillar.id, true);
+                              }}
+                              title="Open the pillar summary report"
+                              className="font-semibold text-amber-800 text-[12px] flex items-center gap-0.5 cursor-pointer"
+                            >
                               <span>Summary</span>
                               <ArrowRight size={14} className="text-amber-800" />
-                            </span>
+                            </button>
                           ) : isReassessReady ? (
                             <span className="font-semibold text-emerald-700 text-[12px] group-hover:underline">
                               Start Assessment
