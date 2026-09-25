@@ -1702,12 +1702,12 @@ export default function CompleteSurveyPage() {
                     <p className="text-xs text-on-surface-variant mb-2">Permanent year-round team managing daily farm tasks, irrigation, and security.</p>
                     <div className="flex items-center gap-2">
                       <button type="button" onClick={() => setPermanentWorkers((v) => Math.max(0, (typeof v === "number" ? v : 0) - 1))}
-                        className="w-9 h-9 rounded-xl border border-outline-variant font-bold hover:bg-surface-container-low cursor-pointer">−</button>
+                        className="w-9 h-9 shrink-0 rounded-xl border border-outline-variant font-bold hover:bg-surface-container-low cursor-pointer">−</button>
                       <input type="number" min="0" value={permanentWorkers} placeholder="0"
                         onChange={(e) => setPermanentWorkers(e.target.value === "" ? "" : Math.max(0, Number(e.target.value)))}
-                        className="flex-1 rounded-xl border border-outline-variant px-4 py-2.5 text-sm text-center focus:border-secondary focus:outline-none bg-surface" />
+                        className="flex-1 min-w-0 rounded-xl border border-outline-variant px-4 py-2.5 text-sm text-center focus:border-secondary focus:outline-none bg-surface" />
                       <button type="button" onClick={() => setPermanentWorkers((v) => (typeof v === "number" ? v : 0) + 1)}
-                        className="w-9 h-9 rounded-xl border border-outline-variant font-bold hover:bg-surface-container-low cursor-pointer">+</button>
+                        className="w-9 h-9 shrink-0 rounded-xl border border-outline-variant font-bold hover:bg-surface-container-low cursor-pointer">+</button>
                     </div>
                   </div>
                   <div>
@@ -1715,12 +1715,12 @@ export default function CompleteSurveyPage() {
                     <p className="text-xs text-on-surface-variant mb-2">Short-term hands recruited during harvesting, weeding, and packing periods.</p>
                     <div className="flex items-center gap-2">
                       <button type="button" onClick={() => setSeasonalWorkers((v) => Math.max(0, (typeof v === "number" ? v : 0) - 1))}
-                        className="w-9 h-9 rounded-xl border border-outline-variant font-bold hover:bg-surface-container-low cursor-pointer">−</button>
+                        className="w-9 h-9 shrink-0 rounded-xl border border-outline-variant font-bold hover:bg-surface-container-low cursor-pointer">−</button>
                       <input type="number" min="0" value={seasonalWorkers} placeholder="0"
                         onChange={(e) => setSeasonalWorkers(e.target.value === "" ? "" : Math.max(0, Number(e.target.value)))}
-                        className="flex-1 rounded-xl border border-outline-variant px-4 py-2.5 text-sm text-center focus:border-secondary focus:outline-none bg-surface" />
+                        className="flex-1 min-w-0 rounded-xl border border-outline-variant px-4 py-2.5 text-sm text-center focus:border-secondary focus:outline-none bg-surface" />
                       <button type="button" onClick={() => setSeasonalWorkers((v) => (typeof v === "number" ? v : 0) + 1)}
-                        className="w-9 h-9 rounded-xl border border-outline-variant font-bold hover:bg-surface-container-low cursor-pointer">+</button>
+                        className="w-9 h-9 shrink-0 rounded-xl border border-outline-variant font-bold hover:bg-surface-container-low cursor-pointer">+</button>
                     </div>
                   </div>
                 </div>
