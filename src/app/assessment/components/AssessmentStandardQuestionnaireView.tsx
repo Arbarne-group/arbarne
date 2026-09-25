@@ -466,7 +466,9 @@ export default function AssessmentStandardQuestionnaireView({
                 {isSubmitting
                   ? "Submitting to Database..."
                   : currentCapIndex === pillar.capabilities.length - 1
-                  ? `Submit Pillar 0${pillar.id} Assessment`
+                  ? isReadOnly
+                    ? "View Summary"
+                    : `Submit Pillar 0${pillar.id} Assessment`
                   : isCurrentPageComplete
                   ? "Next"
                   : `Next (${unansweredQuestions.length} remaining)`}
