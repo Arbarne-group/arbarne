@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { clearLocalAppData, getActiveUserEmail } from "@/lib/onboardingGuard";
 
 /* =====================================================================
    Complete Farm Profile Survey — every onboarding question on one page.
@@ -1179,17 +1179,16 @@ export default function CompleteSurveyPage() {
         body: JSON.stringify({ step: "confirm-profile", email, data: {} }),
       });
       const confirmData = await confirmRes.json();
-      if (confirmData.user) {
-        localStorage.setItem(
-          "future_farms_user",
-          JSON.stringify({ ...confirmData.user, stage: "FULLY_COMPLETED" })
-        );
-      } else if (lastUser) {
-        localStorage.setItem("future_farms_user", JSON.stringify(lastUser));
+      // Submit wipes local storage
+      const freshUser = confirmData.user
+        ? { ...confirmData.user, stage: "FULLY_COMPLETED" }
+        : lastUser;
+      clearLocalAppData();
+      if (freshUser) {
+        try {
+          localStorage.setItem("future_farms_user", JSON.stringify(freshUser));
+        } catch {}
       }
-      try {
-        localStorage.removeItem(DRAFT_KEY);
-      } catch {}
       router.push("/assessment");
     } catch (e) {
       console.error(e);
