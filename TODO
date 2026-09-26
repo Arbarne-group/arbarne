@@ -1,0 +1,4 @@
+# TODO
+
+- [ ] Make the answers fields have a minimum number of words/characters and a responsive counter
+- [ ] Questions should be stored in the database, not hardcoded in the code. Also, add the admin side to add/edit questions.

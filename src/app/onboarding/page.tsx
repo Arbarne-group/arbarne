@@ -318,14 +318,7 @@ function QCard({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      id={id}
-      className={`bg-surface-container-lowest rounded-[26px] p-6 md:p-8 border transition-all duration-200 scroll-mt-28 ${
-        error
-          ? "border-2 border-red-400 bg-red-50/20 shadow-[0_8px_30px_rgba(220,38,38,0.08)]"
-          : "border-outline-variant/40 shadow-[0_2px_6px_rgba(25,28,29,0.04),0_12px_32px_rgba(25,28,29,0.06)] hover:shadow-[0_4px_10px_rgba(25,28,29,0.05),0_16px_40px_rgba(25,28,29,0.08)]"
-      }`}
-    >
+    <div id={id} className="scroll-mt-28 py-6 md:py-7">
       <div className="flex items-start justify-between gap-4 mb-5">
         <label className="block text-[15px] md:text-base font-semibold text-on-surface leading-snug">{title}</label>
         {error && <RequiredBadge />}
@@ -412,7 +405,7 @@ function CheckCard({
           : "border-outline-variant hover:bg-surface-container-low cursor-pointer"
       }`}
     >
-      <div>
+      <div className="flex-1 min-w-0">
         <div className={`text-xs sm:text-sm font-medium ${checked ? "text-secondary font-semibold" : "text-on-surface"}`}>
           {title}
         </div>
@@ -1236,7 +1229,7 @@ export default function CompleteSurveyPage() {
       <div className="px-4 md:px-10 pt-[84px] pb-40 max-w-4xl mx-auto w-full">
         {/* Header */}
         <div className="mb-10">
-          <div className="flex items-center gap-3 mb-3">
+          <div className="hidden sm:flex items-center gap-3 mb-3">
             <span className="px-3.5 py-1.5 bg-primary text-white rounded-full text-[11px] font-bold tracking-[0.14em] uppercase shadow-sm">
               Complete Farm Profile
             </span>
@@ -1278,12 +1271,12 @@ export default function CompleteSurveyPage() {
           {/* ============ Farm identity ============ */}
           <div>
             <SectionHeader index="Farm Identity" title="Farm Identity & Contact" desc="Your farm name and phone number." />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div id="q-farmName" className={`scroll-mt-28 p-4 rounded-2xl border ${err("farmName") ? "border-2 border-red-400" : "border-surface-variant/40 bg-surface-container-lowest"} shadow-[0_2px_6px_rgba(25,28,29,0.04)]`}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
+              <div id="q-farmName" className="scroll-mt-28">
                 <label className="text-xs font-bold text-on-surface block mb-2">Farm / Agribusiness Name *</label>
                 <TextInput value={farmName} onChange={(v) => { setFarmName(v); if (v.trim()) clearError("farmName"); }} placeholder="e.g. Simba Ridge Demonstration Farm" error={err("farmName")} />
               </div>
-              <div id="q-phone" className={`scroll-mt-28 p-4 rounded-2xl border ${err("phone") ? "border-2 border-red-400" : "border-surface-variant/40 bg-surface-container-lowest"} shadow-[0_2px_6px_rgba(25,28,29,0.04)]`}>
+              <div id="q-phone" className="scroll-mt-28">
                 <label className="text-xs font-bold text-on-surface block mb-2">Farmer Contact / Phone Number *</label>
                 <TextInput type="tel" value={phone} onChange={(v) => { setPhone(v); if (v.trim()) clearError("phone"); }} placeholder="e.g. +254 712 345 678" error={err("phone")} />
               </div>
@@ -1293,7 +1286,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 1: Farmer profile (Q1-5) ============ */}
           <div>
             <SectionHeader index="Section 1 of 10" title="Farmer Profile" desc="Tell us about the person building the future-ready farm." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-jobTitle" title="1. What is your current job title or secondary occupation?" error={err("jobTitle")}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
                   {JOB_OPTIONS.map((opt) => (
@@ -1360,7 +1353,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 2: Management (Q6-8) ============ */}
           <div>
             <SectionHeader index="Section 2 of 10" title="Farm Management Experience" desc="Help us understand how you currently manage your farm." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-mgmtAbility" title="6. Which statement best describes your current farm management ability?" error={err("mgmtAbility")}>
                 <div className="space-y-3">
                   {ABILITY_OPTIONS.map((opt) => (
@@ -1396,7 +1389,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 3: Operating style (Q9-14) ============ */}
           <div>
             <SectionHeader index="Section 3 of 10" title="Your Operating Style" desc="Help us understand how you make decisions, navigate challenges, and measure progress." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-decisionStyle" title="9. When facing an important business decision, what do you typically do first?" error={err("decisionStyle")}>
                 <div className="space-y-3">
                   {DECISION_OPTIONS.map((opt) => (
@@ -1469,7 +1462,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 4: Aspirations (Q15-21) ============ */}
           <div>
             <SectionHeader index="Section 4 of 10" title="Your Future Farms Aspirations" desc="Tell us where you want your farm to go over the next 1 to 25 years." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-twelveMonthSuccess" title="15. What would success look like for your farm over the next 12 months?" error={err("twelveMonthSuccess")}>
                 <textarea rows={3} value={twelveMonthSuccess}
                   onChange={(e) => { setTwelveMonthSuccess(e.target.value); if (e.target.value.trim()) clearError("twelveMonthSuccess"); }}
@@ -1537,7 +1530,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 5: Digital platforms (Q22-27) ============ */}
           <div>
             <SectionHeader index="Section 5 of 10" title="Working With Digital Farm Management Platforms" desc="Understanding your readiness and requirements for digital management, transparency, and operational verification." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-supportReasons" title="22. What could be your main reason for considering professional farm management support?" error={err("supportReasons")}>
                 <div className="space-y-3">
                   {SUPPORT_REASON_OPTIONS.map((opt) => (
@@ -1599,7 +1592,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 6: Location ============ */}
           <div>
             <SectionHeader index="Section 6 of 10" title="Farm Location" desc="Tell us where your farm is located so we can provide local micro-climate forecasts, soil nutrient composition, and connect you directly with regional aggregate buyers." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-locationSearch" title="Enter your farm location, town, or nearby landmark" error={err("locationSearch")}>
                 <TextInput value={locationSearch}
                   onChange={(v) => { setLocationSearch(v); if (v.trim()) clearError("locationSearch"); }}
@@ -1664,7 +1657,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 7: Characteristics ============ */}
           <div>
             <SectionHeader index="Section 7 of 10" title="Farm Characteristics" desc="Tell us about your land size, ownership, water source, and soil so we can give you relevant farming recommendations." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-farmSize" title="How big is your farm?" error={err("farmSize")}>
                 <div className="flex gap-2 mb-3">
                   {(["Acres", "Hectares"] as const).map((u) => (
@@ -1739,7 +1732,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 8: Farming system ============ */}
           <div>
             <SectionHeader index="Section 8 of 10" title="Farming System" desc="Tell us about your crops, livestock, farming practices, and power sources so we can customize agronomy advice, equipment rebates, and supplier connections." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-enterprises" title="1. What do you grow and raise on your farm?" error={err("enterprises")}>
                 <p className="text-xs text-on-surface-variant mb-3">Select all that apply</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1782,7 +1775,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 9: Business experience ============ */}
           <div>
             <SectionHeader index="Section 9 of 10" title="Business Experience" desc="Help us understand your commercial track record, market outlets, and bookkeeping to match you with appropriate financing and buyers." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-commercialYears" title="1. How long have you been farming commercially?" error={err("commercialYears")}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {COMMERCIAL_YEARS_OPTIONS.map((opt) => (
@@ -1824,7 +1817,7 @@ export default function CompleteSurveyPage() {
           {/* ============ Section 10: Household & labour ============ */}
           <div>
             <SectionHeader index="Section 10 of 10" title="Household & Labour" desc="Detail your farm's workforce structure, seasonal labor reliance, and household management to assess human capital readiness and ethical workforce standards." />
-            <div className="space-y-8 mt-4">
+            <div className="mt-2">
               <QCard id="q-workforce" title="1. Farm Workforce & Labour Size" error={err("workforce")}>
                 <p className="text-xs text-on-surface-variant mb-4">Detail full-time permanent personnel and seasonal hands hired during peak activities.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
