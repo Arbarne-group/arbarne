@@ -7,6 +7,7 @@ import {
   AssessmentCapability,
 } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import PageLoader from "@/components/PageLoader";
 
 interface AssessmentStandardQuestionnaireViewProps {
   pillarId: number;
@@ -43,51 +44,77 @@ export default function AssessmentStandardQuestionnaireView({
     daysRemaining: number;
   }>({ isCompleted: false, canReassess: true, nextEligibleDate: null, daysRemaining: 0 });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Gate the entire view behind the server response
+  const [isLoading, setIsLoading] = useState(true);
 
   // Completed pillars under the 90-day cooldown are strictly read-only
   const isReadOnly = cooldownStatus.isCompleted && !cooldownStatus.canReassess;
 
   const activeEmail = user?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
 
-  // Load existing answers and cooldown status on mount
+  // Load server truth (answers + lock status) BEFORE showing anything.
   useEffect(() => {
-    try {
-      const email = activeEmail;
-      if (!email) return;
-
-      fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.pillarStatus && data.pillarStatus[pillarId]) {
-            const pStatus = data.pillarStatus[pillarId];
-            setCooldownStatus({
-              isCompleted: Boolean(pStatus.isCompleted),
-              canReassess: pStatus.canReassess ?? true,
-              nextEligibleDate: pStatus.nextEligibleDate,
-              daysRemaining: pStatus.daysRemaining ?? 0,
-            });
-          }
-          if (data.answers && Object.keys(data.answers).length > 0) {
-            setAnswers((prev) => {
-              const combined = { ...data.answers, ...prev };
-              try {
-                localStorage.setItem(
-                  "future_farms_assessment_answers",
-                  JSON.stringify(combined)
-                );
-                const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
-                localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...combined }));
-              } catch (err) {
-                console.error(err);
-              }
-              return combined;
-            });
-          }
-        })
-        .catch(console.error);
-    } catch (e) {
-      console.error(e);
+    let cancelled = false;
+    async function load() {
+      // Re-arm the gate on pillar switches
+      setIsLoading(true);
+      try {
+        const email = activeEmail;
+        if (!email) return; // keep spinner until identity resolves
+        const res = await fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`);
+        const data = await res.json().catch(() => ({}));
+        if (cancelled) return;
+        let locked = false;
+        if (data.pillarStatus && data.pillarStatus[pillarId]) {
+          const pStatus = data.pillarStatus[pillarId];
+          locked = Boolean(pStatus.isCompleted) && !(pStatus.canReassess ?? true);
+          setCooldownStatus({
+            isCompleted: Boolean(pStatus.isCompleted),
+            canReassess: pStatus.canReassess ?? true,
+            nextEligibleDate: pStatus.nextEligibleDate,
+            daysRemaining: pStatus.daysRemaining ?? 0,
+          });
+        }
+        if (data.answers && Object.keys(data.answers).length > 0) {
+          const pillarQIds = new Set(
+            pillar.capabilities.flatMap((c) => c.questions.map((q) => q.id))
+          );
+          setAnswers((prev) => {
+            let combined: Record<string, "yes" | "no">;
+            if (locked) {
+              // Server answers win. Drop any stale local
+              // edits for this pillar so wrong data is never displayed.
+              const local = { ...prev };
+              pillarQIds.forEach((id) => {
+                delete local[id];
+              });
+              combined = { ...local, ...data.answers };
+            } else {
+              combined = { ...data.answers, ...prev };
+            }
+            try {
+              localStorage.setItem(
+                "future_farms_assessment_answers",
+                JSON.stringify(combined)
+              );
+              const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
+              localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...combined }));
+            } catch (err) {
+              console.error(err);
+            }
+            return combined;
+          });
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
     }
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, [pillarId, activeEmail]);
 
   const currentCapability: AssessmentCapability =
@@ -247,6 +274,15 @@ export default function AssessmentStandardQuestionnaireView({
       .slice(0, currentCapIndex)
       .reduce((acc, c) => acc + c.questions.length, 0) + 1;
   const endQuestionNum = startQuestionNum + currentCapability.questions.length - 1;
+
+  // Locked, loading, or otherwise not ready
+  if (isLoading) {
+    return (
+      <div className="flex flex-col flex-1 min-h-screen">
+        <PageLoader message="Loading pillar assessment…" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 min-h-screen">

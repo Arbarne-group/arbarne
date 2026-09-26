@@ -81,7 +81,7 @@ export default function Sidebar({
   const navItems = [
     {
       label: "Overview",
-      href: "/onboarding",
+      href: "/overview",
       icon: "dashboard",
     },
     {
@@ -173,8 +173,8 @@ export default function Sidebar({
      ============================================================ */
 
   const isItemActive = (itemHref: string) => {
-    if (itemHref === "/onboarding") {
-      return pathname === "/onboarding";
+    if (itemHref === "/overview") {
+      return pathname === "/overview";
     }
 
     if (itemHref === "/assessment") {

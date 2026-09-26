@@ -481,6 +481,7 @@ export function getActiveUserEmail(): string {
  * Wipes all browser-stored app data (local + session storage)
  */
 export function clearLocalAppData() {
+  farmUnlockedCache = false;
   if (typeof window === "undefined") {
     return;
   }
@@ -495,6 +496,42 @@ export function clearLocalAppData() {
     sessionStorage.clear();
   } catch (error) {
     console.error("Error clearing session storage:", error);
+  }
+}
+
+/* ================================================================
+   FARM ACCESS FLAG (persisted unlock state)
+   ================================================================ */
+
+const FARM_UNLOCKED_KEY = "ff_farm_unlocked";
+
+// Module-level cache so the very first paint (before any fetch) already
+// knows whether My Farm was unlocked. Assessment history never disappears
+// for an account, so only the unlocked state is ever persisted; logout
+// resets both layers via clearLocalAppData().
+let farmUnlockedCache: boolean | null = null;
+
+/** Synchronous first-paint check: was My Farm unlocked? */
+export function isFarmUnlockedCached(): boolean {
+  if (farmUnlockedCache !== null) return farmUnlockedCache;
+  if (typeof window === "undefined") return false;
+  try {
+    farmUnlockedCache = localStorage.getItem(FARM_UNLOCKED_KEY) === "1";
+  } catch {
+    farmUnlockedCache = false;
+  }
+  return farmUnlockedCache;
+}
+
+/** Persist the unlocked state once the server confirms it. */
+export function setFarmUnlockedCached(unlocked: boolean) {
+  farmUnlockedCache = unlocked;
+  if (typeof window === "undefined") return;
+  try {
+    if (unlocked) localStorage.setItem(FARM_UNLOCKED_KEY, "1");
+    else localStorage.removeItem(FARM_UNLOCKED_KEY);
+  } catch {
+    // Ignore restricted environments.
   }
 }
 

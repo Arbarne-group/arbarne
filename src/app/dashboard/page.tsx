@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import AppShell from "@/components/layout/AppShell";
 import RadarChart from "@/components/dashboard/RadarChart";
+import PageLoader from "@/components/PageLoader";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import {
   computeAssessmentResults,
@@ -33,6 +34,9 @@ export default function DashboardPage() {
   const [rawAnswers, setRawAnswers] = useState<Record<string, "yes" | "no">>({});
   const [assessmentMeta, setAssessmentMeta] = useState<any>(null);
   const [assessmentResult, setAssessmentResult] = useState<OverallAssessmentResult | null>(null);
+  // Gate content until BOTH the onboarding check and the assessment
+  // responses round-trip settle
+  const [responsesLoaded, setResponsesLoaded] = useState(false);
 
   // Modals & Interactive States
   const [showProgressModal, setShowProgressModal] = useState(false);
@@ -146,6 +150,9 @@ export default function DashboardPage() {
           } else {
             router.replace("/assessment");
           }
+        })
+        .finally(() => {
+          setResponsesLoaded(true);
         });
     } else {
       const localCount = countCompletedPillarsFromAnswers(localAnswers);
@@ -154,6 +161,7 @@ export default function DashboardPage() {
         return;
       }
       setLoading(false);
+      setResponsesLoaded(true);
     }
   }, [clerkUser, router]);
 
@@ -430,6 +438,17 @@ export default function DashboardPage() {
     }
     return "Complete assessment to schedule";
   }, [assessmentMeta, hasAssessment]);
+
+  if (loading || !responsesLoaded) {
+    return (
+      <AppShell
+        userName={user?.name || clerkUser?.fullName || "Farmer"}
+        userRole={user?.farmerProfile?.jobTitle === "owner" ? "Farm Owner" : "Farm Operator"}
+      >
+        <PageLoader message="Loading your farm dashboard…" />
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

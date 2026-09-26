@@ -16,6 +16,7 @@ import {
 } from "@/data/capabilityFeedback";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 import ScannableQrCode from "@/components/ScannableQrCode";
+import PageLoader from "@/components/PageLoader";
 
 interface AssessmentSummaryViewProps {
   pillarId: number;
@@ -675,17 +676,11 @@ export default function AssessmentSummaryView({
     }
   };
 
-  if (!mounted || (loadingDb && totalYes === 0 && Object.keys(answers).length === 0)) {
+  // Gate on the server round-trip itself
+  if (!mounted || loadingDb) {
     return (
       <div className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop flex items-center justify-center min-h-[60vh]">
-        <div className="flex flex-col items-center gap-3">
-          <span className="material-symbols-outlined text-primary text-4xl animate-spin">
-            progress_activity
-          </span>
-          <span className="font-label-sm text-sm text-on-surface-variant font-medium">
-            Extracting verified diagnostic results from database...
-          </span>
-        </div>
+        <PageLoader message="Extracting verified diagnostic results from database..." />
       </div>
     );
   }

@@ -13,6 +13,8 @@ import {
   computeOnboardingStageFromUser,
   countCompletedPillarsFromAnswers,
   getRouteAccess,
+  isFarmUnlockedCached,
+  setFarmUnlockedCached,
 } from "@/lib/onboardingGuard";
 
 interface AppShellProps {
@@ -31,8 +33,21 @@ export default function AppShell({
   const { user, isLoaded } = useUser();
   const [collapsed, setCollapsed] = useState(false);
   const [onboardingStage, setOnboardingStage] = useState<OnboardingStage>("FULLY_COMPLETED");
-  const [completedPillarsCount, setCompletedPillarsCount] = useState<number>(0);
-  const [hasAssessmentHistory, setHasAssessmentHistory] = useState(false);
+  const [completedPillarsCount, setCompletedPillarsCount] = useState<number>(() => {
+    // First-paint values. Persisted unlock flag + local answers, so the
+    // sidebar never flashes
+    if (typeof window === "undefined") return 0;
+    try {
+      const saved =
+        localStorage.getItem("future_farms_assessment_answers") ||
+        localStorage.getItem("future_farms_all_answers");
+      if (saved) return countCompletedPillarsFromAnswers(JSON.parse(saved));
+    } catch {}
+    return 0;
+  });
+  const [hasAssessmentHistory, setHasAssessmentHistory] = useState<boolean>(() =>
+    isFarmUnlockedCached()
+  );
   const [userEmail, setUserEmail] = useState<string>("");
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
@@ -132,9 +147,11 @@ export default function AppShell({
         }
         if (data.completedPillarsCount !== undefined) {
           setCompletedPillarsCount(data.completedPillarsCount);
+          if (data.completedPillarsCount >= 1) setFarmUnlockedCached(true);
         }
         if (data.hasAssessmentHistory !== undefined) {
           setHasAssessmentHistory(data.hasAssessmentHistory);
+          if (data.hasAssessmentHistory) setFarmUnlockedCached(true);
         }
       })
       .catch(() => {})
@@ -269,6 +286,7 @@ export default function AppShell({
                 <MobileNav
                   onboardingStage={onboardingStage}
                   completedPillarsCount={completedPillarsCount}
+                  hasAssessmentHistory={hasAssessmentHistory}
                 />
               )}
             </>
