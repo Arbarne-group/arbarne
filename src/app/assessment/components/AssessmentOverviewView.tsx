@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { ALL_PILLARS, AssessmentPillar } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import PageLoader from "@/components/PageLoader";
 import { ArrowRight } from "lucide-react";
 
 interface PillarProgressItem {
@@ -40,12 +41,19 @@ export default function AssessmentOverviewView({
     nextEligibleDateFull: null,
     daysRemainingFull: 0,
   });
+  // Gate content behind the server round-trip so pillar cards never render
+  // from empty defaults
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load progress from API and localStorage
   useEffect(() => {
+    let cancelled = false;
     async function loadProgress() {
+      // Re-arm the gate when identity resolves/changes.
+      setIsLoading(true);
       let answers: Record<string, "yes" | "no"> = {};
       const email = user?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+      if (!email) return; // stay gated until identity resolves (always authed here)
       let pillarApiStatus: Record<number, any> = {};
 
       try {
@@ -103,10 +111,14 @@ export default function AssessmentOverviewView({
       });
 
       setPillarProgress(progress);
+      if (!cancelled) setIsLoading(false);
     }
 
     loadProgress();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   const totalAnswered = Object.values(pillarProgress).reduce(
     (acc, p) => acc + (p.answeredCount || 0),
@@ -124,6 +136,12 @@ export default function AssessmentOverviewView({
       : totalAnswered > 0
       ? "In Progress"
       : "Not Started";
+
+  // Gate content behind the server round-trip so pillar cards never render
+  // from empty defaults
+  if (isLoading) {
+    return <PageLoader message="Loading assessment overview…" />;
+  }
 
   return (
     <div className="flex-1 p-margin-mobile md:p-margin-desktop bg-surface-container-low min-h-full">

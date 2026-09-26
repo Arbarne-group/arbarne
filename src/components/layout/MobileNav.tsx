@@ -35,7 +35,7 @@ export default function MobileNav({
   };
 
   const navItems = [
-    { label: "Overview", href: "/onboarding", icon: "dashboard" },
+    { label: "Overview", href: "/overview", icon: "dashboard" },
     { label: "My Farm", href: "/dashboard", icon: "agriculture" },
     { label: "Assess", href: "/assessment", icon: "fact_check", highlight: true },
     { label: "Learn", href: "/learning", icon: "school" },
@@ -61,7 +61,7 @@ export default function MobileNav({
         const locked = isItemLocked(item.href);
         const isActive =
           pathname === item.href ||
-          (item.href === "/onboarding" && pathname.startsWith("/onboarding")) ||
+          (item.href === "/overview" && pathname === "/overview") ||
           (item.href === "/assessment" && pathname.startsWith("/assessment"));
 
         if (item.highlight) {
@@ -73,13 +73,15 @@ export default function MobileNav({
               className={`flex flex-col items-center justify-center rounded-xl px-3 py-1.5 active:scale-95 transition-transform ${
                 locked
                   ? "bg-surface-container-high text-on-surface-variant/80 border border-outline-variant/40"
-                  : "bg-primary text-on-primary"
+                  : isActive
+                  ? "bg-primary text-on-primary"
+                  : "text-on-surface-variant hover:bg-surface-container-high"
               }`}
             >
               <span className="material-symbols-outlined text-[20px] fill">
                 {locked ? "lock" : item.icon}
               </span>
-              <span className="text-[10px] font-bold">
+              <span className={`text-[10px] ${isActive && !locked ? "font-bold" : ""}`}>
                 {locked ? "Locked" : item.label}
               </span>
             </Link>

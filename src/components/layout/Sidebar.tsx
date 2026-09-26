@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
-import { OnboardingStage } from "@/lib/onboardingGuard";
+import { OnboardingStage, clearLocalAppData } from "@/lib/onboardingGuard";
 import { ChevronRightIcon } from "lucide-react";
 
 interface SidebarProps {
@@ -81,7 +81,7 @@ export default function Sidebar({
   const navItems = [
     {
       label: "Overview",
-      href: "/onboarding",
+      href: "/overview",
       icon: "dashboard",
     },
     {
@@ -173,8 +173,8 @@ export default function Sidebar({
      ============================================================ */
 
   const isItemActive = (itemHref: string) => {
-    if (itemHref === "/onboarding") {
-      return pathname === "/onboarding";
+    if (itemHref === "/overview") {
+      return pathname === "/overview";
     }
 
     if (itemHref === "/assessment") {
@@ -815,9 +815,10 @@ export default function Sidebar({
 
         <button
           type="button"
-          onClick={() =>
-            signOut(() => router.push("/"))
-          }
+          onClick={() => {
+            clearLocalAppData();
+            signOut(() => router.push("/"));
+          }}
           title={
             collapsed
               ? "Sign Out"

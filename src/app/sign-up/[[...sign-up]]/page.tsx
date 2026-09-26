@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { SignUp } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
+import { clearLocalAppData } from "@/lib/onboardingGuard";
 
 const slides = [
   {
@@ -41,6 +42,12 @@ const slides = [
 
 export default function SignUpPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Fresh registration starts with clean storage: no drafts, answers, or
+  // cached user from a previous account
+  useEffect(() => {
+    clearLocalAppData();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
