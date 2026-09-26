@@ -397,7 +397,7 @@ function CheckCard({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`border rounded-2xl p-4 flex items-center justify-between text-left transition-all ${
+      className={`w-full border rounded-2xl p-4 flex items-center justify-between text-left transition-all ${
         checked
           ? "border-secondary bg-secondary-container/10 ring-1 ring-secondary shadow-sm cursor-pointer"
           : disabled
