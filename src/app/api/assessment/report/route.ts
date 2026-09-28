@@ -4,6 +4,7 @@ import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { PILLAR_BRANDS } from "@/data/brandColors";
 import { getMaturityTier } from "@/lib/assessmentScoring";
+import { getPillarScoringTier } from "@/data/pillarScoringTiers";
 import { syncNeonAssessmentToSheetsFast } from "@/lib/neonRealtimeSync";
 
 export const dynamic = "force-dynamic";
@@ -118,6 +119,8 @@ export async function GET(request: Request) {
       const yesResponses = pillarResponses.filter((r) => r.answer === "yes");
       const noResponses = pillarResponses.filter((r) => r.answer === "no");
       const score = pillarRecord ? pillarRecord.score : Math.round((yesResponses.length / 25) * 100);
+      // Pillar status/recommendation follow the per-pillar 0-25 bands (scoring.json)
+      const scoringTier = getPillarScoringTier(pId, yesResponses.length);
       const tier = getMaturityTier(score);
 
       // Group recommendations by priority
@@ -137,7 +140,9 @@ export async function GET(request: Request) {
           verifiedCount: yesResponses.length,
           gapCount: noResponses.length,
           totalQuestions: pillarResponses.length || 25,
-          maturityStage: tier.label,
+          maturityStage: scoringTier.status,
+          scoreBand: `${scoringTier.minScore}\u2013${scoringTier.maxScore}`,
+          recommendation: scoringTier.recommendation,
           maturityDescription: tier.description,
           guidingQuestion: pillarMeta.guidingQuestion,
           isCompleted: true,
@@ -225,6 +230,7 @@ export async function GET(request: Request) {
       const pNo = pResponses.filter((r) => r.answer === "no").length;
       const isAssessed = pResponses.length > 0 || !!pa;
       const score = pa ? pa.score : pResponses.length > 0 ? Math.round((pYes / 25) * 100) : 0;
+      const scoringTier = getPillarScoringTier(p.id, pYes);
       const tier = isAssessed ? getMaturityTier(score) : { label: "Pending Assessment", stage: "pending", description: "Pillar not yet assessed by farmer." };
       const brand = PILLAR_BRANDS[p.id];
 
@@ -236,7 +242,9 @@ export async function GET(request: Request) {
         verifiedCount: pYes,
         gapCount: pNo,
         totalQuestions: pResponses.length || 25,
-        maturityStage: tier.label,
+        maturityStage: isAssessed ? scoringTier.status : tier.label,
+        scoreBand: isAssessed ? `${scoringTier.minScore}\u2013${scoringTier.maxScore}` : undefined,
+        recommendation: isAssessed ? scoringTier.recommendation : undefined,
         isCompleted: true,
         isAssessed: true,
       };

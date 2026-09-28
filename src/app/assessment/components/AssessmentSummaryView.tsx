@@ -446,14 +446,11 @@ export default function AssessmentSummaryView({
   const clampedRatio = Math.max(0, Math.min(1, totalYes / totalQuestions));
   const dashOffset = (125.6 * (1 - clampedRatio)).toFixed(1);
 
-  // Automatic feedback for pillar based on total score and database maturity
-  const pillarFeedback = useMemo(() => {
-    const feedback = getPillarAutomaticFeedback(totalYes, totalQuestions);
-    if (dbPillarStatus?.maturityLevel) {
-      feedback.label = dbPillarStatus.maturityLevel;
-    }
-    return feedback;
-  }, [totalYes, totalQuestions, dbPillarStatus]);
+  // Pillar status + recommendation from total score (per-pillar bands in scoring.json)
+  const pillarFeedback = useMemo(
+    () => getPillarAutomaticFeedback(pillar.id, totalYes, totalQuestions),
+    [pillar.id, totalYes, totalQuestions]
+  );
 
   const pillarPercentage = Math.round((totalYes / totalQuestions) * 100);
   const nextPillarId = pillar.id < ALL_PILLARS.length ? pillar.id + 1 : 1;
@@ -868,14 +865,17 @@ export default function AssessmentSummaryView({
           </div>
         </div>
 
-        {/* Status Label */}
+        {/* Status + score band */}
         <div
-          className={`inline-flex items-center justify-center px-4 py-1.5 rounded-full ${pillarFeedback.badgeBg} border ${pillarFeedback.badgeBorder} mb-4`}
+          className={`inline-flex items-center gap-2 justify-center px-4 py-1.5 rounded-full ${pillarFeedback.badgeBg} border ${pillarFeedback.badgeBorder} mb-4`}
         >
           <span
             className={`font-label-sm text-[12px] font-bold uppercase tracking-widest ${pillarFeedback.badgeText}`}
           >
             {pillarFeedback.label}
+          </span>
+          <span className={`text-[11px] font-semibold ${pillarFeedback.badgeText} opacity-70`}>
+            {pillarFeedback.rangeLabel}
           </span>
         </div>
 
@@ -988,46 +988,43 @@ export default function AssessmentSummaryView({
                     </div>
                   </div>
 
-                  {/* Expanded Capability Status Feedback Panel */}
-                  {isExpanded && (
-                    <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-1 border-t border-outline-variant/30 flex flex-col bg-surface-container-lowest/50 animate-in fade-in duration-150">
-                      <div
-                        className={`p-4 rounded-xl border ${cap.tier.badgeBg} ${cap.tier.badgeBorder} flex flex-col gap-3`}
-                      >
-                        <div className="flex items-center justify-between">
+                {/* Expanded Capability Status Feedback Panel */}
+                {isExpanded && (
+                  <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-1 border-t border-outline-variant/30 flex flex-col bg-surface-container-lowest/50 animate-in fade-in duration-150">
+                    <div
+                      className={`p-4 rounded-xl border ${cap.tier.badgeBg} ${cap.tier.badgeBorder} flex flex-col gap-3`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`text-xs font-bold uppercase tracking-wider ${cap.tier.badgeText} flex items-center gap-1.5`}
+                        >
                           <span
-                            className={`text-xs font-bold uppercase tracking-wider ${cap.tier.badgeText} flex items-center gap-1.5`}
-                          >
-                            <span
-                              className="w-2 h-2 rounded-full"
-                              style={{ backgroundColor: cap.tier.hex }}
-                            />
-                            Maturity: {cap.tier.status}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedCapForDetail(cap);
-                            }}
-                            className="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1 bg-white/70 px-2.5 py-1 rounded-lg border border-primary/20 shadow-xs cursor-pointer"
-                          >
-                            <span>View Action Plan</span>
-                            <span className="material-symbols-outlined text-[14px]">
-                              arrow_forward
-                            </span>
-                          </button>
-                        </div>
-                        <p className="text-md text-on-surface leading-relaxed m-0">
-                          {cap.statusFeedback}
-                        </p>
+                            className="w-2 h-2 rounded-full"
+                            style={{ backgroundColor: cap.tier.hex }}
+                          />
+                          Maturity: {cap.tier.status}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCapForDetail(cap);
+                          }}
+                          className="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1 bg-white/70 px-2.5 py-1 rounded-lg border border-primary/20 shadow-xs cursor-pointer"
+                        >
+                          <span>View Action Plan</span>
+                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </button>
                       </div>
+                      <p className="text-md text-on-surface leading-relaxed m-0">
+                        {cap.statusFeedback}
+                      </p>
                     </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Main Actions */}

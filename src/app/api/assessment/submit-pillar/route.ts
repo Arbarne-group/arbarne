@@ -3,7 +3,8 @@ import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { ALL_PILLARS } from "@/data/allPillarsData";
-import { computeAssessmentResults, getMaturityTier } from "@/lib/assessmentScoring";
+import { computeAssessmentResults } from "@/lib/assessmentScoring";
+import { getPillarScoringTier } from "@/data/pillarScoringTiers";
 import { triggerNeonRealtimeAssessmentSync, syncNeonAssessmentToSheetsFast } from "@/lib/neonRealtimeSync";
 
 const QUESTION_MAP = new Map<string, {
@@ -163,7 +164,8 @@ export async function POST(request: Request) {
 
     const scoring = computeAssessmentResults(fullAnswerMap);
     const pScoreResult = scoring.pillarScores.find((p) => p.pillarId === numPillarId)!;
-    const tier = getMaturityTier(pScoreResult.score);
+    // Pillar status comes from the per-pillar 0-25 scoring bands (scoring.json)
+    const tier = { label: getPillarScoringTier(numPillarId, pScoreResult.yesCount).status };
 
     // 5. Update / finalize PillarAssessment
     const pillarRecord = await prisma.pillarAssessment.upsert({

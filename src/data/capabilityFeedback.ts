@@ -1,6 +1,8 @@
 // Capability Status Feedback Data and Utilities
 // Based on the Future Farms Framework (FFF) Capability Status Guidance
 
+import { getPillarScoringTier } from "@/data/pillarScoringTiers";
+
 export interface CapabilityStatusTier {
   level: number; // 0 to 5
   status: string; // 'Non-Existent' | 'Emerging' | 'Basic' | 'Developing' | 'Established' | 'Advanced'
@@ -150,6 +152,7 @@ export const PILLAR_AUTOMATIC_FEEDBACK_TIERS: PillarAutomaticFeedbackTier[] = [
 ];
 
 export function getPillarAutomaticFeedback(
+  pillarId: number,
   totalScore: number,
   totalQuestions: number = 25
 ): PillarAutomaticFeedbackTier {
@@ -157,11 +160,15 @@ export function getPillarAutomaticFeedback(
     totalQuestions > 0 ? Math.round((totalScore / totalQuestions) * 25) : totalScore;
   const clamped = Math.max(0, Math.min(25, normalized));
 
-  const tier = PILLAR_AUTOMATIC_FEEDBACK_TIERS.find(
+  const visualTier = PILLAR_AUTOMATIC_FEEDBACK_TIERS.find(
     (t) => clamped >= t.minScore && clamped <= t.maxScore
   );
+  const base = visualTier || PILLAR_AUTOMATIC_FEEDBACK_TIERS[0];
 
-  return tier || PILLAR_AUTOMATIC_FEEDBACK_TIERS[0];
+  // Status wording and recommendation are pillar-specific (see scoring.json)
+  const { status, recommendation } = getPillarScoringTier(pillarId, clamped);
+
+  return { ...base, label: status, feedback: recommendation };
 }
 
 // Exact verbatim Capability Status Feedback for Pillar 5

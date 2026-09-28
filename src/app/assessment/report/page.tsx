@@ -1230,7 +1230,8 @@ function AssessmentReportContent() {
                       {reportData?.pillar?.verifiedCount || 18} / {reportData?.pillar?.totalQuestions || 25} Verified
                     </span>
                     <span className="text-[11px] block font-semibold text-slate-700 mt-0.5">
-                      {reportData?.pillar?.maturityStage || "Level 2: Emerging Stage"}
+                      {reportData?.pillar?.maturityStage || "Emerging"}
+                      {reportData?.pillar?.scoreBand ? ` (${reportData.pillar.scoreBand})` : ""}
                     </span>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700">
@@ -1278,13 +1279,19 @@ function AssessmentReportContent() {
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                   <div className="flex-1 space-y-2">
                     <p className="font-medium text-slate-800">
-                      <strong className="text-slate-900">{farmName}</strong> demonstrates structured foundational practices in{" "}
-                      {reportData?.pillar?.name || "this pillar focus"}, placing the enterprise in the{" "}
+                      <strong className="text-slate-900">{farmName}</strong> is assessed as{" "}
                       <strong className="text-emerald-900 font-bold">
-                        {reportData?.pillar?.maturityStage || "Level 2: Emerging Agribusiness"}
+                        {reportData?.pillar?.maturityStage || "Emerging"}
                       </strong>{" "}
-                      category.
+                      in {reportData?.pillar?.name || "this pillar"}
+                      {reportData?.pillar?.scoreBand ? ` (score band ${reportData.pillar.scoreBand})` : ""}.
                     </p>
+                    {reportData?.pillar?.recommendation && (
+                      <p className="text-slate-700 border-l-2 border-emerald-600 pl-3">
+                        <strong className="text-slate-900">Recommendation:</strong>{" "}
+                        {reportData.pillar.recommendation}
+                      </p>
+                    )}
                     <p className="text-slate-600">
                       <strong className="text-slate-900">Key Strengths:</strong> Complete conversion to primary sustainable
                       practices, active preventative servicing logs, and routine operational monitoring by field managers.
