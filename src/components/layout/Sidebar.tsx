@@ -4,9 +4,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useClerk } from "@clerk/nextjs";
-import { OnboardingStage, clearLocalAppData } from "@/lib/onboardingGuard";
+import { usePathname } from "next/navigation";
+import { appSignOut } from "@/hooks/useAppUser";
+import { OnboardingStage } from "@/lib/onboardingGuard";
 import { ChevronRightIcon } from "lucide-react";
 
 interface SidebarProps {
@@ -27,17 +27,10 @@ export default function Sidebar({
   hasAssessmentHistory = false,
 }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { signOut } = useClerk();
 
   /* ============================================================
-     ONBOARDING / ACCESS LOGIC
+     ACCESS LOGIC (no onboarding locks — free roam)
      ============================================================ */
-
-  const isInitialSurveyIncomplete =
-    onboardingStage === "INITIAL_IN_PROGRESS";
-
-  const platformUnlocked = !isInitialSurveyIncomplete;
 
   // FIX (Bug 2): My Farm should unlock on ANY assessment history,
   // not only once a full 25/25 pillar is complete. A user who has
@@ -50,25 +43,14 @@ export default function Sidebar({
      LOGO DESTINATION
      ============================================================ */
 
-  const logoHref = isInitialSurveyIncomplete
-    ? "/onboarding"
-    : dashboardUnlocked
-      ? "/dashboard"
-      : "/assessment";
+  const logoHref = dashboardUnlocked ? "/dashboard" : "/assessment";
 
   /* ============================================================
      NAVIGATION ACCESS
      ============================================================ */
 
-  const isItemLocked = (itemHref: string) => {
-    if (isInitialSurveyIncomplete) {
-      return itemHref !== "/onboarding";
-    }
-
-    if (itemHref === "/dashboard" && !dashboardUnlocked) {
-      return true;
-    }
-
+  const isItemLocked = (_itemHref: string) => {
+    // No locks: every section opens; pages themselves emphasize what to do.
     return false;
   };
 
@@ -85,7 +67,7 @@ export default function Sidebar({
       icon: "dashboard",
     },
     {
-      label: "My Farm",
+      label: "My Business",
       href: "/dashboard",
       icon: "agriculture",
     },
@@ -139,33 +121,10 @@ export default function Sidebar({
      ============================================================ */
 
   const handleItemClick = (
-    e: React.MouseEvent,
-    itemHref: string
+    _e: React.MouseEvent,
+    _itemHref: string
   ) => {
-    /*
-     * If onboarding is incomplete, keep the user in onboarding.
-     */
-    if (
-      isInitialSurveyIncomplete &&
-      itemHref !== "/onboarding"
-    ) {
-      e.preventDefault();
-      router.push("/onboarding");
-      return;
-    }
-
-    /*
-     * My Farm requires at least one completed assessment pillar
-     * (or, now, any assessment history at all).
-     */
-    if (
-      itemHref === "/dashboard" &&
-      !dashboardUnlocked
-    ) {
-      e.preventDefault();
-      router.push("/assessment");
-      return;
-    }
+    // All destinations open directly; no rerouting.
   };
 
   /* ============================================================
@@ -413,11 +372,9 @@ export default function Sidebar({
           const isActive = isItemActive(item.href);
 
           const lockedHref =
-            isInitialSurveyIncomplete
-              ? "/onboarding"
-              : item.href === "/dashboard"
-                ? "/assessment"
-                : item.href;
+            item.href === "/dashboard"
+              ? "/assessment"
+              : item.href;
 
           return (
             <Link
@@ -430,9 +387,7 @@ export default function Sidebar({
                 collapsed
                   ? `${item.label}${
                       locked
-                        ? item.href === "/dashboard"
-                          ? " (Complete an assessment first)"
-                          : " (Complete onboarding first)"
+                        ? " (Complete an assessment first)"
                         : ""
                     }`
                   : undefined
@@ -815,10 +770,7 @@ export default function Sidebar({
 
         <button
           type="button"
-          onClick={() => {
-            clearLocalAppData();
-            signOut(() => router.push("/"));
-          }}
+          onClick={() => appSignOut("/")}
           title={
             collapsed
               ? "Sign Out"

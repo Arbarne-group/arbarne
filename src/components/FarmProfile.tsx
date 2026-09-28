@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { getBusinessProfileStatus } from "@/lib/businessProfile";
 
 type FarmProfileData = {
   farmName: string;
@@ -57,6 +59,12 @@ type OnboardingUser = {
   phone?: string;
   farmName?: string;
   futureFarmId?: string;
+  businessId?: string;
+  businessName?: string;
+  business?: {
+    businessName?: string | null;
+    businessId?: string | null;
+  };
 
   farmLocation?: any;
   farmCharacteristics?: any;
@@ -134,7 +142,7 @@ function initialData(user: OnboardingUser, farmId?: string): FarmProfileData {
   const waterSources = parseList(characteristics?.waterSources);
 
   return {
-    farmName: display(user?.farmName),
+    farmName: display(user?.business?.businessName || user?.businessName || user?.farmName),
     futureFarmId: display(
       farmId ||
         user?.futureFarmId ||
@@ -584,6 +592,8 @@ export default function FarmProfileMetadata() {
     [user],
   );
 
+  const bizStatus = useMemo(() => getBusinessProfileStatus(user), [user]);
+
   useEffect(() => {
     if (!editing) return;
     document.body.style.overflow = "hidden";
@@ -762,11 +772,18 @@ export default function FarmProfileMetadata() {
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-y-2 gap-x-5 text-[13px] text-on-primary/80 font-medium">
-                  {profile.futureFarmId && (
+                  {/* {profile.futureFarmId && (
                     <span className="flex items-center gap-1.5 bg-secondary/80 px-2.5 py-1 rounded-lg">
                       <Icon name="fingerprint" className="text-[16px]" />
                       Farm ID:
                       {profile.futureFarmId}
+                    </span>
+                  )} */}
+                  {(user?.business?.businessId || user?.businessId) && (
+                    <span className="flex items-center gap-1.5 bg-white/15 px-2.5 py-1 rounded-lg font-mono">
+                      <Icon name="badge" className="text-[16px]" />
+                      Business ID:
+                      {user.business?.businessId || user.businessId}
                     </span>
                   )}
                   {profile.locality && (
@@ -789,8 +806,51 @@ export default function FarmProfileMetadata() {
             </div>
           </div>
 
+          {/* ── COMPLETION RIBBON (partial business data) ─────────── */}
+          {!bizStatus.complete && (
+            <div className="rounded-2xl border border-amber-300/70 bg-amber-50 p-5 sm:p-6 shadow-sm">
+              <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-700 flex items-center justify-center shrink-0">
+                    <Icon name="pending_actions" className="text-[22px]" />
+                  </div>
+                  <div>
+                    <h3 className="text-[15px] md:text-base font-bold text-amber-900">
+                      Farm Business Profile {bizStatus.percent}% complete
+                    </h3>
+                    <p className="text-xs md:text-[13px] text-amber-800/90 mt-0.5">
+                      {bizStatus.missing.length > 0 ? (
+                        <>
+                          Still needed:{" "}
+                          {bizStatus.missing.slice(0, 4).map((m) => m.label).join(" • ")}
+                          {bizStatus.missing.length > 4 &&
+                            ` +${bizStatus.missing.length - 4} more`}
+                        </>
+                      ) : (
+                        "Almost there — finish the last details."
+                      )}
+                    </p>
+                    <div className="w-full sm:w-64 bg-amber-200/60 rounded-full h-1.5 mt-2.5 overflow-hidden">
+                      <div
+                        className="bg-amber-500 h-1.5 rounded-full transition-all"
+                        style={{ width: `${bizStatus.percent}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <Link
+                  href="/farm-business"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary text-[13.5px] font-bold hover:opacity-90 transition shadow-sm shrink-0"
+                >
+                  <Icon name="edit" className="text-[18px]" />
+                  Complete Farm Business Profile
+                </Link>
+              </div>
+            </div>
+          )}
+
           {/* ── METRICS DASHBOARD ─────────────────────────────────── */}
-          {highlights.length > 0 && (
+          {highlights.length > 0 && bizStatus.complete && (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {highlights.map((h) => (
                 <KPICard key={h.label} {...h} />
@@ -799,6 +859,7 @@ export default function FarmProfileMetadata() {
           )}
 
           {/* ── MASONRY-STYLE DETAILS GRID ───────────────────────── */}
+          {bizStatus.complete && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <SectionCard
               icon="home_work"
@@ -877,6 +938,7 @@ export default function FarmProfileMetadata() {
               />
             </SectionCard>
           </div>
+          )}
 
           {isEmpty && (
             <div className="text-center py-16 px-4 bg-surface-container-lowest border border-dashed border-outline-variant/80 rounded-3xl">
@@ -890,14 +952,13 @@ export default function FarmProfileMetadata() {
                 Your farm profile metadata hasn't been configured yet. Populate
                 your details to start managing operations.
               </p>
-              <button
-                type="button"
-                onClick={openEdit}
+              <Link
+                href="/farm-business"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary text-[14px] font-bold hover:opacity-90 transition shadow-sm"
               >
                 <Icon name="add" />
                 Fill Out Profile
-              </button>
+              </Link>
             </div>
           )}
 

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { syncNeonUsersToSheetsFast, syncAllNeonAssessmentsToSheetsFast } from "@/lib/neonRealtimeSync";
-import { syncClerkUsersToDatabaseAndSheet } from "@/lib/clerkSync";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // Allow sufficient time for sheets batching
@@ -16,14 +15,12 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    const clerkResult = await syncClerkUsersToDatabaseAndSheet();
     const onboardingResult = await syncNeonUsersToSheetsFast();
     const assessmentResult = await syncAllNeonAssessmentsToSheetsFast();
 
     return NextResponse.json({
       success: true,
       timestamp: new Date().toISOString(),
-      clerk: clerkResult,
       onboarding: onboardingResult,
       assessment: assessmentResult,
     });

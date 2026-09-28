@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { OnboardingStage } from "@/lib/onboardingGuard";
 
 interface MobileNavProps {
@@ -17,42 +17,23 @@ export default function MobileNav({
   hasAssessmentHistory = false,
 }: MobileNavProps) {
   const pathname = usePathname();
-  const router = useRouter();
-
-  const isSurvey1 = onboardingStage === "INITIAL_IN_PROGRESS";
 
   
-  const isItemLocked = (itemHref: string) => {
-    if (isSurvey1) return itemHref !== "/onboarding";
-
-    // FIX (Bug 2): unlock on any assessment history, not only once
-    // a full 25/25 pillar is complete.
-    if (itemHref === "/dashboard" && !hasAssessmentHistory && completedPillarsCount < 1) {
-      return true;
-    }
-
+  const isItemLocked = (_itemHref: string) => {
+    // No locks: every section opens; pages themselves emphasize what to do.
     return false;
   };
 
   const navItems = [
     { label: "Overview", href: "/overview", icon: "dashboard" },
-    { label: "My Farm", href: "/dashboard", icon: "agriculture" },
+    { label: "Business", href: "/dashboard", icon: "agriculture" },
     { label: "Assess", href: "/assessment", icon: "fact_check", highlight: true },
     { label: "Learn", href: "/learning", icon: "school" },
     { label: "Opps", href: "/opportunities", icon: "lightbulb" },
   ];
   
-  const handleItemClick = (e: React.MouseEvent, itemHref: string) => {
-    if (isSurvey1 && itemHref !== "/onboarding") {
-      e.preventDefault();
-      router.push("/onboarding");
-      return;
-    }
-    if (itemHref === "/dashboard" && !hasAssessmentHistory && completedPillarsCount < 1) {
-      e.preventDefault();
-      router.push("/assessment");
-      return;
-    }
+  const handleItemClick = (_e: React.MouseEvent, _itemHref: string) => {
+    // All destinations open directly; no rerouting.
   };
 
   return (
@@ -68,7 +49,7 @@ export default function MobileNav({
           return (
             <Link
               key={item.label}
-              href={locked ? (isSurvey1 ? "/onboarding" : "/assessment") : item.href}
+              href={locked ? "/assessment" : item.href}
               onClick={(e) => handleItemClick(e, item.href)}
               className={`flex flex-col items-center justify-center rounded-xl px-3 py-1.5 active:scale-95 transition-transform ${
                 locked
@@ -91,7 +72,7 @@ export default function MobileNav({
         return (
           <Link
             key={item.label}
-            href={locked ? (isSurvey1 ? "/onboarding" : "/assessment") : item.href}
+            href={locked ? "/assessment" : item.href}
             onClick={(e) => handleItemClick(e, item.href)}
             className={`flex flex-col items-center justify-center p-1.5 rounded-xl transition-colors relative ${
               isActive

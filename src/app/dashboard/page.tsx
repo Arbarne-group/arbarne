@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAppUser as useUser } from "@/hooks/useAppUser";
 import AppShell from "@/components/layout/AppShell";
 import RadarChart from "@/components/dashboard/RadarChart";
 import PageLoader from "@/components/PageLoader";
@@ -14,10 +14,10 @@ import {
   OverallAssessmentResult,
 } from "@/lib/assessmentScoring";
 import {
-  computeOnboardingStageFromUser,
   countCompletedPillarsFromAnswers,
   getActiveUserEmail,
 } from "@/lib/onboardingGuard";
+import { getBusinessProfileStatus } from "@/lib/businessProfile";
 
 interface ActionItem {
   id: string;
@@ -48,24 +48,13 @@ export default function DashboardPage() {
 
   const [actions, setActions] = useState<ActionItem[]>([]);
   const [subscription, setSubscription] = useState<any>(null);
+  // Staff roam freely: farmer onboarding gates don't apply to them.
+  const STAFF_ROLES = ["FFDeveloper", "FFAdmin", "FFStaff"];
 
   useEffect(() => {
     const email = clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
 
-    // 1. Immediate local cache verification
-    try {
-      const cached = localStorage.getItem("future_farms_user");
-      if (cached) {
-        const u = JSON.parse(cached);
-        if (u) {
-          const st = computeOnboardingStageFromUser(u);
-          if (st.stage === "INITIAL_IN_PROGRESS") {
-            router.replace("/onboarding");
-            return;
-          }
-        }
-      }
-    } catch (e) {}
+    // (No onboarding stage gate — farmers roam freely.)
 
     let localAnswers: Record<string, "yes" | "no"> | null = null;
     try {
@@ -83,16 +72,14 @@ export default function DashboardPage() {
         .then((data) => {
           if (data.user) {
             setUser(data.user);
-            const st = computeOnboardingStageFromUser(data.user);
-            if (st.stage === "INITIAL_IN_PROGRESS") {
-              router.replace("/onboarding");
-              return;
+            if (data.user.role && STAFF_ROLES.includes(data.user.role)) {
+              return; // staff skip all gates below
             }
           }
-          if (!data.hasAssessmentHistory) {
+          if (!data.hasAssessmentHistory && !(data.user?.role && STAFF_ROLES.includes(data.user.role))) {
             const localCount = countCompletedPillarsFromAnswers(localAnswers);
             if (localCount < 1) {
-              router.replace("/assessment");
+              // No assessment yet: stay and render empty states below.
               return;
             }
           }
@@ -120,35 +107,24 @@ export default function DashboardPage() {
             if (count < 1) {
               const localCount = countCompletedPillarsFromAnswers(localAnswers);
               if (localCount < 1) {
-                router.replace("/assessment");
+                // No assessment yet: stay and render empty states below.
                 return;
               }
             }
           } else {
-            // Fallback to local storage if available
+            // Fallback to local storage if available; otherwise stay and
+            // render empty states below.
             if (localAnswers && Object.keys(localAnswers).length > 0) {
               setRawAnswers(localAnswers);
               setAssessmentResult(computeAssessmentResults(localAnswers));
-              const count = countCompletedPillarsFromAnswers(localAnswers);
-              if (count < 1) {
-                router.replace("/assessment");
-                return;
-              }
-            } else {
-              router.replace("/assessment");
-              return;
             }
           }
         })
         .catch(() => {
           if (localAnswers && Object.keys(localAnswers).length > 0) {
-            const count = countCompletedPillarsFromAnswers(localAnswers);
-            if (count < 1) {
-              router.replace("/assessment");
-              return;
-            }
-          } else {
-            router.replace("/assessment");
+            const safeAnswers: Record<string, "yes" | "no"> = localAnswers;
+            setRawAnswers(safeAnswers);
+            setAssessmentResult(computeAssessmentResults(safeAnswers));
           }
         })
         .finally(() => {
@@ -156,9 +132,10 @@ export default function DashboardPage() {
         });
     } else {
       const localCount = countCompletedPillarsFromAnswers(localAnswers);
-      if (localCount < 1) {
-        router.replace("/assessment");
-        return;
+      if (localCount >= 1 && localAnswers) {
+        const safeAnswers: Record<string, "yes" | "no"> = localAnswers;
+        setRawAnswers(safeAnswers);
+        setAssessmentResult(computeAssessmentResults(safeAnswers));
       }
       setLoading(false);
       setResponsesLoaded(true);
@@ -412,6 +389,10 @@ export default function DashboardPage() {
     (user as any)?.futureFarmId ||
     (user?.id ? `FFF-KE-PROD-${user.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD");
 
+  // Farm Business Profile completeness: partial profiles get a prominent
+  // banner + redirect button instead of silent gaps.
+  const bizStatus = useMemo(() => getBusinessProfileStatus(user), [user]);
+
   const lastAssessmentDate = useMemo(() => {
     if (assessmentMeta?.assessment?.updatedAt) {
       return new Date(assessmentMeta.assessment.updatedAt).toLocaleDateString("en-GB", {
@@ -485,6 +466,47 @@ export default function DashboardPage() {
           </div>
 
           {/* Top Section: Bento Grid for Maturity Index & Radar */}
+          {user && !bizStatus.complete && (
+            <div className="rounded-2xl border border-amber-300/70 bg-amber-50 p-5 shadow-sm">
+              <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-700 flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-[22px]">pending_actions</span>
+                  </div>
+                  <div>
+                    <h3 className="text-sm md:text-base font-bold text-amber-900">
+                      Complete your Farm Business Profile — {bizStatus.percent}% done
+                    </h3>
+                    <p className="text-xs md:text-[13px] text-amber-800/90 mt-0.5">
+                      {bizStatus.missing.length > 0 ? (
+                        <>
+                          Still needed:{" "}
+                          {bizStatus.missing.slice(0, 4).map((m) => m.label).join(" • ")}
+                          {bizStatus.missing.length > 4 &&
+                            ` +${bizStatus.missing.length - 4} more`}
+                        </>
+                      ) : (
+                        "Almost there — finish the last details."
+                      )}
+                    </p>
+                    <div className="w-full sm:w-64 bg-amber-200/60 rounded-full h-1.5 mt-2.5 overflow-hidden">
+                      <div
+                        className="bg-amber-500 h-1.5 rounded-full transition-all"
+                        style={{ width: `${bizStatus.percent}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <Link
+                  href="/farm-business"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary text-xs md:text-sm font-bold hover:opacity-90 transition shadow-sm shrink-0"
+                >
+                  <span className="material-symbols-outlined text-[18px]">edit</span>
+                  Complete Farm Business Profile
+                </Link>
+              </div>
+            </div>
+          )}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
             {/* Left Col: Maturity Index */}
             <div className="col-span-1 lg:col-span-5 flex flex-col gap-gutter ">
@@ -689,7 +711,27 @@ export default function DashboardPage() {
               </div>
 
               <div className="flex flex-col gap-3 flex-1">
-                {developmentPlanItems.map((item) => (
+                {!hasAssessment ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center py-10 px-4">
+                    <span className="material-symbols-outlined text-4xl text-on-surface-variant/40 mb-3">
+                      assignment
+                    </span>
+                    <p className="font-semibold text-sm text-on-surface">
+                      No development plan yet
+                    </p>
+                    <p className="text-sm text-on-surface-variant mt-1 mb-4 max-w-xs">
+                      Perform your farm assessment to get your tailored development plan.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => router.push("/assessment")}
+                      className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs md:text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                    >
+                      Take Assessment
+                    </button>
+                  </div>
+                ) : (
+                  developmentPlanItems.map((item) => (
                   <div
                     key={item.id}
                     className="flex items-center p-3 rounded-xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant group"
@@ -718,7 +760,8 @@ export default function DashboardPage() {
                       Audit
                     </button>
                   </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
 
@@ -765,7 +808,27 @@ export default function DashboardPage() {
               )}
 
               <div className="flex flex-col gap-4 flex-1 z-10">
-                {actions.map((act) => (
+                {!hasAssessment ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center py-10 px-4">
+                    <span className="material-symbols-outlined text-4xl text-on-surface-variant/40 mb-3">
+                      task_alt
+                    </span>
+                    <p className="font-semibold text-sm text-on-surface">
+                      No recommendations yet
+                    </p>
+                    <p className="text-sm text-on-surface-variant mt-1 mb-4 max-w-xs">
+                      Perform your farm assessment to get your tailored recommendations.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => router.push("/assessment")}
+                      className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs md:text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                    >
+                      Take Assessment
+                    </button>
+                  </div>
+                ) : (
+                  actions.map((act) => (
                   <label
                     key={act.id}
                     className="flex items-start gap-3 cursor-pointer group select-none"
@@ -786,7 +849,8 @@ export default function DashboardPage() {
                       </p>
                     </div>
                   </label>
-                ))}
+                  ))
+                )}
               </div>
 
               <div className="mt-6 z-10 flex justify-center">

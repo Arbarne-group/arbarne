@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useState, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useUser } from "@clerk/nextjs";
+import { useAppUser as useUser } from "@/hooks/useAppUser";
 import { ALL_PILLARS, PillarData, AssessmentQuestion } from "@/data/allPillarsData";
 import { getMaturityTier } from "@/lib/assessmentScoring";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";

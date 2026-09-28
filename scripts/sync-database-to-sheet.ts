@@ -1,19 +1,12 @@
 import { syncAllUnsentUsersToSheet, syncAllUnsentAssessmentsToSheet } from "../src/lib/googleSheets";
-import { syncClerkUsersToDatabaseAndSheet } from "../src/lib/clerkSync";
 
 async function main() {
   console.log("=================================================");
-  console.log("Future Farms - Clerk, Onboarding & Assessment Sync");
+  console.log("Future Farms - Onboarding & Assessment Sync");
   console.log("=================================================");
   console.log(`Starting scan at: ${new Date().toISOString()}`);
 
-  console.log("\n1. Syncing users from Clerk Production...");
-  const clerkResult = await syncClerkUsersToDatabaseAndSheet();
-  console.log(`- Total users in Clerk:        ${clerkResult.clerkTotal}`);
-  console.log(`- New users imported to DB:    ${clerkResult.importedToDb}`);
-  console.log(`- Clerk users synced to Sheet: ${clerkResult.syncedToSheet}`);
-
-  console.log("\n2. Scanning Database for User & Onboarding records...");
+  console.log("\n1. Scanning Database for User & Onboarding records...");
   const result = await syncAllUnsentUsersToSheet();
 
   console.log("\nUser & Onboarding Sync Summary:");
@@ -35,7 +28,7 @@ async function main() {
     });
   }
 
-  console.log("\n3. Scanning Database for Assessment & Diagnostic records...");
+  console.log("\n2. Scanning Database for Assessment & Diagnostic records...");
   const assessResult = await syncAllUnsentAssessmentsToSheet();
   console.log(`- Total assessments in DB:     ${assessResult.totalInDb}`);
   console.log(`- Assessments synced to Sheet: ${assessResult.syncedCount}`);

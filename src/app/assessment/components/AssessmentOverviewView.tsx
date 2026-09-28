@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useAppUser as useUser } from "@/hooks/useAppUser";
 import { ALL_PILLARS, AssessmentPillar } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 import PageLoader from "@/components/PageLoader";
@@ -25,7 +25,7 @@ interface AssessmentOverviewViewProps {
 export default function AssessmentOverviewView({
   onSelectPillar,
 }: AssessmentOverviewViewProps) {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [pillarProgress, setPillarProgress] = useState<
     Record<number, PillarProgressItem>
@@ -53,7 +53,12 @@ export default function AssessmentOverviewView({
       setIsLoading(true);
       let answers: Record<string, "yes" | "no"> = {};
       const email = user?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
-      if (!email) return; // stay gated until identity resolves (always authed here)
+      if (!email) {
+        // No identity even after Auth settled: stop loading and render the
+        // empty state instead of spinning forever.
+        if (isLoaded && !cancelled) setIsLoading(false);
+        return;
+      }
       let pillarApiStatus: Record<number, any> = {};
 
       try {
@@ -118,7 +123,7 @@ export default function AssessmentOverviewView({
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, isLoaded]);
 
   const totalAnswered = Object.values(pillarProgress).reduce(
     (acc, p) => acc + (p.answeredCount || 0),

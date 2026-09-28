@@ -1,4 +1,4 @@
-import { currentUser, auth } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { recordUserToSheet, syncAllUnsentUsersToSheet } from "@/lib/googleSheets";
 import { generateUniqueFutureFarmId } from "@/lib/idGenerator";
@@ -9,20 +9,29 @@ const BACKGROUND_SYNC_COOLDOWN = 5 * 60 * 1000; // 5 minutes
 export { generateUniqueFutureFarmId };
 
 /**
- * Retrieves the currently authenticated Clerk user on the server.
+ * Retrieves the currently authenticated session user (Auth.js: Google or
+ * Credentials) in the legacy Clerk-compatible shape.
  */
 export async function getAuthenticatedClerkUser() {
   try {
-    const user = await currentUser();
-    return user;
+    const session = await auth().catch(() => null);
+    const su: any = (session as any)?.user;
+    if (!su?.email) return null;
+    return {
+      id: su.id,
+      primaryEmailAddressId: "primary",
+      emailAddresses: [{ id: "primary", emailAddress: su.email }],
+      firstName: null,
+      lastName: null,
+    };
   } catch (err) {
-    console.error("Error retrieving Clerk user:", err);
+    console.error("Error retrieving session user:", err);
     return null;
   }
 }
 
 /**
- * Returns the primary email of the authenticated Clerk user, or null if unauthenticated.
+ * Returns the primary email of the authenticated session user, or null.
  */
 export async function getAuthenticatedUserEmail(): Promise<string | null> {
   const clerkUser = await getAuthenticatedClerkUser();
@@ -34,20 +43,28 @@ export async function getAuthenticatedUserEmail(): Promise<string | null> {
 }
 
 /**
- * Finds or creates the matching database user record in Prisma for the authenticated Clerk user,
- * assigns their unique Future Farms Production ID (e.g. FFF-KE-PROD-001), and registers them
- * in the Google Spreadsheet.
+ * Finds or creates the matching database user record in Prisma for the
+ * authenticated session user, assigns their unique Future Farms Production
+ * ID (e.g. FFF-KE-PROD-001), and registers them in the Google Spreadsheet.
  */
 export async function getOrCreateCurrentUser(fallbackEmail?: string) {
-  const clerkUser = await getAuthenticatedClerkUser();
+  const session = await auth().catch(() => null);
+  const sessionUser: any = (session as any)?.user;
   let email: string | null = null;
 
-  if (clerkUser) {
-    const primary = clerkUser.emailAddresses?.find(
-      (e) => e.id === clerkUser.primaryEmailAddressId
-    )?.emailAddress || clerkUser.emailAddresses?.[0]?.emailAddress;
-    if (primary) {
-      email = primary.toLowerCase().trim();
+  if (sessionUser?.email) {
+    email = String(sessionUser.email).toLowerCase().trim();
+  }
+
+  if (!email) {
+    try {
+      const { getPasswordSession } = await import("@/lib/session");
+      const s = await getPasswordSession();
+      if (s?.email) {
+        email = s.email.toLowerCase().trim();
+      }
+    } catch {
+      // No password session — fall through to fallbackEmail.
     }
   }
 
@@ -59,9 +76,8 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
     return null;
   }
 
-  const fullName = clerkUser
-    ? [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ") || "Farmer"
-    : "Farmer";
+  const fullName =
+    (typeof sessionUser?.name === "string" && sessionUser.name.trim()) || "Farmer";
 
   let dbUser: any = null;
   try {
@@ -80,6 +96,7 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
         goalsPriorities: true,
         householdLabour: true,
         onboardingStatus: true,
+        business: true,
       },
     });
   } catch (findErr: any) {
@@ -95,7 +112,9 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
           name: fullName,
           email,
           futureFarmId: assignedId,
-          passwordHash: "CLERK_AUTHENTICATED",
+          passwordHash: "SOCIAL_AUTHENTICATED",
+          authProvider: sessionUser ? "google" : "password",
+          accountStatus: "VERIFIED",
           farmerProfile: { create: {} },
           farmManagement: { create: {} },
           operatingStyle: { create: {} },
@@ -115,6 +134,7 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
           goalsPriorities: true,
           householdLabour: true,
           onboardingStatus: true,
+          business: true,
         },
       });
     } catch (createErr: any) {
@@ -151,6 +171,7 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
           goalsPriorities: true,
           householdLabour: true,
           onboardingStatus: true,
+          business: true,
         },
       });
     } catch (updateErr: any) {
@@ -158,8 +179,29 @@ export async function getOrCreateCurrentUser(fallbackEmail?: string) {
     }
   }
 
+  // Backfill split names + provider for accounts created before they existed.
+  // Only runs for session-backed calls; name parts come from the session
+  // display name when the DB row lacks them.
+  if (dbUser?.id && !String(dbUser.id).startsWith("usr_") && sessionUser) {
+    try {
+      const patch: Record<string, string> = {};
+      if (dbUser.passwordHash === "CLERK_AUTHENTICATED" && dbUser.authProvider !== "google") {
+        patch.authProvider = "google";
+      }
+      if (dbUser.accountStatus !== "VERIFIED") patch.accountStatus = "VERIFIED";
+      if (Object.keys(patch).length > 0) {
+        dbUser = await (prisma.user as any).update({
+          where: { id: dbUser.id },
+          data: patch,
+        });
+      }
+    } catch (backfillErr: any) {
+      console.warn("[Auth] backfill notice:", backfillErr.message);
+    }
+  }
+
   // Record user to Google Sheet asynchronously (background cron job scans db to update spreadsheet)
-  recordUserToSheet(dbUser, clerkUser).catch((err: any) => {
+  recordUserToSheet(dbUser, sessionUser).catch((err: any) => {
     console.warn("[GoogleSheets] Asynchronous Google Sheet recording notice:", err?.message || err);
   });
 

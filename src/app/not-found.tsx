@@ -1,7 +1,56 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+const STAFF_ROLES = ["FFDeveloper", "FFAdmin", "FFStaff"];
+const FARMER_ROLES = ["FFFarmer", "FFFarmManager", "Other"];
+
+function ActionButton({
+  href,
+  icon,
+  label,
+  primary,
+}: {
+  href: string;
+  icon: string;
+  label: string;
+  primary?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`w-full sm:w-auto justify-center px-6 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-md flex items-center gap-2 ${
+        primary
+          ? "bg-primary hover:bg-primary/90 text-on-primary"
+          : "bg-surface-container-low hover:bg-surface-container border border-outline-variant text-on-surface font-semibold"
+      }`}
+    >
+      <span className="material-symbols-outlined text-[18px]">{icon}</span>
+      <span>{label}</span>
+    </Link>
+  );
+}
 
 export default function NotFound() {
+  const [role, setRole] = useState<string | null>(null);
+  const [checked, setChecked] = useState(false);
+
+  // Detect user type so every link points at their own pages.
+  useEffect(() => {
+    fetch("/api/auth/profile/details", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.user?.role) setRole(data.user.role);
+      })
+      .catch(() => {})
+      .finally(() => setChecked(true));
+  }, []);
+
+  const isStaff = role !== null && STAFF_ROLES.includes(role);
+  const isFarmer = role !== null && FARMER_ROLES.includes(role);
+
   return (
     <div className="min-h-screen bg-background flex flex-col justify-between text-on-background">
       {/* Top Navbar */}
@@ -17,13 +66,32 @@ export default function NotFound() {
             className="h-9 sm:h-11 w-auto object-contain"
           />
         </Link>
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
-        >
-          <span className="material-symbols-outlined text-[18px]">agriculture</span>
-          <span>Go to Dashboard</span>
-        </Link>
+        {checked &&
+          (isStaff ? (
+            <Link
+              href="/a/dashboard"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">dashboard</span>
+              <span>Admin Dashboard</span>
+            </Link>
+          ) : isFarmer ? (
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">agriculture</span>
+              <span>Go to Dashboard</span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">login</span>
+              <span>Sign In</span>
+            </Link>
+          ))}
       </header>
 
       {/* Main 404 Content */}
@@ -54,29 +122,26 @@ export default function NotFound() {
 
           {/* Action Navigation Options */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
-            <Link
-              href="/dashboard"
-              className="w-full sm:w-auto justify-center px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-on-primary font-bold text-xs sm:text-sm transition-all shadow-md flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined text-[18px]">dashboard</span>
-              <span>Farm Dashboard</span>
-            </Link>
-
-            <Link
-              href="/assessment"
-              className="w-full sm:w-auto justify-center px-6 py-3 rounded-xl bg-surface-container-low hover:bg-surface-container border border-outline-variant text-on-surface font-semibold text-xs sm:text-sm transition-all flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined text-[18px]">fact_check</span>
-              <span>Assessment Hub</span>
-            </Link>
-
-            <Link
-              href="/"
-              className="w-full sm:w-auto justify-center px-6 py-3 rounded-xl hover:bg-surface-container-low text-on-surface-variant font-medium text-xs sm:text-sm transition-all flex items-center gap-1.5"
-            >
-              <span className="material-symbols-outlined text-[18px]">home</span>
-              <span>Home</span>
-            </Link>
+            {!checked ? (
+              <div className="h-[46px] w-full sm:w-64 rounded-xl bg-surface-container-high animate-pulse" />
+            ) : isStaff ? (
+              <>
+                <ActionButton href="/a/dashboard" icon="dashboard" label="Admin Dashboard" primary />
+                <ActionButton href="/a/users" icon="group" label="Users" />
+                <ActionButton href="/a/audit" icon="receipt_long" label="Audit Log" />
+              </>
+            ) : isFarmer ? (
+              <>
+                <ActionButton href="/dashboard" icon="dashboard" label="Farm Dashboard" primary />
+                <ActionButton href="/assessment" icon="fact_check" label="Assessment Hub" />
+                <ActionButton href="/" icon="home" label="Home" />
+              </>
+            ) : (
+              <>
+                <ActionButton href="/login" icon="login" label="Sign In" primary />
+                <ActionButton href="/" icon="home" label="Home" />
+              </>
+            )}
           </div>
 
           {/* Quick Help Link */}

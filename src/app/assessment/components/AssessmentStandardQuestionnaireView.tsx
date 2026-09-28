@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import React, { useState, useEffect, useRef } from "react";
+import { useAppUser as useUser } from "@/hooks/useAppUser";
 import {
   getPillarById,
-  AssessmentCapability,
 } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 import PageLoader from "@/components/PageLoader";
@@ -20,9 +19,8 @@ export default function AssessmentStandardQuestionnaireView({
   onExit,
   onComplete,
 }: AssessmentStandardQuestionnaireViewProps) {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const pillar = getPillarById(pillarId);
-  const [currentCapIndex, setCurrentCapIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, "yes" | "no">>(() => {
     if (typeof window !== "undefined") {
       try {
@@ -46,13 +44,61 @@ export default function AssessmentStandardQuestionnaireView({
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Gate the entire view behind the server response
   const [isLoading, setIsLoading] = useState(true);
+  // Smooth reading progress 0..1 across the questions only.
+  const [scrollFrac, setScrollFrac] = useState(0);
+  const questionsRef = useRef<HTMLFormElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Always start at the top when opening (or switching) pillars: reset the
+  // window and every scrollable ancestor so no retained position shows.
+  // Runs again once loading finishes, since content arriving late shifts
+  // the layout after the initial reset.
+  useEffect(() => {
+    if (isLoading) return;
+    window.scrollTo(0, 0);
+    if (document.scrollingElement) {
+      document.scrollingElement.scrollTop = 0;
+    }
+    let el: HTMLElement | null = rootRef.current?.parentElement ?? null;
+    while (el) {
+      if (el.scrollHeight > el.clientHeight + 1) {
+        el.scrollTop = 0;
+      }
+      el = el.parentElement;
+    }
+  }, [pillarId, isLoading]);
 
   // Completed pillars under the 90-day cooldown are strictly read-only
   const isReadOnly = cooldownStatus.isCompleted && !cooldownStatus.canReassess;
 
   const activeEmail = user?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
 
-  // Load server truth (answers + lock status) BEFORE showing anything.
+  // Smooth progress across the questions region only (not the footer):
+  // measured off the questions form itself, so it works no matter which
+  // ancestor container actually scrolls. Capture phase catches scrolls
+  // from nested scroll containers too.
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const el = questionsRef.current;
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const vh = window.innerHeight || 1;
+        const frac = (vh * 0.85 - rect.top) / Math.max(rect.height, 1);
+        setScrollFrac(Math.min(1, Math.max(0, frac)));
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true, capture: true });
+    window.addEventListener("resize", update);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [pillarId, isLoading]);
   useEffect(() => {
     let cancelled = false;
     async function load() {
@@ -60,7 +106,12 @@ export default function AssessmentStandardQuestionnaireView({
       setIsLoading(true);
       try {
         const email = activeEmail;
-        if (!email) return; // keep spinner until identity resolves
+        if (!email) {
+          // No identity even after Auth settled: stop loading and render
+          // whatever is cached instead of spinning forever.
+          if (isLoaded && !cancelled) setIsLoading(false);
+          return;
+        }
         const res = await fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`);
         const data = await res.json().catch(() => ({}));
         if (cancelled) return;
@@ -115,13 +166,14 @@ export default function AssessmentStandardQuestionnaireView({
     return () => {
       cancelled = true;
     };
-  }, [pillarId, activeEmail]);
+  }, [pillarId, activeEmail, isLoaded]);
 
-  const currentCapability: AssessmentCapability =
-    pillar.capabilities[currentCapIndex] || pillar.capabilities[0];
+  // All questions across all capabilities, in order, with running numbers.
+  const allQuestions = pillar.capabilities.flatMap((cap) =>
+    cap.questions.map((q) => ({ ...q, capabilityId: cap.id, capabilityName: cap.name }))
+  );
+  const totalQuestionsInPillar = allQuestions.length;
 
-  const unansweredQuestions = currentCapability.questions.filter((q) => !answers[q.id]);
-  const isCurrentPageComplete = unansweredQuestions.length === 0;
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleAnswer = (questionId: string, value: "yes" | "no") => {
@@ -129,7 +181,7 @@ export default function AssessmentStandardQuestionnaireView({
     const updated = { ...answers, [questionId]: value };
     setAnswers(updated);
     if (validationError) {
-      const remaining = currentCapability.questions.filter((q) => !updated[q.id]);
+      const remaining = allQuestions.filter((q) => !updated[q.id]);
       if (remaining.length === 0) {
         setValidationError(null);
       }
@@ -146,67 +198,18 @@ export default function AssessmentStandardQuestionnaireView({
     }
   };
 
-  const persistProgress = (silent = false) => {
-    try {
-      localStorage.setItem(
-        "future_farms_assessment_answers",
-        JSON.stringify(answers)
-      );
-      const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
-      localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
-    } catch (e) {
-      console.error(e);
-    }
-    // Locked pillars are read-only server-side (90-day cooldown) so local copy is just enough
-    if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) return;
-    const email = activeEmail;
-    if (!email) return;
-    fetch("/api/assessment/save-progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, pillarId, answers }),
-    })
-      .then((res) => {
-        if (!res.ok && !silent) {
-          throw new Error(`Save failed (${res.status})`);
-        }
-      })
-      .catch((e) => {
-        console.error("Error saving progress to API:", e);
-        if (!silent) {
-          setToastMessage("Couldn't reach the server — progress kept on this device.");
-          setTimeout(() => setToastMessage(null), 3000);
-        }
-      });
-  };
+  const unansweredQuestions = allQuestions.filter((q) => !answers[q.id]);
+  const isPillarComplete = unansweredQuestions.length === 0;
+  const answeredCount = totalQuestionsInPillar - unansweredQuestions.length;
 
-  const handleSaveProgress = () => {
-    if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) {
-      setToastMessage(
-        `Reassessment locked: 90-day cooldown active (${cooldownStatus.daysRemaining} days remaining). Responses cannot be altered.`
-      );
-      setTimeout(() => setToastMessage(null), 3500);
-      return;
-    }
-    try {
-      persistProgress();
-      setToastMessage("Progress saved successfully!");
-      setTimeout(() => {
-        setToastMessage(null);
-      }, 3000);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const handleNext = async () => {
-    if (!isCurrentPageComplete) {
+  const handleSubmit = async () => {
+    if (!isPillarComplete) {
       setValidationError(
-        `Please answer all questions on this page before proceeding (${unansweredQuestions.length} question${
+        `Please answer all questions before submitting (${unansweredQuestions.length} question${
           unansweredQuestions.length > 1 ? "s" : ""
         } remaining).`
       );
-      setToastMessage(`Please answer all ${unansweredQuestions.length} remaining question(s) on this page.`);
+      setToastMessage(`Please answer all ${unansweredQuestions.length} remaining question(s).`);
       setTimeout(() => setToastMessage(null), 3500);
       const firstUnansweredId = unansweredQuestions[0]?.id;
       if (firstUnansweredId) {
@@ -218,62 +221,41 @@ export default function AssessmentStandardQuestionnaireView({
 
     setValidationError(null);
 
-    if (currentCapIndex < pillar.capabilities.length - 1) {
-      // Auto-save the draft on every page turn so progress survives
-      // reloads and other devices without tapping Save Progress.
-      persistProgress(true);
-      setCurrentCapIndex((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      // Completed all 5 capabilities in this pillar
-      if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) {
-        // In cooldown, skip API submission and view existing summary
-        onComplete(pillarId, answers);
-        return;
-      }
-      setIsSubmitting(true);
-      try {
-        localStorage.setItem(
-          "future_farms_assessment_answers",
-          JSON.stringify(answers)
-        );
-        const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
-        localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
-        const email = activeEmail;
-        const res = await fetch("/api/assessment/submit-pillar", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, pillarId, answers }),
-        });
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          console.warn("[Questionnaire] Database submission notice:", errData);
-        }
-      } catch (e) {
-        console.error("Error submitting pillar to database API:", e);
-      } finally {
-        setIsSubmitting(false);
-      }
+    // Single page: submit the whole pillar at once.
+    if (cooldownStatus.isCompleted && !cooldownStatus.canReassess) {
+      // In cooldown, skip API submission and view existing summary
       onComplete(pillarId, answers);
+      return;
     }
+    setIsSubmitting(true);
+    try {
+      localStorage.setItem(
+        "future_farms_assessment_answers",
+        JSON.stringify(answers)
+      );
+      const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
+      localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
+      const email = activeEmail;
+      const res = await fetch("/api/assessment/submit-pillar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, pillarId, answers }),
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        console.warn("[Questionnaire] Database submission notice:", errData);
+      }
+    } catch (e) {
+      console.error("Error submitting pillar to database API:", e);
+    } finally {
+      setIsSubmitting(false);
+    }
+    onComplete(pillarId, answers);
   };
 
   const handleBack = () => {
-    if (currentCapIndex > 0) {
-      setCurrentCapIndex((prev) => prev - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      onExit();
-    }
+    onExit();
   };
-
-  const totalQuestionsInPillar = pillar.capabilities.flatMap((c) => c.questions).length;
-  // Calculate question range for current capability
-  const startQuestionNum =
-    pillar.capabilities
-      .slice(0, currentCapIndex)
-      .reduce((acc, c) => acc + c.questions.length, 0) + 1;
-  const endQuestionNum = startQuestionNum + currentCapability.questions.length - 1;
 
   // Locked, loading, or otherwise not ready
   if (isLoading) {
@@ -285,9 +267,9 @@ export default function AssessmentStandardQuestionnaireView({
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-screen">
-      {/* Pillar Title & Progress (Sticky below top nav) */}
-      <div className="w-full bg-surface border-b border-outline-variant/50 sticky top-16 md:top-0 z-30 shadow-sm">
+    <div ref={rootRef} className="flex flex-col flex-1 min-h-screen">
+      {/* Pillar Title & Progress (sticky: touches the navbar on mobile) */}
+      <div className="w-full bg-surface border-b border-outline-variant/50 sticky top-0 z-30 shadow-sm">
         <div className="px-4 sm:px-6 md:px-12 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 max-w-5xl mx-auto w-full">
           <div className="flex items-center gap-3">
             <div
@@ -304,23 +286,15 @@ export default function AssessmentStandardQuestionnaireView({
                 {pillar.icon}
               </span>
             </div>
-            <h1 className="font-title-md text-headline-lg-mobile md:text-headline-lg text-on-surface font-semibold">
+            <h1 className="font-title-md text-lg md:text-headline-lg text-on-surface font-semibold">
               Pillar {pillar.id}: {pillar.name}
             </h1>
           </div>
 
           <div className="flex items-center gap-4 justify-between md:justify-end">
             <div className="font-label-sm text-label-sm text-on-surface-variant font-medium">
-              Questions {startQuestionNum}-{endQuestionNum} of {totalQuestionsInPillar}
+              {answeredCount} of {totalQuestionsInPillar} answered
             </div>
-            <button
-              type="button"
-              onClick={handleSaveProgress}
-              className="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm flex items-center gap-1 border border-outline-variant rounded-lg px-3 py-1.5 hover:bg-surface-container-low cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[18px]">save</span>{" "}
-              Save Progress
-            </button>
           </div>
         </div>
 
@@ -357,48 +331,18 @@ export default function AssessmentStandardQuestionnaireView({
           </div>
         )}
 
-        {/* 5-Segment Progress Track for the 5 capabilities */}
-        <div className="w-full bg-surface-container h-1.5 flex">
-          {pillar.capabilities.map((cap, idx) => {
-            const isCompleted = idx < currentCapIndex;
-            const isCurrent = idx === currentCapIndex;
-
-            return (
-              <div
-                key={cap.id}
-                className={`h-full transition-colors duration-300 ${
-                  idx > 0 ? "border-l border-surface" : ""
-                } ${
-                  isCurrent || isCompleted
-                    ? ""
-                    : "bg-surface-container"
-                }`}
-                style={{
-                  width: `${100 / pillar.capabilities.length}%`,
-                  backgroundColor: isCurrent || isCompleted ? pillar.accentColor : undefined,
-                }}
-              />
-            );
-          })}
+        {/* Smooth continuous progress — fills as the view moves down */}
+        <div className="w-full bg-surface-container h-1.5">
+          <div
+            className="h-full"
+            style={{ width: `${scrollFrac * 100}%`, backgroundColor: pillar.accentColor }}
+          />
         </div>
       </div>
 
-      {/* Assessment Form Area */}
+      {/* Assessment Form Area — all capabilities on one page */}
       <div className="flex-1 overflow-y-auto p-margin-mobile md:p-8 flex justify-center pb-24 md:pb-12 bg-surface-container-low">
         <div className="w-full max-w-[800px] bg-surface-container-lowest rounded-2xl shadow-sm p-6 md:p-10 border border-outline-variant/30 h-fit">
-          <div className="mb-10">
-            <p className="font-label-sm text-label-sm text-primary font-bold mb-2 uppercase tracking-widest">
-              Capability {currentCapability.id.replace("P", "")}
-            </p>
-            <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
-              {currentCapability.name}
-            </h2>
-            <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-              {currentCapability.description ||
-                `Please answer the following questions to help us assess your farm's current ${currentCapability.name.toLowerCase()}.`}
-            </p>
-          </div>
-
           {validationError && (
             <div className="mb-8 p-4 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-xl flex items-center gap-3 text-red-700 dark:text-red-300 text-sm animate-fadeIn">
               <span className="material-symbols-outlined text-red-500 text-xl shrink-0">error</span>
@@ -406,69 +350,90 @@ export default function AssessmentStandardQuestionnaireView({
             </div>
           )}
 
-          <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-            {currentCapability.questions.map((q, idx) => {
-              const currentVal = answers[q.id];
-              const isMissing = Boolean(validationError && !currentVal);
-
+          <form
+            ref={questionsRef}
+            className="space-y-10"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            {pillar.capabilities.map((cap, capIdx) => {
+              const startNum =
+                pillar.capabilities
+                  .slice(0, capIdx)
+                  .reduce((acc, c) => acc + c.questions.length, 0) + 1;
               return (
-                <div
-                  key={q.id}
-                  id={`question-${q.id}`}
-                  className={`p-5 rounded-2xl transition-all duration-200 ${
-                    isMissing
-                      ? "bg-red-50/60 dark:bg-red-950/30 border-2 border-red-400 shadow-xs"
-                      : idx < currentCapability.questions.length - 1
-                      ? "border-b border-outline-variant/20 pb-8"
-                      : ""
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <h3 className="font-title-md text-title-md text-on-surface font-medium">
-                      {idx + 1}. {q.question_text}
-                    </h3>
-                    {isMissing && (
-                      <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
-                        <span className="material-symbols-outlined text-[14px]">warning</span>
-                        Required
-                      </span>
-                    )}
+                <section key={cap.id} aria-label={cap.name}>
+                  <div className="mb-5">
+                    <p className="font-label-sm text-label-sm text-primary font-bold mb-1.5 uppercase tracking-widest">
+                      Capability {cap.id.replace("P", "")} • {cap.name}
+                    </p>
+                    <div className="h-px bg-outline-variant/40" />
                   </div>
+                  <div className="space-y-8">
+                    {cap.questions.map((q, idx) => {
+                      const qNum = startNum + idx;
+                      const currentVal = answers[q.id];
+                      const isMissing = Boolean(validationError && !currentVal);
 
-                  <div className="flex gap-6">
-                    {/* Yes Radio Option */}
-                    <label className={`relative flex items-center ${isReadOnly ? "cursor-default" : "cursor-pointer group"}`}>
-                      <input
-                        type="radio"
-                        name={q.id}
-                        value="yes"
-                        checked={currentVal === "yes"}
-                        onChange={() => handleAnswer(q.id, "yes")}
-                        disabled={isReadOnly}
-                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 accent-[#009924]"
-                      />
-                      <span className={`ml-3 font-body-md text-body-md text-on-surface transition-colors ${isReadOnly ? "" : "group-hover:text-primary"}`}>
-                        Yes
-                      </span>
-                    </label>
+                      return (
+                        <div
+                          key={q.id}
+                          id={`question-${q.id}`}
+                          className={`p-5 rounded-2xl transition-all duration-200 ${
+                            isMissing
+                              ? "bg-red-50/60 dark:bg-red-950/30 border-2 border-red-400 shadow-xs"
+                              : "border-b border-outline-variant/20 pb-8"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-4 mb-4">
+                            <h3 className="font-title-md text-[15px] md:text-title-md text-on-surface font-medium">
+                              {qNum}. {q.question_text}
+                            </h3>
+                            {isMissing && (
+                              <span className="shrink-0 text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                                <span className="material-symbols-outlined text-[14px]">warning</span>
+                                Required
+                              </span>
+                            )}
+                          </div>
 
-                    {/* No Radio Option */}
-                    <label className={`relative flex items-center ${isReadOnly ? "cursor-default" : "cursor-pointer group"}`}>
-                      <input
-                        type="radio"
-                        name={q.id}
-                        value="no"
-                        checked={currentVal === "no"}
-                        onChange={() => handleAnswer(q.id, "no")}
-                        disabled={isReadOnly}
-                        className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 accent-[#009924]"
-                      />
-                      <span className={`ml-3 font-body-md text-body-md text-on-surface transition-colors ${isReadOnly ? "" : "group-hover:text-primary"}`}>
-                        No
-                      </span>
-                    </label>
+                          <div className="flex gap-6">
+                            {/* Yes Radio Option */}
+                            <label className={`relative flex items-center ${isReadOnly ? "cursor-default" : "cursor-pointer group"}`}>
+                              <input
+                                type="radio"
+                                name={q.id}
+                                value="yes"
+                                checked={currentVal === "yes"}
+                                onChange={() => handleAnswer(q.id, "yes")}
+                                disabled={isReadOnly}
+                                className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 accent-[#009924]"
+                              />
+                              <span className={`ml-3 font-body-md text-[15px] md:text-title-md text-on-surface transition-colors ${isReadOnly ? "" : "group-hover:text-primary"}`}>
+                                Yes
+                              </span>
+                            </label>
+
+                            {/* No Radio Option */}
+                            <label className={`relative flex items-center ${isReadOnly ? "cursor-default" : "cursor-pointer group"}`}>
+                              <input
+                                type="radio"
+                                name={q.id}
+                                value="no"
+                                checked={currentVal === "no"}
+                                onChange={() => handleAnswer(q.id, "no")}
+                                disabled={isReadOnly}
+                                className="w-6 h-6 text-primary border-outline-variant focus:ring-primary focus:ring-2 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 accent-[#009924]"
+                              />
+                              <span className={`ml-3 font-body-md text-[15px] md:text-title-md text-on-surface transition-colors ${isReadOnly ? "" : "group-hover:text-primary"}`}>
+                                No
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                </div>
+                </section>
               );
             })}
           </form>
@@ -488,12 +453,12 @@ export default function AssessmentStandardQuestionnaireView({
 
             <button
               type="button"
-              onClick={handleNext}
+              onClick={handleSubmit}
               disabled={isSubmitting}
               className={`flex items-center justify-center gap-2 px-6 sm:px-8 py-3 font-label-sm text-label-sm font-semibold rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer w-full sm:w-auto ${
                 isSubmitting
                   ? "bg-primary/70 text-white cursor-wait opacity-80"
-                  : isCurrentPageComplete
+                  : isPillarComplete
                   ? "bg-[#009924] hover:bg-primary-container text-white hover:shadow-md"
                   : "bg-surface-variant text-on-surface-variant hover:bg-surface-variant/80 border border-outline-variant"
               }`}
@@ -501,20 +466,14 @@ export default function AssessmentStandardQuestionnaireView({
               <span>
                 {isSubmitting
                   ? "Submitting to Database..."
-                  : currentCapIndex === pillar.capabilities.length - 1
-                  ? isReadOnly
-                    ? "View Summary"
-                    : `Submit Pillar 0${pillar.id} Assessment`
-                  : isCurrentPageComplete
-                  ? "Next"
-                  : `Next (${unansweredQuestions.length} remaining)`}
+                  : isReadOnly
+                  ? "View Summary"
+                  : isPillarComplete
+                  ? `Submit Pillar 0${pillar.id} Assessment`
+                  : `Submit (${unansweredQuestions.length} remaining)`}
               </span>
               <span className={`material-symbols-outlined text-[20px] ${isSubmitting ? "animate-spin" : ""}`}>
-                {isSubmitting
-                  ? "progress_activity"
-                  : currentCapIndex === pillar.capabilities.length - 1
-                  ? "send"
-                  : "chevron_right"}
+                {isSubmitting ? "progress_activity" : "send"}
               </span>
             </button>
           </div>

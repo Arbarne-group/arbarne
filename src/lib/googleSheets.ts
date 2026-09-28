@@ -14,6 +14,34 @@ interface ServiceAccountCredentials {
 let cachedAccessToken: string | null = null;
 let tokenExpiresAt = 0;
 
+let sheetsConfiguredCache: boolean | null = null;
+
+/**
+ * Whether Google Sheets sync can work in this environment. Cached after the
+ * first check; warns once when credentials are absent so every API request
+ * doesn't flood the logs with the same missing-file stack trace.
+ */
+export function isSheetsSyncConfigured(): boolean {
+  if (sheetsConfiguredCache !== null) return sheetsConfiguredCache;
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY?.trim()) {
+    sheetsConfiguredCache = true;
+    return true;
+  }
+  const credentialsPath =
+    process.env.GOOGLE_APPLICATION_CREDENTIALS || "./google-service-account.json";
+  sheetsConfiguredCache = fs.existsSync(
+    path.resolve(process.cwd(), credentialsPath)
+  );
+  if (!sheetsConfiguredCache) {
+    console.warn(
+      "[GoogleSheets] Sync disabled: no service-account credentials found. " +
+        "Set GOOGLE_SERVICE_ACCOUNT_KEY or provide google-service-account.json to enable. " +
+        "(Logged once; sync calls will be skipped silently.)"
+    );
+  }
+  return sheetsConfiguredCache;
+}
+
 function base64UrlEncode(str: string): string {
   return Buffer.from(str)
     .toString("base64")
@@ -162,6 +190,7 @@ export async function getSpreadsheetMetadata(spreadsheetId?: string) {
 }
 
 export async function getSheetValues(range: string, spreadsheetId?: string) {
+  if (!isSheetsSyncConfigured()) return [];
   const id = spreadsheetId || process.env.GOOGLE_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
   const token = await getGoogleSheetsAccessToken();
   const res = await fetchSheetsWithRetry(
@@ -179,6 +208,7 @@ export async function getSheetValues(range: string, spreadsheetId?: string) {
 }
 
 export async function updateSheetValues(range: string, values: any[][], spreadsheetId?: string) {
+  if (!isSheetsSyncConfigured()) return null;
   const id = spreadsheetId || process.env.GOOGLE_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
   const token = await getGoogleSheetsAccessToken();
   const res = await fetchSheetsWithRetry(
@@ -203,6 +233,7 @@ export async function updateSheetValues(range: string, values: any[][], spreadsh
 }
 
 export async function appendSheetValues(range: string, values: any[][], spreadsheetId?: string) {
+  if (!isSheetsSyncConfigured()) return null;
   const id = spreadsheetId || process.env.GOOGLE_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
   const token = await getGoogleSheetsAccessToken();
   const res = await fetchSheetsWithRetry(
@@ -234,6 +265,7 @@ export async function ensureSheetTabExists(
   headerRows: any[][],
   spreadsheetId?: string
 ): Promise<void> {
+  if (!isSheetsSyncConfigured()) return;
   const id = spreadsheetId || process.env.GOOGLE_ASSESSMENT_SPREADSHEET_ID || DEFAULT_ASSESSMENT_SPREADSHEET_ID;
   try {
     const meta = await getSpreadsheetMetadata(id);

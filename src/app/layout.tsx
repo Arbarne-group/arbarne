@@ -1,4 +1,4 @@
-import { ClerkProvider } from "@clerk/nextjs";
+import AuthSessionProvider from "@/components/AuthSessionProvider";
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
@@ -51,9 +51,9 @@ export default function RootLayout({
         className="min-h-full bg-background font-sans text-on-background selection:bg-primary-container selection:text-on-primary-container flex flex-col"
         suppressHydrationWarning
       >
-        <ClerkProvider>
+        <AuthSessionProvider>
           {children}
-        </ClerkProvider>
+        </AuthSessionProvider>
       </body>
     </html>
   );
