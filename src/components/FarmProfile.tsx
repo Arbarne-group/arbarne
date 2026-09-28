@@ -759,7 +759,7 @@ export default function FarmProfileMetadata() {
   return (
     <>
       <div className="bg-background min-h-screen px-4 sm:px-6 lg:px-10 py-8 pb-20 text-on-surface">
-        <div className="max-w-6xl mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           {/* ── HERO BANNER ───────────────────────────────────────── */}
           <div className="bg-primary rounded-3xl p-6 sm:p-8 md:p-10 relative overflow-hidden shadow-lg">
             <div className="absolute -right-12 -top-20 w-80 h-80 rounded-full bg-on-primary/[0.06] pointer-events-none" />
@@ -815,10 +815,10 @@ export default function FarmProfileMetadata() {
                     <Icon name="pending_actions" className="text-[22px]" />
                   </div>
                   <div>
-                    <h3 className="text-[15px] md:text-base font-bold text-amber-900">
+                    <h3 className="text-[15px] md:text-[20px] font-bold text-amber-900">
                       Farm Business Profile {bizStatus.percent}% complete
                     </h3>
-                    <p className="text-xs md:text-[13px] text-amber-800/90 mt-0.5">
+                    <p className="text-sm max-w-xl md:text-[18px] text-amber-800/90 mt-0.5">
                       {bizStatus.missing.length > 0 ? (
                         <>
                           Still needed:{" "}
@@ -948,7 +948,7 @@ export default function FarmProfileMetadata() {
               <h3 className="text-[18px] font-bold text-on-surface">
                 No Farm Information Available
               </h3>
-              <p className="text-[14px] text-on-surface-variant max-w-md mx-auto mt-1 mb-6">
+              <p className="text-[16px] text-on-surface-variant max-w-md mx-auto mt-1 mb-6">
                 Your farm profile metadata hasn't been configured yet. Populate
                 your details to start managing operations.
               </p>

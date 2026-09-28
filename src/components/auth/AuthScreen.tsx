@@ -9,6 +9,21 @@ import { signIn } from "next-auth/react";
 
 const slides = [
   {
+    eyebrow: "FUTURE FARMS FRAMEWORK",
+    title: (
+      <>
+        Our Farms.
+        <br />
+        <span>Our Future.</span>
+      </>
+    ),
+    description:
+      "Assess your farm's capabilities, measure maturity, and identify the priorities that will move your farm forward.",
+
+    visual: "02",
+    image: "/photo3.png",
+  },
+  {
     eyebrow: "FUTURE FARMS INITIATIVE",
     title: (
       <>
@@ -19,24 +34,18 @@ const slides = [
     ),
     description:
       "Assess where your farm stands, strengthen its capabilities, and track your progress toward a more resilient, productive, and investment-ready farm.",
-    label: "A practical pathway for farm transformation",
+
     visual: "01",
     image: "/photo8.png",
   },
   {
-    eyebrow: "FUTURE FARMS FRAMEWORK",
-    title: (
-      <>
-        Know where you stand.
-        <br />
-        <span>Know where to go next.</span>
-      </>
-    ),
+    eyebrow: "FUTURE FARMS INITIATIVE",
+    title: <>Future Farms Framework</>,
     description:
-      "Assess your farm's capabilities, measure maturity, and identify the priorities that will move your farm forward.",
-    label: "Farm Systems Capability & Maturity Framework",
-    visual: "02",
-    image: "/photo3.png",
+      "Assess your farm using the Farm Systems Capability and Maturity Framework, designed to guide and measure your farm’s transition toward future-readiness.",
+
+    visual: "01",
+    image: "/photo2.png",
   },
 ];
 
@@ -47,119 +56,112 @@ function ShowcasePanel() {
     const timer = setInterval(() => {
       setCurrentSlide((current) => (current + 1) % slides.length);
     }, 7000);
-
     return () => clearInterval(timer);
   }, []);
 
-  const nextSlide = () => {
+  const nextSlide = () =>
     setCurrentSlide((current) => (current + 1) % slides.length);
-  };
-
-  const previousSlide = () => {
-    setCurrentSlide(
-      (current) => (current - 1 + slides.length) % slides.length
-    );
-  };
+  const previousSlide = () =>
+    setCurrentSlide((current) => (current - 1 + slides.length) % slides.length);
 
   const slide = slides[currentSlide];
 
   return (
-    <section className="relative hidden overflow-hidden lg:block">
-      {slides.map((item, index) => (
-        <div
-          key={item.image}
-          className={`absolute inset-0 transition-all duration-[1200ms] ease-out ${
-            currentSlide === index
-              ? "scale-100 opacity-100"
-              : "scale-105 opacity-0"
-          }`}
-        >
-          <Image
-            src={item.image}
-            alt=""
-            fill
-            priority={index === 0}
-            className="object-cover"
-            sizes="60vw"
-          />
-        </div>
-      ))}
-
-      <div className="absolute inset-0 bg-black/35" />
-      <div className="absolute inset-0 bg-gradient-to-tr from-[#0E3B2B]/95 via-[#0E3B2B]/50 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-[#071F17]/80 to-transparent" />
-      <div className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full border border-white/10" />
-      <div className="absolute -left-20 -top-20 h-[300px] w-[300px] rounded-full border border-white/10" />
-
-      <div className="relative z-10 flex h-full min-h-screen flex-col justify-between p-8 xl:p-14">
-        <div className="-ml-2 -mt-2">
-          <Image
-            src="/images/auth-logo.png"
-            alt="Future Farms"
-            width={160}
-            height={80}
-            priority
-            className="h-auto w-24 object-contain xl:w-44"
-          />
-        </div>
-
-        <div className="max-w-2xl py-4">
-          <h1
-            key={`title-${currentSlide}`}
-            className="text-3xl font-semibold leading-[1.05] tracking-tight text-white animate-[slideUp_650ms_ease-out] lg:text-4xl xl:text-6xl 2xl:text-7xl"
-            style={{ fontFamily: "Georgia, serif" }}
-          >
-            {slide.title}
-          </h1>
-
-          <p
-            key={`description-${currentSlide}`}
-            className="mt-3 max-w-xl text-sm leading-6 text-white/80 animate-[slideUp_700ms_ease-out] xl:mt-5 xl:text-lg xl:leading-7"
-          >
-            {slide.description}
-          </p>
-
+    // Sticky + h-screen: stays put while the form column scrolls, never stretches
+    <section className="hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start ">
+      {/* max-h keeps it from getting too tall on big monitors */}
+      <div className="relative mx-auto h-full max-h-220 overflow-hidden ">
+        {/* Background images */}
+        {slides.map((item, index) => (
           <div
-            key={`label-${currentSlide}`}
-            className="mt-5 flex items-center gap-3 animate-[slideUp_750ms_ease-out] xl:mt-8"
+            key={item.image}
+            className={`absolute inset-0 transition-all duration-[1200ms] ease-out ${
+              currentSlide === index
+                ? "scale-100 opacity-100"
+                : "scale-105 opacity-0"
+            }`}
           >
-            <div className="h-px w-9 bg-white/80" />
-            <p className="text-sm font-medium text-white/75">{slide.label}</p>
+            <Image
+              src={item.image}
+              alt=""
+              fill
+              priority={index === 0}
+              className="object-cover"
+              sizes="60vw"
+            />
           </div>
-        </div>
+        ))}
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                aria-label={`Go to slide ${index + 1}`}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  currentSlide === index
-                    ? "w-10 bg-white"
-                    : "w-1.5 bg-white/35 hover:bg-white/60"
-                }`}
-              />
-            ))}
+        {/* Overlays: darker at the bottom where the text lives */}
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-linear-to-tr from-[#0E3B2B]/80 via-[#0E3B2B]/30 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-[65%] bg-linear-to-t from-[#071F17]/95 via-[#071F17]/60 to-transparent" />
+        <div className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full border border-white/10" />
+        <div className="absolute -left-20 -top-20 h-[300px] w-[300px] rounded-full border border-white/10" />
+
+        <div className="relative z-10 flex h-full flex-col justify-between p-8 xl:p-12">
+          {/* Top row: eyebrow pill + slide counter */}
+          <div className="flex items-center justify-between">
+            <span
+              key={`eyebrow-${currentSlide}`}
+              className="inline-flex animate-[fadeIn_700ms_ease-out] items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[11px] font-semibold tracking-[0.2em] text-white backdrop-blur-md"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
+              {slide.eyebrow}
+            </span>
           </div>
 
-          <div className="flex gap-2">
-            <button
-              onClick={previousSlide}
-              aria-label="Previous slide"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/10 text-white/65 backdrop-blur-sm transition hover:border-white/40 hover:bg-white/10 hover:text-white"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </button>
+          {/* Bottom block: copy + controls, anchored together */}
+          <div>
+            <div className="max-w-full ">
+              <h1
+                key={`title-${currentSlide}`}
+                className="animate-[slideUp_650ms_ease-out] text-4xl font-semibold leading-[1.08] tracking-tight text-white xl:text-5xl 2xl:text-6xl  max-w-4xl"
+              >
+                {slide.title}
+              </h1>
 
-            <button
-              onClick={nextSlide}
-              aria-label="Next slide"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/10 text-white/65 backdrop-blur-sm transition hover:border-white/40 hover:bg-white/10 hover:text-white"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </button>
+              <p
+                key={`description-${currentSlide}`}
+                className="mt-4 max-w-4xl animate-[slideUp_700ms_ease-out] text-md md:text-[20px] leading-6 text-white/80 xl:mt-5  xl:leading-7"
+              >
+                {slide.description}
+              </p>
+            </div>
+
+            <div className="mt-8 flex items-center justify-between border-t border-white/15 pt-6">
+              <div className="flex items-center gap-2">
+                {slides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    aria-label={`Go to slide ${index + 1}`}
+                    className={`h-1.5 rounded-full transition-all duration-500 ${
+                      currentSlide === index
+                        ? "w-10 bg-white"
+                        : "w-1.5 bg-white/35 hover:bg-white/60"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={previousSlide}
+                  aria-label="Previous slide"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white/70 backdrop-blur-sm transition hover:border-white/50 hover:bg-white/15 hover:text-white"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  aria-label="Next slide"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white/70 backdrop-blur-sm transition hover:border-white/50 hover:bg-white/15 hover:text-white"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -220,7 +222,7 @@ function GoogleButton({
       onClick={() => {
         if (!enabled) {
           onError(
-            "Google sign-in isn't configured yet. Add GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET, or continue with email."
+            "Google sign-in isn't configured yet. Add GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET, or continue with email.",
           );
           return;
         }
@@ -274,11 +276,15 @@ function LoginPane({
             });
             const rj = await r.json().catch(() => ({}));
             if (rj.publicId) {
-              router.push(`/verify/${rj.publicId}${rj.mailSent === false ? "?mail=failed" : ""}`);
+              router.push(
+                `/verify/${rj.publicId}${rj.mailSent === false ? "?mail=failed" : ""}`,
+              );
               return;
             }
           } catch {}
-          setError("Your email is not verified yet. Please try signing up again to get a code.");
+          setError(
+            "Your email is not verified yet. Please try signing up again to get a code.",
+          );
           return;
         }
         setError(data.error || "Invalid email or password.");
@@ -298,9 +304,9 @@ function LoginPane({
       }
       // Staff land in their workspace, everyone else follows the callback.
       try {
-        const me = await fetch("/api/auth/profile/details", { cache: "no-store" }).then((r) =>
-          r.json()
-        );
+        const me = await fetch("/api/auth/profile/details", {
+          cache: "no-store",
+        }).then((r) => r.json());
         const role = me?.user?.role;
         if (role && ["FFDeveloper", "FFAdmin", "FFStaff"].includes(role)) {
           router.push("/a/dashboard");
@@ -319,7 +325,6 @@ function LoginPane({
 
   return (
     <div className="w-full shrink-0 px-3">
-
       <div className="w-full overflow-hidden rounded-[20px] bg-[#FCFDFC] p-6 shadow-[0_20px_50px_-20px_rgba(4,93,97,0.25)] ring-1 ring-gray-200 sm:p-7">
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -377,7 +382,11 @@ function LoginPane({
 
         <OrDivider />
         <div className="pt-3">
-          <GoogleButton label="Sign in with Google" enabled={googleEnabled} onError={setError} />
+          <GoogleButton
+            label="Sign in with Google"
+            enabled={googleEnabled}
+            onError={setError}
+          />
         </div>
       </div>
     </div>
@@ -424,13 +433,15 @@ function SignupPane({
         return;
       }
       if (!data.publicId) {
-        setError("Account created but no verification challenge found. Please try logging in.");
+        setError(
+          "Account created but no verification challenge found. Please try logging in.",
+        );
         return;
       }
       try {
         sessionStorage.setItem(
           "ff_pw_tmp",
-          JSON.stringify({ email: email.toLowerCase().trim(), password })
+          JSON.stringify({ email: email.toLowerCase().trim(), password }),
         );
       } catch {}
       router.push(`/verify/${data.publicId}`);
@@ -443,7 +454,6 @@ function SignupPane({
 
   return (
     <div className="w-full shrink-0 px-3">
-
       <div className="w-full overflow-hidden rounded-[20px] bg-[#FCFDFC] p-6 shadow-[0_20px_50px_-20px_rgba(4,93,97,0.25)] ring-1 ring-gray-200 sm:p-7">
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -559,7 +569,11 @@ function SignupPane({
 
         <OrDivider />
         <div className="pt-3">
-          <GoogleButton label="Sign up with Google" enabled={googleEnabled} onError={setError} />
+          <GoogleButton
+            label="Sign up with Google"
+            enabled={googleEnabled}
+            onError={setError}
+          />
         </div>
       </div>
     </div>
@@ -705,13 +719,13 @@ export default function AuthScreen({
           {/* Decorative background — soft light + contour motif on whitish */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             {/* Top sheen */}
-            <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-white to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-64 bg-linear-to-b from-white to-transparent" />
             {/* Soft radial light, upper area */}
             <div
               className="absolute -top-32 left-1/2 h-[480px] w-[720px] -translate-x-1/2 rounded-full blur-3xl"
               style={{
                 background:
-                  "radial-gradient(closest-side, rgba(0,153,36,0.10), transparent)",
+                  "radial-linear(closest-side, rgba(0,153,36,0.10), transparent)",
               }}
             />
             {/* Soft radial shade, lower area */}
@@ -719,7 +733,7 @@ export default function AuthScreen({
               className="absolute -bottom-48 left-1/4 h-[420px] w-[620px] rounded-full blur-3xl"
               style={{
                 background:
-                  "radial-gradient(closest-side, rgba(4,93,97,0.08), transparent)",
+                  "radial-linear(closest-side, rgba(4,93,97,0.08), transparent)",
               }}
             />
             {/* Faint contour rings, bottom-right */}
@@ -761,17 +775,6 @@ export default function AuthScreen({
           </div>
 
           <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-between px-5 py-10 sm:px-8 lg:min-h-0 lg:px-12">
-            <div className="mb-6 flex w-full justify-center lg:hidden">
-              <Image
-                src="/ffi-green-horizontal-landscape.png"
-                alt="Future Farms"
-                width={240}
-                height={60}
-                priority
-                className="h-auto w-48 object-contain"
-              />
-            </div>
-
             {/* Constant brand block above the forms */}
             <div className="my-auto flex w-full max-w-md flex-col items-center">
               <div className="mb-5 flex flex-col items-center text-center">
@@ -783,48 +786,43 @@ export default function AuthScreen({
                   priority
                   className="h-auto w-52 object-contain"
                 />
-                <h2 className="mt-3 text-xl font-bold text-secondary">
-                  Future Farms Framework
+                <h2 className="mt-3 text-2xl font-bold text-secondary">
+                  Welcome to Future Farms!
                 </h2>
-                <p className="mt-1.5 max-w-sm text-[13px] leading-relaxed text-gray-500">
-                  Assess your farm using the Farm Systems Capability and
-                  Maturity Framework, designed to guide and measure your
-                  farm&apos;s transition toward future-readiness.
+                <p className="mt-1.5 mb-4 max-w-full text-sm md:text-[16px] lg:text-[20px] leading-relaxed text-gray-500">
+                  Your journey to a future-ready farm starts here. Build your
+                  farm profile, assess your capabilities, identify development
+                  priorities, verify your progress, and access opportunities to
+                  grow.
                 </p>
               </div>
 
               {/* Swiping panes */}
               <div className="w-full overflow-hidden">
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{
-                  transform: `translateX(-${MODE_INDEX[mode] * 100}%)`,
-                }}
-              >
-                <div className="w-full shrink-0">
-                  <ForgotPane onSwitch={() => switchMode("login")} />
-                </div>
-                <div className="w-full shrink-0">
-                  <LoginPane
-                    googleEnabled={googleEnabled}
-                    onSwitch={() => switchMode("signup")}
-                    onForgot={() => switchMode("forgot")}
-                  />
-                </div>
-                <div className="w-full shrink-0">
-                  <SignupPane
-                    googleEnabled={googleEnabled}
-                    onSwitch={() => switchMode("login")}
-                  />
+                <div
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{
+                    transform: `translateX(-${MODE_INDEX[mode] * 100}%)`,
+                  }}
+                >
+                  <div className="w-full shrink-0">
+                    <ForgotPane onSwitch={() => switchMode("login")} />
+                  </div>
+                  <div className="w-full shrink-0">
+                    <LoginPane
+                      googleEnabled={googleEnabled}
+                      onSwitch={() => switchMode("signup")}
+                      onForgot={() => switchMode("forgot")}
+                    />
+                  </div>
+                  <div className="w-full shrink-0">
+                    <SignupPane
+                      googleEnabled={googleEnabled}
+                      onSwitch={() => switchMode("login")}
+                    />
+                  </div>
                 </div>
               </div>
-              </div>
-            </div>
-
-            <div className="mt-8 text-center">
-              <p className="text-[10px] uppercase tracking-[0.22em] text-gray-400">
-                Future Farms Initiative
-              </p>
             </div>
           </div>
         </section>

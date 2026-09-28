@@ -60,7 +60,7 @@ function Section({
         </span>
       </div>
       <h2 className="text-lg md:text-xl font-bold text-on-surface">{title}</h2>
-      <p className="text-xs md:text-sm text-on-surface-variant mt-1 mb-5">{desc}</p>
+      <p className="text-sm md:text-md text-on-surface-variant mt-1 mb-5">{desc}</p>
       <div className="space-y-6">{children}</div>
     </section>
   );
@@ -595,7 +595,7 @@ export default function FarmBusinessPage() {
             Complete your farm business profile
           </h1>
           <p className="text-sm md:text-base text-on-surface-variant">
-            Every section below feeds your public business scorecard.
+            Help us understand your business more.
           </p>
           <div className="w-full bg-surface-container-highest rounded-full h-2.5 mt-4 overflow-hidden">
             <div
