@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { UserButton, Show, SignInButton, useUser, useClerk } from "@clerk/nextjs";
+import { useAppUser as useUser, appSignOut } from "@/hooks/useAppUser";
 
 import { OnboardingStage, getActiveUserEmail } from "@/lib/onboardingGuard";
 
@@ -31,9 +31,12 @@ export default function Header({
 }: HeaderProps) {
   const router = useRouter();
   const { user } = useUser();
-  const { signOut } = useClerk();
   const [notifOpen, setNotifOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [userMenuOpenMobile, setUserMenuOpenMobile] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const avatarRef = useRef<HTMLDivElement>(null);
+  const avatarRefMobile = useRef<HTMLDivElement>(null);
   const [clientEmail, setClientEmail] = useState<string>("");
 
   const clerkEmail =
@@ -70,10 +73,21 @@ export default function Header({
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setNotifOpen(false);
       }
+      if (avatarRef.current && !avatarRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+      if (avatarRefMobile.current && !avatarRefMobile.current.contains(e.target as Node)) {
+        setUserMenuOpenMobile(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const avatarInitials = (displayEmail || userName || "F")
+    .trim()
+    .charAt(0)
+    .toUpperCase();
 
   return (
     <>
@@ -98,17 +112,37 @@ export default function Header({
             <span className="material-symbols-outlined text-[22px]">notifications</span>
           </button>
 
-          <Show when="signed-in">
-            <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
-          </Show>
-          <Show when="signed-out">
+          {user ? (
+            <div className="relative" ref={avatarRefMobile}>
+              <button
+                type="button"
+                onClick={() => setUserMenuOpenMobile((v) => !v)}
+                aria-label="Account menu"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-on-primary cursor-pointer"
+              >
+                {avatarInitials}
+              </button>
+              {userMenuOpenMobile && (
+                <div className="absolute right-0 top-10 w-48 rounded-xl border border-surface-variant bg-surface-container-lowest p-2 shadow-xl z-50">
+                  <button
+                    type="button"
+                    onClick={() => appSignOut("/")}
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">logout</span>
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
             <Link
-              href="/sign-in"
+              href="/login"
               className="px-3 py-1.5 text-xs font-semibold bg-primary text-on-primary rounded-xl"
             >
               Sign In
             </Link>
-          </Show>
+          )}
 
           {/* Notifications Dropdown */}
           {notifOpen && (
@@ -129,7 +163,7 @@ export default function Header({
       </header>
 
       
-      <div className="hidden md:flex justify-between items-center px-6 h-20 bg-surface border-b border-surface-variant sticky top-0 z-30 transition-all shrink-0 no-print print:hidden">
+      <div className="hidden md:flex justify-between items-center px-6 h-20 bg-surface border-b border-surface-variant sticky top-0 z-40 transition-all shrink-0 no-print print:hidden">
         
         <div className="flex items-center gap-3">
           {/* {onToggleCollapse && (
@@ -182,7 +216,7 @@ export default function Header({
           </div>
 
           {/* User Controls */}
-          <Show when="signed-in">
+          {user ? (
             <div className="flex items-center gap-3 pl-2 border-l border-surface-variant">
               {displayEmail && (
                 <div className="text-right hidden sm:block leading-tight">
@@ -194,24 +228,37 @@ export default function Header({
                   </span>
                 </div>
               )}
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "w-9 h-9 ring-2 ring-primary/20",
-                  },
-                }}
-              />
+              <div className="relative" ref={avatarRef}>
+                <button
+                  type="button"
+                  onClick={() => setUserMenuOpen((v) => !v)}
+                  aria-label="Account menu"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-on-primary ring-2 ring-primary/20 cursor-pointer"
+                >
+                  {avatarInitials}
+                </button>
+                {userMenuOpen && (
+                  <div className="absolute right-0 top-11 w-48 rounded-xl border border-surface-variant bg-surface-container-lowest p-2 shadow-xl z-50">
+                    <button
+                      type="button"
+                      onClick={() => appSignOut("/")}
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">logout</span>
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </Show>
-
-          <Show when="signed-out">
+          ) : (
             <Link
-              href="/sign-in"
+              href="/login"
               className="px-4 py-2 text-xs font-semibold bg-primary text-on-primary rounded-xl shadow-xs hover:bg-primary/90 transition-colors"
             >
               Sign In
             </Link>
-          </Show>
+          )}
         </div>
       </div>
     </>

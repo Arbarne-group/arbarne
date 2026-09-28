@@ -480,7 +480,8 @@ export async function POST(request: Request) {
       }
 
       case "farm-profile": {
-        // Edits from the Farm Profile metadata modal (src/components/FarmProfile.tsx).
+        // Edits from the Farm Profile metadata modal (src/components/FarmProfile.tsx)
+        // and the full business form (src/app/farm-business/page.tsx).
         // Allow profile edits even after approval unlike survey steps, but do not change the onboarding stage or approval status.
         // Only keys present in `data` are touched; absent keys keep existing values.
         // Do not edit `email` / `futureFarmId` since they are identity fields
@@ -494,14 +495,72 @@ export async function POST(request: Request) {
           const n = Number(v);
           return Number.isFinite(n) ? n : null;
         };
+        const asList = (v: unknown): string | null => {
+          if (v === undefined || v === null) return null;
+          if (Array.isArray(v)) return JSON.stringify(v);
+          if (typeof v === "string") {
+            const t = v.trim();
+            if (!t) return JSON.stringify([]);
+            try {
+              const p = JSON.parse(t);
+              if (Array.isArray(p)) return JSON.stringify(p);
+            } catch {}
+            return JSON.stringify(
+              t.split(",").map((s) => s.trim()).filter(Boolean)
+            );
+          }
+          return JSON.stringify([String(v)]);
+        };
 
-        const userUpdates: { farmName?: string; phone?: string; name?: string } = {};
+        // Every farm business gets its generated ID on first profile save.
+        // Source of truth is the Business table (FK → User); the legacy
+        // User.businessId column is mirrored for compatibility.
+        if (!user.businessId) {
+          try {
+            const { generateBusinessId } = await import("@/lib/idGenerator");
+            const businessId = await generateBusinessId();
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { businessId },
+            });
+            user.businessId = businessId;
+          } catch (bizErr: any) {
+            console.warn("[FarmProfile] businessId notice:", bizErr.message);
+          }
+        }
+        if (user.businessId || has("businessName")) {
+          try {
+            const existing = await prisma.business.findUnique({
+              where: { userId: user.id },
+            });
+            await prisma.business.upsert({
+              where: { userId: user.id },
+              create: {
+                userId: user.id,
+                businessId: user.businessId,
+                businessName: has("businessName") ? text(d.businessName) : existing?.businessName ?? null,
+              },
+              update: {
+                ...(user.businessId ? { businessId: user.businessId } : {}),
+                ...(has("businessName") ? { businessName: text(d.businessName) } : {}),
+              },
+            });
+          } catch (bizRowErr: any) {
+            console.warn("[FarmProfile] business row notice:", bizRowErr.message);
+          }
+        }
+
+        const userUpdates: { farmName?: string; phone?: string; name?: string; businessName?: string } = {};
         if (has("farmName") && text(d.farmName))
           userUpdates.farmName = text(d.farmName);
         if (has("phone") && text(d.phone))
           userUpdates.phone = text(d.phone);
         if (has("managerName") && text(d.managerName))
           userUpdates.name = text(d.managerName);
+        if (has("businessName") && text(d.businessName)) {
+          userUpdates.businessName = text(d.businessName);
+          userUpdates.name = text(d.businessName);
+        }
         if (Object.keys(userUpdates).length > 0) {
           await prisma.user.update({
             where: { id: user.id },
@@ -593,6 +652,155 @@ export async function POST(request: Request) {
             update: { energySource: text(d.energyAccess) },
           });
         }
+
+        // Full business form fields (farming system)
+        if (
+          has("enterprises") ||
+          has("enterpriseCore") ||
+          has("enterpriseStrategic") ||
+          has("enterpriseStrategicOther") ||
+          has("enterpriseCashFlow") ||
+          has("enterpriseCashFlowOther") ||
+          has("cultivationMethod") ||
+          has("irrigationMethod") ||
+          has("energySource") ||
+          has("storageFacilities") ||
+          has("processingFacilities")
+        ) {
+          const fs = user.farmingSystem ?? {};
+          const pickList = (key: string, fallback: unknown) => {
+            const v = has(key) ? asList(d[key]) : null;
+            return v ?? (typeof fallback === "string" ? fallback : "[]");
+          };
+          const fsData = {
+            enterprises: has("enterprises") ? pickList("enterprises", fs.enterprises) : fs.enterprises ?? "[]",
+            enterpriseCore: has("enterpriseCore") ? text(d.enterpriseCore) : fs.enterpriseCore ?? "",
+            enterpriseStrategic: has("enterpriseStrategic")
+              ? pickList("enterpriseStrategic", fs.enterpriseStrategic)
+              : fs.enterpriseStrategic ?? "[]",
+            enterpriseStrategicOther: has("enterpriseStrategicOther")
+              ? text(d.enterpriseStrategicOther)
+              : (fs as any).enterpriseStrategicOther ?? "",
+            enterpriseCashFlow: has("enterpriseCashFlow")
+              ? pickList("enterpriseCashFlow", fs.enterpriseCashFlow)
+              : fs.enterpriseCashFlow ?? "[]",
+            enterpriseCashFlowOther: has("enterpriseCashFlowOther")
+              ? text(d.enterpriseCashFlowOther)
+              : (fs as any).enterpriseCashFlowOther ?? "",
+            cultivationMethod: has("cultivationMethod") ? text(d.cultivationMethod) : fs.cultivationMethod ?? "",
+            mechanizationSetup: fs.mechanizationSetup ?? "",
+            energySource: has("energySource") ? text(d.energySource) : fs.energySource ?? "",
+            irrigationMethod: has("irrigationMethod") ? text(d.irrigationMethod) : fs.irrigationMethod ?? "",
+            storageFacilities: has("storageFacilities")
+              ? pickList("storageFacilities", fs.storageFacilities)
+              : fs.storageFacilities ?? "[]",
+            processingFacilities: has("processingFacilities")
+              ? pickList("processingFacilities", fs.processingFacilities)
+              : fs.processingFacilities ?? "[]",
+          };
+          await prisma.farmingSystem.upsert({
+            where: { userId: user.id },
+            create: { userId: user.id, ...fsData },
+            update: fsData,
+          });
+        }
+
+        // Full business form fields (labour)
+        if (
+          has("permanentWorkers") ||
+          has("seasonalWorkers") ||
+          has("familyLabour") ||
+          has("managementStructure") ||
+          has("fairEmploymentPractices")
+        ) {
+          const lab = user.householdLabour ?? {};
+          const labData = {
+            permanentWorkers: has("permanentWorkers") ? numOrNull(d.permanentWorkers) : lab.permanentWorkers ?? null,
+            seasonalWorkers: has("seasonalWorkers") ? numOrNull(d.seasonalWorkers) : lab.seasonalWorkers ?? null,
+            familyLabour: has("familyLabour") ? numOrNull(d.familyLabour) : lab.familyLabour ?? null,
+            managementStructure: has("managementStructure") ? text(d.managementStructure) : lab.managementStructure ?? "",
+            fairEmploymentPractices: has("fairEmploymentPractices")
+              ? asList(d.fairEmploymentPractices) ?? lab.fairEmploymentPractices ?? "[]"
+              : lab.fairEmploymentPractices ?? "[]",
+          };
+          await prisma.householdLabour.upsert({
+            where: { userId: user.id },
+            create: { userId: user.id, ...labData },
+            update: labData,
+          });
+        }
+
+        // Full business form fields (markets + officiality)
+        if (
+          has("marketType") ||
+          has("produceBuyers") ||
+          has("buyers") ||
+          has("registrationStatus") ||
+          has("commercialYears") ||
+          has("annualRevenueBracket") ||
+          has("recordKeepingMethod")
+        ) {
+          const biz = user.businessExperience ?? {};
+          const buyersRaw = has("produceBuyers") ? d.produceBuyers : has("buyers") ? d.buyers : undefined;
+          const bizData = {
+            commercialYears: has("commercialYears") ? text(d.commercialYears) : biz.commercialYears ?? "",
+            annualRevenueBracket: has("annualRevenueBracket") ? text(d.annualRevenueBracket) : biz.annualRevenueBracket ?? "",
+            recordKeepingMethod: has("recordKeepingMethod") ? text(d.recordKeepingMethod) : biz.recordKeepingMethod ?? "",
+            produceBuyers: buyersRaw !== undefined ? asList(buyersRaw) ?? biz.produceBuyers ?? "[]" : biz.produceBuyers ?? "[]",
+            marketType: has("marketType") ? text(d.marketType) : biz.marketType ?? "",
+            registrationStatus: has("registrationStatus") ? text(d.registrationStatus) : biz.registrationStatus ?? "",
+          };
+          await prisma.businessExperience.upsert({
+            where: { userId: user.id },
+            create: { userId: user.id, ...bizData },
+            update: bizData,
+          });
+        }
+
+        // Full business form fields (goals + priorities)
+        if (has("twelveMonthSuccess") || has("developmentPriorities")) {
+          const asp = user.aspiration ?? {};
+          await prisma.aspiration.upsert({
+            where: { userId: user.id },
+            create: {
+              userId: user.id,
+              twelveMonthSuccess: has("twelveMonthSuccess") ? text(d.twelveMonthSuccess) : asp.twelveMonthSuccess ?? "",
+              developmentPriorities: has("developmentPriorities") ? text(d.developmentPriorities) : asp.developmentPriorities ?? "",
+            },
+            update: {
+              ...(has("twelveMonthSuccess") ? { twelveMonthSuccess: text(d.twelveMonthSuccess) } : {}),
+              ...(has("developmentPriorities") ? { developmentPriorities: text(d.developmentPriorities) } : {}),
+            },
+          });
+        }
+
+        if (has("objectives")) {
+          const goalsVal = asList(d.objectives) ?? "[]";
+          await prisma.goalsPriorities.upsert({
+            where: { userId: user.id },
+            create: { userId: user.id, goals: goalsVal },
+            update: { goals: goalsVal },
+          });
+        }
+
+        // grazingAcres rides with the characteristics block
+        if (has("grazingAcres")) {
+          const ch = user.farmCharacteristics ?? {};
+          await prisma.farmCharacteristics.upsert({
+            where: { userId: user.id },
+            create: {
+              userId: user.id,
+              farmSize: ch.farmSize ?? null,
+              farmUnit: ch.farmUnit ?? "Acres",
+              cultivatedAcres: ch.cultivatedAcres ?? null,
+              grazingAcres: numOrNull(d.grazingAcres),
+              landTenure: ch.landTenure ?? "",
+              waterSources: ch.waterSources ?? "",
+              soilTested: ch.soilTested ?? "",
+            },
+            update: { grazingAcres: numOrNull(d.grazingAcres) },
+          });
+        }
         break;
       }
 
@@ -632,6 +840,7 @@ export async function POST(request: Request) {
         goalsPriorities: true,
         householdLabour: true,
         onboardingStatus: true,
+        business: true,
       },
     });
 

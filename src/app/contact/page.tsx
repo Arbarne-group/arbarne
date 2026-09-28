@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useAppUser as useUser } from "@/hooks/useAppUser";
 import AppShell from "@/components/layout/AppShell";
 
 export default function ContactUsPage() {

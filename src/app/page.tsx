@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { Show, UserButton } from "@clerk/nextjs";
+import { useAppUser as useUser, appSignOut } from "@/hooks/useAppUser";
 
 export default function Home() {
+  const { user } = useUser();
+
   return (
     <div className="min-h-screen bg-background flex flex-col justify-between text-on-background">
       {/* Top Navigation Bar */}
@@ -29,30 +33,39 @@ export default function Home() {
           </a>
         </div>
         <div className="flex items-center gap-3">
-          <Show when="signed-out">
-            <Link
-              href="/sign-in"
-              className="px-4 py-2 text-xs md:text-sm font-semibold text-on-surface hover:text-primary transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/sign-up"
-              className="px-4 md:px-5 py-2 md:py-2.5 text-xs md:text-sm font-semibold bg-primary hover:bg-primary/90 text-on-primary rounded-xl shadow-sm hover-lift transition-all"
-            >
-              Get Started
-            </Link>
-          </Show>
-          <Show when="signed-in">
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 text-xs md:text-sm font-semibold bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-all flex items-center gap-1.5"
-            >
-              <span className="material-symbols-outlined text-[18px]">agriculture</span>
-              <span>Dashboard</span>
-            </Link>
-            <UserButton />
-          </Show>
+          {!user ? (
+            <>
+              <Link
+                href="/login"
+                className="px-4 py-2 text-xs md:text-sm font-semibold text-on-surface hover:text-primary transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className="px-4 md:px-5 py-2 md:py-2.5 text-xs md:text-sm font-semibold bg-primary hover:bg-primary/90 text-on-primary rounded-xl shadow-sm hover-lift transition-all"
+              >
+                Get Started
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/dashboard"
+                className="px-4 py-2 text-xs md:text-sm font-semibold bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-all flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-[18px]">agriculture</span>
+                <span>Dashboard</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => appSignOut("/")}
+                className="px-4 py-2 text-xs md:text-sm font-semibold text-on-surface hover:text-primary transition-colors cursor-pointer"
+              >
+                Sign Out
+              </button>
+            </>
+          )}
         </div>
       </header>
 
@@ -88,37 +101,40 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto">
-              <Show when="signed-out">
-                <Link
-                  href="/sign-up"
-                  className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
-                >
-                  <span>Start Farm Assessment</span>
-                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                </Link>
-                <Link
-                  href="/sign-in"
-                  className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
-                >
-                  <span>Sign In to Account</span>
-                </Link>
-              </Show>
-              <Show when="signed-in">
-                <Link
-                  href="/dashboard"
-                  className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
-                >
-                  <span>Go to My Farm Radar</span>
-                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                </Link>
-                <Link
-                  href="/assessment"
-                  className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
-                >
-                  <span className="material-symbols-outlined text-lg">fact_check</span>
-                  <span>Assessment Hub</span>
-                </Link>
-              </Show>
+              {!user ? (
+                <>
+                  <Link
+                    href="/signup"
+                    className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                  >
+                    <span>Start Farm Assessment</span>
+                    <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                  >
+                    <span>Sign In to Account</span>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                  >
+                    <span>Go to My Farm Radar</span>
+                    <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                  </Link>
+                  <Link
+                    href="/assessment"
+                    className="w-full sm:w-auto justify-center px-7 py-3.5 text-sm md:text-base font-semibold bg-black/35 hover:bg-black/50 text-white border border-white/40 backdrop-blur-md rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-lg">fact_check</span>
+                    <span>Assessment Hub</span>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

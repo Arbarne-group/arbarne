@@ -15,6 +15,7 @@ import { generateUniqueFutureFarmId } from "@/lib/idGenerator";
 import {
   getGoogleSheetsAccessToken,
   fetchSheetsWithRetry,
+  isSheetsSyncConfigured,
   resolveProfileWithDashboardFallback,
   DEFAULT_SPREADSHEET_ID,
   DEFAULT_ASSESSMENT_SPREADSHEET_ID,
@@ -32,6 +33,7 @@ export async function batchGetSheetValues(
   spreadsheetId?: string
 ): Promise<Record<string, any[][]>> {
   if (!ranges || ranges.length === 0) return {};
+  if (!isSheetsSyncConfigured()) return {};
 
   const id = spreadsheetId || process.env.GOOGLE_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
   const token = await getGoogleSheetsAccessToken();
@@ -69,6 +71,7 @@ export async function batchUpdateSheetValues(
   spreadsheetId?: string
 ): Promise<any> {
   if (!data || data.length === 0) return { totalUpdatedRows: 0 };
+  if (!isSheetsSyncConfigured()) return { totalUpdatedRows: 0 };
 
   const id = spreadsheetId || process.env.GOOGLE_SPREADSHEET_ID || DEFAULT_SPREADSHEET_ID;
   const token = await getGoogleSheetsAccessToken();

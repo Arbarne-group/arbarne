@@ -110,10 +110,34 @@ npx prisma db push
 npx prisma db seed
 ```
 
-### 5. Run the Development Server
+Seed the system tables (54 African countries, Kenya's 47 counties, sample
+towns) plus the staff admin account:
+
+```bash
+npm run db:seed:admin
+```
+
+### 5. Seeded Staff (FFAdmin) Setup
+
+1. Fill in the `SEED_ADMIN_*` variables in `.env` (email + names + role,
+   see `.env.example`). There is deliberately **no password variable**.
+2. Run `npm run db:seed:admin`. It creates the account with a **random
+   one-time password printed once** to the console (never stored).
+3. Open [`/forgot-password`](http://localhost:3000/forgot-password), enter
+   the admin email, and follow the emailed link to set a strong password
+   (requires `SMTP_*` in `.env`; without SMTP the link is logged to the
+   server console for local testing).
+4. Log in at [`/login`](http://localhost:3000/login) and open
+   [`/admin`](http://localhost:3000/admin) to manage users, geography
+   (countries → counties/provinces → towns), invites, and the audit log.
+   Re-running the seed never resets an existing admin password.
+
+### 6. Run the Development Server
+
 ```bash
 npm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
@@ -131,6 +155,25 @@ A fully-seeded farm account is available for immediate testing:
 | **Assessment Score** | 82 / 100 (Advancing Stage) |
 
 > 💡 **Quick Login**: You can also click the **"Quick Demo Login"** button on [`/login`](http://localhost:3000/login) to log in with one click.
+
+---
+
+## 🔐 Auth, Roles & Audit (overview)
+
+* **Email signup:** `/signup/manual` (first/middle/last name + email + password
+  confirmation) → 6-digit emailed code at `/verify-code` (30s resend delay)
+  → details at `/complete-profile` (role: Farmer/Manager only, DB-backed
+  country, dial-code phone picker, farming type) → onboarding survey.
+* **Google signup:** same details step after first Clerk login (email trusted,
+  no code).
+* **Staff roles** (`FFDeveloper`, `FFAdmin`, `FFStaff`, `Other`) are granted by
+  **invitation only** (admin creates invite at `/admin` → emailed accept link
+  at `/invite/accept`, valid 7 days).
+* **Audit:** every create/update/delete on every table is logged with actor,
+  timestamp, and before/after values (browse at `/admin` → Audit Log).
+  Presence heartbeats are excluded from the trail.
+* **Presence:** the app pings `/api/presence/heartbeat` every 60s; users seen
+  within 3 minutes show as Online in `/admin` → Users.
 
 ---
 

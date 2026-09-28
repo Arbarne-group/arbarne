@@ -219,11 +219,13 @@ export function getRouteAccess(
   options?: {
     completedPillarsCount?: number;
     hasAssessmentHistory?: boolean;
+    isStaff?: boolean;
   },
 ): {
   allowed: boolean;
   redirectTo?: string;
   message?: string;
+  reason?: string;
 } {
   /* ============================================================
      PUBLIC / AUTH / API ROUTES
@@ -232,6 +234,7 @@ export function getRouteAccess(
   if (
     pathname === "/login" ||
     pathname === "/signup" ||
+    pathname === "/complete-profile" ||
     pathname.startsWith("/sign-in") ||
     pathname.startsWith("/sign-up") ||
     pathname.startsWith("/api") ||
@@ -243,151 +246,26 @@ export function getRouteAccess(
     };
   }
 
-  // The single-page survey lives at /onboarding: until every question is
-  // submitted (FULLY_COMPLETED), the user must stay here.
-  const isCompleteSurvey = pathname === "/onboarding";
+  // Staff roam freely: the farmer onboarding funnel never gates them.
+  if (options?.isStaff) {
+    return {
+      allowed: true,
+      reason: "isStaff=true → bypass",
+    };
+  }
 
   const completedPillars =
     options?.completedPillarsCount ?? 0;
   const hasAssessmentHistory =
     options?.hasAssessmentHistory ?? completedPillars > 0;
 
-  /* ============================================================
-     ROUTE IDENTIFICATION
-     ============================================================ */
+  // (Assessment-history context retained for callers; no gating uses it.)
 
-  const isSurvey1Step =
-    /^\/onboarding\/step-[1-5](?:\/|$)/.test(
-      pathname,
-    );
-
-  const isSurvey2Step =
-    /^\/onboarding\/(location|characteristics|farming-system|business-experience|household-labour)(?:\/|$)/.test(
-      pathname,
-    );
-
-  const isFarmProfile =
-    pathname === "/onboarding/farm-profile" ||
-    pathname.startsWith(
-      "/onboarding/farm-profile/",
-    );
-
-  const isAssessment =
-    pathname === "/assessment" ||
-    pathname.startsWith("/assessment/");
-
-  const isDashboard =
-    pathname === "/dashboard" ||
-    pathname.startsWith("/dashboard/");
-
-  const isOnboarding =
-    pathname === "/onboarding";
-
- 
-  // The complete single-page survey is the only gate: until every
-  // question is submitted (FULLY_COMPLETED), the user must stay here.
-  const profileComplete = stage === "FULLY_COMPLETED";
-
-  if (!profileComplete) {
-    if (isCompleteSurvey) {
-      return {
-        allowed: true,
-      };
-    }
-
-    return {
-      allowed: false,
-      redirectTo: "/onboarding",
-      message:
-        "Please complete all farm profile questions to unlock the platform.",
-    };
-  }
-
-  
-  // Profile complete: the whole platform is open (step pages remain
-  // available for reviewing or editing individual sections).
-  if (
-    stage === "FULLY_COMPLETED"
-  ) {
-    /*
-     * Survey 1 can still be revisited.
-     */
-
-    if (isSurvey1Step) {
-      return {
-        allowed: true,
-      };
-    }
-
-    /*
-     * Survey 2 is optional.
-     */
-
-    if (isSurvey2Step) {
-      return {
-        allowed: true,
-      };
-    }
-
-    /*
-     * Farm Profile is available after Survey 1.
-     */
-
-    if (isFarmProfile) {
-      return {
-        allowed: true,
-      };
-    }
-
-    /*
-     * Onboarding overview.
-     */
-
-    if (isOnboarding) {
-      return {
-        allowed: true,
-      };
-    }
-
-    /*
-     * Assessment is available once the full profile is complete.
-     */
-
-    if (isAssessment) {
-      return {
-        allowed: true,
-      };
-    }
-
-    /*
-     * Dashboard has its own assessment requirement.
-     */
-
-    if (isDashboard) {
-      if (!hasAssessmentHistory) {
-        return {
-          allowed: false,
-          redirectTo: "/assessment",
-          message: "Take an assessment to unlock My Farm.",
-        };
-      }
-
-      return {
-        allowed: true,
-      };
-    }
-
-    /*
-     * All other platform routes are available.
-     */
-
-    return {
-      allowed: true,
-    };
-  }
-
+  // No gates: farmers roam freely with or without onboarding answers or
+  // assessment history. Pages render their own empty states.
   return {
     allowed: true,
+    reason: "open roam",
   };
 }
 

@@ -13,10 +13,25 @@ model User {
   id                  String               @id @default(cuid())
   futureFarmId        String?              @unique
   name                String
+  firstName           String?
+  middleName          String?
+  lastName            String?
+  businessName        String?
   email               String               @unique
   passwordHash        String
   phone               String?
+  phoneCountryCode    String?
+  phoneNational       String?
+  countryCode         String?
+  country             Country?             @relation(fields: [countryCode], references: [initials])
+  role                String               @default("FFFarmer")
+  otherRoleLabel      String?
+  accountStatus       String               @default("VERIFIED")
+  authProvider        String               @default("password")
+  farmingType         String?
+  lastSeenAt          DateTime?
   farmName            String?
+  businessId          String?              @unique
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   aspiration          Aspiration?
@@ -34,6 +49,21 @@ model User {
   operatingStyle      OperatingStyle?
   orders              Order[]
   subscriptions       Subscription[]
+  business            Business?
+}
+
+// ─── Farm business identity (own table, FK → User) ─────────────────
+// The business lives here — never mixed into the User identity row.
+// (User.businessName / User.businessId are legacy fallbacks only.)
+model Business {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessId String?  @unique // generated, e.g. FFF-KE-000-001
+  businessName String?
+  farmName   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model FarmerProfile {
@@ -105,6 +135,7 @@ model Aspiration {
   handoverResponsibilities    String?
   personallyApprovedDecisions String?
   twentyFiveYearVision        String?
+  developmentPriorities       String?
   updatedAt                   DateTime @updatedAt
   user                        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -143,9 +174,17 @@ model FarmingSystem {
   id                 String   @id @default(cuid())
   userId             String   @unique
   enterprises        String?
+  enterpriseCore     String?
+  enterpriseStrategic String?
+  enterpriseStrategicOther String?
+  enterpriseCashFlow String?
+  enterpriseCashFlowOther String?
   cultivationMethod  String?
   mechanizationSetup String?
   energySource       String?
+  irrigationMethod   String?
+  storageFacilities  String?
+  processingFacilities String?
   updatedAt          DateTime @updatedAt
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -157,6 +196,8 @@ model BusinessExperience {
   annualRevenueBracket String?
   recordKeepingMethod  String?
   produceBuyers        String?
+  marketType           String?
+  registrationStatus   String?
   updatedAt            DateTime @updatedAt
   user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -176,6 +217,7 @@ model HouseholdLabour {
   userId                  String   @unique
   permanentWorkers        Int?     @default(0)
   seasonalWorkers         Int?     @default(0)
+  familyLabour            Int?     @default(0)
   managementStructure     String?
   fairEmploymentPractices String?
   updatedAt               DateTime @updatedAt
@@ -321,4 +363,97 @@ model FfvEvidence {
 
   @@unique([assessmentId, questionId])
   @@index([assessmentId, pillarId])
+}
+
+// ─── Geographic hierarchy (composite primary keys) ───────────────
+
+model Country {
+  initials  String  @id // e.g. "KE"
+  name      String // e.g. "Kenya"
+  dialCode  String // e.g. "+254"
+  flagEmoji String? // e.g. "🇰🇪"
+
+  counties CountyOrProvince[]
+  users    User[]
+}
+
+model CountyOrProvince {
+  countryCode String
+  code        String // county/province code, unique per country
+  name        String
+
+  country Country @relation(fields: [countryCode], references: [initials], onDelete: Cascade)
+  towns   Town[]
+
+  @@id([countryCode, code])
+  @@index([countryCode])
+}
+
+model Town {
+  countryCode String
+  countyCode  String
+  code        String // town code, unique per county/province
+  name        String
+
+  county CountyOrProvince @relation(fields: [countryCode, countyCode], references: [countryCode, code], onDelete: Cascade)
+
+  @@id([countryCode, countyCode, code])
+  @@index([countryCode, countyCode])
+}
+
+// ─── Auth: verification codes, password resets, invites ──────────
+
+model EmailVerification {
+  id         String    @id @default(cuid())
+  email      String    @unique
+  publicId   String    @unique // dashless UUID used in /verify/<id> links
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int       @default(0)
+  lastSentAt DateTime  @default(now())
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Invite {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  role           String
+  otherRoleLabel String?
+  tokenHash      String    @unique
+  expiresAt      DateTime
+  invitedById    String?
+  acceptedAt     DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([invitedById])
+}
+
+// ─── Audit trail (every create/update/delete) ────────────────────
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  at        DateTime @default(now())
+  actorId   String?
+  action    String // CREATE | UPDATE | DELETE
+  model     String
+  recordId  String
+  before    String?
+  after     String?
+  ip        String?
+
+  @@index([model, recordId])
+  @@index([actorId])
+  @@index([at])
 }

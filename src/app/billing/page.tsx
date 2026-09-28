@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useAppUser as useUser } from "@/hooks/useAppUser";
 import AppShell from "@/components/layout/AppShell";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 

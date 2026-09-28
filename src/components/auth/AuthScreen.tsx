@@ -1,0 +1,856 @@
+"use client";
+
+import { ArrowLeft, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
+import PasswordInput from "./PasswordInput";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+
+const slides = [
+  {
+    eyebrow: "FUTURE FARMS INITIATIVE",
+    title: (
+      <>
+        Build your farm&apos;s capabilities.
+        <br />
+        <span>Become future-ready.</span>
+      </>
+    ),
+    description:
+      "Assess where your farm stands, strengthen its capabilities, and track your progress toward a more resilient, productive, and investment-ready farm.",
+    label: "A practical pathway for farm transformation",
+    visual: "01",
+    image: "/photo8.png",
+  },
+  {
+    eyebrow: "FUTURE FARMS FRAMEWORK",
+    title: (
+      <>
+        Know where you stand.
+        <br />
+        <span>Know where to go next.</span>
+      </>
+    ),
+    description:
+      "Assess your farm's capabilities, measure maturity, and identify the priorities that will move your farm forward.",
+    label: "Farm Systems Capability & Maturity Framework",
+    visual: "02",
+    image: "/photo3.png",
+  },
+];
+
+function ShowcasePanel() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((current) => (current + 1) % slides.length);
+    }, 7000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextSlide = () => {
+    setCurrentSlide((current) => (current + 1) % slides.length);
+  };
+
+  const previousSlide = () => {
+    setCurrentSlide(
+      (current) => (current - 1 + slides.length) % slides.length
+    );
+  };
+
+  const slide = slides[currentSlide];
+
+  return (
+    <section className="relative hidden overflow-hidden lg:block">
+      {slides.map((item, index) => (
+        <div
+          key={item.image}
+          className={`absolute inset-0 transition-all duration-[1200ms] ease-out ${
+            currentSlide === index
+              ? "scale-100 opacity-100"
+              : "scale-105 opacity-0"
+          }`}
+        >
+          <Image
+            src={item.image}
+            alt=""
+            fill
+            priority={index === 0}
+            className="object-cover"
+            sizes="60vw"
+          />
+        </div>
+      ))}
+
+      <div className="absolute inset-0 bg-black/35" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-[#0E3B2B]/95 via-[#0E3B2B]/50 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-[#071F17]/80 to-transparent" />
+      <div className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full border border-white/10" />
+      <div className="absolute -left-20 -top-20 h-[300px] w-[300px] rounded-full border border-white/10" />
+
+      <div className="relative z-10 flex h-full min-h-screen flex-col justify-between p-8 xl:p-14">
+        <div className="-ml-2 -mt-2">
+          <Image
+            src="/images/auth-logo.png"
+            alt="Future Farms"
+            width={160}
+            height={80}
+            priority
+            className="h-auto w-24 object-contain xl:w-44"
+          />
+        </div>
+
+        <div className="max-w-2xl py-4">
+          <h1
+            key={`title-${currentSlide}`}
+            className="text-3xl font-semibold leading-[1.05] tracking-tight text-white animate-[slideUp_650ms_ease-out] lg:text-4xl xl:text-6xl 2xl:text-7xl"
+            style={{ fontFamily: "Georgia, serif" }}
+          >
+            {slide.title}
+          </h1>
+
+          <p
+            key={`description-${currentSlide}`}
+            className="mt-3 max-w-xl text-sm leading-6 text-white/80 animate-[slideUp_700ms_ease-out] xl:mt-5 xl:text-lg xl:leading-7"
+          >
+            {slide.description}
+          </p>
+
+          <div
+            key={`label-${currentSlide}`}
+            className="mt-5 flex items-center gap-3 animate-[slideUp_750ms_ease-out] xl:mt-8"
+          >
+            <div className="h-px w-9 bg-white/80" />
+            <p className="text-sm font-medium text-white/75">{slide.label}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                aria-label={`Go to slide ${index + 1}`}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  currentSlide === index
+                    ? "w-10 bg-white"
+                    : "w-1.5 bg-white/35 hover:bg-white/60"
+                }`}
+              />
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={previousSlide}
+              aria-label="Previous slide"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/10 text-white/65 backdrop-blur-sm transition hover:border-white/40 hover:bg-white/10 hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+
+            <button
+              onClick={nextSlide}
+              aria-label="Next slide"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/10 text-white/65 backdrop-blur-sm transition hover:border-white/40 hover:bg-white/10 hover:text-white"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const inputCls =
+  "w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-900 outline-none focus:border-primary";
+const primaryBtn =
+  "w-full rounded-xl bg-primary py-2.5 text-sm font-semibold text-white transition hover:bg-primary/90 disabled:opacity-60";
+
+function OrDivider() {
+  return (
+    <div className="flex items-center gap-3 pt-2">
+      <div className="h-px flex-1 bg-gray-200" />
+      <span className="text-xs font-semibold text-gray-400">OR</span>
+      <div className="h-px flex-1 bg-gray-200" />
+    </div>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.3h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.6 2.8c2.2-2 3.8-5 3.8-8.6z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.6-2.8c-1 .7-2.4 1.2-4.3 1.2-3.1 0-5.8-2.1-6.8-5l-3.7 2.9c2.1 4.1 6.1 6.6 10.5 6.6z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.2 14.5c-.2-.7-.4-1.5-.4-2.5s.1-1.8.4-2.5L1.4 6.6C.5 8.4 0 10.1 0 12s.5 3.6 1.4 5.4l3.8-2.9z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.5 0 3.5 2.7 1.4 6.6l3.8 2.9c1-2.8 3.7-4.8 6.8-4.8z"
+      />
+    </svg>
+  );
+}
+
+function GoogleButton({
+  label,
+  enabled,
+  onError,
+}: {
+  label: string;
+  enabled: boolean;
+  onError: (msg: string) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        if (!enabled) {
+          onError(
+            "Google sign-in isn't configured yet. Add GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET, or continue with email."
+          );
+          return;
+        }
+        signIn("google", { callbackUrl: "/complete-profile" });
+      }}
+      className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-300 bg-white py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+    >
+      <GoogleIcon />
+      {label}
+    </button>
+  );
+}
+
+function LoginPane({
+  onSwitch,
+  onForgot,
+  googleEnabled,
+}: {
+  onSwitch: () => void;
+  onForgot: () => void;
+  googleEnabled: boolean;
+}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/overview";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        if (data.code === "UNVERIFIED") {
+          // Unverified account: (re)send the OTP and take them straight to
+          // the code entry screen — no dead-end error.
+          try {
+            const r = await fetch("/api/auth/verify/resend", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+            });
+            const rj = await r.json().catch(() => ({}));
+            if (rj.publicId) {
+              router.push(`/verify/${rj.publicId}${rj.mailSent === false ? "?mail=failed" : ""}`);
+              return;
+            }
+          } catch {}
+          setError("Your email is not verified yet. Please try signing up again to get a code.");
+          return;
+        }
+        setError(data.error || "Invalid email or password.");
+        return;
+      }
+      try {
+        localStorage.setItem("future_farms_user", JSON.stringify(data.user));
+      } catch {}
+      const second = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      if (second?.error) {
+        setError("Login succeeded but the session failed. Please try again.");
+        return;
+      }
+      // Staff land in their workspace, everyone else follows the callback.
+      try {
+        const me = await fetch("/api/auth/profile/details", { cache: "no-store" }).then((r) =>
+          r.json()
+        );
+        const role = me?.user?.role;
+        if (role && ["FFDeveloper", "FFAdmin", "FFStaff"].includes(role)) {
+          router.push("/a/dashboard");
+          router.refresh();
+          return;
+        }
+      } catch {}
+      router.push(callbackUrl);
+      router.refresh();
+    } catch {
+      setError("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="w-full shrink-0 px-3">
+
+      <div className="w-full overflow-hidden rounded-[20px] bg-[#FCFDFC] p-6 shadow-[0_20px_50px_-20px_rgba(4,93,97,0.25)] ring-1 ring-gray-200 sm:p-7">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
+              {error}
+            </p>
+          )}
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <PasswordInput
+              value={password}
+              onChange={setPassword}
+              placeholder="••••••••"
+            />
+          </div>
+          <div className="text-right">
+            <button
+              type="button"
+              onClick={onForgot}
+              className="text-xs font-semibold text-primary hover:text-primary/80 cursor-pointer"
+            >
+              Forgot password?
+            </button>
+          </div>
+          <button type="submit" disabled={loading} className={primaryBtn}>
+            {loading ? "Logging in..." : "Log in"}
+          </button>
+        </form>
+
+        <p className="pt-4 text-center text-sm text-gray-500">
+          No account?{" "}
+          <button
+            type="button"
+            onClick={onSwitch}
+            className="font-semibold text-primary hover:text-primary/80 cursor-pointer"
+          >
+            Sign up
+          </button>
+        </p>
+
+        <OrDivider />
+        <div className="pt-3">
+          <GoogleButton label="Sign in with Google" enabled={googleEnabled} onError={setError} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SignupPane({
+  onSwitch,
+  googleEnabled,
+}: {
+  onSwitch: () => void;
+  googleEnabled: boolean;
+}) {
+  const router = useRouter();
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName,
+          middleName,
+          lastName,
+          email,
+          password,
+          confirmPassword,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || (!data.success && res.status !== 200)) {
+        setError(data.error || "Failed to create account.");
+        return;
+      }
+      if (!data.publicId) {
+        setError("Account created but no verification challenge found. Please try logging in.");
+        return;
+      }
+      try {
+        sessionStorage.setItem(
+          "ff_pw_tmp",
+          JSON.stringify({ email: email.toLowerCase().trim(), password })
+        );
+      } catch {}
+      router.push(`/verify/${data.publicId}`);
+    } catch {
+      setError("Signup failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="w-full shrink-0 px-3">
+
+      <div className="w-full overflow-hidden rounded-[20px] bg-[#FCFDFC] p-6 shadow-[0_20px_50px_-20px_rgba(4,93,97,0.25)] ring-1 ring-gray-200 sm:p-7">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
+              {error}
+            </p>
+          )}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                First name *
+              </label>
+              <input
+                required
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Keziah"
+                className={inputCls}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Last name *
+              </label>
+              <input
+                required
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Wanjiku"
+                className={inputCls}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Middle name{" "}
+              <span className="font-normal text-gray-400">(optional)</span>
+            </label>
+            <input
+              value={middleName}
+              onChange={(e) => setMiddleName(e.target.value)}
+              placeholder="Optional"
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Email address *
+            </label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Password *
+            </label>
+            <PasswordInput
+              value={password}
+              onChange={setPassword}
+              placeholder="Min. 8 characters, letters + numbers"
+              minLength={8}
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Confirm password *
+            </label>
+            <PasswordInput
+              value={confirmPassword}
+              onChange={setConfirmPassword}
+              placeholder="Repeat your password"
+            />
+            {confirmPassword.length > 0 && (
+              <p
+                className={`mt-1.5 flex items-center gap-1.5 text-xs font-semibold ${
+                  password === confirmPassword
+                    ? "text-emerald-600"
+                    : "text-red-600"
+                }`}
+              >
+                {password === confirmPassword ? (
+                  <CheckCircle2 className="h-4 w-4 shrink-0" />
+                ) : (
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                )}
+                {password === confirmPassword
+                  ? "Passwords match"
+                  : "Passwords do not match"}
+              </p>
+            )}
+          </div>
+          <button type="submit" disabled={loading} className={primaryBtn}>
+            {loading ? "Creating account..." : "Continue"}
+          </button>
+        </form>
+
+        <p className="pt-4 text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <button
+            type="button"
+            onClick={onSwitch}
+            className="font-semibold text-primary hover:text-primary/80 cursor-pointer"
+          >
+            Log in
+          </button>
+        </p>
+
+        <OrDivider />
+        <div className="pt-3">
+          <GoogleButton label="Sign up with Google" enabled={googleEnabled} onError={setError} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ForgotPane({ onSwitch }: { onSwitch: () => void }) {
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await fetch("/api/auth/forgot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setDone(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="w-full shrink-0 px-3">
+      <div className="mb-6 text-center md:text-left">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-secondary">
+          Account recovery
+        </p>
+        <h2
+          className="mt-2 text-3xl font-semibold tracking-tight text-gray-900"
+          style={{ fontFamily: "Georgia, serif" }}
+        >
+          Forgot password
+        </h2>
+        <p className="mt-1 text-md text-gray-500">
+          We&apos;ll email you a reset link.
+        </p>
+      </div>
+
+      <div className="w-full overflow-hidden rounded-[20px] bg-[#FCFDFC] p-6 shadow-[0_20px_50px_-20px_rgba(4,93,97,0.25)] ring-1 ring-gray-200 sm:p-7">
+        {done ? (
+          <div className="text-center">
+            <p className="text-sm text-gray-700">
+              If an account exists for <strong>{email}</strong>, a reset link
+              was sent. Check your inbox (valid 1 hour).
+            </p>
+            <button
+              type="button"
+              onClick={onSwitch}
+              className="mt-4 text-sm font-semibold text-primary hover:text-primary/80 cursor-pointer"
+            >
+              Back to log in
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Email address
+              </label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className={inputCls}
+              />
+            </div>
+            <button type="submit" disabled={loading} className={primaryBtn}>
+              {loading ? "Sending..." : "Send reset link"}
+            </button>
+          </form>
+        )}
+
+        <p className="pt-4 text-center text-sm text-gray-500">
+          Remembered it?{" "}
+          <button
+            type="button"
+            onClick={onSwitch}
+            className="font-semibold text-primary hover:text-primary/80 cursor-pointer"
+          >
+            Log in
+          </button>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+type AuthMode = "login" | "signup" | "forgot";
+
+const MODE_PATH: Record<AuthMode, string> = {
+  login: "/login",
+  signup: "/signup",
+  forgot: "/forgot-password",
+};
+
+const MODE_INDEX: Record<AuthMode, number> = {
+  forgot: 0,
+  login: 1,
+  signup: 2,
+};
+
+export default function AuthScreen({
+  initialMode = "login",
+}: {
+  initialMode?: AuthMode;
+}) {
+  const [mode, setMode] = useState<AuthMode>(initialMode);
+  const [googleEnabled, setGoogleEnabled] = useState(false);
+
+  // Swipe between panes AND keep the address bar in sync without
+  // remounting (history state only, so the animation stays intact).
+  const switchMode = (next: AuthMode) => {
+    setMode(next);
+    try {
+      window.history.replaceState(null, "", MODE_PATH[next]);
+    } catch {}
+  };
+
+  useEffect(() => {
+    fetch("/api/auth/providers")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && typeof data === "object" && "google" in data) {
+          setGoogleEnabled(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  return (
+    <main className="h-screen w-full overflow-x-hidden bg-[#F7F9F5]">
+      <div className="grid w-full lg:h-screen lg:grid-cols-[1.15fr_0.85fr] lg:overflow-y-auto">
+        <ShowcasePanel />
+
+        <section className="relative flex w-full flex-col bg-[#F7F9F5]">
+          {/* Decorative background — soft light + contour motif on whitish */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* Top sheen */}
+            <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-white to-transparent" />
+            {/* Soft radial light, upper area */}
+            <div
+              className="absolute -top-32 left-1/2 h-[480px] w-[720px] -translate-x-1/2 rounded-full blur-3xl"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(0,153,36,0.10), transparent)",
+              }}
+            />
+            {/* Soft radial shade, lower area */}
+            <div
+              className="absolute -bottom-48 left-1/4 h-[420px] w-[620px] rounded-full blur-3xl"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(4,93,97,0.08), transparent)",
+              }}
+            />
+            {/* Faint contour rings, bottom-right */}
+            <svg
+              className="absolute -bottom-48 -right-48 h-[560px] w-[560px] text-primary opacity-[0.08]"
+              viewBox="0 0 560 560"
+              fill="none"
+              aria-hidden="true"
+            >
+              {[70, 110, 150, 190, 230, 270].map((r) => (
+                <circle
+                  key={r}
+                  cx="280"
+                  cy="280"
+                  r={r}
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+              ))}
+            </svg>
+            {/* Faint contour rings, top-left */}
+            <svg
+              className="absolute -left-40 -top-40 h-[380px] w-[380px] text-primary opacity-[0.06]"
+              viewBox="0 0 380 380"
+              fill="none"
+              aria-hidden="true"
+            >
+              {[60, 100, 140, 180].map((r) => (
+                <circle
+                  key={r}
+                  cx="190"
+                  cy="190"
+                  r={r}
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+              ))}
+            </svg>
+          </div>
+
+          <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-between px-5 py-10 sm:px-8 lg:min-h-0 lg:px-12">
+            <div className="mb-6 flex w-full justify-center lg:hidden">
+              <Image
+                src="/ffi-green-horizontal-landscape.png"
+                alt="Future Farms"
+                width={240}
+                height={60}
+                priority
+                className="h-auto w-48 object-contain"
+              />
+            </div>
+
+            {/* Constant brand block above the forms */}
+            <div className="my-auto flex w-full max-w-md flex-col items-center">
+              <div className="mb-5 flex flex-col items-center text-center">
+                <Image
+                  src="/ffi-green-horizontal-landscape.png"
+                  alt="Future Farms"
+                  width={280}
+                  height={70}
+                  priority
+                  className="h-auto w-52 object-contain"
+                />
+                <h2 className="mt-3 text-xl font-bold text-secondary">
+                  Future Farms Framework
+                </h2>
+                <p className="mt-1.5 max-w-sm text-[13px] leading-relaxed text-gray-500">
+                  Assess your farm using the Farm Systems Capability and
+                  Maturity Framework, designed to guide and measure your
+                  farm&apos;s transition toward future-readiness.
+                </p>
+              </div>
+
+              {/* Swiping panes */}
+              <div className="w-full overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{
+                  transform: `translateX(-${MODE_INDEX[mode] * 100}%)`,
+                }}
+              >
+                <div className="w-full shrink-0">
+                  <ForgotPane onSwitch={() => switchMode("login")} />
+                </div>
+                <div className="w-full shrink-0">
+                  <LoginPane
+                    googleEnabled={googleEnabled}
+                    onSwitch={() => switchMode("signup")}
+                    onForgot={() => switchMode("forgot")}
+                  />
+                </div>
+                <div className="w-full shrink-0">
+                  <SignupPane
+                    googleEnabled={googleEnabled}
+                    onSwitch={() => switchMode("login")}
+                  />
+                </div>
+              </div>
+              </div>
+            </div>
+
+            <div className="mt-8 text-center">
+              <p className="text-[10px] uppercase tracking-[0.22em] text-gray-400">
+                Future Farms Initiative
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+    </main>
+  );
+}

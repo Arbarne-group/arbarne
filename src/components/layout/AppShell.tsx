@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAppUser as useUser } from "@/hooks/useAppUser";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import MobileNav from "./MobileNav";
@@ -51,6 +51,9 @@ export default function AppShell({
   const [userEmail, setUserEmail] = useState<string>("");
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
+  // Staff bypass the farmer funnel: treat as fully complete for access.
+  const [isStaffUser, setIsStaffUser] = useState(false);
+  const STAFF_ROLES = ["FFDeveloper", "FFAdmin", "FFStaff"];
   const wasSignedIn = useRef(false);
 
   // Any Clerk sign-out path (sidebar button, avatar menu) wipes local data
@@ -65,6 +68,23 @@ export default function AppShell({
       clearLocalAppData();
     }
   }, [user, isLoaded]);
+
+  // Presence heartbeat: lets the admin side show who is online / last seen.
+  useEffect(() => {
+    if (!isLoaded) return;
+    let stopped = false;
+    const beat = () => {
+      fetch("/api/presence/heartbeat", { method: "POST" }).catch(() => {});
+    };
+    beat();
+    const timer = setInterval(() => {
+      if (!stopped) beat();
+    }, 60 * 1000);
+    return () => {
+      stopped = true;
+      clearInterval(timer);
+    };
+  }, [isLoaded]);
 
   const effectiveUserName =
     userName ||
@@ -107,9 +127,40 @@ export default function AppShell({
             email = u.email;
             setUserEmail(email);
           }
-          const status = computeOnboardingStageFromUser(u);
-          setOnboardingStage(status.stage);
-          setStatusLoaded(true);
+          if (u.role && STAFF_ROLES.includes(u.role)) {
+            setIsStaffUser(true);
+            setOnboardingStage("FULLY_COMPLETED");
+            setStatusLoaded(true);
+            console.debug("[appshell] stage source: localStorage cache", {
+              email: u.email,
+              role: u.role,
+              staff: true,
+            });
+          } else {
+            // Only trust the cache when it actually carries profile data —
+            // a bare login stub (no role, no relations) must not trigger the
+            // guard before the server responds.
+            const hasSurveyData = [
+              u.farmerProfile,
+              u.farmManagement,
+              u.operatingStyle,
+              u.digitalPlatform,
+              u.aspiration,
+              u.farmLocation,
+              u.farmCharacteristics,
+              u.farmingSystem,
+              u.businessExperience,
+              u.householdLabour,
+              u.countryCode,
+              u.farmingType,
+              u.businessName,
+            ].some(Boolean);
+            if (u.role || hasSurveyData) {
+              const status = computeOnboardingStageFromUser(u);
+              setOnboardingStage(status.stage);
+              setStatusLoaded(true);
+            }
+          }
         } catch (e) {}
       }
     }
@@ -136,11 +187,26 @@ export default function AppShell({
           if (data.user.email) {
             setUserEmail(data.user.email);
           }
-          const status = computeOnboardingStageFromUser(data.user);
-          setOnboardingStage(status.stage);
+          if (data.user.role && STAFF_ROLES.includes(data.user.role)) {
+            setIsStaffUser(true);
+            setOnboardingStage("FULLY_COMPLETED");
+            console.debug("[appshell] stage source: server", {
+              email: data.user.email,
+              role: data.user.role,
+              staff: true,
+            });
+          } else {
+            const status = computeOnboardingStageFromUser(data.user);
+            setOnboardingStage(status.stage);
+            console.debug("[appshell] stage source: server", {
+              email: data.user.email,
+              role: data.user.role,
+              stage: status.stage,
+            });
+          }
           localStorage.setItem(
             "future_farms_user",
-            JSON.stringify({ ...data.user, stage: status.stage })
+            JSON.stringify({ ...data.user, stage: "FULLY_COMPLETED" })
           );
         } else if (data.stage) {
           setOnboardingStage(data.stage);
@@ -182,9 +248,27 @@ export default function AppShell({
     const check = getRouteAccess(pathname, onboardingStage, {
       completedPillarsCount,
       hasAssessmentHistory,
+      isStaff: isStaffUser,
+    });
+    // Decision trace: open DevTools console to see exactly which condition
+    // allowed or redirected the current route.
+    console.debug("[guard]", {
+      pathname,
+      onboardingStage,
+      isStaffUser,
+      completedPillarsCount,
+      hasAssessmentHistory,
+      statusLoaded,
+      allowed: check.allowed,
+      redirectTo: check.redirectTo,
+      reason: check.reason,
     });
     if (!check.allowed && check.redirectTo && pathname !== check.redirectTo) {
-      setRedirectNotice(check.message || "Please complete the required onboarding survey.");
+      setRedirectNotice(
+        check.reason
+          ? `${check.message || "Please complete the required onboarding survey."} [${check.reason}]`
+          : check.message || "Please complete the required onboarding survey."
+      );
       router.replace(check.redirectTo);
 
       const timer = setTimeout(() => {
@@ -197,6 +281,7 @@ export default function AppShell({
     onboardingStage,
     completedPillarsCount,
     hasAssessmentHistory,
+    isStaffUser,
     statusLoaded,
     router,
   ]);

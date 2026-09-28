@@ -1,6 +1,45 @@
 import { prisma } from "@/lib/prisma";
 
 /**
+ * Safely determines the next unique Farm Business ID (e.g. FFF-KE-000-001),
+ * scanning all existing records to guarantee ZERO unique constraint collisions.
+ */
+export async function generateBusinessId(): Promise<string> {
+  try {
+    const allUsers = await (prisma.user as any).findMany({
+      select: { businessId: true },
+    });
+    const existingIds = new Set<string>(
+      allUsers
+        .map((u: any) => u.businessId?.toUpperCase())
+        .filter(Boolean)
+    );
+
+    let maxNum = allUsers.length;
+    for (const u of allUsers) {
+      if (u.businessId) {
+        const match = u.businessId.match(/FFF-KE-000-(\d+)/i);
+        if (match) {
+          const num = parseInt(match[1], 10);
+          if (num > maxNum && num < 1000000) {
+            maxNum = num;
+          }
+        }
+      }
+    }
+
+    let nextNum = maxNum + 1;
+    let candidate = `FFF-KE-000-${String(nextNum).padStart(3, "0")}`;
+    while (existingIds.has(candidate)) {
+      nextNum++;
+      candidate = `FFF-KE-000-${String(nextNum).padStart(3, "0")}`;
+    }
+    return candidate;
+  } catch {
+    return `FFF-KE-000-${Date.now().toString().slice(-4)}`;
+  }
+}
+/**
  * Safely determines the next unique Future Farms Production ID (e.g. FFF-KE-PROD-025),
  * scanning all existing records to guarantee ZERO unique constraint collisions.
  */

@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Script from "next/script";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAppUser as useUser } from "@/hooks/useAppUser";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 
 function CheckoutContent() {
