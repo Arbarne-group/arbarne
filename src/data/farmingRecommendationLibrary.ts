@@ -1,0 +1,561 @@
+// Capability-level status feedback for every pillar and capability.
+// Source: farming_recommendation_library.json
+
+export interface CapabilityRecommendation {
+  capabilityId: string; // normalized, e.g. "1.1"
+  name: string;
+  scale: string;
+  feedback: Record<number, string>;
+}
+
+export const CAPABILITY_STATUS_LEVEL_NAMES: Record<number, string> = {
+  0: "Non-Existent",
+  1: "Emerging",
+  2: "Basic",
+  3: "Developing",
+  4: "Established",
+  5: "Advanced",
+};
+
+export const FARMING_RECOMMENDATION_LIBRARY: Record<string, CapabilityRecommendation> = {
+  "1.1": {
+    capabilityId: "1.1",
+    name: "Technology Readiness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established the foundations for technology adoption. Begin by identifying the main production and operational challenges on your farm and learning about technologies that could address them. Building awareness of your needs and available solutions is the first step toward appropriate technology adoption.",
+      1: "Your farm is beginning to develop technology readiness, but significant gaps remain. Strengthen your understanding of available technologies and how they could address specific farm challenges before making investment decisions.",
+      2: "Your farm has established some foundations for technology adoption. Build on this by evaluating suitable technologies, understanding their costs and benefits, and identifying the infrastructure, financing and technical support required for adoption.",
+      3: "Your farm demonstrates good progress in technology readiness. Continue strengthening your technology planning, comparing available solutions and preparing the resources and partnerships required for successful adoption.",
+      4: "Your farm demonstrates strong technology readiness, with most of the necessary foundations in place. Address the remaining gaps and continue evaluating technologies based on suitability, expected value, affordability and their contribution to your farm's long-term goals.",
+      5: "Congratulations! Your farm demonstrates advanced technology readiness. Continue monitoring emerging technologies, evaluating their relevance and making strategic technology investments based on your farm's needs and performance.",
+    },
+  },
+  "1.2": {
+    capabilityId: "1.2",
+    name: "Digital Capability",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet developed the digital capability required to benefit from digital agriculture. Begin by developing basic skills in using digital devices, accessing information and communicating through digital platforms.",
+      1: "Your digital capability is beginning to develop, but your use of digital tools remains limited. Build confidence through regular practice and gradually introduce simple digital tools into your farming and business activities.",
+      2: "You have established some useful digital skills. Continue strengthening your ability to independently access agricultural information, use relevant applications, communicate digitally and participate in digital services and learning.",
+      3: "You demonstrate good digital capability and are increasingly using digital tools to support your farm. Continue expanding your skills and integrating digital technologies into more areas of farm and business management.",
+      4: "Your farm demonstrates strong digital capability, with digital technologies integrated into most relevant activities. Address the remaining skills or adoption gaps and continue exploring tools that can improve efficiency, access to information and farm management.",
+      5: "Congratulations! Your farm demonstrates advanced digital capability. Continue strengthening your skills, adopting appropriate emerging technologies and using digital tools strategically to improve farm performance and competitiveness.",
+    },
+  },
+  "1.3": {
+    capabilityId: "1.3",
+    name: "Farm Information & Data Management",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm does not yet have a structured approach to recording and managing information. Begin with simple, consistent records of production, activities, inputs, expenses and sales to establish a reliable information base.",
+      1: "Your farm has started recording some information, but records remain limited or inconsistent. Focus on making record keeping routine and ensuring that important farm activities and transactions are captured.",
+      2: "Your farm maintains some useful records, but gaps remain in completeness, organisation or consistency. Strengthen your record-management practices so that important farm information can be easily accessed and used.",
+      3: "Your farm demonstrates good information-management practices. Continue improving the completeness, accuracy, organisation and security of your records and progressively integrate appropriate digital record-keeping systems.",
+      4: "Your farm has a well-established information-management system, with most important information consistently recorded and organised. Address the remaining gaps and strengthen data quality, accessibility, security and integration across farm activities.",
+      5: "Congratulations! Your farm demonstrates advanced farm information and data management. Continue maintaining high-quality records and progressively use integrated digital systems and analytics to generate greater value from your farm information.",
+    },
+  },
+  "1.4": {
+    capabilityId: "1.4",
+    name: "Data-Driven Decision Making",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm does not yet consistently use information or evidence to guide decisions. Begin by using simple farm records, weather information and other reliable sources when making routine production and business decisions.",
+      1: "Your farm is beginning to use information in decision-making, but this remains limited. Increase the use of available production, weather, financial and market information when planning and managing farm activities.",
+      2: "Your farm uses information to support some decisions. Strengthen this capability by regularly reviewing farm performance and using multiple sources of reliable information when making important decisions.",
+      3: "Your farm demonstrates good progress in evidence-based decision-making. Continue integrating production, financial, market and climate information and reviewing the results of decisions to improve future performance.",
+      4: "Your farm consistently uses reliable information to guide most operational and business decisions. Address remaining gaps and strengthen analysis, performance monitoring and the use of appropriate decision-support tools.",
+      5: "Congratulations! Your farm demonstrates advanced data-driven decision-making. Continue using multiple information sources, analytics and appropriate emerging tools to anticipate challenges, identify opportunities and continuously improve performance.",
+    },
+  },
+  "1.5": {
+    capabilityId: "1.5",
+    name: "Continuous Improvement & Innovation",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a consistent approach to improvement and innovation. Begin by identifying areas where performance could improve and actively seeking practical ideas, knowledge and solutions that address those needs.",
+      1: "Your farm is beginning to explore new ideas and improvements, but innovation remains occasional. Develop a more deliberate habit of learning, identifying improvement opportunities and testing practical changes.",
+      2: "Your farm demonstrates some commitment to learning and improvement. Build on this by testing appropriate innovations, documenting what works and using the results to guide future improvements.",
+      3: "Your farm is actively learning and adopting new approaches. Continue evaluating innovations, documenting lessons and incorporating successful improvements into routine farm management.",
+      4: "Your farm demonstrates a strong culture of continuous improvement and innovation. Address remaining gaps while strengthening experimentation, performance measurement and partnerships that can support further innovation.",
+      5: "Congratulations! Your farm demonstrates advanced continuous-improvement and innovation capability. Continue experimenting, measuring results, adopting proven innovations and sharing effective practices while remaining responsive to emerging opportunities and challenges. Pillar 1 Summary : Smart Farming & Digital Transformation Pillar Objective To assess the farm's readiness and capability to adopt technology, build digital capacity, manage farm information, make evidence-based decisions, and continuously innovate to improve productivity, resilience, sustainability, and competitiveness. Capability Progression Capability Focus 1.1 Technology Readiness Is the farm prepared to adopt appropriate technologies? 1.2 Digital Capability Can the farmer effectively use digital tools and technologies? 1.3 Farm Information & Data Management Does the farm systematically collect, organize, and protect information? 1.4 Data-Driven Decision Making Is farm information used to guide management and business decisions? 1.5 Continuous Improvement & Innovation Does the farm continuously learn, innovate, and improve?",
+    },
+  },
+  "2.1": {
+    capabilityId: "2.1",
+    name: "Energy Awareness & Readiness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established an understanding of its energy needs, use, costs or challenges. Begin by identifying where energy is used on the farm, the energy sources you currently depend on, and where access, reliability or cost may be limiting farm performance.",
+      1: "Your farm is beginning to understand its energy needs, but significant gaps remain. Strengthen your awareness of how energy supports different farm activities and identify the main energy challenges and opportunities within your farming system.",
+      2: "Your farm has established some understanding of its energy requirements and current energy situation. Build on this by assessing energy costs, reliability, major energy-consuming activities and opportunities where better energy solutions could improve farm operations.",
+      3: "Your farm demonstrates good energy awareness and readiness. Continue strengthening your understanding of energy demand, costs and future requirements, and begin prioritising appropriate energy interventions based on your farm's operational needs.",
+      4: "Your farm demonstrates strong energy awareness and readiness, with most of the foundations required for informed energy planning in place. Address the remaining gaps and strengthen your ability to evaluate future energy requirements, costs and suitable solutions.",
+      5: "Congratulations! Your farm demonstrates advanced energy awareness and readiness. Continue reviewing your energy needs as the farm changes and use this understanding to guide strategic decisions about energy efficiency, renewable-energy adoption and productive energy use.",
+    },
+  },
+  "2.2": {
+    capabilityId: "2.2",
+    name: "Renewable Energy Adoption",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet begun adopting renewable-energy solutions. Start by identifying farm activities that could benefit from renewable energy and learning about appropriate options such as solar, biogas or other locally suitable technologies.",
+      1: "Your farm is beginning to explore renewable energy, but adoption remains limited. Continue assessing suitable technologies and consider their costs, technical requirements, expected benefits and relevance to your farm's needs.",
+      2: "Your farm has taken some steps toward renewable-energy adoption. Strengthen this capability by ensuring that selected solutions are appropriate to your energy requirements and that you have access to reliable installation, maintenance, financing and technical support.",
+      3: "Your farm demonstrates good progress in adopting renewable energy. Continue expanding appropriate use, improving system functionality and ensuring that installed technologies are properly maintained and aligned with actual farm energy requirements.",
+      4: "Your farm has established strong renewable-energy adoption, with renewable solutions supporting most relevant energy needs. Address remaining gaps and continue evaluating whether existing systems are appropriately sized, reliable, maintained and delivering the expected value.",
+      5: "Congratulations! Your farm demonstrates advanced renewable-energy adoption. Continue optimising existing systems, evaluating emerging solutions and strategically expanding renewable energy where it can further improve farm performance, sustainability and energy independence.",
+    },
+  },
+  "2.3": {
+    capabilityId: "2.3",
+    name: "Energy Efficiency & Management",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm does not yet systematically manage energy consumption, efficiency or costs. Begin by identifying how much energy your major farm activities use and where unnecessary consumption, losses or inefficiencies may be occurring.",
+      1: "Your farm has started paying attention to energy efficiency, but management remains limited. Begin monitoring energy use and costs more consistently and identify simple opportunities to reduce waste and improve equipment efficiency.",
+      2: "Your farm has established some energy-efficiency practices. Build on these by regularly monitoring consumption, maintaining equipment, improving operating practices and tracking whether efficiency measures are reducing energy use and costs.",
+      3: "Your farm demonstrates good progress in managing energy efficiently. Continue improving monitoring, maintenance and equipment use while using energy-performance information to identify additional opportunities for optimisation.",
+      4: "Your farm has strong energy-efficiency and management practices, with most major energy uses actively monitored and managed. Address remaining inefficiencies and strengthen performance measurement, preventive maintenance and cost optimisation.",
+      5: "Congratulations! Your farm demonstrates advanced energy efficiency and management. Continue monitoring performance, optimising equipment and systems, adopting appropriate efficiency innovations and using energy information to continuously improve operational and financial performance.",
+    },
+  },
+  "2.4": {
+    capabilityId: "2.4",
+    name: "Productive Energy Use & Adoption",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm is not yet deliberately using energy to improve production, processing, storage or other value-creating activities. Begin by identifying farm operations where reliable energy could reduce labour, increase productivity, reduce losses or enable value addition.",
+      1: "Your farm is beginning to use energy productively, but applications remain limited. Identify additional farm activities where appropriate energy-powered solutions could address operational challenges or create measurable economic value.",
+      2: "Your farm has adopted some productive uses of energy. Strengthen this capability by expanding appropriate applications and assessing whether they are improving productivity, reducing costs or losses, saving labour, improving quality or generating additional income.",
+      3: "Your farm demonstrates good progress in using energy productively. Continue integrating appropriate energy-powered technologies into farm operations and measure their contribution to productivity, efficiency, quality and profitability.",
+      4: "Your farm has well-established productive energy use across most relevant operations. Address remaining opportunities and continue optimising energy-powered activities based on their operational and financial value to the farm.",
+      5: "Congratulations! Your farm demonstrates advanced productive energy use. Energy is strategically applied to create measurable value across your farming system. Continue identifying new opportunities for mechanisation, processing, storage, value addition and other productive applications as your enterprise grows.",
+    },
+  },
+  "2.5": {
+    capabilityId: "2.5",
+    name: "Energy Management, Resilience & Continuous Improvement",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established systems for managing long-term energy reliability or responding to energy disruptions. Begin by identifying the major energy risks that could interrupt critical farm operations and considering practical ways to reduce your vulnerability.",
+      1: "Your farm is beginning to consider energy reliability and resilience, but significant gaps remain. Strengthen your preparedness for outages, equipment failures, supply interruptions and changing energy costs.",
+      2: "Your farm has established some measures to manage energy risks and maintain continuity. Build on these by strengthening maintenance, contingency arrangements, backup options and regular monitoring of energy-system performance.",
+      3: "Your farm demonstrates good progress in building energy resilience. Continue improving system reliability, preventive maintenance, contingency planning and performance monitoring while adapting your energy systems to changing farm needs.",
+      4: "Your farm demonstrates strong energy management and resilience, with most systems in place to maintain reliable energy and respond to disruptions. Address remaining vulnerabilities and strengthen long-term energy planning, system optimisation and continuous improvement.",
+      5: "Congratulations! Your farm demonstrates advanced energy management and resilience. Continue monitoring risks and performance, adapting energy systems as the enterprise grows, evaluating emerging technologies and continuously improving the reliability, affordability and productive value of energy across the farm.",
+    },
+  },
+  "3.1": {
+    capabilityId: "3.1",
+    name: "Food Safety Awareness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a basic understanding of food safety and the risks that can affect the safety of farm products. Begin by learning about biological, chemical and physical hazards, contamination risks, safe input use, hygiene and your responsibility to produce food that is safe for consumers.",
+      1: "Your farm is beginning to develop food safety awareness, but significant knowledge gaps remain. Strengthen your understanding of common food safety hazards, how contamination can occur and the practices required to prevent risks during production and handling.",
+      2: "Your farm demonstrates a basic understanding of food safety. Build on this foundation by strengthening your knowledge of safe input use, hygiene, water safety, contamination prevention and the food safety requirements relevant to your products and markets.",
+      3: "Your farm demonstrates good food safety awareness. Continue strengthening your understanding of risks across the production and handling process and ensure that everyone involved in farm operations understands their food safety responsibilities.",
+      4: "Your farm demonstrates strong food safety awareness, with most key principles and risks well understood. Address the remaining knowledge gaps and continue strengthening awareness as production practices, regulations and market requirements change.",
+      5: "Congratulations! Your farm demonstrates advanced food safety awareness. Continue keeping your knowledge current, strengthening awareness among workers and applying food safety principles consistently as your farm, products and markets evolve.",
+    },
+  },
+  "3.2": {
+    capabilityId: "3.2",
+    name: "Safe Production Practices",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established the essential practices required for safe food production and handling. Begin by introducing basic hygiene, safe input use, contamination prevention and appropriate harvesting and post-harvest practices.",
+      1: "Your farm has started implementing some safe production practices, but significant gaps remain. Prioritise the most important food safety risks and establish simple, consistent procedures for controlling them throughout production and handling.",
+      2: "Your farm has established some safe production practices. Strengthen implementation by improving consistency in areas such as input handling, water use, worker hygiene, sanitation, harvesting, storage and contamination prevention.",
+      3: "Your farm demonstrates good progress in applying safe production practices. Continue strengthening consistency across farm activities and ensure that workers understand and follow the required procedures during production, harvesting, handling and storage.",
+      4: "Your farm has strong safe-production practices, with most important food safety controls consistently implemented. Address the remaining gaps and strengthen monitoring to ensure practices remain effective and consistently followed.",
+      5: "Congratulations! Your farm demonstrates advanced safe production practices. Continue monitoring food safety controls, maintaining high standards, training workers and improving practices as risks, technologies and market requirements evolve.",
+    },
+  },
+  "3.3": {
+    capabilityId: "3.3",
+    name: "Product Quality Management",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a systematic approach to managing product quality. Begin by identifying the quality characteristics your customers and markets expect and determining how these can be consistently achieved.",
+      1: "Your farm is beginning to consider product quality, but quality management remains limited. Strengthen your understanding of customer requirements and introduce basic practices for checking, sorting, grading and handling products appropriately.",
+      2: "Your farm has established some product quality practices. Build on these by defining clearer product specifications, improving consistency and monitoring factors such as size, appearance, maturity, freshness, handling and other characteristics relevant to your product.",
+      3: "Your farm demonstrates good progress in managing product quality. Continue strengthening quality controls across production and post-harvest handling, monitoring product losses and using customer feedback to improve consistency.",
+      4: "Your farm demonstrates strong product quality management, with most relevant quality requirements consistently achieved. Address remaining gaps and strengthen quality monitoring, documentation and responsiveness to changing customer requirements.",
+      5: "Congratulations! Your farm demonstrates advanced product quality management. Continue monitoring quality performance, responding to customer expectations and improving your systems to maintain consistency, reduce losses and strengthen market competitiveness.",
+    },
+  },
+  "3.4": {
+    capabilityId: "3.4",
+    name: "Compliance, Traceability & Documentation",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established the records and systems required to demonstrate compliance or trace products. Begin by identifying the records required for your farming activities and maintaining basic documentation for production, inputs, harvesting and sales.",
+      1: "Your farm has started maintaining some compliance or traceability information, but significant gaps remain. Strengthen your documentation and begin establishing clear links between farm activities, inputs used, products harvested and where products are sold.",
+      2: "Your farm has established some compliance records and traceability practices. Build on this by improving record completeness, organisation and consistency and ensuring that relevant regulatory, buyer and market requirements are understood.",
+      3: "Your farm demonstrates good progress in compliance, traceability and documentation. Continue strengthening records across the production cycle and ensure that products, inputs, activities and buyers can be reliably linked when information is required.",
+      4: "Your farm has strong compliance, documentation and traceability systems, with most required information consistently maintained and accessible. Address remaining gaps and strengthen internal checks to ensure continued compliance and traceability.",
+      5: "Congratulations! Your farm demonstrates advanced compliance, traceability and documentation capability. Continue maintaining reliable records, reviewing changing requirements and strengthening systems so that your farm can confidently demonstrate compliance to buyers, regulators and other relevant stakeholders.",
+    },
+  },
+  "3.5": {
+    capabilityId: "3.5",
+    name: "Continuous Improvement & Certification Readiness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a process for reviewing and improving its food safety, quality and compliance systems. Begin by identifying current gaps and learning about the standards or certification requirements that may be relevant to your target markets.",
+      1: "Your farm is beginning to consider continuous improvement and certification requirements, but preparation remains limited. Start reviewing food safety and quality performance regularly and identify the most important improvements needed.",
+      2: "Your farm has established some foundations for continuous improvement and certification readiness. Build on these by conducting periodic reviews, documenting weaknesses, taking corrective actions and becoming more familiar with relevant standards.",
+      3: "Your farm demonstrates good progress toward systematic improvement and certification readiness. Continue strengthening internal reviews, corrective actions, worker training and documentation while addressing gaps against relevant standards or buyer requirements.",
+      4: "Your farm demonstrates strong continuous-improvement and certification-readiness practices. Address the remaining gaps, strengthen internal audits and documentation, and maintain the systems required to confidently undergo relevant inspections, assessments or certification processes.",
+      5: "Congratulations! Your farm demonstrates advanced continuous improvement and certification readiness. Continue monitoring performance, maintaining compliance, addressing emerging risks and strengthening your systems as standards, customer expectations and market opportunities evolve.",
+    },
+  },
+  "4.1": {
+    capabilityId: "4.1",
+    name: "Indigenous & Local Knowledge Awareness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established awareness of indigenous and locally developed agricultural knowledge. Begin by identifying farming knowledge, practices and experiences within your community that may contribute to productivity, sustainability and climate resilience.",
+      1: "Your farm is beginning to recognise the value of indigenous and local knowledge, but awareness remains limited. Engage with experienced farmers, elders and other local knowledge holders to better understand practices relevant to your farming system.",
+      2: "Your farm demonstrates basic awareness of indigenous and local agricultural knowledge. Strengthen this capability by identifying locally relevant practices, understanding their purpose and considering how they may complement scientific knowledge and modern farming approaches.",
+      3: "Your farm demonstrates good awareness and appreciation of indigenous and local knowledge. Continue learning from local knowledge holders, documenting useful practices and evaluating how relevant knowledge can contribute to current farm challenges and climate resilience.",
+      4: "Your farm demonstrates strong understanding and appreciation of indigenous and local knowledge. Address remaining gaps by strengthening knowledge documentation, intergenerational learning and the appropriate integration of local knowledge with scientific evidence and modern technologies.",
+      5: "Congratulations! Your farm demonstrates advanced indigenous and local knowledge capability. Continue preserving, applying and sharing relevant knowledge while critically evaluating and integrating it with scientific evidence, new technologies and emerging approaches to strengthen farm resilience.",
+    },
+  },
+  "4.2": {
+    capabilityId: "4.2",
+    name: "Climate Risk Awareness & Assessment",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet systematically identified the climate risks that could affect production, resources, infrastructure or business performance. Begin by identifying the major climate hazards affecting your location and the areas of your farm that are most vulnerable.",
+      1: "Your farm is beginning to recognise climate-related risks, but understanding and assessment remain limited. Strengthen your awareness of changing rainfall, drought, floods, heat, pests, diseases and other relevant risks and how they may affect your farm.",
+      2: "Your farm demonstrates basic climate-risk awareness. Build on this by assessing how identified risks could affect crops, livestock, water, soil, infrastructure and farm income and by beginning to use reliable weather and climate information.",
+      3: "Your farm demonstrates good progress in understanding and assessing climate risks. Continue strengthening risk monitoring, identifying vulnerable areas and incorporating climate information into production and farm-management decisions.",
+      4: "Your farm has strong climate-risk awareness and assessment practices, with most significant risks and vulnerabilities understood. Address remaining gaps and regularly update your assessment as climate conditions, farm activities and exposure change.",
+      5: "Congratulations! Your farm demonstrates advanced climate-risk awareness and assessment. Continue monitoring emerging risks, updating vulnerability assessments and using climate intelligence to anticipate threats and guide long-term farm planning and investment.",
+    },
+  },
+  "4.3": {
+    capabilityId: "4.3",
+    name: "Climate-Smart Farm Practices",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established climate-smart practices appropriate to its production system. Begin by identifying practical measures that can reduce climate vulnerability while protecting or improving farm productivity.",
+      1: "Your farm has started implementing some climate-smart practices, but adoption remains limited. Prioritise practices that address your most significant climate risks and are appropriate to your farm's resources, enterprises and local conditions.",
+      2: "Your farm has adopted some climate-smart practices. Strengthen this capability by improving consistency and expanding appropriate practices across areas such as soil management, water use, production planning and enterprise diversification.",
+      3: "Your farm demonstrates good progress in climate-smart farming. Continue strengthening implementation, adapting practices to changing conditions and monitoring whether they are improving productivity, resource efficiency and resilience.",
+      4: "Your farm demonstrates strong adoption of climate-smart practices across most relevant areas. Address remaining gaps and strengthen monitoring to determine which practices provide the greatest resilience, productivity and sustainability benefits.",
+      5: "Congratulations! Your farm demonstrates advanced climate-smart farming capability. Continue monitoring performance, adapting practices as conditions change and refining your farming system using evidence, experience and appropriate innovations.",
+    },
+  },
+  "4.4": {
+    capabilityId: "4.4",
+    name: "Resource Conservation & Ecosystem Resilience",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established consistent practices for protecting the natural resources and ecosystems on which production depends. Begin by identifying risks affecting your soil, water, biodiversity and surrounding farm environment.",
+      1: "Your farm has started implementing some resource-conservation practices, but significant gaps remain. Prioritise practical actions that protect soil, conserve water, reduce degradation and support biodiversity.",
+      2: "Your farm demonstrates some resource-conservation practices. Build on these by strengthening soil and water management, reducing erosion and degradation, protecting beneficial organisms and improving the responsible use of natural resources.",
+      3: "Your farm demonstrates good progress in conserving natural resources and strengthening ecosystem resilience. Continue expanding effective practices and monitor changes in soil condition, water availability, biodiversity and other important natural resources.",
+      4: "Your farm has strong resource-conservation and ecosystem-resilience practices across most relevant areas. Address remaining gaps and strengthen restoration, monitoring and long-term management of the natural resources that support farm productivity.",
+      5: "Congratulations! Your farm demonstrates advanced resource conservation and ecosystem resilience. Continue protecting and restoring natural resources, monitoring ecosystem health and integrating conservation into long-term production and farm-development decisions.",
+    },
+  },
+  "4.5": {
+    capabilityId: "4.5",
+    name: "Adaptation, Innovation & Continuous Improvement",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a systematic approach to adapting to changing climate and environmental conditions. Begin by reviewing how changing conditions are affecting your farm and identifying practical areas where adaptation or improvement is needed.",
+      1: "Your farm is beginning to adapt and explore new approaches, but these efforts remain limited. Strengthen your ability to learn from climate events, changing conditions and farm performance and begin testing practical responses to identified challenges.",
+      2: "Your farm demonstrates some capacity to adapt and innovate. Build on this by testing appropriate practices, combining useful local and scientific knowledge, and documenting the results of changes made on the farm.",
+      3: "Your farm demonstrates good progress in adaptation and innovation. Continue experimenting with appropriate solutions, documenting lessons, evaluating results and incorporating successful approaches into routine farm management.",
+      4: "Your farm demonstrates strong adaptation and continuous-improvement capability. Address remaining gaps while strengthening experimentation, monitoring, knowledge integration and long-term planning for changing climate and environmental conditions.",
+      5: "Congratulations! Your farm demonstrates advanced adaptation, innovation and continuous improvement. Continue anticipating change, experimenting responsibly, integrating local knowledge with scientific evidence and appropriate technologies, and using lessons from experience to continuously strengthen long-term farm resilience.",
+    },
+  },
+  "5.1": {
+    capabilityId: "5.1",
+    name: "Financial Literacy & Farm Record Management",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established the basic financial knowledge and record-management practices needed to manage it as a business. Begin by understanding key financial concepts and consistently recording farm income, expenses, production, sales and other important business information.",
+      1: "Your farm is beginning to develop financial literacy and record-keeping practices, but significant gaps remain. Strengthen your understanding of basic farm finances and make recording transactions and farm activities a regular part of your management routine.",
+      2: "Your farm has established some financial and record-management foundations. Build on these by improving the completeness, accuracy and organisation of your records and strengthening your understanding of how financial information reflects farm performance.",
+      3: "Your farm demonstrates good progress in financial literacy and record management. Continue improving record consistency, separating farm and personal finances, and regularly reviewing financial and operational records to support business decisions.",
+      4: "Your farm demonstrates strong financial literacy and maintains reliable records across most important business activities. Address remaining gaps and strengthen record accuracy, organisation, review and appropriate use of digital systems.",
+      5: "Congratulations! Your farm demonstrates advanced financial literacy and farm record management. Continue maintaining high-quality records and using reliable financial and operational information to strengthen planning, accountability and long-term business performance.",
+    },
+  },
+  "5.2": {
+    capabilityId: "5.2",
+    name: "Cost, Revenue & Profitability Management",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm does not yet systematically determine its costs, revenues or profitability. Begin by identifying what it costs to operate and produce your major farm products and comparing these costs with the income generated.",
+      1: "Your farm is beginning to understand costs and revenues, but profitability management remains limited. Strengthen your ability to track production costs and sales income so you can determine whether your farm enterprises are generating a profit.",
+      2: "Your farm has established some understanding of costs, revenue and profitability. Build on this by calculating profitability for individual enterprises, understanding cost per unit and identifying the main factors affecting your margins.",
+      3: "Your farm demonstrates good progress in managing costs, revenue and profitability. Continue using profitability information to guide production, pricing and investment decisions and identify opportunities to improve margins.",
+      4: "Your farm demonstrates strong profitability management, with most major costs, revenues and margins understood and actively managed. Address remaining gaps and strengthen cost control, enterprise comparison and profitability optimisation.",
+      5: "Congratulations! Your farm demonstrates advanced cost, revenue and profitability management. Continue monitoring margins, identifying efficiency opportunities and using profitability analysis strategically to guide enterprise, pricing and investment decisions.",
+    },
+  },
+  "5.3": {
+    capabilityId: "5.3",
+    name: "Productivity & Performance Management",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm does not yet systematically measure productivity or business performance. Begin by identifying a few important indicators that show how effectively your farm is using land, labour, inputs and other resources to generate results.",
+      1: "Your farm has started monitoring some aspects of performance, but measurement remains limited. Strengthen this capability by consistently tracking key production and business indicators relevant to your farm enterprises.",
+      2: "Your farm monitors some productivity and performance indicators. Build on this by establishing clear targets, comparing actual results with previous production cycles and identifying areas where resources are not being used efficiently.",
+      3: "Your farm demonstrates good progress in productivity and performance management. Continue strengthening performance monitoring, comparing results against targets and using the information to address inefficiencies and operational bottlenecks.",
+      4: "Your farm demonstrates strong productivity and performance management across most important areas. Address remaining gaps and strengthen benchmarking, performance analysis and regular management reviews to drive further improvement.",
+      5: "Congratulations! Your farm demonstrates advanced productivity and performance management. Continue monitoring key indicators, benchmarking results, refining targets and using performance information to continuously improve efficiency, productivity and overall business performance.",
+    },
+  },
+  "5.4": {
+    capabilityId: "5.4",
+    name: "Cash Flow, Planning & Risk Management",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established financial planning, cash-flow management or business-risk practices. Begin by preparing simple budgets, understanding when money enters and leaves the farm, and identifying the major risks that could disrupt operations.",
+      1: "Your farm is beginning to plan its finances and recognise business risks, but significant gaps remain. Strengthen budgeting, monitor cash inflows and outflows and identify periods when the farm may experience financial pressure.",
+      2: "Your farm has established some budgeting, cash-flow and risk-management practices. Build on these by forecasting future cash needs, identifying seasonal financing gaps and developing practical responses to major production, financial, market and operational risks.",
+      3: "Your farm demonstrates good progress in financial planning and risk management. Continue strengthening cash-flow forecasting, contingency planning and measures that help the business prepare for and respond to disruptions.",
+      4: "Your farm demonstrates strong cash-flow, planning and risk-management capability. Address remaining gaps and strengthen financial reserves, risk-mitigation measures, scenario planning and business-continuity arrangements where appropriate.",
+      5: "Congratulations! Your farm demonstrates advanced cash-flow, planning and risk management. Continue reviewing financial forecasts, monitoring emerging risks and strengthening the farm's ability to maintain operations and financial stability under changing conditions.",
+    },
+  },
+  "5.5": {
+    capabilityId: "5.5",
+    name: "Growth Strategy, Scalability & Continuous Improvement",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a clear strategy for business growth and improvement. Begin by defining where you want the farm business to be in the future and identifying realistic opportunities for improving or expanding its operations.",
+      1: "Your farm is beginning to consider growth opportunities, but growth planning remains limited. Develop clearer business goals and identify the main opportunities, resources and constraints that could influence future growth.",
+      2: "Your farm has established some growth goals and improvement activities. Build on these by assessing whether your people, finances, markets, infrastructure, technology and operational systems can support the growth you are considering.",
+      3: "Your farm demonstrates good progress in planning for growth and continuous improvement. Continue strengthening your growth strategy, addressing operational constraints and ensuring expansion does not undermine profitability, quality, resilience or efficiency.",
+      4: "Your farm demonstrates strong growth and scalability capability, with most of the systems required for sustainable expansion in place. Address remaining constraints and strengthen strategic reviews, standardised systems and performance monitoring as the enterprise grows.",
+      5: "Congratulations! Your farm demonstrates advanced growth strategy, scalability and continuous improvement. Continue identifying strategic opportunities, strengthening systems and reviewing performance to ensure that growth remains profitable, efficient, resilient and sustainable.",
+    },
+  },
+  "6.1": {
+    capabilityId: "6.1",
+    name: "Human Capital Awareness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established an understanding of its human-capital needs. Begin by identifying the people, roles, skills and labour required to operate the farm effectively and recognising how workforce capability affects productivity, quality and business performance.",
+      1: "Your farm is beginning to recognise the importance of people and skills, but significant gaps remain. Strengthen your understanding of workforce roles, labour requirements, skills needs and how people contribute to achieving farm objectives.",
+      2: "Your farm demonstrates basic human-capital awareness. Build on this by identifying existing workforce skills, recognising skills gaps and developing a clearer understanding of the labour and capabilities required across different farm activities.",
+      3: "Your farm demonstrates good awareness of its human-capital requirements. Continue strengthening your understanding of workforce capacity, labour costs, skills gaps and the relationship between people, productivity and farm performance.",
+      4: "Your farm demonstrates strong human-capital awareness, with most workforce roles, skills and requirements clearly understood. Address remaining gaps and strengthen workforce assessment as the farm's operations, technologies and business needs evolve.",
+      5: "Congratulations! Your farm demonstrates advanced human-capital awareness. Continue reviewing your workforce requirements, anticipating future skills needs and treating people, knowledge and capabilities as strategic resources for long-term farm development.",
+    },
+  },
+  "6.2": {
+    capabilityId: "6.2",
+    name: "Workforce Planning & Recruitment",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm does not yet systematically plan its workforce or recruitment needs. Begin by identifying the roles, number of workers and skills required for key farm activities and production periods.",
+      1: "Your farm has started considering workforce requirements, but planning and recruitment remain largely informal. Strengthen your approach by defining roles, estimating labour requirements and identifying the skills needed before recruiting workers.",
+      2: "Your farm has established some workforce planning and recruitment practices. Build on these by developing clearer responsibilities, planning seasonal labour needs, improving worker selection and introducing appropriate onboarding and employment documentation.",
+      3: "Your farm demonstrates good progress in workforce planning and recruitment. Continue strengthening labour forecasting, role definition, recruitment processes and worker onboarding to ensure the right people are available when needed.",
+      4: "Your farm demonstrates strong workforce planning and recruitment practices, with most labour requirements anticipated and roles clearly defined. Address remaining gaps and strengthen recruitment quality, workforce continuity and forward planning as the farm grows.",
+      5: "Congratulations! Your farm demonstrates advanced workforce planning and recruitment capability. Continue anticipating future workforce requirements, maintaining effective recruitment and onboarding systems, and adapting your workforce strategy as farm operations evolve.",
+    },
+  },
+  "6.3": {
+    capabilityId: "6.3",
+    name: "Skills Development & Capacity Building",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a structured approach to developing workforce skills. Begin by identifying the knowledge and skills workers need to perform their roles safely, correctly and effectively.",
+      1: "Your farm has started providing some learning or guidance, but workforce development remains limited. Identify priority skills gaps and provide practical training in the areas most important to farm performance.",
+      2: "Your farm has established some skills-development practices. Build on these by making training more regular, addressing technical and management skills gaps and ensuring workers receive appropriate instruction when new practices or technologies are introduced.",
+      3: "Your farm demonstrates good progress in workforce development. Continue strengthening training, coaching and knowledge transfer and begin evaluating whether learning is improving worker performance and operational outcomes.",
+      4: "Your farm demonstrates strong skills-development and capacity-building practices. Address remaining gaps and strengthen ongoing learning, performance-based training, leadership development and preparation for emerging skills requirements.",
+      5: "Congratulations! Your farm demonstrates advanced workforce-development capability. Continue investing in continuous learning, developing future supervisors and leaders, preparing workers for emerging technologies and ensuring skills development contributes to measurable farm performance.",
+    },
+  },
+  "6.4": {
+    capabilityId: "6.4",
+    name: "Farm Operations & Workforce Management",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm does not yet have structured systems for organising people and daily operations. Begin by clearly defining responsibilities, planning farm activities and establishing simple processes for assigning and monitoring work.",
+      1: "Your farm has started organising tasks and workers, but management remains largely informal. Strengthen work planning, task allocation, supervision and communication so that farm activities are completed consistently and on time.",
+      2: "Your farm has established some operational and workforce-management practices. Build on these by introducing clearer work schedules, procedures, performance expectations, safety practices and systems for monitoring task completion.",
+      3: "Your farm demonstrates good progress in managing operations and its workforce. Continue strengthening supervision, standard operating procedures, labour productivity, accountability and coordination across farm activities.",
+      4: "Your farm demonstrates strong farm-operations and workforce-management capability, with most activities systematically planned, assigned and monitored. Address remaining gaps and strengthen operational efficiency, performance measurement, safety and accountability.",
+      5: "Congratulations! Your farm demonstrates advanced farm-operations and workforce management. Continue optimising workflows, monitoring labour productivity, improving operating systems and using performance information to maintain safe, efficient and consistent farm operations.",
+    },
+  },
+  "6.5": {
+    capabilityId: "6.5",
+    name: "Leadership, Culture & Workforce Wellbeing",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established the leadership and workplace practices required to support an effective workforce. Begin by creating clear expectations, respectful communication, safe working conditions and fair treatment for everyone working on the farm.",
+      1: "Your farm is beginning to develop positive leadership and workplace practices, but significant gaps remain. Strengthen communication, worker safety, fairness, feedback and clarity of expectations to create a more supportive working environment.",
+      2: "Your farm demonstrates some positive leadership, culture and wellbeing practices. Build on these by improving communication, worker engagement, conflict management, recognition, safety and opportunities for workers to contribute and develop.",
+      3: "Your farm demonstrates good progress in leadership and workplace culture. Continue strengthening accountability, teamwork, worker engagement, wellbeing and leadership practices that support both people and farm performance.",
+      4: "Your farm demonstrates strong leadership and a positive workplace culture, with most systems supporting worker safety, engagement, accountability and wellbeing. Address remaining gaps and strengthen retention, leadership development and long-term workforce sustainability.",
+      5: "Congratulations! Your farm demonstrates advanced leadership, workplace culture and workforce wellbeing. Continue developing future leaders, maintaining a safe and respectful workplace, supporting worker growth and strengthening a culture of accountability, collaboration and continuous improvement.",
+    },
+  },
+  "7.1": {
+    capabilityId: "7.1",
+    name: "Market Awareness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a clear understanding of its markets or customers. Begin by identifying who could buy your products, what they require, where they can be reached, and the factors that influence demand and prices.",
+      1: "Your farm is beginning to understand its market, but significant knowledge gaps remain. Strengthen your awareness of potential customers, market channels, buyer requirements, prices and demand patterns relevant to your products.",
+      2: "Your farm demonstrates basic market awareness. Build on this by developing a clearer understanding of customer needs, market requirements, seasonal demand, pricing patterns and the different market opportunities available to your farm.",
+      3: "Your farm demonstrates good market awareness. Continue strengthening your understanding of customer segments, buyer requirements, demand patterns and emerging opportunities, and increasingly use this information when planning production.",
+      4: "Your farm demonstrates strong market awareness, with most important customers, requirements and market opportunities well understood. Address remaining knowledge gaps and continue monitoring changes in demand, prices, customer preferences and market requirements.",
+      5: "Congratulations! Your farm demonstrates advanced market awareness. Continue monitoring changing customer needs, market trends and emerging opportunities and use this knowledge strategically to guide production, product and business decisions.",
+    },
+  },
+  "7.2": {
+    capabilityId: "7.2",
+    name: "Market Access & Customer Relationships",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established reliable access to customers or markets. Begin by identifying appropriate market channels and potential buyers and developing basic approaches for reaching, communicating with and serving them.",
+      1: "Your farm is beginning to access markets and engage customers, but relationships and sales channels remain limited or inconsistent. Strengthen buyer outreach, communication and reliability while exploring suitable channels for your products.",
+      2: "Your farm has established some market access and customer relationships. Build on these by strengthening buyer communication, negotiation, reliability, customer service and the consistency of your sales channels.",
+      3: "Your farm demonstrates good progress in accessing markets and maintaining customer relationships. Continue strengthening buyer trust, supply reliability, customer feedback, negotiation and customer retention while developing more dependable market channels.",
+      4: "Your farm demonstrates strong market access and customer relationships, with most sales channels and buyer relationships well established. Address remaining gaps and strengthen customer retention, commercial agreements, service quality and long-term buyer relationships.",
+      5: "Congratulations! Your farm demonstrates advanced market access and customer-relationship capability. Continue strengthening strategic buyer relationships, maintaining reliable supply and service, and developing long-term commercial relationships that support sustainable farm growth.",
+    },
+  },
+  "7.3": {
+    capabilityId: "7.3",
+    name: "Market Intelligence & Competitiveness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm does not yet systematically collect or use market information to support commercial decisions. Begin by monitoring basic information such as prices, demand, customer preferences and competing products within your target markets.",
+      1: "Your farm is beginning to gather market information, but its use remains limited. Strengthen your understanding of competitors, market prices, customer behaviour and changing demand and begin using this information in routine business decisions.",
+      2: "Your farm uses some market intelligence to guide decisions. Build on this by regularly monitoring prices, competitors, customer feedback and market trends and comparing your products and performance with available alternatives.",
+      3: "Your farm demonstrates good progress in market intelligence and competitiveness. Continue strengthening market monitoring, competitor analysis and benchmarking and use the information to improve pricing, production, quality and marketing decisions.",
+      4: "Your farm demonstrates strong market-intelligence capability and uses market information across most important commercial decisions. Address remaining gaps and strengthen your ability to anticipate market changes, identify opportunities and maintain a competitive advantage.",
+      5: "Congratulations! Your farm demonstrates advanced market intelligence and competitiveness. Continue analysing customers, competitors, prices and emerging trends and use these insights strategically to anticipate change, identify opportunities and strengthen your competitive position.",
+    },
+  },
+  "7.4": {
+    capabilityId: "7.4",
+    name: "Value Addition & Market Diversification",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established approaches for increasing customer value or diversifying its market opportunities. Begin by identifying what customers value and exploring practical opportunities to improve products, access additional customers or reduce dependence on a single market.",
+      1: "Your farm is beginning to explore value addition or market diversification, but these efforts remain limited. Identify practical opportunities for improving product value and reaching additional customers, channels or markets.",
+      2: "Your farm has established some value-addition or diversification activities. Build on these by assessing customer demand, costs and potential returns and by strengthening product, customer or market diversification where commercially appropriate.",
+      3: "Your farm demonstrates good progress in creating additional customer value and diversifying market opportunities. Continue evaluating value-addition activities, expanding appropriate market channels and reducing dependence on limited products or buyers.",
+      4: "Your farm demonstrates strong value addition and market diversification, with most relevant opportunities actively developed. Address remaining gaps and strengthen the profitability, consistency and strategic management of your product and market portfolio.",
+      5: "Congratulations! Your farm demonstrates advanced value-addition and market-diversification capability. Continue identifying emerging customer needs, developing commercially viable products and market opportunities, and maintaining a diversified market portfolio that strengthens profitability and reduces risk.",
+    },
+  },
+  "7.5": {
+    capabilityId: "7.5",
+    name: "Market Leadership & Strategic Positioning",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a clear market position or competitive identity. Begin by defining your target customers, understanding why they should choose your products and identifying the value your farm can offer differently or more effectively.",
+      1: "Your farm is beginning to develop its market position, but differentiation and strategic direction remain limited. Strengthen your understanding of your target customers, value proposition, competitors and the characteristics that could distinguish your farm in the market.",
+      2: "Your farm has established some elements of a market position. Build on these by strengthening your value proposition, product differentiation, reputation and consistency in delivering what your target customers value.",
+      3: "Your farm demonstrates good progress in strategic market positioning. Continue strengthening your reputation, differentiation, customer experience and competitive advantage while developing a clearer long-term market strategy.",
+      4: "Your farm demonstrates strong strategic positioning, with a clear value proposition and established presence within its target market. Address remaining gaps and strengthen brand reputation, preferred-buyer relationships, differentiation and long-term competitive positioning.",
+      5: "Congratulations! Your farm demonstrates advanced market leadership and strategic positioning. Continue strengthening your competitive advantage, reputation and customer value proposition while anticipating market changes, pursuing strategic opportunities and maintaining a distinctive position within your target markets.",
+    },
+  },
+  "8.1": {
+    capabilityId: "8.1",
+    name: "Investment Awareness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established an understanding of its financing and investment needs or the options available. Begin by identifying why and when your farm may require additional capital and learning about financing options such as savings, credit, asset finance, grants, equity and other appropriate sources.",
+      1: "Your farm is beginning to understand financing and investment, but significant knowledge gaps remain. Strengthen your awareness of available financing options and the costs, risks, repayment requirements and other obligations associated with each.",
+      2: "Your farm demonstrates basic investment awareness. Build on this by identifying specific capital needs, understanding the purpose of different financing options and assessing which sources of finance are appropriate for your farm's stage and objectives.",
+      3: "Your farm demonstrates good investment awareness. Continue strengthening your understanding of financing costs, risks, returns and obligations and improve your ability to match different capital needs with appropriate financing options.",
+      4: "Your farm demonstrates strong investment awareness, with most financing options, requirements and implications well understood. Address remaining gaps and strengthen your ability to evaluate financing opportunities based on affordability, suitability, risk and expected business value.",
+      5: "Congratulations! Your farm demonstrates advanced investment awareness. Continue evaluating financing strategically and ensure that capital decisions remain aligned with your farm's financial capacity, growth objectives, expected returns and long-term sustainability.",
+    },
+  },
+  "8.2": {
+    capabilityId: "8.2",
+    name: "Business Governance & Legal Readiness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established the governance and legal foundations required for a structured farm enterprise. Begin by clarifying ownership, responsibilities and decision-making arrangements and identifying the registrations, licences, agreements or other legal requirements applicable to your business.",
+      1: "Your farm is beginning to establish its business and legal structure, but significant gaps remain. Strengthen ownership documentation, roles and responsibilities, business registration and other basic governance and legal requirements relevant to your enterprise.",
+      2: "Your farm has established some governance and legal foundations. Build on these by strengthening business documentation, contracts, decision-making responsibilities, compliance and separation between personal and business affairs.",
+      3: "Your farm demonstrates good progress in governance and legal readiness. Continue strengthening accountability, ownership documentation, contracts, regulatory compliance and the systems used to manage important business decisions and obligations.",
+      4: "Your farm demonstrates strong business governance and legal readiness, with most appropriate structures and documentation in place. Address remaining gaps and strengthen governance, compliance, risk management and accountability as the enterprise grows.",
+      5: "Congratulations! Your farm demonstrates advanced business governance and legal readiness. Continue maintaining appropriate governance structures, reviewing legal and regulatory obligations and strengthening accountability as your enterprise, partnerships and investment relationships evolve.",
+    },
+  },
+  "8.3": {
+    capabilityId: "8.3",
+    name: "Financial & Investment Documentation",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm does not yet maintain the financial and business documentation required to demonstrate its performance or investment needs. Begin by organising basic financial, production, sales and business records that provide reliable evidence about your enterprise.",
+      1: "Your farm has started maintaining some financial and business documentation, but significant gaps remain. Strengthen the completeness, accuracy and organisation of your records so that the farm's activities and financial performance can be clearly demonstrated.",
+      2: "Your farm has established some useful financial and investment documentation. Build on this by strengthening financial statements, business plans, projections, capital requirements and supporting evidence needed by potential financiers or partners.",
+      3: "Your farm demonstrates good progress in financial and investment documentation. Continue improving the accuracy, completeness and consistency of your records and ensure that your business performance, financing requirements and proposed use of funds can be clearly demonstrated.",
+      4: "Your farm demonstrates strong financial and investment documentation, with most information required to assess the enterprise readily available. Address remaining gaps and strengthen financial projections, supporting evidence and document organisation in preparation for financing or due diligence.",
+      5: "Congratulations! Your farm demonstrates advanced financial and investment documentation capability. Continue maintaining accurate, current and credible records that allow financiers, investors and strategic partners to efficiently evaluate your enterprise, its performance and its growth opportunities.",
+    },
+  },
+  "8.4": {
+    capabilityId: "8.4",
+    name: "Resource Mobilisation & Strategic Partnerships",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established a systematic approach to mobilising the resources required for development. Begin by identifying your financial and non-financial resource needs and the organisations, businesses or institutions that could potentially help address them.",
+      1: "Your farm is beginning to explore financing and partnership opportunities, but engagement remains limited. Strengthen your understanding of potential partners and develop clearer propositions explaining what your farm needs and the value a potential relationship could create.",
+      2: "Your farm has established some financing or partnership relationships. Build on these by expanding your network, improving funding and partnership proposals and identifying opportunities to mobilise technology, knowledge, markets, equipment and other resources alongside finance.",
+      3: "Your farm demonstrates good progress in resource mobilisation and strategic partnerships. Continue strengthening relationships with relevant financiers, service providers, buyers and other partners and improve your ability to negotiate and manage mutually beneficial arrangements.",
+      4: "Your farm demonstrates strong resource-mobilisation and partnership capability, with most important relationships and resource pathways established. Address remaining gaps and strengthen partnership management, negotiation, diversification and long-term strategic relationships.",
+      5: "Congratulations! Your farm demonstrates advanced resource mobilisation and strategic partnership capability. Continue building high-value relationships, diversifying resource sources and using partnerships strategically to access capital, technology, knowledge, markets and other resources required for sustainable growth.",
+    },
+  },
+  "8.5": {
+    capabilityId: "8.5",
+    name: "Enterprise Growth & Investment Readiness",
+    scale: "0-5",
+    feedback: {
+      0: "Your farm has not yet established the foundations required to responsibly seek or absorb external investment. Begin by strengthening your business model, financial records, market understanding, governance and growth objectives before pursuing significant external capital.",
+      1: "Your farm is beginning to build the foundations for investment readiness, but significant gaps remain. Strengthen your business performance, documentation, governance and understanding of how additional capital would contribute to enterprise growth.",
+      2: "Your farm has established some elements of investment readiness. Build on these by clarifying your growth strategy, capital requirements, use of funds, financial projections, market opportunity and capacity to manage additional resources.",
+      3: "Your farm demonstrates good progress toward investment readiness. Continue strengthening evidence of business performance, market demand, financial viability, management capacity and the expected outcomes of any capital you intend to raise.",
+      4: "Your farm demonstrates strong investment readiness, with most of the business, financial, governance and growth foundations required by potential financiers or investors in place. Address remaining gaps and strengthen due-diligence preparedness, capital strategy and evidence supporting your growth plans.",
+      5: "Congratulations! Your farm demonstrates advanced enterprise growth and investment readiness. Your business is well positioned to engage appropriate financiers, investors or strategic partners. Continue strengthening performance, governance, reporting and capital management to ensure that external resources translate into sustainable and measurable enterprise growth.",
+    },
+  },
+};
+
+/** Normalizes ids like "P1.1", "p1.1" or "1.1" to the library key "1.1". */
+export function normalizeCapabilityId(capabilityId: string): string {
+  return capabilityId.replace(/^p/i, '').trim();
+}
+
+export function getCapabilityRecommendation(
+  capabilityId: string
+): CapabilityRecommendation | undefined {
+  return FARMING_RECOMMENDATION_LIBRARY[normalizeCapabilityId(capabilityId)];
+}
+
+export function getCapabilityRecommendationText(
+  capabilityId: string,
+  level: number
+): string | undefined {
+  const entry = getCapabilityRecommendation(capabilityId);
+  if (!entry) return undefined;
+  return entry.feedback[Math.max(0, Math.min(5, Math.round(level)))];
+}

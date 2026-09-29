@@ -5,6 +5,7 @@ import { ALL_PILLARS } from "@/data/allPillarsData";
 import { PILLAR_BRANDS } from "@/data/brandColors";
 import { getMaturityTier } from "@/lib/assessmentScoring";
 import { getPillarScoringTier } from "@/data/pillarScoringTiers";
+import { getCapabilityFeedbackText, getCapabilityTier } from "@/data/capabilityFeedback";
 import { syncNeonAssessmentToSheetsFast } from "@/lib/neonRealtimeSync";
 
 export const dynamic = "force-dynamic";
@@ -154,14 +155,16 @@ export async function GET(request: Request) {
             yes: pillarResponses.filter((r) => r.capabilityId === c.id && r.answer === "yes").length,
             total: 5,
           };
-          const capTier = getMaturityTier(capScoreData.score);
+          // Capability maturity uses the 0-5 status levels from the library
+          const capTier = getCapabilityTier(capScoreData.yes ?? 0, capScoreData.total || 5);
           return {
             id: c.id,
             name: c.name,
             focus: c.focus,
             score: capScoreData.score,
             verified: `${capScoreData.yes}/${capScoreData.total || 5}`,
-            maturity: capTier.label,
+            maturity: capTier.status,
+            statusFeedback: getCapabilityFeedbackText(c.id, capScoreData.yes ?? 0, c.name),
           };
         }),
         identifiedGaps: {

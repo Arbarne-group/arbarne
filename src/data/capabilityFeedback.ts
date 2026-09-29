@@ -2,6 +2,7 @@
 // Based on the Future Farms Framework (FFF) Capability Status Guidance
 
 import { getPillarScoringTier } from "@/data/pillarScoringTiers";
+import { getCapabilityRecommendationText } from "@/data/farmingRecommendationLibrary";
 
 export interface CapabilityStatusTier {
   level: number; // 0 to 5
@@ -171,66 +172,23 @@ export function getPillarAutomaticFeedback(
   return { ...base, label: status, feedback: recommendation };
 }
 
-// Exact verbatim Capability Status Feedback for Pillar 5
-export const PILLAR_5_CAPABILITY_FEEDBACK: Record<string, Record<number, string>> = {
-  "P5.1": {
-    0: "Your farm has not yet established the basic financial knowledge and record-management practices needed to manage it as a business. Begin by understanding key financial concepts and consistently recording farm income, expenses, production, sales and other important business information.",
-    1: "Your farm is beginning to develop financial literacy and record-keeping practices, but significant gaps remain. Strengthen your understanding of basic farm finances and make recording transactions and farm activities a regular part of your management routine.",
-    2: "Your farm has established some financial and record-management foundations. Build on these by improving the completeness, accuracy and organisation of your records and strengthening your understanding of how financial information reflects farm performance.",
-    3: "Your farm demonstrates good progress in financial literacy and record management. Continue improving record consistency, separating farm and personal finances, and regularly reviewing financial and operational records to support business decisions.",
-    4: "Your farm demonstrates strong financial literacy and maintains reliable records across most important business activities. Address remaining gaps and strengthen record accuracy, organisation, review and appropriate use of digital systems.",
-    5: "Congratulations! Your farm demonstrates advanced financial literacy and farm record management. Continue maintaining high-quality records and using reliable financial and operational information to strengthen planning, accountability and long-term business performance.",
-  },
-  "P5.2": {
-    0: "Your farm does not yet systematically determine its costs, revenues or profitability. Begin by identifying what it costs to operate and produce your major farm products and comparing these costs with the income generated.",
-    1: "Your farm is beginning to understand costs and revenues, but profitability management remains limited. Strengthen your ability to track production costs and sales income so you can determine whether your farm enterprises are generating a profit.",
-    2: "Your farm has established some understanding of costs, revenue and profitability. Build on this by calculating profitability for individual enterprises, understanding cost per unit and identifying the main factors affecting your margins.",
-    3: "Your farm demonstrates good progress in managing costs, revenue and profitability. Continue using profitability information to guide production, pricing and investment decisions and identify opportunities to improve margins.",
-    4: "Your farm demonstrates strong profitability management, with most major costs, revenues and margins understood and actively managed. Address remaining gaps and strengthen cost control, enterprise comparison and profitability optimisation.",
-    5: "Congratulations! Your farm demonstrates advanced cost, revenue and profitability management. Continue monitoring margins, identifying efficiency opportunities and using profitability analysis strategically to guide enterprise, pricing and investment decisions.",
-  },
-  "P5.3": {
-    0: "Your farm does not yet systematically measure productivity or business performance. Begin by identifying a few important indicators that show how effectively your farm is using land, labour, inputs and other resources to generate results.",
-    1: "Your farm has started monitoring some aspects of performance, but measurement remains limited. Strengthen this capability by consistently tracking key production and business indicators relevant to your farm enterprises.",
-    2: "Your farm monitors some productivity and performance indicators. Build on this by establishing clear targets, comparing actual results with previous production cycles and identifying areas where resources are not being used efficiently.",
-    3: "Your farm demonstrates good progress in productivity and performance management. Continue strengthening performance monitoring, comparing results against targets and using the information to address inefficiencies and operational bottlenecks.",
-    4: "Your farm demonstrates strong productivity and performance management across most important areas. Address remaining gaps and strengthen benchmarking, performance analysis and regular management reviews to drive further improvement.",
-    5: "Congratulations! Your farm demonstrates advanced productivity and performance management. Continue monitoring key indicators, benchmarking results, refining targets and using performance information to continuously improve efficiency, productivity and overall business performance.",
-  },
-  "P5.4": {
-    0: "Your farm has not yet established financial planning, cash-flow management or business-risk practices. Begin by preparing simple budgets, understanding when money enters and leaves the farm, and identifying the major risks that could disrupt operations.",
-    1: "Your farm is beginning to plan its finances and recognise business risks, but significant gaps remain. Strengthen budgeting, monitor cash inflows and outflows and identify periods when the farm may experience financial pressure.",
-    2: "Your farm has established some budgeting, cash-flow and risk-management practices. Build on these by forecasting future cash needs, identifying seasonal financing gaps and developing practical responses to major production, financial, market and operational risks.",
-    3: "Your farm demonstrates good progress in financial planning and risk management. Continue strengthening cash-flow forecasting, contingency planning and measures that help the business prepare for and respond to disruptions.",
-    4: "Your farm demonstrates strong cash-flow, planning and risk-management capability. Address remaining gaps and strengthen financial reserves, risk-mitigation measures, scenario planning and business-continuity arrangements where appropriate.",
-    5: "Congratulations! Your farm demonstrates advanced cash-flow, planning and risk management. Continue reviewing financial forecasts, monitoring emerging risks and strengthening the farm's ability to maintain operations and financial stability under changing conditions.",
-  },
-  "P5.5": {
-    0: "Your farm has not yet established a clear strategy for business growth and improvement. Begin by defining where you want the farm business to be in the future and identifying realistic opportunities for improving or expanding its operations.",
-    1: "Your farm is beginning to consider growth opportunities, but growth planning remains limited. Develop clearer business goals and identify the main opportunities, resources and constraints that could influence future growth.",
-    2: "Your farm has established some growth goals and improvement activities. Build on these by assessing whether your people, finances, markets, infrastructure, technology and operational systems can support the growth you are considering.",
-    3: "Your farm demonstrates good progress in planning for growth and continuous improvement. Continue strengthening your growth strategy, addressing operational constraints and ensuring expansion does not undermine profitability, quality, resilience or efficiency.",
-    4: "Your farm demonstrates strong growth and scalability capability, with most of the systems required for sustainable expansion in place. Address remaining constraints and strengthen strategic reviews, standardised systems and performance monitoring as the enterprise grows.",
-    5: "Congratulations! Your farm demonstrates advanced growth strategy, scalability and continuous improvement. Continue identifying strategic opportunities, strengthening systems and reviewing performance to ensure that growth remains profitable, efficient, resilient and sustainable.",
-  },
-};
-
 /**
  * Retrieves the tailored status feedback guidance for a capability and score.
- * Falls back dynamically to a high-quality contextual response if not explicitly in the dataset.
+ * Falls back dynamically to a high-quality contextual response if the capability is not in the library.
  */
 export function getCapabilityFeedbackText(
   capabilityId: string,
   yesCount: number,
   capabilityName: string
 ): string {
-  const level = Math.max(0, Math.min(5, yesCount));
+  const level = Math.max(0, Math.min(5, Math.round(yesCount)));
 
-  if (PILLAR_5_CAPABILITY_FEEDBACK[capabilityId]?.[level]) {
-    return PILLAR_5_CAPABILITY_FEEDBACK[capabilityId][level];
+  const libraryText = getCapabilityRecommendationText(capabilityId, level);
+  if (libraryText) {
+    return libraryText;
   }
 
-  // Dynamic contextual fallback for capabilities across all pillars
+  // Dynamic contextual fallback for capabilities outside the library
   switch (level) {
     case 0:
       return `Your farm has not yet established foundational practices in ${capabilityName.toLowerCase()}. Begin by identifying baseline operational requirements and introducing simple, consistent initial routines.`;
