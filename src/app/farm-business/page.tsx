@@ -292,6 +292,7 @@ export default function FarmBusinessPage() {
   const [country, setCountry] = useState("");
   const [geoCountry, setGeoCountry] = useState("");
   const [countries, setCountries] = useState<{ initials: string; name: string; dialCode: string; flagEmoji: string | null }[]>([]);
+  const [countriesError, setCountriesError] = useState("");
   const [counties, setCounties] = useState<{ code: string; name: string }[]>([]);
   const [county, setCounty] = useState("");
   const [subcounty, setSubcounty] = useState("");
@@ -388,9 +389,14 @@ export default function FarmBusinessPage() {
     fetch("/api/geo/countries", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
-        if (data.countries) setCountries(data.countries);
+        if (data?.countries) {
+          setCountries(data.countries);
+          setCountriesError("");
+        } else {
+          setCountriesError(data?.error || "Could not load countries.");
+        }
       })
-      .catch(console.error);
+      .catch(() => setCountriesError("Could not load countries."));
   }, []);
 
   useEffect(() => {
@@ -657,18 +663,24 @@ export default function FarmBusinessPage() {
                   <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
-              <SearchSelect
-                value={country}
-                onChange={(v) => {
-                  setCountry(v);
-                  clearError("country");
-                }}
-                placeholder="Select country…"
-                options={countries.map((c) => ({
-                  value: c.initials,
-                  label: `${c.flagEmoji ? `${c.flagEmoji} ` : ""}${c.name} (${c.initials})`,
-                }))}
-              />
+              {countriesError ? (
+                <div className="w-full rounded-xl border border-red-200 bg-red-50 px-3.5 py-3 text-[13px] text-red-800">
+                  {countriesError}
+                </div>
+              ) : (
+                <SearchSelect
+                  value={country}
+                  onChange={(v) => {
+                    setCountry(v);
+                    clearError("country");
+                  }}
+                  placeholder="Select country…"
+                  options={countries.map((c) => ({
+                    value: c.initials,
+                    label: `${c.flagEmoji ? `${c.flagEmoji} ` : ""}${c.name} (${c.initials})`,
+                  }))}
+                />
+              )}
             </div>
             <div id="q-county">
               <span className="block text-[15px] font-semibold text-on-surface mb-2">
