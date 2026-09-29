@@ -36,7 +36,7 @@ type FarmProfileData = {
   irrigationMethod: string;
   waterSource: string;
   energyAccess: string;
-  storageFacilities: string;
+  storageFacilities: string[];
 
   permanentWorkers: string;
   seasonalWorkers: string;
@@ -191,7 +191,7 @@ function initialData(user: OnboardingUser, farmId?: string): FarmProfileData {
         (waterSources.length ? waterSources.join(", ") : ""),
     ),
     energyAccess: display(farming?.energyAccess || farming?.energySource),
-    storageFacilities: display(farming?.storageFacilities),
+    storageFacilities: parseList(farming?.storageFacilities),
 
     permanentWorkers: display(labour?.permanentWorkers),
     seasonalWorkers: display(labour?.seasonalWorkers),
@@ -913,7 +913,7 @@ export default function FarmProfileMetadata() {
                 profile.waterSource ||
                 profile.irrigationMethod ||
                 profile.energyAccess ||
-                profile.storageFacilities,
+                profile.storageFacilities.length > 0,
               )}
             >
               <DataRow label="Water Source" value={profile.waterSource} />
@@ -922,9 +922,9 @@ export default function FarmProfileMetadata() {
                 value={profile.irrigationMethod}
               />
               <DataRow label="Energy Access" value={profile.energyAccess} />
-              <DataRow
+              <TagList
                 label="Storage Infrastructure"
-                value={profile.storageFacilities}
+                items={profile.storageFacilities}
               />
             </SectionCard>
           </div>
