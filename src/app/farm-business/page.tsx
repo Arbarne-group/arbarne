@@ -10,9 +10,6 @@ import {
   TENURE_OPTIONS,
   WATER_OPTIONS,
   ENERGY_OPTIONS,
-  ENTERPRISE_OPTIONS,
-  STRATEGIC_CHAIN_OPTIONS,
-  CASHFLOW_CHAIN_OPTIONS,
   IRRIGATION_OPTIONS,
   STORAGE_OPTIONS,
   PROCESSING_OPTIONS,
@@ -143,8 +140,17 @@ function Multi({
   onChange: (v: string[]) => void;
   cols?: 1 | 2;
 }) {
-  const toggle = (id: string) =>
-    onChange(values.includes(id) ? values.filter((v) => v !== id) : [...values, id]);
+  const exclusiveIds = options.filter((o) => o.exclusive).map((o) => o.id);
+  const toggle = (id: string) => {
+    // An "exclusive" option (e.g. None) stands alone. Picking it drops every
+    // other selection, and picking anything else drops it.
+    if (exclusiveIds.includes(id)) {
+      onChange(values.includes(id) ? [] : [id]);
+      return;
+    }
+    const next = values.includes(id) ? values.filter((v) => v !== id) : [...values, id];
+    onChange(next.filter((v) => !exclusiveIds.includes(v)));
+  };
   return (
     <div className={`grid grid-cols-1 ${cols === 2 ? "sm:grid-cols-2" : ""} gap-2.5`}>
       {options.map((o) => {
@@ -195,6 +201,18 @@ function parseList(v: unknown): string[] {
   return v.split(",").map((s) => s.trim()).filter(Boolean);
 }
 
+/* The enterprise fields are open-ended: the farmer writes their own answers,
+   one per line. The database still stores them as JSON string arrays, so the
+   same columns keep working for anything that already reads them. */
+
+function joined(values: string[]): string {
+  return values.join("\n");
+}
+
+function lines(text: string): string[] {
+  return text.split("\n").map((s) => s.trim()).filter(Boolean);
+}
+
 
 /* ---------- page ---------- */
 
@@ -224,17 +242,17 @@ export default function FarmBusinessPage() {
   const [cultivatedAcres, setCultivatedAcres] = useState("");
   const [grazingAcres, setGrazingAcres] = useState("");
   const [landTenure, setLandTenure] = useState("");
-  const [enterprises, setEnterprises] = useState<string[]>([]);
+  const [enterprisesText, setEnterprisesText] = useState("");
   const [enterpriseCore, setEnterpriseCore] = useState("");
-  const [enterpriseStrategic, setEnterpriseStrategic] = useState<string[]>([]);
-  const [enterpriseStrategicOther, setEnterpriseStrategicOther] = useState("");
-  const [enterpriseCashFlow, setEnterpriseCashFlow] = useState<string[]>([]);
-  const [enterpriseCashFlowOther, setEnterpriseCashFlowOther] = useState("");
+  const [enterpriseStrategicText, setEnterpriseStrategicText] = useState("");
+  const [enterpriseCashFlowText, setEnterpriseCashFlowText] = useState("");
   const [irrigationMethod, setIrrigationMethod] = useState("");
+  const [irrigationOther, setIrrigationOther] = useState("");
   const [waterSources, setWaterSources] = useState<string[]>([]);
   const [energySource, setEnergySource] = useState("");
   const [storageFacilities, setStorageFacilities] = useState<string[]>([]);
   const [processingFacilities, setProcessingFacilities] = useState<string[]>([]);
+  const [processingOther, setProcessingOther] = useState("");
   const [permanentWorkers, setPermanentWorkers] = useState("");
   const [seasonalWorkers, setSeasonalWorkers] = useState("");
   const [familyLabour, setFamilyLabour] = useState("");
@@ -259,9 +277,18 @@ export default function FarmBusinessPage() {
         }
         if (u.businessId) setBusinessId(u.businessId);
         if (u.businessName) setBusinessName(u.businessName);
+
+        /* Carry over what the user already told us in /complete-profile so the
+           same facts are not asked for twice. complete-profile only writes to
+           the User row, never to the farm tables this page reads. */
+        const fromDetailsStep = !!(u.countryCode || u.farmingType);
         if (u.farmerProfile?.jobTitle) setManagerRole(u.farmerProfile.jobTitle);
+        else if (fromDetailsStep && u.role === "FFFarmManager") setManagerRole("manager");
+        else if (fromDetailsStep && u.role === "FFFarmer") setManagerRole("owner");
+
         const loc = u.farmLocation ?? {};
         if (loc.country) setGeoCountry(loc.country);
+        else if (u.countryCode) setCountry(u.countryCode);
         if (loc.county) setCounty(loc.county);
         if (loc.subcounty) setSubcounty(loc.subcounty);
         if (loc.ward) setWard(loc.ward);
@@ -275,17 +302,16 @@ export default function FarmBusinessPage() {
         if (ch.landTenure) setLandTenure(ch.landTenure);
         setWaterSources(parseList(ch.waterSources));
         const sys = u.farmingSystem ?? {};
-        setEnterprises(parseList(sys.enterprises));
+        setEnterprisesText(joined(parseList(sys.enterprises)));
         if (sys.enterpriseCore) setEnterpriseCore(sys.enterpriseCore);
-        setEnterpriseStrategic(parseList(sys.enterpriseStrategic));
-        if (sys.enterpriseStrategicOther) setEnterpriseStrategicOther(sys.enterpriseStrategicOther);
-        setEnterpriseCashFlow(parseList(sys.enterpriseCashFlow));
-        if (sys.enterpriseCashFlowOther) setEnterpriseCashFlowOther(sys.enterpriseCashFlowOther);
-        if (sys.cultivationMethod) setEnterprises((prev) => prev); // keep enterprises as-is
+        setEnterpriseStrategicText(joined(parseList(sys.enterpriseStrategic)));
+        setEnterpriseCashFlowText(joined(parseList(sys.enterpriseCashFlow)));
         if (sys.irrigationMethod) setIrrigationMethod(sys.irrigationMethod);
+        if (sys.irrigationOther) setIrrigationOther(sys.irrigationOther);
         if (sys.energySource) setEnergySource(sys.energySource);
         setStorageFacilities(parseList(sys.storageFacilities));
         setProcessingFacilities(parseList(sys.processingFacilities));
+        if (sys.processingOther) setProcessingOther(sys.processingOther);
         const lab = u.householdLabour ?? {};
         if (lab.permanentWorkers !== null && lab.permanentWorkers !== undefined) setPermanentWorkers(String(lab.permanentWorkers));
         if (lab.seasonalWorkers !== null && lab.seasonalWorkers !== undefined) setSeasonalWorkers(String(lab.seasonalWorkers));
@@ -352,10 +378,13 @@ export default function FarmBusinessPage() {
       !!businessName.trim(), !!managerRole, !!county.trim(),
       farmSize.trim() !== "" && Number(farmSize) > 0,
       cultivatedAcres.trim() !== "", !!landTenure,
-      enterprises.length > 0, !!enterpriseCore.trim(),
-      enterpriseStrategic.length > 0, enterpriseCashFlow.length > 0,
-      !!irrigationMethod, waterSources.length > 0, !!energySource,
-      storageFacilities.length > 0, processingFacilities.length > 0,
+      lines(enterprisesText).length > 0, !!enterpriseCore.trim(),
+      lines(enterpriseStrategicText).length > 0, lines(enterpriseCashFlowText).length > 0,
+      irrigationMethod === "other_irrigation" ? !!irrigationOther.trim() : !!irrigationMethod,
+      waterSources.length > 0, !!energySource,
+      storageFacilities.length > 0,
+      processingFacilities.length > 0 &&
+        (!processingFacilities.includes("other_processing") || !!processingOther.trim()),
       permanentWorkers.trim() !== "", seasonalWorkers.trim() !== "", familyLabour.trim() !== "",
       !!marketType, produceBuyers.length > 0,
       !!registrationStatus, !!commercialYears, !!annualRevenueBracket,
@@ -365,8 +394,9 @@ export default function FarmBusinessPage() {
     return { done, total: checks.length, percent: Math.round((done / checks.length) * 100) };
   }, [
     businessName, managerRole, county, farmSize, cultivatedAcres, landTenure,
-    enterprises, enterpriseCore, enterpriseStrategic, enterpriseCashFlow,
-    irrigationMethod, waterSources, energySource, storageFacilities, processingFacilities,
+    enterprisesText, enterpriseCore, enterpriseStrategicText, enterpriseCashFlowText,
+    irrigationMethod, irrigationOther, waterSources, energySource,
+    storageFacilities, processingFacilities, processingOther,
     permanentWorkers, seasonalWorkers, familyLabour, marketType, produceBuyers,
     registrationStatus, commercialYears, annualRevenueBracket, objectives,
     twelveMonthSuccess, developmentPriorities,
@@ -383,15 +413,22 @@ export default function FarmBusinessPage() {
     if (farmSize.trim() === "" || Number(farmSize) <= 0) missing.push("farmSize");
     if (cultivatedAcres.trim() === "") missing.push("cultivatedAcres");
     if (!landTenure) missing.push("landTenure");
-    if (enterprises.length === 0) missing.push("enterprises");
+    if (lines(enterprisesText).length === 0) missing.push("enterprises");
     if (!enterpriseCore.trim()) missing.push("enterpriseCore");
-    if (enterpriseStrategic.length === 0) missing.push("enterpriseStrategic");
-    if (enterpriseCashFlow.length === 0) missing.push("enterpriseCashFlow");
+    if (lines(enterpriseStrategicText).length === 0) missing.push("enterpriseStrategic");
+    if (lines(enterpriseCashFlowText).length === 0) missing.push("enterpriseCashFlow");
     if (!irrigationMethod) missing.push("irrigationMethod");
+    else if (irrigationMethod === "other_irrigation" && !irrigationOther.trim())
+      missing.push("irrigationMethod");
     if (waterSources.length === 0) missing.push("waterSources");
     if (!energySource) missing.push("energySource");
     if (storageFacilities.length === 0) missing.push("storageFacilities");
     if (processingFacilities.length === 0) missing.push("processingFacilities");
+    else if (
+      processingFacilities.includes("other_processing") &&
+      !processingOther.trim()
+    )
+      missing.push("processingFacilities");
     if (permanentWorkers.trim() === "") missing.push("permanentWorkers");
     if (seasonalWorkers.trim() === "") missing.push("seasonalWorkers");
     if (familyLabour.trim() === "") missing.push("familyLabour");
@@ -433,17 +470,20 @@ export default function FarmBusinessPage() {
             cultivatedAcres: cultivatedAcres.trim(),
             grazingAcres: grazingAcres.trim(),
             landTenure,
-            enterprises,
+            enterprises: lines(enterprisesText),
             enterpriseCore: enterpriseCore.trim(),
-            enterpriseStrategic,
-            enterpriseStrategicOther: enterpriseStrategicOther.trim(),
-            enterpriseCashFlow,
-            enterpriseCashFlowOther: enterpriseCashFlowOther.trim(),
+            enterpriseStrategic: lines(enterpriseStrategicText),
+            // the old "specs" boxes are gone; clear the legacy columns
+            enterpriseStrategicOther: "",
+            enterpriseCashFlow: lines(enterpriseCashFlowText),
+            enterpriseCashFlowOther: "",
             irrigationMethod,
+            irrigationOther: irrigationOther.trim(),
             waterSource: JSON.stringify(waterSources),
             energySource,
             storageFacilities,
             processingFacilities,
+            processingOther: processingOther.trim(),
             permanentWorkers: permanentWorkers.trim(),
             seasonalWorkers: seasonalWorkers.trim(),
             familyLabour: familyLabour.trim(),
@@ -485,6 +525,8 @@ export default function FarmBusinessPage() {
     "w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:border-secondary focus:outline-none bg-surface";
   const textInput =
     "w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:border-secondary focus:outline-none bg-surface placeholder:text-on-surface-variant/40";
+  const textArea =
+    "w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:border-secondary focus:outline-none bg-surface placeholder:text-on-surface-variant/40 resize-y leading-relaxed";
 
   if (loading) {
     return (
@@ -605,7 +647,7 @@ export default function FarmBusinessPage() {
             <div id="q-county">
               <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 County / Province
-                <Explain text="Loaded from the database for the selected country — type to filter." />
+                <Explain text="Start typing to filter, then pick your county or province." />
                 {err("county") && (
                   <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
@@ -687,16 +729,23 @@ export default function FarmBusinessPage() {
             </div>
           </Section>
 
-          <Section index="Enterprise" title="Value-chain enterprises" desc="What the business grows and sells, split by commercial role.">
+          <Section index="Enterprise" title="Value-chain enterprises" desc="What the business grows and sells, split by commercial role. Write your own answers — one item per line.">
             <div id="q-enterprises">
               <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Enterprises on the farm
-                <Explain text="Tick every enterprise currently active, even small ones." />
+                <Explain text="Write every enterprise you run, one per line — there is no fixed list." />
                 {err("enterprises") && (
                   <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
-              <Multi options={ENTERPRISE_OPTIONS} values={enterprises} onChange={setEnterprises} cols={2} />
+              <textarea
+                value={enterprisesText}
+                onChange={(e) => setEnterprisesText(e.target.value)}
+                onBlur={() => clearError("enterprises")}
+                rows={4}
+                placeholder={"Tomatoes\nDairy goats\nPoultry (layers)"}
+                className={textArea}
+              />
             </div>
             <div id="q-enterpriseCore">
               <span className="block text-[15px] font-semibold text-on-surface mb-2">
@@ -706,38 +755,46 @@ export default function FarmBusinessPage() {
                   <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
-              <input value={enterpriseCore} onChange={(e) => setEnterpriseCore(e.target.value)} placeholder="e.g. French beans for export" className={textInput} />
+              <input
+                value={enterpriseCore}
+                onChange={(e) => setEnterpriseCore(e.target.value)}
+                onBlur={() => clearError("enterpriseCore")}
+                placeholder="e.g. French beans for export"
+                className={textInput}
+              />
             </div>
             <div id="q-enterpriseStrategic">
               <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Strategic value chain
-                <Explain text="Crops or ventures with long-term value and higher income potential. Value-added products, processing, seed production and similar." />
+                <Explain text="Crops or ventures with long-term value and higher income potential. Value-added products, processing, seed production and similar. One per line." />
                 {err("enterpriseStrategic") && (
                   <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
-              <Multi options={STRATEGIC_CHAIN_OPTIONS} values={enterpriseStrategic} onChange={setEnterpriseStrategic} cols={2} />
-              <input
-                value={enterpriseStrategicOther}
-                onChange={(e) => setEnterpriseStrategicOther(e.target.value)}
-                placeholder="Specifics (optional) — e.g. varieties, acreage, buyers…"
-                className="mt-2.5 w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:border-secondary focus:outline-none bg-surface placeholder:text-on-surface-variant/40"
+              <textarea
+                value={enterpriseStrategicText}
+                onChange={(e) => setEnterpriseStrategicText(e.target.value)}
+                onBlur={() => clearError("enterpriseStrategic")}
+                rows={4}
+                placeholder={"Value addition and packaging\nSeed multiplication"}
+                className={textArea}
               />
             </div>
             <div id="q-enterpriseCashFlow">
               <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Cash-flow value chain
-                <Explain text="Short production-to-income cycle enterprises that keep cash flowing e.g. milk, eggs, leafy vegetables and similar." />
+                <Explain text="Short production-to-income cycle enterprises that keep cash flowing e.g. milk, eggs, leafy vegetables and similar. One per line." />
                 {err("enterpriseCashFlow") && (
                   <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
-              <Multi options={CASHFLOW_CHAIN_OPTIONS} values={enterpriseCashFlow} onChange={setEnterpriseCashFlow} cols={2} />
-              <input
-                value={enterpriseCashFlowOther}
-                onChange={(e) => setEnterpriseCashFlowOther(e.target.value)}
-                placeholder="Specifics (optional) — e.g. 10 Friesians averaging 60L/day…"
-                className="mt-2.5 w-full rounded-xl border border-outline-variant px-4 py-2.5 text-sm focus:border-secondary focus:outline-none bg-surface placeholder:text-on-surface-variant/40"
+              <textarea
+                value={enterpriseCashFlowText}
+                onChange={(e) => setEnterpriseCashFlowText(e.target.value)}
+                onBlur={() => clearError("enterpriseCashFlow")}
+                rows={4}
+                placeholder={"Milk — 10 Friesians averaging 60L/day\nEggs — 500 layers"}
+                className={textArea}
               />
             </div>
           </Section>
@@ -752,6 +809,17 @@ export default function FarmBusinessPage() {
                 )}
               </span>
               <Single options={IRRIGATION_OPTIONS} value={irrigationMethod} onChange={setIrrigationMethod} cols={2} />
+              {irrigationMethod === "other_irrigation" && (
+                <div className="mt-2.5">
+                  <input
+                    value={irrigationOther}
+                    onChange={(e) => setIrrigationOther(e.target.value)}
+                    onBlur={() => clearError("irrigationMethod")}
+                    placeholder="Describe your irrigation system — e.g. sand-drip borehole, solar borehole"
+                    className={textInput}
+                  />
+                </div>
+              )}
             </div>
             <div id="q-waterSources">
               <span className="block text-[15px] font-semibold text-on-surface mb-2">
@@ -792,6 +860,17 @@ export default function FarmBusinessPage() {
                 )}
               </span>
               <Multi options={PROCESSING_OPTIONS} values={processingFacilities} onChange={setProcessingFacilities} cols={2} />
+              {processingFacilities.includes("other_processing") && (
+                <div className="mt-2.5">
+                  <input
+                    value={processingOther}
+                    onChange={(e) => setProcessingOther(e.target.value)}
+                    onBlur={() => clearError("processingFacilities")}
+                    placeholder="Describe your processing facility — e.g. solar dryer, honey extractor"
+                    className={textInput}
+                  />
+                </div>
+              )}
             </div>
           </Section>
 
@@ -844,7 +923,7 @@ export default function FarmBusinessPage() {
             </div>
           </Section>
 
-          <Section index="Officiality" title="Farm business officiality" desc="Registration, track record and scale.">
+          <Section index="About Business" title="" desc="">
             <div id="q-registrationStatus">
               <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Business registration status

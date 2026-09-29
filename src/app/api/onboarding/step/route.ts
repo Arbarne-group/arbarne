@@ -663,9 +663,11 @@ export async function POST(request: Request) {
           has("enterpriseCashFlowOther") ||
           has("cultivationMethod") ||
           has("irrigationMethod") ||
+          has("irrigationOther") ||
           has("energySource") ||
           has("storageFacilities") ||
-          has("processingFacilities")
+          has("processingFacilities") ||
+          has("processingOther")
         ) {
           const fs = user.farmingSystem ?? {};
           const pickList = (key: string, fallback: unknown) => {
@@ -689,14 +691,22 @@ export async function POST(request: Request) {
               : (fs as any).enterpriseCashFlowOther ?? "",
             cultivationMethod: has("cultivationMethod") ? text(d.cultivationMethod) : fs.cultivationMethod ?? "",
             mechanizationSetup: fs.mechanizationSetup ?? "",
-            energySource: has("energySource") ? text(d.energySource) : fs.energySource ?? "",
+            energySource: has("energySource")
+              ? text(d.energySource)
+              : // The edit modal posts "energyAccess" instead; without this the
+                // full-row update above would revert the value block 1
+                has("energyAccess")
+                ? text(d.energyAccess)
+                : fs.energySource ?? "",
             irrigationMethod: has("irrigationMethod") ? text(d.irrigationMethod) : fs.irrigationMethod ?? "",
+            irrigationOther: has("irrigationOther") ? text(d.irrigationOther) : fs.irrigationOther ?? "",
             storageFacilities: has("storageFacilities")
               ? pickList("storageFacilities", fs.storageFacilities)
               : fs.storageFacilities ?? "[]",
             processingFacilities: has("processingFacilities")
               ? pickList("processingFacilities", fs.processingFacilities)
               : fs.processingFacilities ?? "[]",
+            processingOther: has("processingOther") ? text(d.processingOther) : fs.processingOther ?? "",
           };
           await prisma.farmingSystem.upsert({
             where: { userId: user.id },

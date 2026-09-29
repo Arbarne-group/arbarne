@@ -183,8 +183,10 @@ model FarmingSystem {
   mechanizationSetup String?
   energySource       String?
   irrigationMethod   String?
+  irrigationOther    String?
   storageFacilities  String?
   processingFacilities String?
+  processingOther    String?
   updatedAt          DateTime @updatedAt
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
