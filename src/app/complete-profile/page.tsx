@@ -2,7 +2,8 @@
 
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
+import SharedSearchSelect from "@/components/SearchSelect";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -50,380 +51,162 @@ function displayName(u: any): string {
   return u?.name || "";
 }
 
-function SearchSelect({
-  value,
-  onChange,
-  options,
-  placeholder,
-  buttonClassName,
-}: {
+// This page uses a lighter palette than the rest of the app, so the shared
+// SearchSelect is themed here rather than forked.
+function SearchSelect(props: {
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
   placeholder: string;
   buttonClassName?: string;
 }) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const wrapRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function onDown(e: MouseEvent) {
-      if (
-        wrapRef.current &&
-        !wrapRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", onDown);
-
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-    };
-  }, []);
-
-  const selected = options.find((o) => o.value === value);
-
-  const q = query.trim().toLowerCase();
-
-  const filtered = q
-    ? options.filter((o) =>
-        o.label.toLowerCase().includes(q)
-      )
-    : options;
-
   return (
-    <div ref={wrapRef} className="relative">
-      <button
-        type="button"
-        onClick={() => {
-          setQuery("");
-          setOpen((v) => !v);
-        }}
-        className={
-          buttonClassName ||
-          `flex h-12 w-full items-center justify-between gap-3 rounded-xl border border-[#009924] bg-white px-4 text-left text-md outline-none transition-all ${
-            open
-              ? "border-[#009924] ring-4 ring-[#009924]/10"
-              : "hover:border-[#007a1d]"
-          }`
-        }
-      >
-        <span
-          className={
-            selected
-              ? "truncate font-medium text-gray-900"
-              : "truncate text-gray-400"
-          }
-        >
-          {selected ? selected.label : placeholder}
-        </span>
-
-        <ChevronDown
-          size={17}
-          className={`shrink-0 text-gray-400 transition-transform ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-
-      {open && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl shadow-black/10">
-          <div className="border-b border-gray-100 bg-gray-50/70 p-2">
-            <input
-              autoFocus
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search..."
-              className="h-10 w-full rounded-lg border border-[#009924] bg-white px-3 text-md text-gray-900 outline-none transition focus:border-[#009924] focus:ring-4 focus:ring-[#009924]/10"
-            />
-          </div>
-
-          <div className="max-h-60 overflow-y-auto p-1.5">
-            {filtered.length === 0 && (
-              <p className="px-3 py-4 text-center text-md text-gray-400">
-                No matches found.
-              </p>
-            )}
-
-            {filtered.map((o) => {
-              const selectedOption = o.value === value;
-
-              return (
-                <button
-                  key={o.value}
-                  type="button"
-                  onClick={() => {
-                    onChange(o.value);
-                    setOpen(false);
-                  }}
-                  className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-md transition ${
-                    selectedOption
-                      ? "bg-[#009924]/5 font-semibold text-[#045d61]"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  <span className="truncate">{o.label}</span>
-
-                  {selectedOption && (
-                    <Check
-                      size={16}
-                      className="shrink-0 text-[#009924]"
-                      strokeWidth={3}
-                    />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </div>
+    <SharedSearchSelect
+      {...props}
+      buttonClassName={
+        props.buttonClassName ||
+        "w-full rounded-xl border border-gray-200 px-3 py-2 text-left text-sm outline-none focus:border-primary bg-white flex items-center justify-between gap-2"
+      }
+      panelClassName="absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl"
+      inputClassName="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-sm outline-none focus:border-primary"
+    />
   );
 }
 
 function DetailsForm() {
   const router = useRouter();
-
   const [countries, setCountries] = useState<Country[]>([]);
   const [profile, setProfile] = useState<any>(null);
-
   const [loadError, setLoadError] = useState("");
   const [loadingProfile, setLoadingProfile] = useState(true);
-
   const [role, setRole] = useState("");
   const [businessName, setBusinessName] = useState("");
-  const [useNameAsBusiness, setUseNameAsBusiness] =
-    useState(false);
-
+  const [useNameAsBusiness, setUseNameAsBusiness] = useState(false);
   const [countryCode, setCountryCode] = useState("");
-  const [phoneCountryCode, setPhoneCountryCode] =
-    useState("");
+  const [phoneCountryCode, setPhoneCountryCode] = useState("");
   const [phoneNational, setPhoneNational] = useState("");
-
   const [farmingType, setFarmingType] = useState("");
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /*
-   * Load user profile
-   */
+  // Resolve who is signing up: signed-in session first (Google or verified
+  // email flow), so previously provided names/emails prefill as read-only.
   useEffect(() => {
-    fetch("/api/auth/profile/details", {
-      cache: "no-store",
-    })
+    fetch("/api/auth/profile/details", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (!data.success || !data.user) {
-          setLoadError(
-            "We could not find your new account. Please log in or restart signup."
-          );
+          setLoadError("We could not find your new account. Please log in or restart signup.");
           return;
         }
-
         const u = data.user;
-
         setProfile(u);
-
-        // Staff never fill farmer details.
-        if (
-          u.role &&
-          ["FFDeveloper", "FFAdmin", "FFStaff"].includes(u.role)
-        ) {
+        // Staff never fill farmer details — send them to their workspace.
+        if (u.role && ["FFDeveloper", "FFAdmin", "FFStaff"].includes(u.role)) {
           router.replace("/a/dashboard");
           return;
         }
-
-        if (
-          u.role === "FFFarmer" ||
-          u.role === "FFFarmManager"
-        ) {
-          setRole(u.role);
-        }
-
+        if (u.role === "FFFarmer" || u.role === "FFFarmManager") setRole(u.role);
         if (u.businessName) {
           setBusinessName(u.businessName);
-
           const dn = displayName(u);
-
-          if (dn && u.businessName === dn) {
-            setUseNameAsBusiness(true);
-          }
+          if (dn && u.businessName === dn) setUseNameAsBusiness(true);
         }
-
-        if (u.countryCode) {
-          setCountryCode(u.countryCode);
-        }
-
-        if (u.phoneCountryCode) {
-          setPhoneCountryCode(u.phoneCountryCode);
-        }
-
-        if (u.phoneNational) {
-          setPhoneNational(u.phoneNational);
-        }
-
-        if (u.farmingType) {
-          setFarmingType(u.farmingType);
-        }
-
-        // Already complete.
-        if (
-          u.countryCode &&
-          u.phone &&
-          u.farmingType &&
-          u.businessName
-        ) {
+        if (u.countryCode) setCountryCode(u.countryCode);
+        if (u.phoneCountryCode) setPhoneCountryCode(u.phoneCountryCode);
+        if (u.phoneNational) setPhoneNational(u.phoneNational);
+        if (u.farmingType) setFarmingType(u.farmingType);
+        // Already complete (e.g. returning Google user) — move along.
+        if (u.countryCode && u.phone && u.farmingType && u.businessName) {
           router.replace("/overview");
         }
       })
-      .catch(() =>
-        setLoadError(
-          "Could not load your account. Please try again."
-        )
-      )
+      .catch(() => setLoadError("Could not load your account. Please try again."))
       .finally(() => setLoadingProfile(false));
-  }, [router]);
+  }, []);
 
-  /*
-   * Load countries
-   */
   useEffect(() => {
-    fetch("/api/geo/countries", {
-      cache: "no-store",
-    })
+    fetch("/api/geo/countries", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
-        if (data.countries) {
-          setCountries(data.countries);
-        }
+        if (data.countries) setCountries(data.countries);
       })
       .catch(console.error);
   }, []);
 
   function handleCountryChange(v: string) {
     setCountryCode(v);
-
-    const country = countries.find(
-      (x) => x.initials === v
-    );
-
-    if (country && !phoneCountryCode) {
-      setPhoneCountryCode(country.dialCode);
-    }
+    const c = countries.find((x) => x.initials === v);
+    if (c && !phoneCountryCode) setPhoneCountryCode(c.dialCode);
   }
 
   function handleUseNameAsBusiness(checked: boolean) {
     setUseNameAsBusiness(checked);
-
     if (checked) {
-      const name = displayName(profile);
-
-      if (name) {
-        setBusinessName(name);
-      }
+      const dn = displayName(profile);
+      if (dn) setBusinessName(dn);
     } else {
       setBusinessName("");
     }
   }
 
-  /*
-   * Submit
-   */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
     setError("");
-
     if (!role) {
-      setError(
-        "Choose whether you are joining as a Farmer or Farm Manager."
-      );
+      setError("Choose whether you are joining as a Farmer or Farm Manager.");
       return;
     }
-
     if (!businessName.trim()) {
       setError("Enter your business name.");
       return;
     }
-
     if (!countryCode) {
       setError("Select your country.");
       return;
     }
-
     if (!phoneCountryCode || !phoneNational.trim()) {
-      setError(
-        "Enter your phone number with a country code."
-      );
+      setError("Enter your phone number with a country code.");
       return;
     }
-
     if (!farmingType) {
-      setError(
-        "Select the type of farming you engage in."
-      );
+      setError("Select the type of farming you engage in.");
       return;
     }
-
     setLoading(true);
-
     try {
-      const res = await fetch(
-        "/api/auth/profile/details",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            role,
-            businessName: businessName.trim(),
-            countryCode,
-            phoneCountryCode,
-            phoneNational,
-            farmingType,
-          }),
-        }
-      );
-
+      const res = await fetch("/api/auth/profile/details", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // No email in the payload: the server resolves the account from the
+        // signed-in session (Clerk/Google or verified-email cookie).
+        body: JSON.stringify({
+          role,
+          businessName: businessName.trim(),
+          countryCode,
+          phoneCountryCode,
+          phoneNational,
+          farmingType,
+        }),
+      });
       const data = await res.json();
-
       if (!res.ok || !data.success) {
-        setError(
-          data.error || "Could not save details."
-        );
+        setError(data.error || "Could not save details.");
         return;
       }
-
-      /*
-       * Mint browser session for password signup.
-       */
+      // Mint the browser session for password signups via the short-lived
+      // relay (Google users already carry a session — skip silently).
       try {
-        const raw =
-          sessionStorage.getItem("ff_pw_tmp");
-
+        const raw = sessionStorage.getItem("ff_pw_tmp");
         if (raw) {
           const relay = JSON.parse(raw);
-
           sessionStorage.removeItem("ff_pw_tmp");
-
-          if (
-            relay?.email &&
-            relay?.password
-          ) {
-            const second = await signIn(
-              "credentials",
-              {
-                email: relay.email,
-                password: relay.password,
-                redirect: false,
-              }
-            );
-
+          if (relay?.email && relay?.password) {
+            const second = await signIn("credentials", {
+              email: relay.email,
+              password: relay.password,
+              redirect: false,
+            });
             if (second?.error) {
               router.push("/login");
               return;
@@ -431,29 +214,19 @@ function DetailsForm() {
           }
         }
       } catch {}
-
       router.push("/overview");
       router.refresh();
     } catch {
-      setError(
-        "Could not save details. Please try again."
-      );
+      setError("Could not save details. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
-  /*
-   * Consistent Future Farms input style.
-   *
-   * Primary:   #045d61
-   * Secondary: #009924
-   */
   const input =
-    "h-12 w-full rounded-xl border border-[#009924] bg-white px-4 text-md text-gray-900 outline-none transition-all placeholder:text-gray-400 hover:border-[#007a1d] focus:border-[#009924] focus:ring-4 focus:ring-[#009924]/10";
-
+    "w-full rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none focus:border-primary bg-white";
   const readonlyBox =
-    "flex min-h-12 w-full items-center rounded-xl border border-gray-200 bg-gray-50 px-4 text-md font-medium text-gray-700";
+    "w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700";
 
   return (
     <main className="min-h-screen bg-[#F5F8F3] px-4 py-6 sm:px-6 sm:py-10">

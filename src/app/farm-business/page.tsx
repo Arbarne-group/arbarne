@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
+import SearchSelect from "@/components/SearchSelect";
 import { getActiveUserEmail, setActiveUserSession } from "@/lib/onboardingGuard";
 import {
   TENURE_OPTIONS,
@@ -194,87 +195,6 @@ function parseList(v: unknown): string[] {
   return v.split(",").map((s) => s.trim()).filter(Boolean);
 }
 
-function SearchSelect({
-  value,
-  onChange,
-  options,
-  placeholder,
-  disabled,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  options: { value: string; label: string }[];
-  placeholder: string;
-  disabled?: boolean;
-}) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const wrapRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function onDown(e: MouseEvent) {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
-  }, []);
-
-  const selected = options.find((o) => o.value.toLowerCase() === String(value).toLowerCase());
-  const q = query.trim().toLowerCase();
-  const filtered = q ? options.filter((o) => o.label.toLowerCase().includes(q)) : options;
-
-  return (
-    <div ref={wrapRef} className="relative">
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={() => {
-          setQuery("");
-          setOpen((v) => !v);
-        }}
-        className="w-full rounded-xl border border-outline-variant px-4 py-2.5 text-left text-sm outline-none focus:border-secondary bg-surface flex items-center justify-between gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-      >
-        <span className={selected ? "text-on-surface" : "text-on-surface-variant/50"}>
-          {selected ? selected.label : placeholder}
-        </span>
-        <span className="text-on-surface-variant text-xs">▼</span>
-      </button>
-      {open && !disabled && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest shadow-xl">
-          <div className="border-b border-outline-variant/40 p-2">
-            <input
-              autoFocus
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Type to filter…"
-              className="w-full rounded-lg border border-outline-variant px-3 py-1.5 text-sm outline-none focus:border-secondary bg-surface"
-            />
-          </div>
-          <div className="max-h-56 overflow-y-auto py-1">
-            {filtered.length === 0 && (
-              <p className="px-3 py-2 text-sm text-on-surface-variant/70">No matches.</p>
-            )}
-            {filtered.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                onClick={() => {
-                  onChange(o.value);
-                  setOpen(false);
-                }}
-                className={`block w-full px-3 py-2 text-left text-sm cursor-pointer hover:bg-surface-container-low ${
-                  o.value === value ? "font-semibold text-secondary" : "text-on-surface"
-                }`}
-              >
-                {o.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 /* ---------- page ---------- */
 
