@@ -11,22 +11,34 @@ import { getActiveUserEmail } from "@/lib/onboardingGuard";
 import PromoCarousel from "@/components/PromoCarousel";
 
 const PROMO_CARDS = [
-  {
-    image: "/carousel1.png",
+  // {
+  //   image: "/carousel1.png",
     
-  },
+  // },
+  // {
+  //   image: "/photo11.png",
+   
+  // },
+  // {
+  //   image: "/photo13.png",
+    
+  // },
   {
-    image: "/photo11.png",
+    image: "/carousel3.png",
    
   },
   {
-    image: "/photo13.png",
-    
-  },
-  {
-    image: "/carousel2.png",
+    image: "/carousel4.png",
    
   },
+  {
+    image: "/carousel5.png",
+   
+  },
+  // {
+  //   image: "/carousel2.png",
+   
+  // },
   
 ];
 
