@@ -77,7 +77,7 @@
   --spacing-base: 4px;
 }
 
-.p-margin-desktop { padding: 2.5rem; }
+.p-margin-desktop { padding: 3rem; }
 .px-margin-desktop { padding-left: 2.5rem; padding-right: 2.5rem; }
 .py-margin-desktop { padding-top: 2.5rem; padding-bottom: 2.5rem; }
 .p-margin-mobile { padding: 1rem; }
