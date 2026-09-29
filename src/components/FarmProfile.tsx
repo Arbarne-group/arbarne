@@ -331,9 +331,7 @@ function KPICard({
   );
 }
 
-/* =====================================================================
-   EDIT-MODAL FORM PRIMITIVES
-===================================================================== */
+
 
 function TextInput({
   label,
@@ -622,9 +620,7 @@ export default function FarmProfileMetadata() {
 
       const email = getActiveUserEmail();
 
-      // Only send fields the user changed, so untouched sections
-      // (and display-formatted defaults) never clobber stored data or
-      // unintentionally mark onboarding sections complete
+     
       const baseline = initialData(user, user.futureFarmId);
       const changed: Record<string, unknown> = {};
       (Object.keys(form) as (keyof FarmProfileData)[]).forEach((key) => {
@@ -772,16 +768,10 @@ export default function FarmProfileMetadata() {
                 </h1>
 
                 <div className="flex flex-wrap items-center gap-y-2 gap-x-5 text-[13px] text-on-primary/80 font-medium">
-                  {/* {profile.futureFarmId && (
-                    <span className="flex items-center gap-1.5 bg-secondary/80 px-2.5 py-1 rounded-lg">
-                      <Icon name="fingerprint" className="text-[16px]" />
-                      Farm ID:
-                      {profile.futureFarmId}
-                    </span>
-                  )} */}
+                  
                   {(user?.business?.businessId || user?.businessId) && (
                     <span className="flex items-center gap-1.5 bg-white/15 px-2.5 py-1 rounded-lg font-mono">
-                      <Icon name="badge" className="text-[16px]" />
+                      <Icon name="badge" className="text-[17px]" />
                       Business ID:
                       {user.business?.businessId || user.businessId}
                     </span>
@@ -990,7 +980,7 @@ export default function FarmProfileMetadata() {
                   <h2 className="text-[17px] font-bold leading-tight">
                     Edit Farm Profile
                   </h2>
-                  <p className="text-[12px] text-on-primary/70">
+                  <p className="text-[14px] text-on-primary/70">
                     Update enterprise details and metrics
                   </p>
                 </div>

@@ -25,6 +25,7 @@ import {
   getBusinessProfileStatus,
   type FieldOption,
 } from "@/lib/businessProfile";
+import { ArrowLeft, ChevronLeft } from "lucide-react";
 
 /* ---------- small primitives ---------- */
 
@@ -79,11 +80,11 @@ function Field({
 }) {
   return (
     <div id={`q-${label}`}>
-      <span className="block text-[13px] font-semibold text-on-surface mb-2">
+      <span className="block text-[15px] font-semibold text-on-surface mb-2">
         {label}
         {explain && <Explain text={explain} />}
         {error && (
-          <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
+          <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
             Required
           </span>
         )}
@@ -119,10 +120,10 @@ function Single({
                 : "border-outline-variant hover:bg-surface-container-low"
             }`}
           >
-            <span className={`text-sm font-semibold ${s ? "text-secondary" : "text-on-surface"}`}>
+            <span className={`text-[14px] font-semibold ${s ? "text-secondary" : "text-on-surface"}`}>
               {o.title}
             </span>
-            {o.desc && <span className="block text-xs text-on-surface-variant mt-0.5">{o.desc}</span>}
+            {o.desc && <span className="block text-sm text-on-surface-variant mt-0.5">{o.desc}</span>}
           </button>
         );
       })}
@@ -159,10 +160,10 @@ function Multi({
             }`}
           >
             <span>
-              <span className={`text-sm font-semibold ${c ? "text-secondary" : "text-on-surface"}`}>
+              <span className={`text-[14px] font-semibold ${c ? "text-secondary" : "text-on-surface"}`}>
                 {o.title}
               </span>
-              {o.desc && <span className="block text-xs text-on-surface-variant mt-0.5">{o.desc}</span>}
+              {o.desc && <span className="block text-sm text-on-surface-variant mt-0.5">{o.desc}</span>}
               {o.badge && (
                 <span className="inline-block mt-1 text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                   {o.badge}
@@ -614,10 +615,10 @@ export default function FarmBusinessPage() {
         <div className="space-y-8">
           <Section index="Identity" title="Business identity" desc="How your farm business is known on the platform.">
             <div id="q-businessName">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Business name
                 {err("businessName") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <input
@@ -628,11 +629,11 @@ export default function FarmBusinessPage() {
               />
             </div>
             <div id="q-managerRole">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Farmer / Manager
                 <Explain text="Who runs the farm day to day?" />
                 {err("managerRole") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Single
@@ -649,11 +650,11 @@ export default function FarmBusinessPage() {
 
           <Section index="Location" title="Location" desc="Where the farm business sits and operates.">
             <div id="q-country">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Country
                 <Explain text="Start typing to filter, then pick your country." />
                 {err("country") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <SearchSelect
@@ -670,11 +671,11 @@ export default function FarmBusinessPage() {
               />
             </div>
             <div id="q-county">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 County / Province
                 <Explain text="Loaded from the database for the selected country — type to filter." />
                 {err("county") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <SearchSelect
@@ -690,19 +691,19 @@ export default function FarmBusinessPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <span className="block text-[13px] font-semibold text-on-surface mb-2">Sub-county / Area</span>
+                <span className="block text-[15px] font-semibold text-on-surface mb-2">Sub-county / Area</span>
                 <input value={subcounty} onChange={(e) => setSubcounty(e.target.value)} placeholder="e.g. Naivasha" className={textInput} />
               </div>
               <div>
-                <span className="block text-[13px] font-semibold text-on-surface mb-2">Ward / Village</span>
+                <span className="block text-[15px] font-semibold text-on-surface mb-2">Ward / Village</span>
                 <input value={ward} onChange={(e) => setWard(e.target.value)} placeholder="e.g. Ol Karia" className={textInput} />
               </div>
               <div>
-                <span className="block text-[13px] font-semibold text-on-surface mb-2">Latitude</span>
+                <span className="block text-[15px] font-semibold text-on-surface mb-2">Latitude</span>
                 <input value={latitude} onChange={(e) => setLatitude(e.target.value)} placeholder="e.g. -0.72" className={textInput} />
               </div>
               <div>
-                <span className="block text-[13px] font-semibold text-on-surface mb-2">Longitude</span>
+                <span className="block text-[15px] font-semibold text-on-surface mb-2">Longitude</span>
                 <input value={longitude} onChange={(e) => setLongitude(e.target.value)} placeholder="e.g. 36.43" className={textInput} />
               </div>
             </div>
@@ -710,11 +711,11 @@ export default function FarmBusinessPage() {
 
           <Section index="Land" title="Farm size" desc="Total holding, production area and land ownership.">
             <div id="q-farmSize">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Total farm size
                 <Explain text="The entire holding in acres or hectares, including homestead, grazing and resting land." />
                 {err("farmSize") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <div className="flex gap-2">
@@ -730,11 +731,11 @@ export default function FarmBusinessPage() {
               </div>
             </div>
             <div id="q-cultivatedAcres">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Total area used for production
                 <Explain text="Land actively under crops, pasture or livestock in a typical season. Must be provided even if zero." />
                 {err("cultivatedAcres") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -743,11 +744,11 @@ export default function FarmBusinessPage() {
               </div>
             </div>
             <div id="q-landTenure">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Ownership of the land
                 <Explain text="Your legal tenure. Lenders and partners use this to judge collateral and security." />
                 {err("landTenure") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Single options={TENURE_OPTIONS} value={landTenure} onChange={setLandTenure} />
@@ -756,31 +757,31 @@ export default function FarmBusinessPage() {
 
           <Section index="Enterprise" title="Value-chain enterprises" desc="What the business grows and sells, split by commercial role.">
             <div id="q-enterprises">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Enterprises on the farm
                 <Explain text="Tick every enterprise currently active, even small ones." />
                 {err("enterprises") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Multi options={ENTERPRISE_OPTIONS} values={enterprises} onChange={setEnterprises} cols={2} />
             </div>
             <div id="q-enterpriseCore">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Core value chain — primary commercial crop
                 <Explain text="The single crop or product that brings in most of the farm's income today. Type it exactly as buyers know it." />
                 {err("enterpriseCore") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <input value={enterpriseCore} onChange={(e) => setEnterpriseCore(e.target.value)} placeholder="e.g. French beans for export" className={textInput} />
             </div>
             <div id="q-enterpriseStrategic">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Strategic value chain
                 <Explain text="Crops or ventures with long-term value and higher income potential. Value-added products, processing, seed production and similar." />
                 {err("enterpriseStrategic") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Multi options={STRATEGIC_CHAIN_OPTIONS} values={enterpriseStrategic} onChange={setEnterpriseStrategic} cols={2} />
@@ -792,11 +793,11 @@ export default function FarmBusinessPage() {
               />
             </div>
             <div id="q-enterpriseCashFlow">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Cash-flow value chain
                 <Explain text="Short production-to-income cycle enterprises that keep cash flowing e.g. milk, eggs, leafy vegetables and similar." />
                 {err("enterpriseCashFlow") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Multi options={CASHFLOW_CHAIN_OPTIONS} values={enterpriseCashFlow} onChange={setEnterpriseCashFlow} cols={2} />
@@ -811,51 +812,51 @@ export default function FarmBusinessPage() {
 
           <Section index="Infrastructure" title="Infrastructure" desc="Water, power, storage and processing assets.">
             <div id="q-irrigationMethod">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Irrigation system
                 <Explain text="How water reaches the crop. Pick the system covering most of the irrigated area." />
                 {err("irrigationMethod") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Single options={IRRIGATION_OPTIONS} value={irrigationMethod} onChange={setIrrigationMethod} cols={2} />
             </div>
             <div id="q-waterSources">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Water source
                 <Explain text="Tick every source the farm draws from across the year." />
                 {err("waterSources") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Multi options={WATER_OPTIONS} values={waterSources} onChange={setWaterSources} cols={2} />
             </div>
             <div id="q-energySource">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Energy source
                 <Explain text="The main power behind pumping, cooling and machinery." />
                 {err("energySource") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Single options={ENERGY_OPTIONS} value={energySource} onChange={setEnergySource} cols={2} />
             </div>
             <div id="q-storageFacilities">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Storage facility
                 <Explain text="Where harvested produce and inputs are kept. Reduces post-harvest losses." />
                 {err("storageFacilities") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Multi options={STORAGE_OPTIONS} values={storageFacilities} onChange={setStorageFacilities} cols={2} />
             </div>
             <div id="q-processingFacilities">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Processing facilities
                 <Explain text="Any on-farm value addition equipment e.g. milling, cooling, packaging, seed or dairy processing." />
                 {err("processingFacilities") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Multi options={PROCESSING_OPTIONS} values={processingFacilities} onChange={setProcessingFacilities} cols={2} />
@@ -864,11 +865,11 @@ export default function FarmBusinessPage() {
 
           <Section index="Labour" title="Labour" desc="Everyone who works the farm, all year and in season.">
             <div id="q-permanentWorkers">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Workforce numbers
                 <Explain text="Headcounts, not names. Enter 0 where a category does not apply." />
                 {(err("permanentWorkers") || err("seasonalWorkers") || err("familyLabour")) && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -890,21 +891,21 @@ export default function FarmBusinessPage() {
 
           <Section index="Markets" title="Markets" desc="Where the harvest goes and who pays for it.">
             <div id="q-marketType">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Primary market type
                 <Explain text="The channel moving most of your volume. Main buyer or customer categories sit below." />
                 {err("marketType") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Single options={MARKET_TYPE_OPTIONS} value={marketType} onChange={setMarketType} cols={2} />
             </div>
             <div id="q-produceBuyers">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Main buyer / customer categories
                 <Explain text="Tick every buyer type you sold to in the last 12 months." />
                 {err("produceBuyers") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Multi options={BUYER_OPTIONS} values={produceBuyers} onChange={setProduceBuyers} cols={2} />
@@ -913,21 +914,21 @@ export default function FarmBusinessPage() {
 
           <Section index="Officiality" title="Farm business officiality" desc="Registration, track record and scale.">
             <div id="q-registrationStatus">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Business registration status
                 <Explain text="Formal registration unlocks financing, contracts and export paperwork." />
                 {err("registrationStatus") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Single options={REGISTRATION_OPTIONS} value={registrationStatus} onChange={setRegistrationStatus} />
             </div>
             <div id="q-commercialYears">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Years in operation
                 <Explain text="How long the business has been selling commercially." />
                 {err("commercialYears") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Single
@@ -938,11 +939,11 @@ export default function FarmBusinessPage() {
               />
             </div>
             <div id="q-annualRevenueBracket">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Approximate production scale / revenue band
                 <Explain text="Best estimate of annual farm sales. Used to match financing and buyers." />
                 {err("annualRevenueBracket") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Single options={REVENUE_OPTIONS} value={annualRevenueBracket} onChange={setAnnualRevenueBracket} />
@@ -951,17 +952,17 @@ export default function FarmBusinessPage() {
 
           <Section index="Goals" title="Farm goals" desc="What the business is chasing, and what it needs first.">
             <div id="q-objectives">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Primary farm objectives
                 <Explain text="Tick the outcomes that matter most over the next 1–3 years." />
                 {err("objectives") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <Multi options={OBJECTIVE_OPTIONS} values={objectives} onChange={setObjectives} cols={2} />
             </div>
             <div id="q-twelveMonthSuccess">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 12-month success picture
                 <Explain text="What does a successful next 12 months look like for this business?" />
               </span>
@@ -974,11 +975,11 @@ export default function FarmBusinessPage() {
               />
             </div>
             <div id="q-developmentPriorities">
-              <span className="block text-[13px] font-semibold text-on-surface mb-2">
+              <span className="block text-[15px] font-semibold text-on-surface mb-2">
                 Development priorities
                 <Explain text="The 2–3 improvements or investments the business needs first." />
                 {err("developmentPriorities") && (
-                  <span className="ml-2 text-[11px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
+                  <span className="ml-2 text-[12px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded-full">Required</span>
                 )}
               </span>
               <textarea
@@ -1004,9 +1005,9 @@ export default function FarmBusinessPage() {
         <div className="fixed bottom-0 left-0 md:left-64 right-0 bg-surface/95 backdrop-blur-md border-t border-surface-variant px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-center gap-3 z-30 shadow-[0_-4px_16px_rgba(0,0,0,0.03)]">
           <Link
             href="/overview"
-            className="text-xs md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors"
+            className=" text-xs flex flex-row gap-1 justify-center items-center p-1 md:text-sm font-semibold text-on-surface-variant hover:text-primary transition-colors"
           >
-            &larr; Back to Overview
+            <ChevronLeft className="w-4 h-4"/> Back to Overview
           </Link>
           <div className="flex items-center gap-2.5 w-full sm:w-auto">
             {saveOk && (

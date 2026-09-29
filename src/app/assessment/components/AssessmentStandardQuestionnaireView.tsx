@@ -363,7 +363,7 @@ export default function AssessmentStandardQuestionnaireView({
               return (
                 <section key={cap.id} aria-label={cap.name}>
                   <div className="mb-5">
-                    <p className="font-label-sm text-label-sm text-primary font-bold mb-1.5 uppercase tracking-widest">
+                    <p className="font-medium text-md md:text-md text-primary  mb-1.5 uppercase tracking-widest">
                       Capability {cap.id.replace("P", "")} • {cap.name}
                     </p>
                     <div className="h-px bg-outline-variant/40" />
@@ -385,7 +385,7 @@ export default function AssessmentStandardQuestionnaireView({
                           }`}
                         >
                           <div className="flex items-start justify-between gap-4 mb-4">
-                            <h3 className="font-title-md text-[15px] md:text-title-md text-on-surface font-medium">
+                            <h3 className="font-medium text-[16px]  text-on-surface ">
                               {qNum}. {q.question_text}
                             </h3>
                             {isMissing && (
@@ -465,12 +465,12 @@ export default function AssessmentStandardQuestionnaireView({
             >
               <span>
                 {isSubmitting
-                  ? "Submitting to Database..."
+                  ? "Submitting ..."
                   : isReadOnly
                   ? "View Summary"
                   : isPillarComplete
                   ? `Submit Pillar 0${pillar.id} Assessment`
-                  : `Submit (${unansweredQuestions.length} remaining)`}
+                  : `Submit `}
               </span>
               <span className={`material-symbols-outlined text-[20px] ${isSubmitting ? "animate-spin" : ""}`}>
                 {isSubmitting ? "progress_activity" : "send"}
