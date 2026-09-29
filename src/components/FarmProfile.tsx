@@ -919,9 +919,9 @@ export default function FarmProfileMetadata() {
   );
 
   // Sub-counties come from the curated geography data, so only predefined
-  // values can be selected. (Town records are used as the sub-county list.)
+  // values can be selected.
   const subCountyOptions = useMemo<SelectOption[]>(
-    () => subCounties.map((t) => ({ value: t.name, label: t.name, aliases: [t.code] })),
+    () => subCounties.map((s) => ({ value: s.name, label: s.name, aliases: [s.code] })),
     [subCounties],
   );
 
@@ -1009,12 +1009,12 @@ export default function FarmProfileMetadata() {
     (async () => {
       try {
         const res = await fetch(
-          `/api/geo/towns?country=${encodeURIComponent(countryCode)}&county=${encodeURIComponent(countyCode)}`,
+          `/api/geo/subcounties?country=${encodeURIComponent(countryCode)}&county=${encodeURIComponent(countyCode)}`,
           { cache: "no-store" },
         );
         const data = await res.json();
         if (cancelled) return;
-        setSubCounties(data?.towns ?? []);
+        setSubCounties(data?.subCounties ?? []);
       } catch {
         if (cancelled) return;
         setSubCounties([]);

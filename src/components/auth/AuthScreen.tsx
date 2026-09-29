@@ -184,6 +184,27 @@ function OrDivider() {
   );
 }
 
+/** Only ever redirect to a path on this site — never an absolute URL. */
+function safeCallback(raw: string | null): string {
+  if (!raw) return "/overview";
+  if (!raw.startsWith("/") || raw.startsWith("//")) return "/overview";
+  return raw;
+}
+
+/** Auth.js sends the user back to /login?error=… when a provider fails.
+    Without this the page looks identical to a first visit. */
+const PROVIDER_ERRORS: Record<string, string> = {
+  OAuthSignin: "Google sign-in could not be started. Please try again.",
+  OAuthCallback: "Google sign-in did not complete. Please try again.",
+  OAuthAccountNotLinked:
+    "That Google account is already linked to a different sign-in method. Use email and password instead.",
+  AccessDenied: "Google sign-in was refused. If you cancelled, please try again.",
+  Configuration:
+    "Google sign-in is not configured correctly on the server. Please contact support.",
+  Verification:
+    "Google sign-in could not be verified. Please try again.",
+};
+
 function GoogleIcon() {
   return (
     <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
@@ -211,10 +232,12 @@ function GoogleButton({
   label,
   enabled,
   onError,
+  callbackUrl,
 }: {
   label: string;
   enabled: boolean;
   onError: (msg: string) => void;
+  callbackUrl: string;
 }) {
   return (
     <button
@@ -226,7 +249,7 @@ function GoogleButton({
           );
           return;
         }
-        signIn("google", { callbackUrl: "/complete-profile" });
+        signIn("google", { callbackUrl });
       }}
       className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-300 bg-white py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
     >
@@ -247,7 +270,7 @@ function LoginPane({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/overview";
+  const callbackUrl = safeCallback(searchParams.get("callbackUrl"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -338,6 +361,8 @@ function LoginPane({
             </label>
             <input
               type="email"
+              name="email"
+              autoComplete="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -350,6 +375,8 @@ function LoginPane({
               Password
             </label>
             <PasswordInput
+              name="password"
+              autoComplete="current-password"
               value={password}
               onChange={setPassword}
               placeholder="••••••••"
@@ -386,6 +413,7 @@ function LoginPane({
             label="Sign in with Google"
             enabled={googleEnabled}
             onError={setError}
+            callbackUrl={callbackUrl}
           />
         </div>
       </div>
@@ -505,6 +533,8 @@ function SignupPane({
             </label>
             <input
               type="email"
+              name="email"
+              autoComplete="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -517,6 +547,8 @@ function SignupPane({
               Password *
             </label>
             <PasswordInput
+              name="password"
+              autoComplete="new-password"
               value={password}
               onChange={setPassword}
               placeholder="Min. 8 characters, letters + numbers"
@@ -528,6 +560,8 @@ function SignupPane({
               Confirm password *
             </label>
             <PasswordInput
+              name="confirmPassword"
+              autoComplete="new-password"
               value={confirmPassword}
               onChange={setConfirmPassword}
               placeholder="Repeat your password"
@@ -573,6 +607,7 @@ function SignupPane({
             label="Sign up with Google"
             enabled={googleEnabled}
             onError={setError}
+            callbackUrl="/complete-profile"
           />
         </div>
       </div>
@@ -640,6 +675,8 @@ function ForgotPane({ onSwitch }: { onSwitch: () => void }) {
               </label>
               <input
                 type="email"
+                name="email"
+                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -689,6 +726,9 @@ export default function AuthScreen({
 }) {
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [googleEnabled, setGoogleEnabled] = useState(false);
+  const searchParams = useSearchParams();
+  const providerError =
+    PROVIDER_ERRORS[searchParams.get("error") || ""] || "";
 
   // Swipe between panes AND keep the address bar in sync without
   // remounting (history state only, so the animation stays intact).
@@ -796,6 +836,13 @@ export default function AuthScreen({
                   grow.
                 </p>
               </div>
+
+              {/* Auth.js reports provider failures here via ?error= */}
+              {providerError && (
+                <div className="mb-4 w-full rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                  {providerError}
+                </div>
+              )}
 
               {/* Swiping panes */}
               <div className="w-full overflow-hidden">

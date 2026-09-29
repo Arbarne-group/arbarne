@@ -234,6 +234,7 @@ export default function FarmBusinessPage() {
   const [counties, setCounties] = useState<{ code: string; name: string }[]>([]);
   const [county, setCounty] = useState("");
   const [subcounty, setSubcounty] = useState("");
+  const [subcounties, setSubcounties] = useState<{ code: string; name: string }[]>([]);
   const [ward, setWard] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
@@ -369,6 +370,31 @@ export default function FarmBusinessPage() {
       })
       .catch(console.error);
   }, [country]);
+
+  /* Sub-counties are fetched by county CODE, but the county state holds the
+     name (that is what FarmLocation stores), so resolve the code first.
+     The list is cleared in the country/county handlers rather than here, so
+     this effect only ever writes state asynchronously. */
+  useEffect(() => {
+    if (!country || !county) return;
+    const match = counties.find((c) => c.name.toLowerCase() === county.trim().toLowerCase());
+    if (!match) return;
+    let cancelled = false;
+    fetch(
+      `/api/geo/subcounties?country=${encodeURIComponent(country)}&county=${encodeURIComponent(match.code)}`,
+      { cache: "no-store" }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled && data?.subCounties) setSubcounties(data.subCounties);
+      })
+      .catch(() => {
+        if (!cancelled) setSubcounties([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [country, county, counties]);
 
   const num = (v: string) => (v.trim() === "" ? "" : v);
   const clearError = (key: string) =>
@@ -634,6 +660,12 @@ export default function FarmBusinessPage() {
                   value={country}
                   onChange={(v) => {
                     setCountry(v);
+                    // A new country invalidates the county and sub-county below it.
+                    if (v !== country) {
+                      setCounty("");
+                      setSubcounty("");
+                      setSubcounties([]);
+                    }
                     clearError("country");
                   }}
                   placeholder="Select country…"
@@ -656,6 +688,11 @@ export default function FarmBusinessPage() {
                 value={county}
                 onChange={(v) => {
                   setCounty(v);
+                  // Sub-counties belong to a county, so a new county invalidates it.
+                  if (v !== county) {
+                    setSubcounty("");
+                    setSubcounties([]);
+                  }
                   clearError("county");
                 }}
                 placeholder={country ? "Select county / province…" : "Select a country first…"}
@@ -665,8 +702,18 @@ export default function FarmBusinessPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <span className="block text-[15px] font-semibold text-on-surface mb-2">Sub-county / Area</span>
-                <input value={subcounty} onChange={(e) => setSubcounty(e.target.value)} placeholder="e.g. Naivasha" className={textInput} />
+                <span className="block text-[15px] font-semibold text-on-surface mb-2">
+                  Sub-county / Area
+                  <Explain text="Start typing to filter, then pick your sub-county." />
+                </span>
+                <SearchSelect
+                  value={subcounty}
+                  onChange={setSubcounty}
+                  placeholder={county ? "Select sub-county…" : "Select a county first…"}
+                  disabled={!county}
+                  options={subcounties.map((s) => ({ value: s.name, label: s.name }))}
+                  onClear={subcounty ? () => setSubcounty("") : undefined}
+                />
               </div>
               <div>
                 <span className="block text-[15px] font-semibold text-on-surface mb-2">Ward / Village</span>

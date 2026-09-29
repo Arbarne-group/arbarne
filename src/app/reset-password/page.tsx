@@ -74,11 +74,24 @@ function ResetForm() {
             )}
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">New password</label>
-              <PasswordInput value={password} onChange={setPassword} placeholder="Min. 8 characters, letters + numbers" minLength={8} />
+              <PasswordInput
+                name="password"
+                autoComplete="new-password"
+                value={password}
+                onChange={setPassword}
+                placeholder="Min. 8 characters, letters + numbers"
+                minLength={8}
+              />
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">Confirm new password</label>
-              <PasswordInput value={confirmPassword} onChange={setConfirmPassword} placeholder="Repeat your password" />
+              <PasswordInput
+                name="confirmPassword"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={setConfirmPassword}
+                placeholder="Repeat your password"
+              />
             </div>
             <button
               type="submit"

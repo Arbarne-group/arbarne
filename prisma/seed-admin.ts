@@ -3,6 +3,7 @@
  *
  *  - 54 African countries (initials, name, dial code, computed flag emoji)
  *  - Kenya's 47 counties (official KNBS numeric codes)
+ *  - Kenya's 290 sub-counties (constituencies) for every county
  *  - A small sample of Kenyan towns (add the rest in /admin → Geography)
  *  - The seeded staff account from SEED_ADMIN_* env vars. Its password is
  *    RANDOM and printed once — the admin then uses "Forgot password" to set
@@ -12,6 +13,7 @@
  */
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import kenyaSubCounties from "./data/kenya-subcounties.json";
 import crypto from "crypto";
 
 const prisma = new PrismaClient();
@@ -146,6 +148,27 @@ async function main() {
     });
   }
   console.log(`  ${KENYA_COUNTIES.length} counties upserted.`);
+
+  console.log("Seeding Kenya sub-counties...");
+  for (const row of kenyaSubCounties.subCounties) {
+    await prisma.countyOrProvince.upsert({
+      where: { countryCode_code: { countryCode: "KE", code: row.county } },
+      create: { countryCode: "KE", code: row.county, name: row.county },
+      update: {},
+    });
+    await prisma.subCounty.upsert({
+      where: {
+        countryCode_countyCode_code: {
+          countryCode: "KE",
+          countyCode: row.county,
+          code: row.code,
+        },
+      },
+      create: { countryCode: "KE", countyCode: row.county, code: row.code, name: row.name },
+      update: { name: row.name },
+    });
+  }
+  console.log(`  ${kenyaSubCounties.subCounties.length} sub-counties upserted.`);
 
   console.log("Seeding sample towns...");
   for (const [countyCode, code, name] of SAMPLE_TOWNS) {

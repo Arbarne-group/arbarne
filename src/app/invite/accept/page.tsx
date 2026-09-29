@@ -109,11 +109,23 @@ function AcceptForm() {
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">Password *</label>
-              <PasswordInput value={password} onChange={setPassword} placeholder="Min. 8 characters, letters + numbers" minLength={8} />
+              <PasswordInput
+                name="password"
+                autoComplete="new-password"
+                value={password}
+                onChange={setPassword}
+                placeholder="Min. 8 characters, letters + numbers"
+                minLength={8}
+              />
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">Confirm password *</label>
-              <PasswordInput value={confirmPassword} onChange={setConfirmPassword} />
+              <PasswordInput
+                name="confirmPassword"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={setConfirmPassword}
+              />
             </div>
             <button
               type="submit"
