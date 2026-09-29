@@ -1025,6 +1025,7 @@ export default function AssessmentSummaryView({
               </div>
             );
           })}
+          </div>
         </div>
 
         {/* Main Actions */}
