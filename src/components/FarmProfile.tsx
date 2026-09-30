@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useAppUser } from "@/hooks/useAppUser";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 import {
   getBusinessProfileStatus,
@@ -837,6 +838,11 @@ function EditTab({
 ===================================================================== */
 
 export default function FarmProfileMetadata() {
+  const { user: sessionUser, isLoaded: sessionLoaded } = useAppUser();
+  const sessionEmail =
+    sessionUser?.primaryEmailAddress?.emailAddress ||
+    sessionUser?.email ||
+    "";
   const [user, setUser] = useState<OnboardingUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -859,10 +865,13 @@ export default function FarmProfileMetadata() {
 
     async function loadProfile() {
       try {
+        // Right after an OAuth redirect the local cache may not exist yet
+        // wait for the live session instead of failing on first paint.
+        if (!sessionLoaded) return;
         setLoading(true);
         setError("");
 
-        const email = getActiveUserEmail();
+        const email = sessionEmail || getActiveUserEmail();
         if (!email) throw new Error("No active user email found.");
 
         const response = await fetch(
@@ -896,7 +905,9 @@ export default function FarmProfileMetadata() {
     return () => {
       cancelled = true;
     };
-  }, []);
+    // Re-run once the session resolves: on a fresh OAuth login the cached
+    // email does not exist on first paint.
+  }, [sessionLoaded, sessionEmail]);
 
   const profile = useMemo(
     () => (user ? initialData(user, user.futureFarmId) : null),
