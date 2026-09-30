@@ -987,29 +987,6 @@ export default function AuthScreen({
       {/* ============================================================
           AUTH PANES
       ================================================================= */}
-      <div className="w-full overflow-hidden">
-        <div
-          className="flex items-start transition-transform duration-500 ease-in-out"
-          style={{
-            transform: `translateX(-${MODE_INDEX[mode] * 100}%)`,
-          }}
-        >
-          {/* Forgot password */}
-          <div className="w-full shrink-0">
-            <ForgotPane
-              onSwitch={() => switchMode("login")}
-            />
-          </div>
-
-          {/* Login */}
-          <div className="w-full shrink-0">
-            <LoginPane
-              googleEnabled={googleEnabled}
-              onSwitch={() => switchMode("signup")}
-              onForgot={() => switchMode("forgot")}
-            />
-          </div>
-
               {/* Auth.js reports provider failures here via ?error= */}
               {providerError && (
                 <div className="mb-4 w-full rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
@@ -1045,11 +1022,7 @@ export default function AuthScreen({
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        </section>
       </div>
 
       <style jsx global>{`

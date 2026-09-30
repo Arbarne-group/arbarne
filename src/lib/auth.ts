@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { unstable_rethrow } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { recordUserToSheet, syncAllUnsentUsersToSheet } from "@/lib/googleSheets";
 import { generateUniqueFutureFarmId } from "@/lib/idGenerator";
@@ -14,7 +15,13 @@ export { generateUniqueFutureFarmId };
  */
 export async function getAuthenticatedClerkUser() {
   try {
-    const session = await auth().catch(() => null);
+    const session = await auth().catch((e) => {
+      // Let Next's own control-flow errors (e.g. the dynamic-API marker
+      // auth() triggers during prerendering) propagate instead of being
+      // swallowed into a logged-out render.
+      unstable_rethrow(e);
+      return null;
+    });
     const su: any = (session as any)?.user;
     if (!su?.email) return null;
     return {
@@ -25,6 +32,8 @@ export async function getAuthenticatedClerkUser() {
       lastName: null,
     };
   } catch (err) {
+    // Never log or swallow the framework's own control-flow errors.
+    unstable_rethrow(err);
     console.error("Error retrieving session user:", err);
     return null;
   }
