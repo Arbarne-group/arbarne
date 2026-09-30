@@ -754,17 +754,6 @@ function ForgotPane({ onSwitch }: { onSwitch: () => void }) {
         <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-secondary">
           Account recovery
         </p>
-
-        <h2
-          className="mt-2 text-3xl font-semibold tracking-tight text-gray-900"
-          style={{ fontFamily: "Georgia, serif" }}
-        >
-          Forgot password
-        </h2>
-
-        <p className="mt-1 text-md text-gray-500">
-          We&apos;ll email you a reset link.
-        </p>
       </div>
 
       <div className="w-full overflow-hidden rounded-[20px] bg-[#FCFDFC] p-6 shadow-[0_20px_50px_-20px_rgba(4,93,97,0.25)] ring-1 ring-gray-200 sm:p-7">
