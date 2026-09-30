@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import { ArrowLeft, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
@@ -19,7 +21,6 @@ const slides = [
     ),
     description:
       "Assess your farm's capabilities, measure maturity, and identify the priorities that will move your farm forward.",
-
     visual: "02",
     image: "/photo3.png",
   },
@@ -34,7 +35,6 @@ const slides = [
     ),
     description:
       "Assess where your farm stands, strengthen its capabilities, and track your progress toward a more resilient, productive, and investment-ready farm.",
-
     visual: "01",
     image: "/photo8.png",
   },
@@ -43,7 +43,6 @@ const slides = [
     title: <>Future Farms Framework</>,
     description:
       "Assess your farm using the Farm Systems Capability and Maturity Framework, designed to guide and measure your farm’s transition toward future-readiness.",
-
     visual: "01",
     image: "/photo2.png",
   },
@@ -56,21 +55,23 @@ function ShowcasePanel() {
     const timer = setInterval(() => {
       setCurrentSlide((current) => (current + 1) % slides.length);
     }, 7000);
+
     return () => clearInterval(timer);
   }, []);
 
   const nextSlide = () =>
     setCurrentSlide((current) => (current + 1) % slides.length);
+
   const previousSlide = () =>
-    setCurrentSlide((current) => (current - 1 + slides.length) % slides.length);
+    setCurrentSlide(
+      (current) => (current - 1 + slides.length) % slides.length
+    );
 
   const slide = slides[currentSlide];
 
   return (
-    // Sticky + h-screen: stays put while the form column scrolls, never stretches
-    <section className="hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start ">
-      {/* max-h keeps it from getting too tall on big monitors */}
-      <div className="relative mx-auto h-full max-h-220 overflow-hidden ">
+    <section className="hidden lg:sticky lg:top-0 lg:block lg:h-screen lg:self-start">
+      <div className="relative mx-auto h-screen w-full overflow-hidden">
         {/* Background images */}
         {slides.map((item, index) => (
           <div
@@ -92,15 +93,21 @@ function ShowcasePanel() {
           </div>
         ))}
 
-        {/* Overlays: darker at the bottom where the text lives */}
+        {/* Overlays */}
         <div className="absolute inset-0 bg-black/20" />
+
         <div className="absolute inset-0 bg-linear-to-tr from-[#0E3B2B]/80 via-[#0E3B2B]/30 to-transparent" />
+
         <div className="absolute inset-x-0 bottom-0 h-[65%] bg-linear-to-t from-[#071F17]/95 via-[#071F17]/60 to-transparent" />
+
+        {/* Decorative circles */}
         <div className="absolute -left-32 -top-32 h-[420px] w-[420px] rounded-full border border-white/10" />
+
         <div className="absolute -left-20 -top-20 h-[300px] w-[300px] rounded-full border border-white/10" />
 
+        {/* Content */}
         <div className="relative z-10 flex h-full flex-col justify-between p-8 xl:p-12">
-          {/* Top row: eyebrow pill + slide counter */}
+          {/* Top row */}
           <div className="flex items-center justify-between">
             <span
               key={`eyebrow-${currentSlide}`}
@@ -111,24 +118,25 @@ function ShowcasePanel() {
             </span>
           </div>
 
-          {/* Bottom block: copy + controls, anchored together */}
+          {/* Bottom block */}
           <div>
-            <div className="max-w-full ">
+            <div className="max-w-full">
               <h1
                 key={`title-${currentSlide}`}
-                className="animate-[slideUp_650ms_ease-out] text-4xl font-semibold leading-[1.08] tracking-tight text-white xl:text-5xl 2xl:text-6xl  max-w-4xl"
+                className="max-w-4xl animate-[slideUp_650ms_ease-out] text-4xl font-semibold leading-[1.08] tracking-tight text-white xl:text-5xl 2xl:text-6xl"
               >
                 {slide.title}
               </h1>
 
               <p
                 key={`description-${currentSlide}`}
-                className="mt-4 max-w-4xl animate-[slideUp_700ms_ease-out] text-md md:text-[20px] leading-6 text-white/80 xl:mt-5  xl:leading-7"
+                className="mt-4 max-w-4xl animate-[slideUp_700ms_ease-out] text-md leading-6 text-white/80 md:text-[20px] xl:mt-5 xl:leading-7"
               >
                 {slide.description}
               </p>
             </div>
 
+            {/* Slider controls */}
             <div className="mt-8 flex items-center justify-between border-t border-white/15 pt-6">
               <div className="flex items-center gap-2">
                 {slides.map((_, index) => (
@@ -153,6 +161,7 @@ function ShowcasePanel() {
                 >
                   <ArrowLeft className="h-4 w-4" />
                 </button>
+
                 <button
                   onClick={nextSlide}
                   aria-label="Next slide"
@@ -171,6 +180,7 @@ function ShowcasePanel() {
 
 const inputCls =
   "w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-900 outline-none focus:border-primary";
+
 const primaryBtn =
   "w-full rounded-xl bg-primary py-2.5 text-sm font-semibold text-white transition hover:bg-primary/90 disabled:opacity-60";
 
@@ -178,7 +188,9 @@ function OrDivider() {
   return (
     <div className="flex items-center gap-3 pt-2">
       <div className="h-px flex-1 bg-gray-200" />
+
       <span className="text-xs font-semibold text-gray-400">OR</span>
+
       <div className="h-px flex-1 bg-gray-200" />
     </div>
   );
@@ -207,19 +219,26 @@ const PROVIDER_ERRORS: Record<string, string> = {
 
 function GoogleIcon() {
   return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
       <path
         fill="#4285F4"
         d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.3h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.6 2.8c2.2-2 3.8-5 3.8-8.6z"
       />
+
       <path
         fill="#34A853"
         d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.6-2.8c-1 .7-2.4 1.2-4.3 1.2-3.1 0-5.8-2.1-6.8-5l-3.7 2.9c2.1 4.1 6.1 6.6 10.5 6.6z"
       />
+
       <path
         fill="#FBBC05"
         d="M5.2 14.5c-.2-.7-.4-1.5-.4-2.5s.1-1.8.4-2.5L1.4 6.6C.5 8.4 0 10.1 0 12s.5 3.6 1.4 5.4l3.8-2.9z"
       />
+
       <path
         fill="#EA4335"
         d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.5 0 3.5 2.7 1.4 6.6l3.8 2.9c1-2.8 3.7-4.8 6.8-4.8z"
@@ -245,8 +264,9 @@ function GoogleButton({
       onClick={() => {
         if (!enabled) {
           onError(
-            "Google sign-in isn't configured yet. Add GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET, or continue with email.",
+            "Google sign-in isn't configured yet. Add GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET, or continue with email."
           );
+
           return;
         }
         signIn("google", { callbackUrl });
@@ -254,6 +274,7 @@ function GoogleButton({
       className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-300 bg-white py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
     >
       <GoogleIcon />
+
       {label}
     </button>
   );
@@ -278,65 +299,102 @@ function LoginPane({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     setError("");
     setLoading(true);
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
+
       const data = await res.json();
+
       if (!res.ok || !data.success) {
         if (data.code === "UNVERIFIED") {
-          // Unverified account: (re)send the OTP and take them straight to
-          // the code entry screen — no dead-end error.
           try {
             const r = await fetch("/api/auth/verify/resend", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email,
+              }),
             });
+
             const rj = await r.json().catch(() => ({}));
+
             if (rj.publicId) {
               router.push(
-                `/verify/${rj.publicId}${rj.mailSent === false ? "?mail=failed" : ""}`,
+                `/verify/${rj.publicId}${
+                  rj.mailSent === false ? "?mail=failed" : ""
+                }`
               );
+
               return;
             }
           } catch {}
+
           setError(
-            "Your email is not verified yet. Please try signing up again to get a code.",
+            "Your email is not verified yet. Please try signing up again to get a code."
           );
+
           return;
         }
+
         setError(data.error || "Invalid email or password.");
+
         return;
       }
+
       try {
-        localStorage.setItem("future_farms_user", JSON.stringify(data.user));
+        localStorage.setItem(
+          "future_farms_user",
+          JSON.stringify(data.user)
+        );
       } catch {}
+
       const second = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
+
       if (second?.error) {
-        setError("Login succeeded but the session failed. Please try again.");
+        setError(
+          "Login succeeded but the session failed. Please try again."
+        );
+
         return;
       }
+
       // Staff land in their workspace, everyone else follows the callback.
       try {
         const me = await fetch("/api/auth/profile/details", {
           cache: "no-store",
         }).then((r) => r.json());
+
         const role = me?.user?.role;
-        if (role && ["FFDeveloper", "FFAdmin", "FFStaff"].includes(role)) {
+
+        if (
+          role &&
+          ["FFDeveloper", "FFAdmin", "FFStaff"].includes(role)
+        ) {
           router.push("/a/dashboard");
           router.refresh();
+
           return;
         }
       } catch {}
+
       router.push(callbackUrl);
       router.refresh();
     } catch {
@@ -355,10 +413,12 @@ function LoginPane({
               {error}
             </p>
           )}
+
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
               Email
             </label>
+
             <input
               type="email"
               name="email"
@@ -370,10 +430,12 @@ function LoginPane({
               className={inputCls}
             />
           </div>
+
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
               Password
             </label>
+
             <PasswordInput
               name="password"
               autoComplete="current-password"
@@ -382,16 +444,22 @@ function LoginPane({
               placeholder="••••••••"
             />
           </div>
+
           <div className="text-right">
             <button
               type="button"
               onClick={onForgot}
-              className="text-xs font-semibold text-primary hover:text-primary/80 cursor-pointer"
+              className="cursor-pointer text-xs font-semibold text-primary hover:text-primary/80"
             >
               Forgot password?
             </button>
           </div>
-          <button type="submit" disabled={loading} className={primaryBtn}>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={primaryBtn}
+          >
             {loading ? "Logging in..." : "Log in"}
           </button>
         </form>
@@ -401,13 +469,14 @@ function LoginPane({
           <button
             type="button"
             onClick={onSwitch}
-            className="font-semibold text-primary hover:text-primary/80 cursor-pointer"
+            className="cursor-pointer font-semibold text-primary hover:text-primary/80"
           >
             Sign up
           </button>
         </p>
 
         <OrDivider />
+
         <div className="pt-3">
           <GoogleButton
             label="Sign in with Google"
@@ -429,6 +498,7 @@ function SignupPane({
   googleEnabled: boolean;
 }) {
   const router = useRouter();
+
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -440,12 +510,16 @@ function SignupPane({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     setError("");
     setLoading(true);
+
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           firstName,
           middleName,
@@ -455,23 +529,33 @@ function SignupPane({
           confirmPassword,
         }),
       });
+
       const data = await res.json();
+
       if (!res.ok || (!data.success && res.status !== 200)) {
         setError(data.error || "Failed to create account.");
+
         return;
       }
+
       if (!data.publicId) {
         setError(
-          "Account created but no verification challenge found. Please try logging in.",
+          "Account created but no verification challenge found. Please try logging in."
         );
+
         return;
       }
+
       try {
         sessionStorage.setItem(
           "ff_pw_tmp",
-          JSON.stringify({ email: email.toLowerCase().trim(), password }),
+          JSON.stringify({
+            email: email.toLowerCase().trim(),
+            password,
+          })
         );
       } catch {}
+
       router.push(`/verify/${data.publicId}`);
     } catch {
       setError("Signup failed. Please try again.");
@@ -489,11 +573,13 @@ function SignupPane({
               {error}
             </p>
           )}
+
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 First name *
               </label>
+
               <input
                 required
                 value={firstName}
@@ -502,10 +588,12 @@ function SignupPane({
                 className={inputCls}
               />
             </div>
+
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Last name *
               </label>
+
               <input
                 required
                 value={lastName}
@@ -515,11 +603,15 @@ function SignupPane({
               />
             </div>
           </div>
+
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
               Middle name{" "}
-              <span className="font-normal text-gray-400">(optional)</span>
+              <span className="font-normal text-gray-400">
+                (optional)
+              </span>
             </label>
+
             <input
               value={middleName}
               onChange={(e) => setMiddleName(e.target.value)}
@@ -527,10 +619,12 @@ function SignupPane({
               className={inputCls}
             />
           </div>
+
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
               Email address *
             </label>
+
             <input
               type="email"
               name="email"
@@ -542,10 +636,12 @@ function SignupPane({
               className={inputCls}
             />
           </div>
+
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
               Password *
             </label>
+
             <PasswordInput
               name="password"
               autoComplete="new-password"
@@ -555,10 +651,12 @@ function SignupPane({
               minLength={8}
             />
           </div>
+
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
               Confirm password *
             </label>
+
             <PasswordInput
               name="confirmPassword"
               autoComplete="new-password"
@@ -566,6 +664,7 @@ function SignupPane({
               onChange={setConfirmPassword}
               placeholder="Repeat your password"
             />
+
             {confirmPassword.length > 0 && (
               <p
                 className={`mt-1.5 flex items-center gap-1.5 text-xs font-semibold ${
@@ -579,13 +678,19 @@ function SignupPane({
                 ) : (
                   <AlertCircle className="h-4 w-4 shrink-0" />
                 )}
+
                 {password === confirmPassword
                   ? "Passwords match"
                   : "Passwords do not match"}
               </p>
             )}
           </div>
-          <button type="submit" disabled={loading} className={primaryBtn}>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={primaryBtn}
+          >
             {loading ? "Creating account..." : "Continue"}
           </button>
         </form>
@@ -595,13 +700,14 @@ function SignupPane({
           <button
             type="button"
             onClick={onSwitch}
-            className="font-semibold text-primary hover:text-primary/80 cursor-pointer"
+            className="cursor-pointer font-semibold text-primary hover:text-primary/80"
           >
             Log in
           </button>
         </p>
 
         <OrDivider />
+
         <div className="pt-3">
           <GoogleButton
             label="Sign up with Google"
@@ -622,13 +728,20 @@ function ForgotPane({ onSwitch }: { onSwitch: () => void }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     setLoading(true);
+
     try {
       await fetch("/api/auth/forgot", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+        }),
       });
+
       setDone(true);
     } finally {
       setLoading(false);
@@ -641,12 +754,14 @@ function ForgotPane({ onSwitch }: { onSwitch: () => void }) {
         <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-secondary">
           Account recovery
         </p>
+
         <h2
           className="mt-2 text-3xl font-semibold tracking-tight text-gray-900"
           style={{ fontFamily: "Georgia, serif" }}
         >
           Forgot password
         </h2>
+
         <p className="mt-1 text-md text-gray-500">
           We&apos;ll email you a reset link.
         </p>
@@ -659,10 +774,11 @@ function ForgotPane({ onSwitch }: { onSwitch: () => void }) {
               If an account exists for <strong>{email}</strong>, a reset link
               was sent. Check your inbox (valid 1 hour).
             </p>
+
             <button
               type="button"
               onClick={onSwitch}
-              className="mt-4 text-sm font-semibold text-primary hover:text-primary/80 cursor-pointer"
+              className="mt-4 cursor-pointer text-sm font-semibold text-primary hover:text-primary/80"
             >
               Back to log in
             </button>
@@ -673,6 +789,7 @@ function ForgotPane({ onSwitch }: { onSwitch: () => void }) {
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Email address
               </label>
+
               <input
                 type="email"
                 name="email"
@@ -684,7 +801,12 @@ function ForgotPane({ onSwitch }: { onSwitch: () => void }) {
                 className={inputCls}
               />
             </div>
-            <button type="submit" disabled={loading} className={primaryBtn}>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={primaryBtn}
+            >
               {loading ? "Sending..." : "Send reset link"}
             </button>
           </form>
@@ -695,7 +817,7 @@ function ForgotPane({ onSwitch }: { onSwitch: () => void }) {
           <button
             type="button"
             onClick={onSwitch}
-            className="font-semibold text-primary hover:text-primary/80 cursor-pointer"
+            className="cursor-pointer font-semibold text-primary hover:text-primary/80"
           >
             Log in
           </button>
@@ -730,10 +852,11 @@ export default function AuthScreen({
   const providerError =
     PROVIDER_ERRORS[searchParams.get("error") || ""] || "";
 
-  // Swipe between panes AND keep the address bar in sync without
-  // remounting (history state only, so the animation stays intact).
+  // Swipe between panes AND keep the address bar in sync
+  // without remounting.
   const switchMode = (next: AuthMode) => {
     setMode(next);
+
     try {
       window.history.replaceState(null, "", MODE_PATH[next]);
     } catch {}
@@ -743,7 +866,11 @@ export default function AuthScreen({
     fetch("/api/auth/providers")
       .then((res) => res.json())
       .then((data) => {
-        if (data && typeof data === "object" && "google" in data) {
+        if (
+          data &&
+          typeof data === "object" &&
+          "google" in data
+        ) {
           setGoogleEnabled(true);
         }
       })
@@ -751,91 +878,137 @@ export default function AuthScreen({
   }, []);
 
   return (
-    <main className="h-screen w-full overflow-x-hidden bg-[#F7F9F5]">
-      <div className="grid w-full lg:h-screen lg:grid-cols-[1.15fr_0.85fr] lg:overflow-y-auto">
+    <main className="min-h-screen w-full overflow-x-hidden bg-[#F7F9F5]">
+      <div className="grid w-full lg:h-screen lg:grid-cols-[1.15fr_0.85fr] lg:overflow-hidden">
+        {/* ============================================================
+            LEFT SIDE — FIXED 100VH SHOWCASE
+        ============================================================ */}
         <ShowcasePanel />
 
-        <section className="relative flex w-full flex-col bg-[#F7F9F5]">
-          {/* Decorative background — soft light + contour motif on whitish */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            {/* Top sheen */}
-            <div className="absolute inset-x-0 top-0 h-64 bg-linear-to-b from-white to-transparent" />
-            {/* Soft radial light, upper area */}
-            <div
-              className="absolute -top-32 left-1/2 h-[480px] w-[720px] -translate-x-1/2 rounded-full blur-3xl"
-              style={{
-                background:
-                  "radial-linear(closest-side, rgba(0,153,36,0.10), transparent)",
-              }}
+        <section className="relative flex h-screen min-h-0 w-full flex-col overflow-y-auto bg-[#F7F9F5]">
+  {/* Decorative background */}
+  <div className="pointer-events-none fixed inset-y-0 right-0 overflow-hidden lg:absolute lg:inset-0">
+    {/* Top sheen */}
+    <div className="absolute inset-x-0 top-0 h-64 bg-linear-to-b from-white to-transparent" />
+
+    {/* Soft radial light */}
+    <div
+      className="absolute -top-32 left-1/2 h-[480px] w-[720px] -translate-x-1/2 rounded-full blur-3xl"
+      style={{
+        background:
+          "radial-linear(closest-side, rgba(0,153,36,0.10), transparent)",
+      }}
+    />
+
+    {/* Soft radial shade */}
+    <div
+      className="absolute -bottom-48 left-1/4 h-[420px] w-[620px] rounded-full blur-3xl"
+      style={{
+        background:
+          "radial-linear(closest-side, rgba(4,93,97,0.08), transparent)",
+      }}
+    />
+
+    {/* Bottom-right contour rings */}
+    <svg
+      className="absolute -bottom-48 -right-48 h-[560px] w-[560px] text-primary opacity-[0.08]"
+      viewBox="0 0 560 560"
+      fill="none"
+      aria-hidden="true"
+    >
+      {[70, 110, 150, 190, 230, 270].map((r) => (
+        <circle
+          key={r}
+          cx="280"
+          cy="280"
+          r={r}
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+      ))}
+    </svg>
+
+    {/* Top-left contour rings */}
+    <svg
+      className="absolute -left-40 -top-40 h-[380px] w-[380px] text-primary opacity-[0.06]"
+      viewBox="0 0 380 380"
+      fill="none"
+      aria-hidden="true"
+    >
+      {[60, 100, 140, 180].map((r) => (
+        <circle
+          key={r}
+          cx="190"
+          cy="190"
+          r={r}
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+      ))}
+    </svg>
+  </div>
+
+  {/* ================================================================
+      SCROLLABLE CONTENT AREA
+
+      IMPORTANT:
+      Do NOT use justify-center here.
+
+      The content starts from the top so that when the form becomes
+      taller than the viewport, the logo and top of the form remain
+      accessible and the user can scroll all the way down.
+  ================================================================= */}
+  <div className="relative z-10 flex w-full flex-1 flex-col items-center px-5 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-10">
+    <div className="flex w-full max-w-md flex-col items-center">
+      {/* ============================================================
+          BRAND / INTRO
+      ============================================================ */}
+      <div className="mb-6 flex w-full flex-col items-center text-center">
+        <Image
+          src="/ffi-green-horizontal-landscape.png"
+          alt="Future Farms"
+          width={280}
+          height={70}
+          priority
+          className="block h-auto w-52 object-contain"
+        />
+
+        <h2 className="mt-3 text-2xl font-bold text-secondary">
+          Welcome to Future Farms!
+        </h2>
+
+        <p className="mt-1.5 max-w-full text-sm leading-relaxed text-gray-500 md:text-[14px] lg:text-[16px]">
+          Your journey to a future-ready farm starts here. Build your farm
+          profile, assess your capabilities, identify development priorities,
+          verify your progress, and access opportunities to grow.
+        </p>
+      </div>
+
+      {/* ============================================================
+          AUTH PANES
+      ================================================================= */}
+      <div className="w-full overflow-hidden">
+        <div
+          className="flex items-start transition-transform duration-500 ease-in-out"
+          style={{
+            transform: `translateX(-${MODE_INDEX[mode] * 100}%)`,
+          }}
+        >
+          {/* Forgot password */}
+          <div className="w-full shrink-0">
+            <ForgotPane
+              onSwitch={() => switchMode("login")}
             />
-            {/* Soft radial shade, lower area */}
-            <div
-              className="absolute -bottom-48 left-1/4 h-[420px] w-[620px] rounded-full blur-3xl"
-              style={{
-                background:
-                  "radial-linear(closest-side, rgba(4,93,97,0.08), transparent)",
-              }}
-            />
-            {/* Faint contour rings, bottom-right */}
-            <svg
-              className="absolute -bottom-48 -right-48 h-[560px] w-[560px] text-primary opacity-[0.08]"
-              viewBox="0 0 560 560"
-              fill="none"
-              aria-hidden="true"
-            >
-              {[70, 110, 150, 190, 230, 270].map((r) => (
-                <circle
-                  key={r}
-                  cx="280"
-                  cy="280"
-                  r={r}
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                />
-              ))}
-            </svg>
-            {/* Faint contour rings, top-left */}
-            <svg
-              className="absolute -left-40 -top-40 h-[380px] w-[380px] text-primary opacity-[0.06]"
-              viewBox="0 0 380 380"
-              fill="none"
-              aria-hidden="true"
-            >
-              {[60, 100, 140, 180].map((r) => (
-                <circle
-                  key={r}
-                  cx="190"
-                  cy="190"
-                  r={r}
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                />
-              ))}
-            </svg>
           </div>
 
-          <div className="relative z-10 flex min-h-screen w-full flex-col items-center justify-between px-5 py-10 sm:px-8 lg:min-h-0 lg:px-12">
-            {/* Constant brand block above the forms */}
-            <div className="my-auto flex w-full max-w-md flex-col items-center">
-              <div className="mb-5 flex flex-col items-center text-center">
-                <Image
-                  src="/ffi-green-horizontal-landscape.png"
-                  alt="Future Farms"
-                  width={280}
-                  height={70}
-                  priority
-                  className="h-auto w-52 object-contain"
-                />
-                <h2 className="mt-3 text-2xl font-bold text-secondary">
-                  Welcome to Future Farms!
-                </h2>
-                <p className="mt-1.5 mb-4 max-w-full text-sm md:text-[16px] lg:text-[20px] leading-relaxed text-gray-500">
-                  Your journey to a future-ready farm starts here. Build your
-                  farm profile, assess your capabilities, identify development
-                  priorities, verify your progress, and access opportunities to
-                  grow.
-                </p>
-              </div>
+          {/* Login */}
+          <div className="w-full shrink-0">
+            <LoginPane
+              googleEnabled={googleEnabled}
+              onSwitch={() => switchMode("signup")}
+              onForgot={() => switchMode("forgot")}
+            />
+          </div>
 
               {/* Auth.js reports provider failures here via ?error= */}
               {providerError && (
@@ -872,7 +1045,11 @@ export default function AuthScreen({
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
       </div>
 
       <style jsx global>{`
@@ -880,6 +1057,7 @@ export default function AuthScreen({
           from {
             opacity: 0;
           }
+
           to {
             opacity: 1;
           }
@@ -890,6 +1068,7 @@ export default function AuthScreen({
             opacity: 0;
             transform: translateY(16px);
           }
+
           to {
             opacity: 1;
             transform: translateY(0);
