@@ -431,6 +431,54 @@ export default function DashboardPage() {
     );
   }
 
+  // An incomplete Farm Business Profile locks the dashboard: the numbers
+  // below are derived from it, so showing them is misleading. Staff roam
+  // freely — the farmer onboarding gates do not apply to them.
+  const isStaff = Boolean(user?.role) && STAFF_ROLES.includes(user.role);
+  const profileLocked = !!user && !bizStatus.complete && !isStaff;
+
+  const profilePrompt = profileLocked ? (
+    <div className="rounded-2xl border border-amber-300/70 bg-amber-50 p-5 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-700 flex items-center justify-center shrink-0">
+            <span className="material-symbols-outlined text-[22px]">pending_actions</span>
+          </div>
+          <div>
+            <h3 className="text-sm md:text-base font-bold text-amber-900">
+              Complete your Farm Business Profile — {bizStatus.percent}% done
+            </h3>
+            <p className="text-xs md:text-[13px] text-amber-800/90 mt-0.5">
+              {bizStatus.missing.length > 0 ? (
+                <>
+                  Still needed:{" "}
+                  {bizStatus.missing.slice(0, 4).map((m) => m.label).join(" • ")}
+                  {bizStatus.missing.length > 4 &&
+                    ` +${bizStatus.missing.length - 4} more`}
+                </>
+              ) : (
+                "Almost there — finish the last details."
+              )}
+            </p>
+            <div className="w-full sm:w-64 bg-amber-200/60 rounded-full h-1.5 mt-2.5 overflow-hidden">
+              <div
+                className="bg-amber-500 h-1.5 rounded-full transition-all"
+                style={{ width: `${bizStatus.percent}%` }}
+              />
+            </div>
+          </div>
+        </div>
+        <Link
+          href="/farm-business"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary text-xs md:text-sm font-bold hover:opacity-90 transition shadow-sm shrink-0"
+        >
+          <span className="material-symbols-outlined text-[18px]">edit</span>
+          Complete Farm Business Profile
+        </Link>
+      </div>
+    </div>
+  ) : null;
+
   return (
     <AppShell
       userName={user?.name || clerkUser?.fullName || "Farmer"}
@@ -438,6 +486,18 @@ export default function DashboardPage() {
     >
       <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-background">
         <div className="max-w-[1280px] mx-auto flex flex-col gap-lg">
+          {/* Locked: the prompt comes first, then everything else is blurred
+              out and made inert until the profile is finished. */}
+          {profilePrompt}
+          <div
+            inert={profileLocked}
+            aria-hidden={profileLocked ? "true" : undefined}
+            className={
+              profileLocked
+                ? "blur-[6px] pointer-events-none select-none saturate-50"
+                : undefined
+            }
+          >
           {/* My Future Farm Page Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-2 ">
             <div>
@@ -466,47 +526,6 @@ export default function DashboardPage() {
           </div>
 
           {/* Top Section: Bento Grid for Maturity Index & Radar */}
-          {user && !bizStatus.complete && (
-            <div className="rounded-2xl border border-amber-300/70 bg-amber-50 p-5 shadow-sm">
-              <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-700 flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-[22px]">pending_actions</span>
-                  </div>
-                  <div>
-                    <h3 className="text-sm md:text-base font-bold text-amber-900">
-                      Complete your Farm Business Profile — {bizStatus.percent}% done
-                    </h3>
-                    <p className="text-xs md:text-[13px] text-amber-800/90 mt-0.5">
-                      {bizStatus.missing.length > 0 ? (
-                        <>
-                          Still needed:{" "}
-                          {bizStatus.missing.slice(0, 4).map((m) => m.label).join(" • ")}
-                          {bizStatus.missing.length > 4 &&
-                            ` +${bizStatus.missing.length - 4} more`}
-                        </>
-                      ) : (
-                        "Almost there — finish the last details."
-                      )}
-                    </p>
-                    <div className="w-full sm:w-64 bg-amber-200/60 rounded-full h-1.5 mt-2.5 overflow-hidden">
-                      <div
-                        className="bg-amber-500 h-1.5 rounded-full transition-all"
-                        style={{ width: `${bizStatus.percent}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <Link
-                  href="/farm-business"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary text-xs md:text-sm font-bold hover:opacity-90 transition shadow-sm shrink-0"
-                >
-                  <span className="material-symbols-outlined text-[18px]">edit</span>
-                  Complete Farm Business Profile
-                </Link>
-              </div>
-            </div>
-          )}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
             {/* Left Col: Maturity Index */}
             <div className="col-span-1 lg:col-span-5 flex flex-col gap-gutter ">
@@ -984,6 +1003,7 @@ export default function DashboardPage() {
                 );
               })}
             </div> */}
+          </div>
           </div>
 
           

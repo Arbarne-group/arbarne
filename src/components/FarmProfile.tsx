@@ -3,7 +3,16 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
-import { getBusinessProfileStatus } from "@/lib/businessProfile";
+import {
+  getBusinessProfileStatus,
+  TENURE_OPTIONS,
+  WATER_OPTIONS,
+  ENERGY_OPTIONS,
+  IRRIGATION_OPTIONS,
+  STORAGE_OPTIONS,
+  type FieldOption,
+} from "@/lib/businessProfile";
+import SearchSelect from "@/components/SearchSelect";
 
 type FarmProfileData = {
   farmName: string;
@@ -36,7 +45,7 @@ type FarmProfileData = {
   irrigationMethod: string;
   waterSource: string;
   energyAccess: string;
-  storageFacilities: string;
+  storageFacilities: string[];
 
   permanentWorkers: string;
   seasonalWorkers: string;
@@ -75,6 +84,28 @@ type OnboardingUser = {
   aspiration?: any;
 };
 
+type GeoCountry = {
+  id: string;
+  name: string;
+  initials: string;
+  flagEmoji?: string | null;
+};
+
+type GeoCounty = {
+  id: string;
+  name: string;
+  code: string;
+  countryCode: string;
+};
+
+type GeoTown = {
+  id: string;
+  name: string;
+  code: string;
+  countryCode: string;
+  countyCode: string;
+};
+
 function display(value: unknown): string {
   if (value === null || value === undefined) return "";
 
@@ -103,6 +134,122 @@ function display(value: unknown): string {
 
   return formatted;
 }
+
+type SelectOption = { value: string; label: string; aliases?: string[] };
+
+/** Canonical form of a stored value: "Communal Family" -> "communalfamily". */
+function optionKey(value: unknown): string {
+  return String(value ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
+
+/**
+ * Resolve whatever is in the database (a canonical id, a display string like
+ * "Communal Family", or a legacy hand-picked label) onto one of `options`.
+ * Without this every select in the modal fell back to "Select option…"
+ * because `display()` title-cases ids such as `communal_family`.
+ */
+function resolveOption(
+  options: SelectOption[],
+  stored: string
+): SelectOption | undefined {
+  const key = optionKey(stored);
+  if (!key) return undefined;
+  return options.find(
+    (o) =>
+      optionKey(o.value) === key ||
+      optionKey(o.label) === key ||
+      (o.aliases ?? []).some((a) => optionKey(a) === key)
+  );
+}
+
+/** Keeps an unrecognised stored value visible instead of silently dropping it. */
+function withCurrent(options: SelectOption[], stored: string): SelectOption[] {
+  if (!stored || resolveOption(options, stored)) return options;
+  return [...options, { value: stored, label: `${stored} (not in list)` }];
+}
+
+/** Change detection for the save diff, tolerant of id vs. display formatting. */
+function valuesEqual(next: unknown, prev: unknown): boolean {
+  if (Array.isArray(next) || Array.isArray(prev)) {
+    const a = (Array.isArray(next) ? next : []).map(optionKey);
+    const b = (Array.isArray(prev) ? prev : []).map(optionKey);
+    return a.length === b.length && a.every((v, i) => v === b[i]);
+  }
+  if (typeof next === "string" || typeof prev === "string") {
+    return optionKey(next) === optionKey(prev);
+  }
+  return next === prev;
+}
+
+// Ownership has no canonical model in the onboarding schema, so keep the modal's
+// original labels but give them stable ids and match the legacy free-text values.
+// `initialData` falls back to the land-tenure value when ownership is empty, so
+// the canonical tenure ids have to resolve here too.
+const OWNERSHIP_OPTIONS: SelectOption[] = [
+  {
+    value: "owned",
+    label: "Owned",
+    aliases: ["owner", "private", "self owned"],
+  },
+  { value: "leased", label: "Leased", aliases: ["rented", "rent"] },
+  {
+    value: "family_land",
+    label: "Family land",
+    aliases: ["customary", "communal_family", "family"],
+  },
+  {
+    value: "community_land",
+    label: "Community land",
+    aliases: ["communal", "public"],
+  },
+  { value: "other", label: "Other" },
+];
+
+/** Canonical options, extended with legacy free-text values that map onto them. */
+function withAliases(
+  list: FieldOption[],
+  legacy: Record<string, string[]> = {}
+): SelectOption[] {
+  return list.map((o) => ({ value: o.id, label: o.title, aliases: legacy[o.id] }));
+}
+
+const TENURE_SELECT_OPTIONS: SelectOption[] = [
+  ...withAliases(TENURE_OPTIONS, { communal_family: ["customary", "communal"] }),
+  { value: "public", label: "Public", aliases: [] },
+];
+
+const FARM_UNIT_OPTIONS: SelectOption[] = [
+  { value: "Acres", label: "Acres" },
+  { value: "Hectares", label: "Hectares" },
+  { value: "Plots", label: "Plots" },
+];
+
+const WATER_SELECT_OPTIONS: SelectOption[] = withAliases(WATER_OPTIONS, {
+  borehole_solar: ["borehole", "well"],
+  rainwater_dam: ["dam", "pan", "dam / pan", "rainwater harvesting"],
+  river_stream: ["river", "stream"],
+  piped_municipal: ["municipal", "piped"],
+});
+
+const ENERGY_SELECT_OPTIONS: SelectOption[] = [
+  ...withAliases(ENERGY_OPTIONS, {
+    national_grid: ["grid electricity", "grid", "electricity"],
+    solar_pv: ["solar power", "solar"],
+    generator: ["generator"],
+  }),
+  { value: "none_energy", label: "None", aliases: ["none"] },
+];
+
+const IRRIGATION_SELECT_OPTIONS: SelectOption[] = withAliases(
+  IRRIGATION_OPTIONS,
+  { none_irrigation: ["none"] }
+);
+
+const STORAGE_SELECT_OPTIONS: SelectOption[] = withAliases(STORAGE_OPTIONS, {
+  none_storage: ["none"],
+});
 
 function parseList(value: unknown): string[] {
   if (value === null || value === undefined) return [];
@@ -191,7 +338,7 @@ function initialData(user: OnboardingUser, farmId?: string): FarmProfileData {
         (waterSources.length ? waterSources.join(", ") : ""),
     ),
     energyAccess: display(farming?.energyAccess || farming?.energySource),
-    storageFacilities: display(farming?.storageFacilities),
+    storageFacilities: parseList(farming?.storageFacilities),
 
     permanentWorkers: display(labour?.permanentWorkers),
     seasonalWorkers: display(labour?.seasonalWorkers),
@@ -339,12 +486,16 @@ function TextInput({
   onChange,
   placeholder,
   type = "text",
+  min,
+  step,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   type?: string;
+  min?: number;
+  step?: number;
 }) {
   return (
     <label className="block space-y-1.5">
@@ -354,11 +505,102 @@ function TextInput({
       <input
         type={type}
         value={value}
+        min={min}
+        step={step}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="w-full rounded-xl border border-outline-variant bg-surface-container-lowest px-3.5 py-2.5 text-[14px] text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition duration-150"
       />
     </label>
+  );
+}
+
+function SearchSelectInput({
+  label,
+  value,
+  onChange,
+  options,
+  placeholder,
+  disabled,
+  hint,
+  onClear,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: SelectOption[];
+  placeholder: string;
+  disabled?: boolean;
+  hint?: string;
+  onClear?: () => void;
+}) {
+  return (
+    <div className="block space-y-1.5">
+      <span className="block text-[12.5px] font-semibold text-on-surface-variant">
+        {label}
+      </span>
+      <SearchSelect
+        value={value}
+        onChange={onChange}
+        onClear={onClear}
+        options={options}
+        placeholder={placeholder}
+        disabled={disabled}
+      />
+      {hint && (
+        <p className="text-[11px] text-on-surface-variant/70">{hint}</p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Sub-county is restricted to predefined values: users cannot type a free-text
+ * value that would be saved, so an entered location can never be spam.
+ */
+function SubCountyInput({
+  label,
+  value,
+  onChange,
+  options,
+  disabled,
+  loading,
+  hint,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: SelectOption[];
+  disabled?: boolean;
+  loading?: boolean;
+  hint?: string;
+}) {
+  return (
+    <div className="block space-y-1.5">
+      <span className="block text-[12.5px] font-semibold text-on-surface-variant">
+        {label}
+      </span>
+      <SearchSelect
+        value={value}
+        onChange={onChange}
+        onClear={() => onChange("")}
+        options={options}
+        disabled={disabled || loading}
+        placeholder={
+          loading
+            ? "Loading sub-counties…"
+            : options.length
+              ? "Select a sub-county…"
+              : "No sub-counties available"
+        }
+      />
+      <p className="text-[11px] text-on-surface-variant/70">
+        {hint ??
+          (options.length
+            ? "Choose from the official sub-counties for this county."
+            : "No sub-counties have been set up for this county yet.")}
+      </p>
+    </div>
   );
 }
 
@@ -398,26 +640,102 @@ function SelectInput({
   label: string;
   value: string;
   onChange: (v: string) => void;
-  options: string[];
+  options: SelectOption[];
 }) {
+  // Show the matched option, and keep any unrecognised legacy value selectable.
+  const list = withCurrent(options, value);
+  const current = resolveOption(options, value)?.value ?? value;
+
   return (
     <label className="block space-y-1.5">
       <span className="block text-[12.5px] font-semibold text-on-surface-variant">
         {label}
       </span>
       <select
-        value={value}
+        value={current}
         onChange={(e) => onChange(e.target.value)}
         className="w-full rounded-xl border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-[14px] text-on-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition duration-150 cursor-pointer"
       >
         <option value="">Select option…</option>
-        {options.map((o) => (
-          <option key={o} value={o}>
-            {o}
+        {list.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
           </option>
         ))}
       </select>
     </label>
+  );
+}
+
+function CheckboxGroupInput({
+  label,
+  options,
+  values,
+  onChange,
+}: {
+  label: string;
+  options: SelectOption[];
+  values: string[];
+  onChange: (v: string[]) => void;
+}) {
+  // Match each stored value back to its option so legacy display strings
+  // ("Cold Room") tick the right box ("cold_room").
+  const selected = useMemo(
+    () =>
+      values
+        .map((v) => resolveOption(options, v)?.value ?? v)
+        .filter(Boolean),
+    [options, values]
+  );
+
+  const toggle = (id: string) =>
+    onChange(
+      selected.includes(id)
+        ? selected.filter((v) => v !== id)
+        : [...selected, id]
+    );
+
+  return (
+    <fieldset className="space-y-1.5">
+      <legend className="mb-1.5 block text-[12.5px] font-semibold text-on-surface-variant">
+        {label}
+      </legend>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {options.map((o) => {
+          const on = selected.includes(o.value);
+          return (
+            <button
+              key={o.value}
+              type="button"
+              aria-pressed={on}
+              onClick={() => toggle(o.value)}
+              className={`flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition duration-150 cursor-pointer ${
+                on
+                  ? "border-secondary bg-secondary-container/20 ring-1 ring-secondary"
+                  : "border-outline-variant hover:bg-surface-container-low"
+              }`}
+            >
+              <span
+                className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-md border transition-colors ${
+                  on
+                    ? "border-secondary bg-secondary text-white"
+                    : "border-outline-variant"
+                }`}
+              >
+                {on && (
+                  <span className="material-symbols-outlined text-[13px]">check</span>
+                )}
+              </span>
+              <span
+                className={`text-[13px] font-medium ${on ? "text-secondary" : "text-on-surface"}`}
+              >
+                {o.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
   );
 }
 
@@ -513,18 +831,6 @@ function EditTab({
   );
 }
 
-const EDIT_SECTIONS = [
-  { key: "farm", icon: "home_work", label: "Farm Overview" },
-  { key: "farmer", icon: "person", label: "Farmer Details" },
-  { key: "location", icon: "location_on", label: "Location" },
-  { key: "land", icon: "landscape", label: "Land & Tenure" },
-  { key: "production", icon: "agriculture", label: "Production System" },
-  { key: "infrastructure", icon: "water_drop", label: "Infrastructure" },
-  { key: "labour", icon: "groups", label: "Labour & Capacity" },
-  { key: "markets", icon: "storefront", label: "Markets & Sales" },
-  { key: "business", icon: "business", label: "Business & Revenue" },
-  { key: "goals", icon: "flag", label: "Aspirations" },
-] as const;
 
 /* =====================================================================
    MAIN COMPONENT
@@ -537,9 +843,16 @@ export default function FarmProfileMetadata() {
 
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [activeEditSection, setActiveEditSection] =
-    useState<(typeof EDIT_SECTIONS)[number]["key"]>("farm");
   const [form, setForm] = useState<FarmProfileData | null>(null);
+
+  const [countries, setCountries] = useState<GeoCountry[]>([]);
+  const [counties, setCounties] = useState<GeoCounty[]>([]);
+  const [subCounties, setSubCounties] = useState<GeoTown[]>([]);
+  const [geoError, setGeoError] = useState("");
+  // Which request the loaded lists belong to, so a stale list is never shown
+  // and "loading" can be derived instead of stored.
+  const [countiesFor, setCountiesFor] = useState("");
+  const [subCountiesFor, setSubCountiesFor] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -590,6 +903,131 @@ export default function FarmProfileMetadata() {
     [user],
   );
 
+  const countryOptions = useMemo<SelectOption[]>(
+    () =>
+      countries.map((c) => ({
+        value: c.name,
+        label: `${c.flagEmoji ? `${c.flagEmoji} ` : ""}${c.name} (${c.initials})`,
+        aliases: [c.initials],
+      })),
+    [countries],
+  );
+
+  const countyOptions = useMemo<SelectOption[]>(
+    () => counties.map((c) => ({ value: c.name, label: c.name, aliases: [c.code] })),
+    [counties],
+  );
+
+  // Sub-counties come from the curated geography data, so only predefined
+  // values can be selected.
+  const subCountyOptions = useMemo<SelectOption[]>(
+    () => subCounties.map((s) => ({ value: s.name, label: s.name, aliases: [s.code] })),
+    [subCounties],
+  );
+
+  // Stored country may be the full name or the ISO initials.
+  const countryCode = form?.country
+    ? (countries.find(
+        (c) =>
+          optionKey(c.name) === optionKey(form.country) ||
+          optionKey(c.initials) === optionKey(form.country),
+      )?.initials ?? "")
+    : "";
+
+  const countyCode = form?.county
+    ? (counties.find(
+        (c) =>
+          optionKey(c.name) === optionKey(form.county) ||
+          optionKey(c.code) === optionKey(form.county),
+      )?.code ?? "")
+    : "";
+
+  useEffect(() => {
+    if (!editing || countries.length > 0) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const res = await fetch("/api/geo/countries", { cache: "no-store" });
+        const data = await res.json();
+        if (cancelled) return;
+        if (!res.ok || !data?.countries?.length) {
+          setGeoError("Could not load the country list. You can still type a country.");
+          return;
+        }
+        setCountries(data.countries);
+      } catch {
+        if (!cancelled)
+          setGeoError("Could not load the country list. You can still type a country.");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [editing, countries.length]);
+
+  const loadingCounties = Boolean(countryCode) && countiesFor !== countryCode;
+  const subCountyKey = countyCode ? `${countryCode}/${countyCode}` : "";
+  const loadingSubCounties =
+    Boolean(subCountyKey) && subCountiesFor !== subCountyKey;
+
+  useEffect(() => {
+    if (!editing) return;
+    if (!countryCode) return;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/geo/counties?country=${encodeURIComponent(countryCode)}`,
+          { cache: "no-store" },
+        );
+        const data = await res.json();
+        if (cancelled) return;
+        setCounties(data?.counties ?? []);
+      } catch {
+        if (cancelled) return;
+        setCounties([]);
+      } finally {
+        if (!cancelled) setCountiesFor(countryCode);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [editing, countryCode]);
+
+  useEffect(() => {
+    if (!editing) return;
+    if (!countryCode || !countyCode) return;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/geo/subcounties?country=${encodeURIComponent(countryCode)}&county=${encodeURIComponent(countyCode)}`,
+          { cache: "no-store" },
+        );
+        const data = await res.json();
+        if (cancelled) return;
+        setSubCounties(data?.subCounties ?? []);
+      } catch {
+        if (cancelled) return;
+        setSubCounties([]);
+      } finally {
+        if (!cancelled) setSubCountiesFor(`${countryCode}/${countyCode}`);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [editing, countryCode, countyCode]);
+
   const bizStatus = useMemo(() => getBusinessProfileStatus(user), [user]);
 
   useEffect(() => {
@@ -603,13 +1041,35 @@ export default function FarmProfileMetadata() {
   function openEdit() {
     if (!user) return;
     setForm(initialData(user, user.futureFarmId));
-    setActiveEditSection("farm");
     setError("");
     setEditing(true);
   }
 
   function updateField(field: keyof FarmProfileData, value: any) {
     setForm((prev) => (prev ? { ...prev, [field]: value } : prev));
+  }
+
+  // Changing country or county invalidates everything below it.
+  function setCountry(next: string) {
+    setCounties([]);
+    setSubCounties([]);
+    setCountiesFor("");
+    setSubCountiesFor("");
+    setForm((prev) =>
+      prev ? { ...prev, country: next, county: "", subCounty: "" } : prev,
+    );
+  }
+
+  function setCounty(next: string) {
+    setSubCounties([]);
+    setSubCountiesFor("");
+    setForm((prev) =>
+      prev ? { ...prev, county: next, subCounty: "" } : prev,
+    );
+  }
+
+  function setSubCounty(next: string) {
+    setForm((prev) => (prev ? { ...prev, subCounty: next } : prev));
   }
 
   async function save() {
@@ -626,10 +1086,10 @@ export default function FarmProfileMetadata() {
       (Object.keys(form) as (keyof FarmProfileData)[]).forEach((key) => {
         const next = form[key];
         const prev = baseline[key];
-        const same = Array.isArray(next) || Array.isArray(prev)
-          ? JSON.stringify(next) === JSON.stringify(prev)
-          : next === prev;
-        if (!same) changed[key] = next;
+        // Compare loosely: a canonical id (`national_grid`) and its display
+        // string ("National Grid") are the same value, so an untouched select
+        // is not resent as a change.
+        if (!valuesEqual(next, prev)) changed[key] = next;
       });
 
       // Identity fields are never editable
@@ -755,7 +1215,7 @@ export default function FarmProfileMetadata() {
   return (
     <>
       <div className="bg-background min-h-screen px-4 sm:px-6 lg:px-10 py-8 pb-20 text-on-surface">
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="max-w-[1440px] mx-auto space-y-6">
           {/* ── HERO BANNER ───────────────────────────────────────── */}
           <div className="bg-primary rounded-3xl p-6 sm:p-8 md:p-10 relative overflow-hidden shadow-lg">
             <div className="absolute -right-12 -top-20 w-80 h-80 rounded-full bg-on-primary/[0.06] pointer-events-none" />
@@ -913,7 +1373,7 @@ export default function FarmProfileMetadata() {
                 profile.waterSource ||
                 profile.irrigationMethod ||
                 profile.energyAccess ||
-                profile.storageFacilities,
+                profile.storageFacilities.length > 0,
               )}
             >
               <DataRow label="Water Source" value={profile.waterSource} />
@@ -922,9 +1382,9 @@ export default function FarmProfileMetadata() {
                 value={profile.irrigationMethod}
               />
               <DataRow label="Energy Access" value={profile.energyAccess} />
-              <DataRow
+              <TagList
                 label="Storage Infrastructure"
-                value={profile.storageFacilities}
+                items={profile.storageFacilities}
               />
             </SectionCard>
           </div>
@@ -996,7 +1456,15 @@ export default function FarmProfileMetadata() {
 
             {/* Modal Content - Single Scrollable Form */}
             <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-8 bg-surface-container-lowest">
-              <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
+              <form
+                id="farm-profile-edit-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!saving) save();
+                }}
+                className="space-y-8"
+              >
+
                 {/* Section 1: Farm Overview */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 border-b border-outline-variant/40 pb-2">
@@ -1019,13 +1487,7 @@ export default function FarmProfileMetadata() {
                       label="Ownership Type"
                       value={form.ownershipType}
                       onChange={(v) => updateField("ownershipType", v)}
-                      options={[
-                        "Owned",
-                        "Leased",
-                        "Family land",
-                        "Community land",
-                        "Other",
-                      ]}
+                      options={OWNERSHIP_OPTIONS}
                     />
                   </div>
                 </div>
@@ -1081,20 +1543,46 @@ export default function FarmProfileMetadata() {
                     </h3>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <TextInput
+                    <SearchSelectInput
                       label="Country"
                       value={form.country}
-                      onChange={(v) => updateField("country", v)}
+                      onChange={setCountry}
+                      onClear={() => setCountry("")}
+                      options={countryOptions}
+                      placeholder="Select country…"
                     />
-                    <TextInput
+                    <SearchSelectInput
                       label="County"
                       value={form.county}
-                      onChange={(v) => updateField("county", v)}
+                      onChange={setCounty}
+                      onClear={() => setCounty("")}
+                      options={countyOptions}
+                      placeholder={
+                        countryCode
+                          ? loadingCounties
+                            ? "Loading counties…"
+                            : "Select county…"
+                          : "Select a country first…"
+                      }
+                      disabled={!countryCode || loadingCounties}
+                      hint={
+                        countyOptions.length === 0 && countryCode && !loadingCounties
+                          ? "No counties have been set up for this country yet."
+                          : undefined
+                      }
                     />
-                    <TextInput
+                    <SubCountyInput
                       label="Sub-County"
                       value={form.subCounty}
-                      onChange={(v) => updateField("subCounty", v)}
+                      onChange={setSubCounty}
+                      options={subCountyOptions}
+                      loading={loadingSubCounties}
+                      disabled={!countyCode || loadingSubCounties}
+                      hint={
+                        !countyCode
+                          ? "Select a county first."
+                          : undefined
+                      }
                     />
                     <TextInput
                       label="Locality / Village"
@@ -1105,13 +1593,24 @@ export default function FarmProfileMetadata() {
                       label="Latitude"
                       value={form.latitude}
                       onChange={(v) => updateField("latitude", v)}
+                      placeholder="-1.286389"
+                      type="number"
+                      step={0.000001}
                     />
                     <TextInput
                       label="Longitude"
                       value={form.longitude}
                       onChange={(v) => updateField("longitude", v)}
+                      placeholder="36.883893"
+                      type="number"
+                      step={0.000001}
                     />
                   </div>
+                  {geoError && (
+                    <p className="text-[12px] font-medium text-red-600">
+                      {geoError}
+                    </p>
+                  )}
                 </div>
 
                 {/* Section 4: Land & Tenure */}
@@ -1130,28 +1629,36 @@ export default function FarmProfileMetadata() {
                       label="Total Farm Size"
                       value={form.farmSize}
                       onChange={(v) => updateField("farmSize", v)}
+                      placeholder="e.g. 10.5"
+                      type="number"
+                      min={0}
+                      step={0.01}
                     />
                     <SelectInput
                       label="Size Unit"
                       value={form.farmUnit}
                       onChange={(v) => updateField("farmUnit", v)}
-                      options={["acres", "hectares", "plots"]}
+                      options={FARM_UNIT_OPTIONS}
                     />
                     <TextInput
                       label="Cultivated Area"
                       value={form.cultivatedAcres}
                       onChange={(v) => updateField("cultivatedAcres", v)}
+                      placeholder="e.g. 6.25"
+                      type="number"
+                      min={0}
+                      step={0.01}
                     />
                     <SelectInput
                       label="Land Tenure"
                       value={form.landTenure}
                       onChange={(v) => updateField("landTenure", v)}
-                      options={["Freehold", "Leasehold", "Customary", "Public"]}
+                      options={TENURE_SELECT_OPTIONS}
                     />
                   </div>
                 </div>
 
-                {/* Section 6: Infrastructure & Utilities */}
+                {/* Section 5: Infrastructure & Utilities */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 border-b border-outline-variant/40 pb-2">
                     <Icon
@@ -1167,27 +1674,29 @@ export default function FarmProfileMetadata() {
                       label="Water Source"
                       value={form.waterSource}
                       onChange={(v) => updateField("waterSource", v)}
-                      options={[
-                        "Borehole",
-                        "River / Stream",
-                        "Rainwater Harvesting",
-                        "Municipal",
-                        "Dam / Pan",
-                      ]}
+                      options={WATER_SELECT_OPTIONS}
+                    />
+
+                    <SelectInput
+                      label="Irrigation System"
+                      value={form.irrigationMethod}
+                      onChange={(v) => updateField("irrigationMethod", v)}
+                      options={IRRIGATION_SELECT_OPTIONS}
                     />
 
                     <SelectInput
                       label="Energy Access"
                       value={form.energyAccess}
                       onChange={(v) => updateField("energyAccess", v)}
-                      options={[
-                        "Grid Electricity",
-                        "Solar Power",
-                        "Generator",
-                        "None",
-                      ]}
+                      options={ENERGY_SELECT_OPTIONS}
                     />
                   </div>
+                  <CheckboxGroupInput
+                    label="Storage Infrastructure"
+                    options={STORAGE_SELECT_OPTIONS}
+                    values={form.storageFacilities}
+                    onChange={(v) => updateField("storageFacilities", v)}
+                  />
                 </div>
               </form>
             </div>
@@ -1203,8 +1712,8 @@ export default function FarmProfileMetadata() {
                 Cancel
               </button>
               <button
-                type="button"
-                onClick={save}
+                type="submit"
+                form="farm-profile-edit-form"
                 disabled={saving}
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-on-primary text-[13.5px] font-bold hover:opacity-90 transition shadow-sm disabled:opacity-50"
               >

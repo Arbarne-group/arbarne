@@ -181,10 +181,12 @@ export function GeographyTab() {
   const [counties, setCounties] = useState<any[]>([]);
   const [countyCode, setCountyCode] = useState("");
   const [towns, setTowns] = useState<any[]>([]);
+  const [subCounties, setSubCounties] = useState<any[]>([]);
   const [msg, setMsg] = useState("");
   const [cForm, setCForm] = useState({ initials: "", name: "", dialCode: "", flagEmoji: "" });
   const [coForm, setCoForm] = useState({ code: "", name: "" });
   const [tForm, setTForm] = useState({ code: "", name: "" });
+  const [scForm, setScForm] = useState({ code: "", name: "" });
 
   const reloadCountries = async () => {
     const d = await fetch("/api/geo/countries").then((r) => r.json());
@@ -200,10 +202,24 @@ export function GeographyTab() {
     const d = await fetch(`/api/geo/towns?country=${cc}&county=${encodeURIComponent(co)}`).then((r) => r.json());
     if (d.towns) setTowns(d.towns);
   };
+  const reloadSubCounties = async (cc: string, co: string) => {
+    if (!cc || !co) { setSubCounties([]); return; }
+    const d = await fetch(`/api/geo/subcounties?country=${cc}&county=${encodeURIComponent(co)}`).then((r) => r.json());
+    if (d.subCounties) setSubCounties(d.subCounties);
+  };
 
   useEffect(() => { reloadCountries(); }, []);
-  useEffect(() => { setCountyCode(""); setTowns([]); reloadCounties(countryCode); }, [countryCode]);
+  useEffect(() => { setCountyCode(""); setTowns([]); setSubCounties([]); reloadCounties(countryCode); }, [countryCode]);
   useEffect(() => { reloadTowns(countryCode, countyCode); }, [countryCode, countyCode]);
+  useEffect(() => {
+    if (!countryCode || !countyCode) return;
+    let cancelled = false;
+    fetch(`/api/geo/subcounties?country=${countryCode}&county=${encodeURIComponent(countyCode)}`)
+      .then((r) => r.json())
+      .then((d) => { if (!cancelled && d?.subCounties) setSubCounties(d.subCounties); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [countryCode, countyCode]);
 
   async function post(url: string, body: any, okMsg: string) {
     setMsg("");
@@ -212,13 +228,15 @@ export function GeographyTab() {
     if (!res.ok) { setMsg(data.error || "Failed."); return; }
     setMsg(okMsg);
     reloadCountries(); reloadCounties(countryCode); reloadTowns(countryCode, countyCode);
+    reloadSubCounties(countryCode, countyCode);
   }
   async function remove(url: string, label: string) {
     if (!confirm(`Delete ${label}?`)) return;
     const res = await fetch(url, { method: "DELETE" });
     if (!res.ok) { const d = await res.json().catch(() => ({})); setMsg(d.error || "Delete failed."); return; }
     setMsg(`${label} deleted.`);
-    if (url.includes("/towns/")) reloadTowns(countryCode, countyCode);
+    if (url.includes("/subcounties/")) reloadSubCounties(countryCode, countyCode);
+    else if (url.includes("/towns/")) reloadTowns(countryCode, countyCode);
     else if (url.includes("/counties/")) { setCountyCode(""); reloadCounties(countryCode); }
     else { setCountryCode(""); reloadCountries(); }
   }
@@ -265,6 +283,30 @@ export function GeographyTab() {
             <input value={coForm.code} onChange={(e) => setCoForm({ ...coForm, code: e.target.value })} placeholder="Code e.g. NAKURU" className={input} />
             <input value={coForm.name} onChange={(e) => setCoForm({ ...coForm, name: e.target.value })} placeholder="Nakuru" className={input} />
             <button onClick={() => post("/api/geo/counties", { ...coForm, countryCode }, "County added.")} className="rounded-xl bg-primary px-3 py-2 text-xs font-bold text-white cursor-pointer">Add</button>
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-2xl border border-outline-variant/40 bg-surface-container-lowest p-5">
+        <h3 className="text-sm font-bold text-on-surface mb-1">
+          Sub-counties {countyCode ? `in ${countyCode} (${subCounties.length})` : "— select a county"}
+        </h3>
+        <p className="text-xs text-on-surface-variant mb-3">
+          This is the list farmers pick from on the Farm Business Profile.
+        </p>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {subCounties.map((s) => (
+            <span key={s.code} className="inline-flex items-center gap-1 rounded-full border border-outline-variant px-3 py-1.5 text-xs">
+              {s.name}
+              <button type="button" onClick={() => remove(`/api/geo/subcounties/${countryCode}/${encodeURIComponent(countyCode)}/${encodeURIComponent(s.code)}`, s.name)} className="opacity-60 hover:opacity-100 cursor-pointer">×</button>
+            </span>
+          ))}
+        </div>
+        {countryCode && countyCode && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <input value={scForm.code} onChange={(e) => setScForm({ ...scForm, code: e.target.value })} placeholder="Code e.g. 047001" className={input} />
+            <input value={scForm.name} onChange={(e) => setScForm({ ...scForm, name: e.target.value })} placeholder="Westlands" className={input} />
+            <button onClick={() => post("/api/geo/subcounties", { ...scForm, countryCode, countyCode }, "Sub-county added.")} className="rounded-xl bg-primary px-3 py-2 text-xs font-bold text-white cursor-pointer">Add</button>
           </div>
         )}
       </div>

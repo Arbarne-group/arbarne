@@ -8,6 +8,10 @@ export interface FieldOption {
   title: string;
   desc?: string;
   badge?: string;
+  /** Mutually exclusive with every other option in the same list. */
+  exclusive?: boolean;
+  /** When selected, the matching free-text field must also be filled in. */
+  other?: boolean;
 }
 
 export interface SpecField {
@@ -64,7 +68,8 @@ export const IRRIGATION_OPTIONS: FieldOption[] = [
   { id: "furrow", title: "Furrow / flood", desc: "Gravity-fed channels between crop rows." },
   { id: "greenhouse_fertigation", title: "Greenhouse fertigation", desc: "Drip + fertilizer dosing inside protected structures." },
   { id: "rainfed_only", title: "Rain-fed only", desc: "Fully dependent on seasonal rainfall." },
-  { id: "none_irrigation", title: "None", desc: "No irrigation infrastructure in use." },
+  { id: "other_irrigation", title: "Other", desc: "Any other system not listed above, describe it below.", other: true },
+  { id: "none_irrigation", title: "None", desc: "No irrigation infrastructure in use.", exclusive: true },
 ];
 
 export const STORAGE_OPTIONS: FieldOption[] = [
@@ -73,16 +78,17 @@ export const STORAGE_OPTIONS: FieldOption[] = [
   { id: "charcoal_cooler", title: "Charcoal cooler", desc: "Low-cost evaporative cooling chamber." },
   { id: "granary", title: "Granary / dry grain store", desc: "Raised, rodent-proof grain storage." },
   { id: "milk_cooler", title: "Milk cans + cooler", desc: "Aluminium cans with immersion or bulk cooler." },
-  { id: "none_storage", title: "None", desc: "No dedicated storage facility." },
+  { id: "none_storage", title: "None", desc: "No dedicated storage facility.", exclusive: true },
 ];
 
 export const PROCESSING_OPTIONS: FieldOption[] = [
-  { id: "none_processing", title: "None", desc: "No on-farm processing yet." },
+  { id: "none_processing", title: "None", desc: "No on-farm processing yet.", exclusive: true },
   { id: "milling", title: "Milling / grinding", desc: "Posho mills, feed grinders." },
   { id: "cooling", title: "Cooling / chilling", desc: "Milk chillers, cold boxes." },
   { id: "packaging", title: "Packaging & branding", desc: "Sealing, labelling and branded packs." },
   { id: "seed_processing_facility", title: "Seed processing", desc: "Cleaning, sorting and dressing seed." },
   { id: "dairy_processing_facility", title: "Dairy processing", desc: "Yoghurt, mala or cheese production." },
+  { id: "other_processing", title: "Other", desc: "Any other facility not listed above, describe it below.", other: true },
 ];
 
 export const MARKET_TYPE_OPTIONS: FieldOption[] = [
@@ -169,6 +175,15 @@ function parseArr(v: unknown): string[] {
   }
 }
 
+/** A list is answered once it holds at least one entry. If it carries an
+    "Other" sentinel, the matching free-text detail must be filled in too. */
+function listDone(value: unknown, options: FieldOption[], otherText?: unknown): boolean {
+  const list = parseArr(value);
+  if (list.length === 0) return false;
+  const needsOther = list.some((v) => options.find((o) => o.id === v)?.other);
+  return needsOther ? nonEmpty(otherText) : true;
+}
+
 export function getBusinessProfileStatus(user: any): {
   complete: boolean;
   percent: number;
@@ -184,6 +199,9 @@ export function getBusinessProfileStatus(user: any): {
   const asp = user?.aspiration ?? {};
   const farmer = user?.farmerProfile ?? {};
   const goals = parseArr(user?.goalsPriorities?.goals);
+  const irrigation = sys?.irrigationMethod ?? "";
+  const irrigationDone =
+    irrigation === "other_irrigation" ? nonEmpty(sys?.irrigationOther) : nonEmpty(irrigation);
 
   const items: CompletenessItem[] = [
     { key: "businessName", label: "Business name", done: nonEmpty(user?.business?.businessName) || nonEmpty(user?.businessName) },
@@ -196,11 +214,11 @@ export function getBusinessProfileStatus(user: any): {
     { key: "coreChain", label: "Core value chain", done: nonEmpty(sys?.enterpriseCore) },
     { key: "strategicChain", label: "Strategic value chain", done: parseArr(sys?.enterpriseStrategic).length > 0 },
     { key: "cashflowChain", label: "Cash-flow value chain", done: parseArr(sys?.enterpriseCashFlow).length > 0 },
-    { key: "irrigation", label: "Irrigation system", done: nonEmpty(sys?.irrigationMethod) },
+    { key: "irrigation", label: "Irrigation system", done: irrigationDone },
     { key: "water", label: "Water source", done: parseArr(ch?.waterSources).length > 0 },
     { key: "energy", label: "Energy source", done: nonEmpty(sys?.energySource) },
-    { key: "storage", label: "Storage facility", done: parseArr(sys?.storageFacilities).length > 0 },
-    { key: "processing", label: "Processing facility", done: parseArr(sys?.processingFacilities).length > 0 },
+    { key: "storage", label: "Storage facility", done: listDone(sys?.storageFacilities, STORAGE_OPTIONS) },
+    { key: "processing", label: "Processing facility", done: listDone(sys?.processingFacilities, PROCESSING_OPTIONS, sys?.processingOther) },
     { key: "permanent", label: "Permanent workers", done: lab?.permanentWorkers !== null && lab?.permanentWorkers !== undefined },
     { key: "seasonal", label: "Seasonal workers", done: lab?.seasonalWorkers !== null && lab?.seasonalWorkers !== undefined },
     { key: "family", label: "Family labour", done: lab?.familyLabour !== null && lab?.familyLabour !== undefined },

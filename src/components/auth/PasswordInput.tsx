@@ -12,18 +12,24 @@ export default function PasswordInput({
   placeholder,
   minLength,
   required = true,
+  autoComplete = "current-password",
+  name,
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   minLength?: number;
   required?: boolean;
+  autoComplete?: string;
+  name?: string;
 }) {
   const [show, setShow] = useState(false);
   return (
     <div className="relative">
       <input
         type={show ? "text" : "password"}
+        name={name}
+        autoComplete={autoComplete}
         value={value}
         required={required}
         onChange={(e) => onChange(e.target.value)}

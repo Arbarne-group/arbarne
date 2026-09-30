@@ -183,8 +183,10 @@ model FarmingSystem {
   mechanizationSetup String?
   energySource       String?
   irrigationMethod   String?
+  irrigationOther    String?
   storageFacilities  String?
   processingFacilities String?
+  processingOther    String?
   updatedAt          DateTime @updatedAt
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -383,10 +385,25 @@ model CountyOrProvince {
   name        String
 
   country Country @relation(fields: [countryCode], references: [initials], onDelete: Cascade)
-  towns   Town[]
+  towns      Town[]
+  subCounties SubCounty[]
 
   @@id([countryCode, code])
   @@index([countryCode])
+}
+
+// A sub-county (Kenya: constituency). Sits between the county/province and
+// the ward, and is the level the farm profile actually asks farmers for.
+model SubCounty {
+  countryCode String
+  countyCode  String
+  code        String // sub-county code, unique per county/province
+  name        String
+
+  county CountyOrProvince @relation(fields: [countryCode, countyCode], references: [countryCode, code], onDelete: Cascade)
+
+  @@id([countryCode, countyCode, code])
+  @@index([countryCode, countyCode])
 }
 
 model Town {

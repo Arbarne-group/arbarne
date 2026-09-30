@@ -5,8 +5,16 @@ import { runWithAuditContext } from "@/lib/audit";
 
 /** Public: list countries (used by signup phone + country pickers). */
 export async function GET() {
-  const countries = await prisma.country.findMany({ orderBy: { name: "asc" } });
-  return NextResponse.json({ success: true, countries });
+  try {
+    const countries = await prisma.country.findMany({ orderBy: { name: "asc" } });
+    return NextResponse.json({ success: true, countries });
+  } catch (error) {
+    console.error("[GET /api/geo/countries]", error);
+    return NextResponse.json(
+      { success: false, error: "Could not load countries." },
+      { status: 503 }
+    );
+  }
 }
 
 /** Staff: create a country. */

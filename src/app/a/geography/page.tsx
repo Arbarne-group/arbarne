@@ -8,7 +8,7 @@ export default function AdminGeographyPage() {
       <div>
         <h1 className="text-xl font-bold text-on-surface md:text-2xl">Geography</h1>
         <p className="mt-1 text-sm text-on-surface-variant">
-          Countries → counties / provinces → towns.
+          Countries → counties / provinces → sub-counties → towns.
         </p>
       </div>
       <GeographyTab />
