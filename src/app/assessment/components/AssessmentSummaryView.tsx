@@ -874,9 +874,6 @@ export default function AssessmentSummaryView({
           >
             {pillarFeedback.label}
           </span>
-          <span className={`text-[11px] font-semibold ${pillarFeedback.badgeText} opacity-70`}>
-            {pillarFeedback.rangeLabel}
-          </span>
         </div>
 
         {/* Automatic Pillar Feedback Card */}
