@@ -851,18 +851,6 @@ export default function AssessmentSummaryView({
               style={{ filter: "blur(2px)" }}
             />
           </svg>
-
-          <div className="absolute bottom-2 flex flex-col items-center justify-center w-full">
-            <span
-              className="text-[40px] font-bold leading-none tracking-tight text-on-surface"
-              style={{ fontFamily: "'Outfit', sans-serif" }}
-            >
-              {totalYes}
-              <span className="text-[20px] text-on-surface-variant font-medium">
-                /{totalQuestions}
-              </span>
-            </span>
-          </div>
         </div>
 
         {/* Status + score band */}
@@ -964,9 +952,6 @@ export default function AssessmentSummaryView({
                             }}
                           />
                         </div>
-                        <span className="font-title-md text-sm font-bold text-on-surface min-w-[34px] text-right">
-                          {cap.yesCount}/{cap.total}
-                        </span>
                       </div>
 
                       <div
