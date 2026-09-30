@@ -30,7 +30,7 @@ export function isSheetsSyncConfigured(): boolean {
   const credentialsPath =
     process.env.GOOGLE_APPLICATION_CREDENTIALS || "./google-service-account.json";
   sheetsConfiguredCache = fs.existsSync(
-    path.resolve(process.cwd(), credentialsPath)
+    path.resolve(/*turbopackIgnore: true*/ process.cwd(), credentialsPath)
   );
   if (!sheetsConfiguredCache) {
     console.warn(
