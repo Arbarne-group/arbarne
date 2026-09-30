@@ -772,7 +772,7 @@ export default function AssessmentSummaryView({
   if (!mounted || loadingDb) {
     return (
       <div className="flex-1 overflow-y-auto bg-background p-margin-mobile md:p-margin-desktop flex items-center justify-center min-h-[60vh]">
-        <PageLoader message="Extracting verified diagnostic results from database..." />
+        <PageLoader message="Extracting verified diagnostic..." />
       </div>
     );
   }
@@ -851,6 +851,19 @@ export default function AssessmentSummaryView({
               style={{ filter: "blur(2px)" }}
             />
           </svg>
+
+          <div className="absolute bottom-2 flex flex-col items-center justify-center w-full">
+            <span
+              className="text-[40px] font-bold leading-none tracking-tight text-on-surface"
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+            >
+              {pillarPercentage}
+              <span className="text-[20px] text-on-surface-variant font-medium">
+                %
+              </span>
+            </span>
+          </div>
+
         </div>
 
         {/* Status + score band */}
