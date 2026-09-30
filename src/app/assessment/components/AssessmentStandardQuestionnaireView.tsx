@@ -366,6 +366,11 @@ export default function AssessmentStandardQuestionnaireView({
                     <p className="font-medium text-md md:text-md text-primary  mb-1.5 uppercase tracking-widest">
                       Capability {cap.id.replace("P", "")} • {cap.name}
                     </p>
+                    {cap.description && (
+                      <p className="text-sm leading-relaxed text-on-surface-variant mb-3">
+                        {cap.description}
+                      </p>
+                    )}
                     <div className="h-px bg-outline-variant/40" />
                   </div>
                   <div className="space-y-8">
