@@ -262,7 +262,7 @@ export default function DashboardPage() {
 
   const ffmiScore24 = useMemo(() => {
     if (!hasAssessment) return 0;
-    return Math.round((overallPercentage / 100) * 24);
+    return Number(((overallPercentage / 100) * 24).toFixed(2));
   }, [hasAssessment, overallPercentage]);
 
   const maturityTier = useMemo(() => {
