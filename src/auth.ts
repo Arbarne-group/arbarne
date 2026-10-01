@@ -113,7 +113,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           given_name: (profile as any)?.given_name,
           family_name: (profile as any)?.family_name,
           name: (profile as any)?.name,
-        }).catch(() => null);
+        }).catch((error) => {
+            console.error("[Google Auth] ensureGoogleUser failed:", error);
+            return null;
+        });
         if (!ensured) return false;
       }
       return true;
@@ -129,7 +132,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             where: { email },
             select: { id: true, role: true, name: true, email: true },
           })
-          .catch(() => null);
+          .catch((error) => {
+            console.error("[JWT Callback] prisma.user.findUnique failed:", error);
+            return null;
+          });
         if (db) {
           (token as any).userId = db.id;
           (token as any).role = db.role;
