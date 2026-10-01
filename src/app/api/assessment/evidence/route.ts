@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
+import assessmentData from "@/data/assessmentData.json";
 
 export const dynamic = "force-dynamic";
+
+export const MAX_MEDIA_PER_QUESTION = 5;
 
 // Criteria configuration
 const ALLOWED_MIME_TYPES = [
@@ -12,8 +15,70 @@ const ALLOWED_MIME_TYPES = [
   "application/pdf",
 ];
 
+const IMAGE_MIMES = ["image/png", "image/jpeg", "image/jpg"];
+const DOCUMENT_MIMES = ["application/pdf"];
+
 const ALLOWED_EXTENSIONS = [".png", ".jpg", ".jpeg", ".pdf"];
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+
+type IncomingFile = {
+  fileName?: string;
+  fileType?: string;
+  fileSize?: number | string;
+  fileData?: string;
+};
+
+function questionFlags(questionId: string): {
+  requiresVerification: boolean;
+  allowedEvidenceTypes: string[];
+} {
+  const q: any = (assessmentData.questions as any[]).find(
+    (item) => item.id === questionId
+  );
+  if (!q) return { requiresVerification: false, allowedEvidenceTypes: [] };
+  const allowed = Array.isArray(q.allowedEvidenceTypes)
+    ? q.allowedEvidenceTypes.map(String)
+    : ["image", "document"];
+  return {
+    requiresVerification: q.requiresVerification !== false,
+    allowedEvidenceTypes: allowed,
+  };
+}
+
+function fileKind(fileType: string): "image" | "document" | null {
+  const t = fileType.toLowerCase();
+  if (IMAGE_MIMES.includes(t)) return "image";
+  if (DOCUMENT_MIMES.includes(t)) return "document";
+  return null;
+}
+
+function validateFile(f: IncomingFile): string | null {
+  const fileName = String(f.fileName || "");
+  const fileType = String(f.fileType || "");
+  const sizeNumber = Number(f.fileSize) || 0;
+  if (!fileName || typeof f.fileData !== "string" || !f.fileData.startsWith("data:")) {
+    return "Each file needs a name and valid encoded data.";
+  }
+  if (sizeNumber > MAX_FILE_SIZE_BYTES) {
+    return `"${fileName}" exceeds the 10MB limit (${(sizeNumber / (1024 * 1024)).toFixed(2)} MB).`;
+  }
+  const lowerFileName = fileName.toLowerCase();
+  if (!ALLOWED_EXTENSIONS.some((ext) => lowerFileName.endsWith(ext))) {
+    return `"${fileName}": only PNG, JPG and PDF files are accepted.`;
+  }
+  if (fileType && !ALLOWED_MIME_TYPES.includes(fileType.toLowerCase())) {
+    return `"${fileName}": invalid file type ${fileType}.`;
+  }
+  return null;
+}
+
+const MEDIA_SELECT = {
+  id: true,
+  fileName: true,
+  fileType: true,
+  fileSize: true,
+  createdAt: true,
+};
 
 export async function POST(request: Request) {
   try {
@@ -29,6 +94,7 @@ export async function POST(request: Request) {
       fileType,
       fileSize,
       fileData,
+      files,
       notes,
     } = body;
 
@@ -39,52 +105,45 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate file if evidenceType is "digital"
-    if (evidenceType === "digital") {
-      if (!fileName || !fileData) {
-        return NextResponse.json(
-          { error: "Please select a file to upload as digital evidence." },
-          { status: 400 }
-        );
-      }
+    const flags = questionFlags(String(questionId));
+    if (!flags.requiresVerification || flags.allowedEvidenceTypes.length === 0) {
+      return NextResponse.json(
+        { error: "This question does not require verification media." },
+        { status: 400 }
+      );
+    }
 
-      // Check file size (10MB maximum)
-      const sizeNumber = Number(fileSize) || 0;
-      if (sizeNumber > MAX_FILE_SIZE_BYTES) {
-        return NextResponse.json(
-          {
-            error: `File exceeds the 10MB limit. (Selected file: ${(sizeNumber / (1024 * 1024)).toFixed(2)} MB). Please select a file up to 10MB.`,
-          },
-          { status: 400 }
-        );
-      }
+    // New multi-file payload, with the legacy single file mapped onto it.
+    const incoming: IncomingFile[] = Array.isArray(files) && files.length > 0
+      ? files
+      : fileName || fileData
+        ? [{ fileName, fileType, fileSize, fileData }]
+        : [];
 
-      // Check file extension
-      const lowerFileName = fileName.toLowerCase();
-      const hasValidExt = ALLOWED_EXTENSIONS.some((ext) => lowerFileName.endsWith(ext));
-      if (!hasValidExt) {
-        return NextResponse.json(
-          {
-            error: `Invalid file format. Only PNG, JPG, and PDF files are accepted. (${fileName})`,
-          },
-          { status: 400 }
-        );
-      }
+    if (evidenceType === "digital" && incoming.length === 0) {
+      return NextResponse.json(
+        { error: "Please select at least one file to upload as evidence." },
+        { status: 400 }
+      );
+    }
 
-      // Check MIME type if provided
-      if (fileType && !ALLOWED_MIME_TYPES.includes(fileType.toLowerCase())) {
-        return NextResponse.json(
-          {
-            error: `Invalid file type: ${fileType}. Only PNG, JPG, and PDF files are accepted.`,
-          },
-          { status: 400 }
-        );
+    for (const f of incoming) {
+      const problem = validateFile(f);
+      if (problem) {
+        return NextResponse.json({ error: problem }, { status: 400 });
       }
-
-      // Check Base64 payload structure
-      if (typeof fileData !== "string" || !fileData.startsWith("data:")) {
+      const kind = fileKind(String(f.fileType || ""));
+      // Extension-only uploads (no MIME sniffed): infer kind from extension.
+      const inferred =
+        kind ||
+        (String(f.fileName || "").toLowerCase().endsWith(".pdf") ? "document" : "image");
+      if (!flags.allowedEvidenceTypes.includes(inferred)) {
+        const want =
+          flags.allowedEvidenceTypes.includes("document") && !flags.allowedEvidenceTypes.includes("image")
+            ? "only documents (PDF)"
+            : "only photos (PNG/JPG)";
         return NextResponse.json(
-          { error: "Invalid file encoding. File must be encoded as a valid data URL." },
+          { error: `This question accepts ${want}. "${f.fileName}" was rejected.` },
           { status: 400 }
         );
       }
@@ -113,6 +172,20 @@ export async function POST(request: Request) {
       });
     }
 
+    const existing = await prisma.ffvEvidence.findUnique({
+      where: { assessmentId_questionId: { assessmentId: assessment.id, questionId } },
+      include: { media: { select: { id: true } } },
+    });
+    const existingCount = existing?.media.length || 0;
+    if (existingCount + incoming.length > MAX_MEDIA_PER_QUESTION) {
+      return NextResponse.json(
+        {
+          error: `A maximum of ${MAX_MEDIA_PER_QUESTION} files per question. ${existingCount} already uploaded — remove one to add another.`,
+        },
+        { status: 400 }
+      );
+    }
+
     // Upsert the evidence record in Neon database
     const evidence = await prisma.ffvEvidence.upsert({
       where: {
@@ -126,10 +199,6 @@ export async function POST(request: Request) {
         capabilityId,
         claimText: claimText || null,
         evidenceType,
-        fileName: fileName || null,
-        fileType: fileType || null,
-        fileSize: fileSize ? Number(fileSize) : null,
-        fileData: fileData || null,
         notes: notes || null,
         status: "submitted",
         updatedAt: new Date(),
@@ -141,13 +210,30 @@ export async function POST(request: Request) {
         questionId,
         claimText: claimText || null,
         evidenceType,
-        fileName: fileName || null,
-        fileType: fileType || null,
-        fileSize: fileSize ? Number(fileSize) : null,
-        fileData: fileData || null,
         notes: notes || null,
         status: "submitted",
       },
+    });
+
+    const createdMedia = await Promise.all(
+      incoming.map((f) =>
+        prisma.ffvMedia.create({
+          data: {
+            evidenceId: evidence.id,
+            fileName: String(f.fileName),
+            fileType: f.fileType ? String(f.fileType) : null,
+            fileSize: f.fileSize ? Number(f.fileSize) : null,
+            fileData: String(f.fileData),
+          },
+          select: MEDIA_SELECT,
+        })
+      )
+    );
+
+    const media = await prisma.ffvMedia.findMany({
+      where: { evidenceId: evidence.id },
+      orderBy: { createdAt: "asc" },
+      select: MEDIA_SELECT,
     });
 
     return NextResponse.json({
@@ -160,13 +246,12 @@ export async function POST(request: Request) {
         capabilityId: evidence.capabilityId,
         questionId: evidence.questionId,
         evidenceType: evidence.evidenceType,
-        fileName: evidence.fileName,
-        fileType: evidence.fileType,
-        fileSize: evidence.fileSize,
         notes: evidence.notes,
         status: evidence.status,
         createdAt: evidence.createdAt,
         updatedAt: evidence.updatedAt,
+        media,
+        uploaded: createdMedia,
       },
     });
   } catch (error: any) {
@@ -208,6 +293,7 @@ export async function GET(request: Request) {
 
     const evidences = await prisma.ffvEvidence.findMany({
       where: whereClause,
+      include: { media: { orderBy: { createdAt: "asc" }, select: MEDIA_SELECT } },
       orderBy: { createdAt: "asc" },
     });
 

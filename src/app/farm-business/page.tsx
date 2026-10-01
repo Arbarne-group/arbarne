@@ -276,6 +276,15 @@ export default function FarmBusinessPage() {
           setLoadError("Could not load your farm profile.");
           return;
         }
+        // Submitted profiles belong on /overview — this form is for
+        // completing. ?edit=1 keeps an explicit edit path open.
+        try {
+          const params = new URLSearchParams(window.location.search);
+          if (params.get("edit") !== "1" && getBusinessProfileStatus(u).complete) {
+            router.replace("/overview");
+            return;
+          }
+        } catch {}
         if (u.businessId) setBusinessId(u.businessId);
         if (u.businessName) setBusinessName(u.businessName);
 

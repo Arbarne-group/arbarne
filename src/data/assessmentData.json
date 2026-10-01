@@ -512,7 +512,9 @@
         "Future Farms Advisory",
         "Extension Services"
       ],
-      "why_it_matters": "Technology should solve real farm problems rather than being adopted for its own sake."
+      "why_it_matters": "Technology should solve real farm problems rather than being adopted for its own sake.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P1.1",
@@ -529,7 +531,9 @@
         "Technology Partners",
         "FAAB Programme"
       ],
-      "why_it_matters": "Understanding available options helps farmers make informed investment decisions and avoid unsuitable technologies."
+      "why_it_matters": "Understanding available options helps farmers make informed investment decisions and avoid unsuitable technologies.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P1.1",
@@ -546,7 +550,9 @@
         "Farm Business Advisors",
         "Technology Providers"
       ],
-      "why_it_matters": "Careful assessment improves investment decisions and reduces the likelihood of technology failure."
+      "why_it_matters": "Careful assessment improves investment decisions and reduces the likelihood of technology failure.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P1.1",
@@ -562,7 +568,11 @@
         "FAAB Module 5",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Planned technology investments support sustainable farm growth and improve access to finance."
+      "why_it_matters": "Planned technology investments support sustainable farm growth and improve access to finance.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P1.1",
@@ -579,7 +589,9 @@
         "Technology Suppliers",
         "Future Farms Network"
       ],
-      "why_it_matters": "Access to reliable partners and finance makes technology adoption more feasible and sustainable."
+      "why_it_matters": "Access to reliable partners and finance makes technology adoption more feasible and sustainable.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P1.2",
@@ -596,7 +608,12 @@
         "Future Farms Advisory",
         "Digital Extension Services"
       ],
-      "why_it_matters": "Digital devices provide access to information, markets, advisory services, and farm management tools."
+      "why_it_matters": "Digital devices provide access to information, markets, advisory services, and farm management tools.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.2",
@@ -613,7 +630,12 @@
         "ICT Partners",
         "Extension Officers"
       ],
-      "why_it_matters": "Digital skills improve access to timely information and increase management efficiency."
+      "why_it_matters": "Digital skills improve access to timely information and increase management efficiency.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.2",
@@ -630,7 +652,12 @@
         "Government Extension Platforms",
         "FAAB Programme"
       ],
-      "why_it_matters": "Timely access to reliable information improves farm decision-making and reduces production risks."
+      "why_it_matters": "Timely access to reliable information improves farm decision-making and reduces production risks.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.2",
@@ -647,7 +674,12 @@
         "Future Farms Academy",
         "Training Partners"
       ],
-      "why_it_matters": "Digital skills increase the value farmers gain from technology investments and advisory services."
+      "why_it_matters": "Digital skills increase the value farmers gain from technology investments and advisory services.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.2",
@@ -664,7 +696,12 @@
         "FAAB Mentorship",
         "ICT Support Partners"
       ],
-      "why_it_matters": "Independent digital capability enables farmers to continuously access opportunities, information, and innovations."
+      "why_it_matters": "Independent digital capability enables farmers to continuously access opportunities, information, and innovations.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.3",
@@ -681,7 +718,12 @@
         "Extension Officers",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Farm records provide the foundation for monitoring performance and improving management decisions."
+      "why_it_matters": "Farm records provide the foundation for monitoring performance and improving management decisions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.3",
@@ -698,7 +740,12 @@
         "Business Advisors",
         "Extension Services"
       ],
-      "why_it_matters": "Financial and production records help determine profitability and improve business planning."
+      "why_it_matters": "Financial and production records help determine profitability and improve business planning.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.3",
@@ -714,7 +761,12 @@
         "Future Farms Advisory",
         "Digital Farm Management Tools"
       ],
-      "why_it_matters": "Organized information saves time and supports informed decision-making."
+      "why_it_matters": "Organized information saves time and supports informed decision-making.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.3",
@@ -731,7 +783,12 @@
         "Extension Services",
         "Digital Record Keeping Tools"
       ],
-      "why_it_matters": "Up-to-date records provide accurate information for planning and performance monitoring."
+      "why_it_matters": "Up-to-date records provide accurate information for planning and performance monitoring.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.3",
@@ -748,7 +805,12 @@
         "Future Farms Advisory",
         "ICT Partners"
       ],
-      "why_it_matters": "Protecting farm information prevents data loss and ensures business continuity."
+      "why_it_matters": "Protecting farm information prevents data loss and ensures business continuity.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.4",
@@ -765,7 +827,11 @@
         "Extension Services",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Planning based on evidence reduces uncertainty and improves resource allocation."
+      "why_it_matters": "Planning based on evidence reduces uncertainty and improves resource allocation.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P1.4",
@@ -782,7 +848,12 @@
         "Extension Officers",
         "Digital Advisory Platforms"
       ],
-      "why_it_matters": "Climate-informed decisions reduce production risks and improve resilience."
+      "why_it_matters": "Climate-informed decisions reduce production risks and improve resilience.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.4",
@@ -798,7 +869,12 @@
         "FAAB Financial Management Module",
         "Business Advisors"
       ],
-      "why_it_matters": "Performance analysis supports continuous improvement and profitable decision-making."
+      "why_it_matters": "Performance analysis supports continuous improvement and profitable decision-making.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.4",
@@ -815,7 +891,12 @@
         "Future Farms Marketplace",
         "Extension Services"
       ],
-      "why_it_matters": "Market-oriented decisions improve profitability and reduce marketing risks."
+      "why_it_matters": "Market-oriented decisions improve profitability and reduce marketing risks.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.4",
@@ -832,7 +913,12 @@
         "FAAB Mentorship",
         "Farm Business Coaches"
       ],
-      "why_it_matters": "Continuous evaluation enables farms to adapt, innovate, and improve over time."
+      "why_it_matters": "Continuous evaluation enables farms to adapt, innovate, and improve over time.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.5",
@@ -849,7 +935,12 @@
         "Extension Services",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Continuous improvement enables farms to remain competitive and resilient in a changing agricultural environment."
+      "why_it_matters": "Continuous improvement enables farms to remain competitive and resilient in a changing agricultural environment.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.5",
@@ -866,7 +957,12 @@
         "Research Institutions",
         "Technology Partners"
       ],
-      "why_it_matters": "Innovation enables farmers to improve productivity, reduce costs, and respond to changing conditions."
+      "why_it_matters": "Innovation enables farmers to improve productivity, reduce costs, and respond to changing conditions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.5",
@@ -883,7 +979,12 @@
         "Demonstration Farms",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Small-scale testing reduces investment risk and supports evidence-based innovation."
+      "why_it_matters": "Small-scale testing reduces investment risk and supports evidence-based innovation.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.5",
@@ -901,7 +1002,12 @@
         "Extension Officers",
         "Future Farms Academy"
       ],
-      "why_it_matters": "Continuous learning improves knowledge, strengthens capability, and supports innovation."
+      "why_it_matters": "Continuous learning improves knowledge, strengthens capability, and supports innovation.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P1.5",
@@ -918,7 +1024,11 @@
         "FAAB Business Planning Module",
         "Farm Business Advisors"
       ],
-      "why_it_matters": "Long-term planning helps farmers systematically transition toward future-ready farming systems."
+      "why_it_matters": "Long-term planning helps farmers systematically transition toward future-ready farming systems.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P2.1",
@@ -935,7 +1045,9 @@
         "Clean Farms Energy Assessment Toolkit",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Understanding energy sources is the foundation for improving efficiency, reducing costs and planning investments."
+      "why_it_matters": "Understanding energy sources is the foundation for improving efficiency, reducing costs and planning investments.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P2.1",
@@ -951,7 +1063,9 @@
         "Clean Farms Advisory",
         "Energy Assessment Toolkit"
       ],
-      "why_it_matters": "Helps prioritise interventions with the greatest productivity and cost impact."
+      "why_it_matters": "Helps prioritise interventions with the greatest productivity and cost impact.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P2.1",
@@ -967,7 +1081,12 @@
         "FAAB Module 3",
         "Farm Record-Keeping Toolkit"
       ],
-      "why_it_matters": "Energy costs directly affect farm profitability and investment decisions."
+      "why_it_matters": "Energy costs directly affect farm profitability and investment decisions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.1",
@@ -983,7 +1102,9 @@
         "Future Farms Advisory",
         "Clean Farms Energy Assessment"
       ],
-      "why_it_matters": "Identifying energy risks supports better planning and reduces production disruptions."
+      "why_it_matters": "Identifying energy risks supports better planning and reduces production disruptions.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P2.1",
@@ -999,7 +1120,9 @@
         "FAAB Module 1",
         "Clean Farms Advisory"
       ],
-      "why_it_matters": "Energy is a strategic farm-business resource, not simply an operating expense."
+      "why_it_matters": "Energy is a strategic farm-business resource, not simply an operating expense.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P2.2",
@@ -1016,7 +1139,12 @@
         "Clean Farms Advisory",
         "Renewable Energy Technology Partners"
       ],
-      "why_it_matters": "Renewable energy can reduce dependence on costly or unreliable conventional energy sources."
+      "why_it_matters": "Renewable energy can reduce dependence on costly or unreliable conventional energy sources.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.2",
@@ -1032,7 +1160,9 @@
         "Clean Farms Feasibility Toolkit",
         "Renewable Energy Providers"
       ],
-      "why_it_matters": "The cheapest technology is not necessarily the most appropriate solution."
+      "why_it_matters": "The cheapest technology is not necessarily the most appropriate solution.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P2.2",
@@ -1048,7 +1178,12 @@
         "Clean Farms Advisory",
         "Renewable Energy Providers"
       ],
-      "why_it_matters": "Renewable energy creates the greatest value when directly linked to productive farm activities."
+      "why_it_matters": "Renewable energy creates the greatest value when directly linked to productive farm activities.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.2",
@@ -1064,7 +1199,12 @@
         "Equipment Suppliers",
         "Clean Farms Technical Support"
       ],
-      "why_it_matters": "An installed system only creates value when it is functional and used consistently."
+      "why_it_matters": "An installed system only creates value when it is functional and used consistently.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.3",
@@ -1081,7 +1221,12 @@
         "Clean Farms Energy Monitoring Toolkit",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Monitoring reveals inefficiencies, controls costs and establishes a baseline for improvement."
+      "why_it_matters": "Monitoring reveals inefficiencies, controls costs and establishes a baseline for improvement.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.3",
@@ -1097,7 +1242,9 @@
         "Clean Farms Advisory",
         "Energy Efficiency Toolkit"
       ],
-      "why_it_matters": "Reducing waste can lower operating costs without reducing productivity."
+      "why_it_matters": "Reducing waste can lower operating costs without reducing productivity.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P2.3",
@@ -1114,7 +1261,12 @@
         "Equipment Suppliers",
         "Energy Efficiency Toolkit"
       ],
-      "why_it_matters": "Efficient energy use maximises the value obtained from every unit of energy."
+      "why_it_matters": "Efficient energy use maximises the value obtained from every unit of energy.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.3",
@@ -1130,7 +1282,12 @@
         "Equipment Suppliers",
         "Clean Farms Technical Support"
       ],
-      "why_it_matters": "Poorly maintained equipment can consume more energy and fail unexpectedly."
+      "why_it_matters": "Poorly maintained equipment can consume more energy and fail unexpectedly.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.3",
@@ -1147,7 +1304,12 @@
         "Farm Business Advisors",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Energy efficiency should translate into measurable business value."
+      "why_it_matters": "Energy efficiency should translate into measurable business value.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.4",
@@ -1164,7 +1326,12 @@
         "Clean Farms Advisory",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Productive energy enables more efficient and climate-smart production."
+      "why_it_matters": "Productive energy enables more efficient and climate-smart production.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.4",
@@ -1181,7 +1348,12 @@
         "Value Addition Partners",
         "FAAB Module 3"
       ],
-      "why_it_matters": "Energy can improve shelf life, quality and access to higher-value markets."
+      "why_it_matters": "Energy can improve shelf life, quality and access to higher-value markets.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.4",
@@ -1197,7 +1369,12 @@
         "Future Farms Advisory",
         "Equipment Suppliers"
       ],
-      "why_it_matters": "Energy can reduce labour requirements and free workers for higher-value activities."
+      "why_it_matters": "Energy can reduce labour requirements and free workers for higher-value activities.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.4",
@@ -1214,7 +1391,12 @@
         "Clean Farms Advisory",
         "Technical Partners"
       ],
-      "why_it_matters": "Consistent quality strengthens customer confidence and market access."
+      "why_it_matters": "Consistent quality strengthens customer confidence and market access.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.4",
@@ -1231,7 +1413,12 @@
         "Farm Business Advisors",
         "Clean Farms Performance Toolkit"
       ],
-      "why_it_matters": "Energy should contribute to productivity, lower costs and improved business performance."
+      "why_it_matters": "Energy should contribute to productivity, lower costs and improved business performance.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.5",
@@ -1247,7 +1434,9 @@
         "Future Farms Advisory",
         "Clean Farms Energy Assessment"
       ],
-      "why_it_matters": "Energy disruptions can interrupt production, increase costs and cause product losses."
+      "why_it_matters": "Energy disruptions can interrupt production, increase costs and cause product losses.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P2.5",
@@ -1263,7 +1452,11 @@
         "Clean Farms Advisory",
         "Renewable Energy Providers"
       ],
-      "why_it_matters": "Resilience reduces losses during outages and other energy disruptions."
+      "why_it_matters": "Resilience reduces losses during outages and other energy disruptions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P2.5",
@@ -1279,7 +1472,12 @@
         "Future Farms Advisory",
         "Clean Farms Performance Review Toolkit"
       ],
-      "why_it_matters": "Continuous review ensures energy systems remain aligned with changing farm needs."
+      "why_it_matters": "Continuous review ensures energy systems remain aligned with changing farm needs.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.5",
@@ -1296,7 +1494,12 @@
         "Technology Partners",
         "FAAB Module 1"
       ],
-      "why_it_matters": "Continuous innovation keeps farms competitive and adaptable."
+      "why_it_matters": "Continuous innovation keeps farms competitive and adaptable.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.5",
@@ -1313,7 +1516,11 @@
         "Clean Farms Strategic Planning Toolkit",
         "FAAB Programme"
       ],
-      "why_it_matters": "Long-term planning makes energy a strategic driver of productivity, resilience and profitability."
+      "why_it_matters": "Long-term planning makes energy a strategic driver of productivity, resilience and profitability.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P3.1",
@@ -1330,7 +1537,9 @@
         "FAAB Training",
         "Food Safety Authorities"
       ],
-      "why_it_matters": "Understanding food safety risks is the first step in preventing contamination and protecting consumer health."
+      "why_it_matters": "Understanding food safety risks is the first step in preventing contamination and protecting consumer health.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P3.1",
@@ -1347,7 +1556,12 @@
         "Extension Officers",
         "Food Safety Trainers"
       ],
-      "why_it_matters": "Training builds the knowledge needed to consistently produce safe, marketable food."
+      "why_it_matters": "Training builds the knowledge needed to consistently produce safe, marketable food.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.1",
@@ -1364,7 +1578,9 @@
         "Extension Services",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Good hygiene reduces contamination risks and improves product quality."
+      "why_it_matters": "Good hygiene reduces contamination risks and improves product quality.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P3.1",
@@ -1381,7 +1597,9 @@
         "Buyer Organizations",
         "FAAB Business Support"
       ],
-      "why_it_matters": "Compliance increases market access, consumer confidence, and business sustainability."
+      "why_it_matters": "Compliance increases market access, consumer confidence, and business sustainability.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P3.1",
@@ -1398,7 +1616,12 @@
         "Extension Services",
         "Farmer Organizations"
       ],
-      "why_it_matters": "A strong food safety culture protects consumers, strengthens reputation, and improves market opportunities."
+      "why_it_matters": "A strong food safety culture protects consumers, strengthens reputation, and improves market opportunities.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.2",
@@ -1415,7 +1638,12 @@
         "FAAB Training",
         "Public Health Officers"
       ],
-      "why_it_matters": "Good hygiene prevents contamination and protects food safety from farm to consumer."
+      "why_it_matters": "Good hygiene prevents contamination and protects food safety from farm to consumer.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.2",
@@ -1432,7 +1660,12 @@
         "Extension Officers",
         "Regulatory Authorities"
       ],
-      "why_it_matters": "Proper input management reduces contamination risks, protects workers, and safeguards the environment."
+      "why_it_matters": "Proper input management reduces contamination risks, protects workers, and safeguards the environment.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.2",
@@ -1449,7 +1682,12 @@
         "Extension Services",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Contaminated water or equipment is a major source of foodborne illnesses and product spoilage."
+      "why_it_matters": "Contaminated water or equipment is a major source of foodborne illnesses and product spoilage.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.2",
@@ -1466,7 +1704,12 @@
         "Pest Management Advisors",
         "FAAB Programme"
       ],
-      "why_it_matters": "Preventing contamination helps ensure safe, high-quality products and protects consumer health."
+      "why_it_matters": "Preventing contamination helps ensure safe, high-quality products and protects consumer health.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.2",
@@ -1483,7 +1726,12 @@
         "Extension Officers",
         "Food Safety Trainers"
       ],
-      "why_it_matters": "Continuous monitoring helps maintain food safety standards and prevents recurring problems."
+      "why_it_matters": "Continuous monitoring helps maintain food safety standards and prevents recurring problems.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.3",
@@ -1500,7 +1748,12 @@
         "Buyer Guidelines",
         "Extension Services"
       ],
-      "why_it_matters": "Clear quality standards ensure consistent production and improve customer satisfaction."
+      "why_it_matters": "Clear quality standards ensure consistent production and improve customer satisfaction.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.3",
@@ -1517,7 +1770,12 @@
         "Buyer Organizations",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Grading improves consistency, reduces customer complaints, and increases product value."
+      "why_it_matters": "Grading improves consistency, reduces customer complaints, and increases product value.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.3",
@@ -1534,7 +1792,12 @@
         "Extension Services",
         "FAAB Training"
       ],
-      "why_it_matters": "Proper post-harvest handling reduces losses and preserves product quality."
+      "why_it_matters": "Proper post-harvest handling reduces losses and preserves product quality.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.3",
@@ -1551,7 +1814,12 @@
         "Farmer Organizations",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Customer feedback helps identify improvement opportunities and strengthens market relationships."
+      "why_it_matters": "Customer feedback helps identify improvement opportunities and strengthens market relationships.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.3",
@@ -1568,7 +1836,12 @@
         "Quality Assurance Specialists",
         "FAAB Programme"
       ],
-      "why_it_matters": "Continuous quality improvement strengthens competitiveness, reduces losses, and builds customer trust."
+      "why_it_matters": "Continuous quality improvement strengthens competitiveness, reduces losses, and builds customer trust.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.4",
@@ -1585,7 +1858,12 @@
         "Future Farms Advisory",
         "Extension Services"
       ],
-      "why_it_matters": "Traceability enables farms to identify product origins, respond to food safety incidents, and meet buyer requirements."
+      "why_it_matters": "Traceability enables farms to identify product origins, respond to food safety incidents, and meet buyer requirements.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.4",
@@ -1602,7 +1880,12 @@
         "Regulatory Authorities",
         "FAAB Programme"
       ],
-      "why_it_matters": "Input records support food safety, compliance, and responsible farm management."
+      "why_it_matters": "Input records support food safety, compliance, and responsible farm management.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.4",
@@ -1619,7 +1902,9 @@
         "Buyer Organizations",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Compliance protects market access, strengthens customer confidence, and reduces legal and commercial risks."
+      "why_it_matters": "Compliance protects market access, strengthens customer confidence, and reduces legal and commercial risks.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P3.4",
@@ -1636,7 +1921,12 @@
         "Extension Services",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Effective traceability reduces the impact of food safety incidents and protects consumers and markets."
+      "why_it_matters": "Effective traceability reduces the impact of food safety incidents and protects consumers and markets.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.4",
@@ -1653,7 +1943,12 @@
         "Certification Bodies",
         "FAAB Programme"
       ],
-      "why_it_matters": "Continuous compliance reduces business risk and prepares the farm for certification and premium markets."
+      "why_it_matters": "Continuous compliance reduces business risk and prepares the farm for certification and premium markets.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.5",
@@ -1670,7 +1965,12 @@
         "FAAB Programme",
         "Extension Services"
       ],
-      "why_it_matters": "Regular reviews help prevent recurring problems and strengthen farm performance over time."
+      "why_it_matters": "Regular reviews help prevent recurring problems and strengthen farm performance over time.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.5",
@@ -1687,7 +1987,12 @@
         "Extension Officers",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Corrective actions build a culture of accountability and continuous improvement."
+      "why_it_matters": "Corrective actions build a culture of accountability and continuous improvement.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.5",
@@ -1704,7 +2009,12 @@
         "Extension Services",
         "Food Safety Trainers"
       ],
-      "why_it_matters": "Continuous learning ensures that good practices are consistently applied across the farm."
+      "why_it_matters": "Continuous learning ensures that good practices are consistently applied across the farm.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P3.5",
@@ -1721,7 +2031,9 @@
         "Future Farms Advisory",
         "FAAB Programme"
       ],
-      "why_it_matters": "Certification readiness improves market access, increases buyer confidence, and supports business growth."
+      "why_it_matters": "Certification readiness improves market access, increases buyer confidence, and supports business growth.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P3.5",
@@ -1738,7 +2050,11 @@
         "Business Advisors",
         "Extension Services"
       ],
-      "why_it_matters": "Long-term planning ensures systematic improvement rather than reactive problem-solving."
+      "why_it_matters": "Long-term planning ensures systematic improvement rather than reactive problem-solving.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P4.1",
@@ -1755,7 +2071,9 @@
         "Extension Officers",
         "FAAB Programme"
       ],
-      "why_it_matters": "Local knowledge often reflects generations of experience with local environmental conditions."
+      "why_it_matters": "Local knowledge often reflects generations of experience with local environmental conditions.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P4.1",
@@ -1772,7 +2090,12 @@
         "Community Knowledge Holders",
         "Extension Services"
       ],
-      "why_it_matters": "Locally adapted practices may provide practical and affordable resilience options."
+      "why_it_matters": "Locally adapted practices may provide practical and affordable resilience options.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.1",
@@ -1789,7 +2112,12 @@
         "Community Leaders",
         "Community Knowledge Holders"
       ],
-      "why_it_matters": "Knowledge transfer helps preserve valuable experience and supports intergenerational learning."
+      "why_it_matters": "Knowledge transfer helps preserve valuable experience and supports intergenerational learning.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.1",
@@ -1806,7 +2134,12 @@
         "Universities",
         "Research Institutions"
       ],
-      "why_it_matters": "Combining different knowledge systems can produce locally appropriate solutions."
+      "why_it_matters": "Combining different knowledge systems can produce locally appropriate solutions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.1",
@@ -1823,7 +2156,12 @@
         "FAAB Programme",
         "Farmer Organizations"
       ],
-      "why_it_matters": "Future-ready farmers need to combine existing knowledge with new information."
+      "why_it_matters": "Future-ready farmers need to combine existing knowledge with new information.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.2",
@@ -1840,7 +2178,12 @@
         "Climate Advisors",
         "FAAB Programme"
       ],
-      "why_it_matters": "Understanding risks is the first step towards effective adaptation."
+      "why_it_matters": "Understanding risks is the first step towards effective adaptation.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.2",
@@ -1856,7 +2199,12 @@
         "Future Farms Advisory",
         "Extension Services"
       ],
-      "why_it_matters": "Different parts of the farm may be affected differently by climate hazards."
+      "why_it_matters": "Different parts of the farm may be affected differently by climate hazards.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.2",
@@ -1873,7 +2221,12 @@
         "Extension Officers",
         "Digital Agriculture Providers"
       ],
-      "why_it_matters": "Timely information can improve planting, irrigation, pest management and harvesting decisions."
+      "why_it_matters": "Timely information can improve planting, irrigation, pest management and harvesting decisions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.2",
@@ -1889,7 +2242,12 @@
         "Future Farms Advisory",
         "Climate Advisors"
       ],
-      "why_it_matters": "Investments that ignore future climate conditions may become costly or unsuitable."
+      "why_it_matters": "Investments that ignore future climate conditions may become costly or unsuitable.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.2",
@@ -1906,7 +2264,12 @@
         "FAAB Programme",
         "Climate Services"
       ],
-      "why_it_matters": "Climate conditions and exposure can change over time."
+      "why_it_matters": "Climate conditions and exposure can change over time.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.3",
@@ -1923,7 +2286,12 @@
         "Extension Officers",
         "Climate-Smart Agriculture Advisors"
       ],
-      "why_it_matters": "Climate-smart practices help farms manage environmental risks while maintaining productivity."
+      "why_it_matters": "Climate-smart practices help farms manage environmental risks while maintaining productivity.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.3",
@@ -1940,7 +2308,12 @@
         "Soil Specialists",
         "Farmer Organizations"
       ],
-      "why_it_matters": "Healthy soils improve water retention, productivity and resilience to climate stress."
+      "why_it_matters": "Healthy soils improve water retention, productivity and resilience to climate stress.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.3",
@@ -1957,7 +2330,12 @@
         "Climate Advisors",
         "Research Institutions"
       ],
-      "why_it_matters": "Flexible production systems are better able to cope with climate variability."
+      "why_it_matters": "Flexible production systems are better able to cope with climate variability.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.3",
@@ -1974,7 +2352,12 @@
         "Irrigation Providers",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Water availability is a major determinant of farm resilience."
+      "why_it_matters": "Water availability is a major determinant of farm resilience.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.3",
@@ -1991,7 +2374,12 @@
         "FAAB Programme",
         "Extension Services"
       ],
-      "why_it_matters": "Farmers need evidence to determine which practices are worth continuing or scaling."
+      "why_it_matters": "Farmers need evidence to determine which practices are worth continuing or scaling.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.4",
@@ -2008,7 +2396,12 @@
         "Extension Officers",
         "FAAB Programme"
       ],
-      "why_it_matters": "Soil is a foundational productive asset and requires long-term stewardship."
+      "why_it_matters": "Soil is a foundational productive asset and requires long-term stewardship.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.4",
@@ -2025,7 +2418,12 @@
         "Water Specialists",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Efficient water management reduces vulnerability to drought and water shortages."
+      "why_it_matters": "Efficient water management reduces vulnerability to drought and water shortages.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.4",
@@ -2042,7 +2440,12 @@
         "Extension Services",
         "Research Institutions"
       ],
-      "why_it_matters": "Biodiversity supports pollination, pest regulation, soil health and ecosystem stability."
+      "why_it_matters": "Biodiversity supports pollination, pest regulation, soil health and ecosystem stability.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.4",
@@ -2058,7 +2461,12 @@
         "Conservation Organizations",
         "Extension Officers"
       ],
-      "why_it_matters": "Preventing degradation protects the farm's productive capacity over the long term."
+      "why_it_matters": "Preventing degradation protects the farm's productive capacity over the long term.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.4",
@@ -2075,7 +2483,12 @@
         "Environmental Advisors",
         "Research Institutions"
       ],
-      "why_it_matters": "What is not monitored is difficult to manage or improve."
+      "why_it_matters": "What is not monitored is difficult to manage or improve.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.5",
@@ -2092,7 +2505,12 @@
         "Extension Officers",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Adaptation is essential when historical farming practices are no longer sufficient."
+      "why_it_matters": "Adaptation is essential when historical farming practices are no longer sufficient.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.5",
@@ -2109,7 +2527,12 @@
         "Future Farms Innovation Hub",
         "Extension Services"
       ],
-      "why_it_matters": "Controlled experimentation reduces risk and helps farmers learn what works locally."
+      "why_it_matters": "Controlled experimentation reduces risk and helps farmers learn what works locally.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.5",
@@ -2126,7 +2549,12 @@
         "Universities",
         "Research Institutions"
       ],
-      "why_it_matters": "Multiple knowledge sources can produce practical, locally appropriate innovations."
+      "why_it_matters": "Multiple knowledge sources can produce practical, locally appropriate innovations.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.5",
@@ -2143,7 +2571,12 @@
         "FAAB Programme",
         "Extension Services"
       ],
-      "why_it_matters": "Documentation turns individual experience into reusable farm knowledge."
+      "why_it_matters": "Documentation turns individual experience into reusable farm knowledge.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P4.5",
@@ -2160,7 +2593,11 @@
         "FAAB Programme",
         "Business Advisors"
       ],
-      "why_it_matters": "Resilience requires continuous investment, learning and adaptation rather than one-time action."
+      "why_it_matters": "Resilience requires continuous investment, learning and adaptation rather than one-time action.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P5.1",
@@ -2176,7 +2613,9 @@
         "FAAB Financial Literacy Module",
         "Business Advisors"
       ],
-      "why_it_matters": "Financial literacy enables farmers to understand business performance and make better decisions."
+      "why_it_matters": "Financial literacy enables farmers to understand business performance and make better decisions.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P5.1",
@@ -2193,7 +2632,11 @@
         "Record-Keeping Toolkit",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Complete records provide the foundation for budgeting, profitability analysis and financial planning."
+      "why_it_matters": "Complete records provide the foundation for budgeting, profitability analysis and financial planning.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P5.1",
@@ -2209,7 +2652,12 @@
         "FAAB Programme",
         "Farm Record-Keeping Toolkit"
       ],
-      "why_it_matters": "Financial results are easier to understand when connected to what happened operationally on the farm."
+      "why_it_matters": "Financial results are easier to understand when connected to what happened operationally on the farm.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.1",
@@ -2226,7 +2674,12 @@
         "Business Advisors",
         "FAAB Programme"
       ],
-      "why_it_matters": "Separation provides a more accurate picture of farm performance and reduces misuse of business funds."
+      "why_it_matters": "Separation provides a more accurate picture of farm performance and reduces misuse of business funds.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.1",
@@ -2243,7 +2696,12 @@
         "Accountants",
         "FAAB Programme"
       ],
-      "why_it_matters": "Reliable records are essential for decision-making, finance applications and business growth."
+      "why_it_matters": "Reliable records are essential for decision-making, finance applications and business growth.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.2",
@@ -2259,7 +2717,9 @@
         "FAAB Business Skills Module",
         "Business Advisors"
       ],
-      "why_it_matters": "Knowing production costs is essential for pricing, profitability and investment decisions."
+      "why_it_matters": "Knowing production costs is essential for pricing, profitability and investment decisions.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P5.2",
@@ -2275,7 +2735,9 @@
         "FAAB Programme",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Revenue analysis shows which activities generate the farm's income."
+      "why_it_matters": "Revenue analysis shows which activities generate the farm's income.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P5.2",
@@ -2291,7 +2753,12 @@
         "FAAB Financial Training",
         "Business Advisors"
       ],
-      "why_it_matters": "Sales alone do not indicate whether a farm is making money."
+      "why_it_matters": "Sales alone do not indicate whether a farm is making money.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.2",
@@ -2307,7 +2774,12 @@
         "Future Farms Advisory",
         "FAAB Programme"
       ],
-      "why_it_matters": "Financial data should influence actual business decisions rather than simply being recorded."
+      "why_it_matters": "Financial data should influence actual business decisions rather than simply being recorded.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.2",
@@ -2324,7 +2796,12 @@
         "Future Farms Advisory",
         "FAAB Programme"
       ],
-      "why_it_matters": "Active margin management strengthens competitiveness and long-term business viability."
+      "why_it_matters": "Active margin management strengthens competitiveness and long-term business viability.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.3",
@@ -2341,7 +2818,12 @@
         "FAAB Programme",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Productivity measurement shows how effectively farm resources are being converted into output."
+      "why_it_matters": "Productivity measurement shows how effectively farm resources are being converted into output.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.3",
@@ -2357,7 +2839,12 @@
         "Future Farms Advisory",
         "FAAB Programme"
       ],
-      "why_it_matters": "A balanced view of performance enables better business decisions."
+      "why_it_matters": "A balanced view of performance enables better business decisions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.3",
@@ -2374,7 +2861,12 @@
         "Business Advisors",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Comparison helps identify improvement, decline and performance gaps."
+      "why_it_matters": "Comparison helps identify improvement, decline and performance gaps.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.3",
@@ -2390,7 +2882,12 @@
         "Farm Management Specialists",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Measurement only creates value when it leads to action."
+      "why_it_matters": "Measurement only creates value when it leads to action.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.3",
@@ -2407,7 +2904,12 @@
         "Business Coaches",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Targets create accountability and enable continuous performance improvement."
+      "why_it_matters": "Targets create accountability and enable continuous performance improvement.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.4",
@@ -2423,7 +2925,12 @@
         "FAAB Programme",
         "Financial Advisors"
       ],
-      "why_it_matters": "Budgeting helps ensure that available resources are allocated appropriately."
+      "why_it_matters": "Budgeting helps ensure that available resources are allocated appropriately.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.4",
@@ -2439,7 +2946,12 @@
         "FAAB Financial Management Module",
         "Business Advisors"
       ],
-      "why_it_matters": "A profitable farm can still fail if it does not have cash when payments are due."
+      "why_it_matters": "A profitable farm can still fail if it does not have cash when payments are due.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.4",
@@ -2456,7 +2968,11 @@
         "Business Advisors",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Farming often has long gaps between spending money and receiving income."
+      "why_it_matters": "Farming often has long gaps between spending money and receiving income.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P5.4",
@@ -2473,7 +2989,12 @@
         "Extension Services",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Proactive risk management reduces the financial impact of unexpected events."
+      "why_it_matters": "Proactive risk management reduces the financial impact of unexpected events.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.4",
@@ -2490,7 +3011,12 @@
         "Insurance Providers",
         "FAAB Programme"
       ],
-      "why_it_matters": "Resilience depends on the farm's ability to absorb shocks and continue operating."
+      "why_it_matters": "Resilience depends on the farm's ability to absorb shocks and continue operating.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.5",
@@ -2506,7 +3032,12 @@
         "FAAB Business Planning Module",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Clear goals provide direction and enable resources to be prioritised."
+      "why_it_matters": "Clear goals provide direction and enable resources to be prioritised.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.5",
@@ -2523,7 +3054,12 @@
         "Extension Services",
         "Enterprise Development Partners"
       ],
-      "why_it_matters": "Growth opportunities change as markets, technologies and farm capabilities evolve."
+      "why_it_matters": "Growth opportunities change as markets, technologies and farm capabilities evolve.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.5",
@@ -2540,7 +3076,9 @@
         "Technical Experts",
         "Business Advisors"
       ],
-      "why_it_matters": "Expanding faster than the farm's systems can support can reduce quality, efficiency and profitability."
+      "why_it_matters": "Expanding faster than the farm's systems can support can reduce quality, efficiency and profitability.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P5.5",
@@ -2557,7 +3095,12 @@
         "Future Farms Advisory",
         "FAAB Programme"
       ],
-      "why_it_matters": "True scalability means growing while maintaining or improving performance."
+      "why_it_matters": "True scalability means growing while maintaining or improving performance.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P5.5",
@@ -2574,7 +3117,12 @@
         "Business Coaches",
         "FAAB Programme"
       ],
-      "why_it_matters": "Continuous improvement prevents growth from becoming a one-time exercise and keeps the enterprise competitive."
+      "why_it_matters": "Continuous improvement prevents growth from becoming a one-time exercise and keeps the enterprise competitive.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.1",
@@ -2590,7 +3138,12 @@
         "FAAB Programme",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Skilled and motivated people improve productivity, quality, innovation, and business resilience."
+      "why_it_matters": "Skilled and motivated people improve productivity, quality, innovation, and business resilience.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.1",
@@ -2606,7 +3159,9 @@
         "Extension Services",
         "Technical Training Providers"
       ],
-      "why_it_matters": "Understanding skill requirements helps close workforce gaps before they affect performance."
+      "why_it_matters": "Understanding skill requirements helps close workforce gaps before they affect performance.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P6.1",
@@ -2622,7 +3177,12 @@
         "Future Farms Academy",
         "FAAB Programme"
       ],
-      "why_it_matters": "Identifying skill gaps enables targeted training and continuous improvement."
+      "why_it_matters": "Identifying skill gaps enables targeted training and continuous improvement.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.1",
@@ -2638,7 +3198,9 @@
         "Occupational Safety Officers",
         "Extension Services"
       ],
-      "why_it_matters": "A positive work environment improves productivity, staff retention, and business reputation."
+      "why_it_matters": "A positive work environment improves productivity, staff retention, and business reputation.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P6.1",
@@ -2655,7 +3217,12 @@
         "FAAB Programme",
         "Business Mentors"
       ],
-      "why_it_matters": "Learning and leadership drive innovation, adaptability, and long-term competitiveness."
+      "why_it_matters": "Learning and leadership drive innovation, adaptability, and long-term competitiveness.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.2",
@@ -2672,7 +3239,9 @@
         "Future Farms Advisory",
         "Business Advisors"
       ],
-      "why_it_matters": "Workforce planning ensures the farm has the right people to support growth and operational efficiency."
+      "why_it_matters": "Workforce planning ensures the farm has the right people to support growth and operational efficiency.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P6.2",
@@ -2688,7 +3257,12 @@
         "Extension Services",
         "Human Resource Advisors"
       ],
-      "why_it_matters": "Role clarity improves accountability, productivity, and teamwork."
+      "why_it_matters": "Role clarity improves accountability, productivity, and teamwork.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.2",
@@ -2704,7 +3278,12 @@
         "Business Mentors",
         "Human Resource Professionals"
       ],
-      "why_it_matters": "Recruiting the right people reduces turnover and improves overall farm performance."
+      "why_it_matters": "Recruiting the right people reduces turnover and improves overall farm performance.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.2",
@@ -2721,7 +3300,12 @@
         "Gender and Youth Programmes",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Inclusive employment strengthens workforce diversity, improves reputation, and supports decent work."
+      "why_it_matters": "Inclusive employment strengthens workforce diversity, improves reputation, and supports decent work.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.2",
@@ -2738,7 +3322,12 @@
         "FAAB Programme",
         "Business Advisors"
       ],
-      "why_it_matters": "Workforce needs evolve with business growth, mechanisation, and innovation."
+      "why_it_matters": "Workforce needs evolve with business growth, mechanisation, and innovation.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.3",
@@ -2755,7 +3344,12 @@
         "FAAB Programme",
         "Extension Services"
       ],
-      "why_it_matters": "Continuous learning enables farmers to adopt better practices, improve productivity, and remain competitive."
+      "why_it_matters": "Continuous learning enables farmers to adopt better practices, improve productivity, and remain competitive.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.3",
@@ -2772,7 +3366,12 @@
         "Technical Experts",
         "Extension Officers"
       ],
-      "why_it_matters": "Skilled workers perform tasks more efficiently, safely, and consistently."
+      "why_it_matters": "Skilled workers perform tasks more efficiently, safely, and consistently.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.3",
@@ -2789,7 +3388,12 @@
         "Future Farms Network",
         "Cooperatives"
       ],
-      "why_it_matters": "Knowledge sharing strengthens teamwork, preserves experience, and accelerates learning."
+      "why_it_matters": "Knowledge sharing strengthens teamwork, preserves experience, and accelerates learning.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.3",
@@ -2806,7 +3410,12 @@
         "Business Coaches",
         "Extension Services"
       ],
-      "why_it_matters": "Measuring training outcomes ensures learning delivers tangible value to the farm."
+      "why_it_matters": "Measuring training outcomes ensures learning delivers tangible value to the farm.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.3",
@@ -2824,7 +3433,11 @@
         "TVET Institutions",
         "Development Partners"
       ],
-      "why_it_matters": "A learning culture prepares the farm to adapt to new technologies, regulations, and market opportunities."
+      "why_it_matters": "A learning culture prepares the farm to adapt to new technologies, regulations, and market opportunities.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P6.4",
@@ -2841,7 +3454,12 @@
         "Extension Services",
         "FAAB Programme"
       ],
-      "why_it_matters": "Standardised procedures improve consistency, efficiency, quality, and reduce operational errors."
+      "why_it_matters": "Standardised procedures improve consistency, efficiency, quality, and reduce operational errors.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.4",
@@ -2857,7 +3475,12 @@
         "Farm Management Advisors",
         "Extension Officers"
       ],
-      "why_it_matters": "Effective supervision ensures work is completed correctly, safely, and on schedule."
+      "why_it_matters": "Effective supervision ensures work is completed correctly, safely, and on schedule.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.4",
@@ -2873,7 +3496,12 @@
         "Future Farms Advisory",
         "Business Coaches"
       ],
-      "why_it_matters": "Monitoring performance enables continuous improvement and better resource utilisation."
+      "why_it_matters": "Monitoring performance enables continuous improvement and better resource utilisation.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.4",
@@ -2890,7 +3518,12 @@
         "AgTech Providers",
         "Extension Services"
       ],
-      "why_it_matters": "Appropriate technology improves efficiency, decision-making, and coordination."
+      "why_it_matters": "Appropriate technology improves efficiency, decision-making, and coordination.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.4",
@@ -2907,7 +3540,12 @@
         "Business Mentors",
         "FAAB Programme"
       ],
-      "why_it_matters": "Continuous operational improvement increases productivity, quality, profitability, and resilience."
+      "why_it_matters": "Continuous operational improvement increases productivity, quality, profitability, and resilience.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.5",
@@ -2924,7 +3562,12 @@
         "Leadership Coaches",
         "Business Mentors"
       ],
-      "why_it_matters": "Effective leadership builds trust, improves teamwork, and increases overall farm performance."
+      "why_it_matters": "Effective leadership builds trust, improves teamwork, and increases overall farm performance.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.5",
@@ -2941,7 +3584,12 @@
         "Extension Services",
         "Health Providers"
       ],
-      "why_it_matters": "Healthy and motivated workers are more productive, engaged, and likely to remain with the business."
+      "why_it_matters": "Healthy and motivated workers are more productive, engaged, and likely to remain with the business.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.5",
@@ -2957,7 +3605,12 @@
         "Human Resource Advisors",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Recognition increases motivation, strengthens commitment, and improves staff retention."
+      "why_it_matters": "Recognition increases motivation, strengthens commitment, and improves staff retention.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.5",
@@ -2974,7 +3627,12 @@
         "Innovation Programmes",
         "FAAB"
       ],
-      "why_it_matters": "Engaged workers often identify practical solutions that improve farm performance and innovation."
+      "why_it_matters": "Engaged workers often identify practical solutions that improve farm performance and innovation.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P6.5",
@@ -2991,7 +3649,12 @@
         "Business Mentors",
         "Leadership Development Programmes"
       ],
-      "why_it_matters": "Leadership development strengthens business continuity, resilience, and long-term organisational growth."
+      "why_it_matters": "Leadership development strengthens business continuity, resilience, and long-term organisational growth.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.1",
@@ -3008,7 +3671,9 @@
         "Future Farms Advisory",
         "Cooperatives"
       ],
-      "why_it_matters": "Understanding your customers helps you produce what the market demands."
+      "why_it_matters": "Understanding your customers helps you produce what the market demands.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P7.1",
@@ -3025,7 +3690,9 @@
         "Buyer Networks",
         "Market Advisors"
       ],
-      "why_it_matters": "Meeting customer expectations improves satisfaction, loyalty, and market competitiveness."
+      "why_it_matters": "Meeting customer expectations improves satisfaction, loyalty, and market competitiveness.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P7.1",
@@ -3042,7 +3709,12 @@
         "Cooperatives",
         "Extension Officers"
       ],
-      "why_it_matters": "Market information reduces risk and helps maximise profitability."
+      "why_it_matters": "Market information reduces risk and helps maximise profitability.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.1",
@@ -3059,7 +3731,9 @@
         "Food Safety Experts",
         "Export Promotion Agencies"
       ],
-      "why_it_matters": "Understanding market requirements improves market access and reduces product rejection."
+      "why_it_matters": "Understanding market requirements improves market access and reduces product rejection.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P7.1",
@@ -3076,7 +3750,12 @@
         "Trade Promotion Organisations",
         "Business Advisors"
       ],
-      "why_it_matters": "Exploring new markets increases resilience, growth potential, and business competitiveness."
+      "why_it_matters": "Exploring new markets increases resilience, growth potential, and business competitiveness.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.2",
@@ -3094,7 +3773,12 @@
         "Buyer Networks",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Stable market channels improve income predictability and reduce post-harvest losses."
+      "why_it_matters": "Stable market channels improve income predictability and reduce post-harvest losses.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.2",
@@ -3111,7 +3795,12 @@
         "Extension Services",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Reliable suppliers build trust, secure repeat business, and strengthen market reputation."
+      "why_it_matters": "Reliable suppliers build trust, secure repeat business, and strengthen market reputation.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.2",
@@ -3128,7 +3817,12 @@
         "Business Advisors",
         "Marketing Specialists"
       ],
-      "why_it_matters": "Customer feedback helps improve products, services, and long-term business relationships."
+      "why_it_matters": "Customer feedback helps improve products, services, and long-term business relationships.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.2",
@@ -3145,7 +3839,12 @@
         "Legal Advisors",
         "Cooperatives"
       ],
-      "why_it_matters": "Effective negotiation improves profitability, transparency, and long-term partnerships."
+      "why_it_matters": "Effective negotiation improves profitability, transparency, and long-term partnerships.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.2",
@@ -3162,7 +3861,12 @@
         "Business Coaches",
         "Market Development Organisations"
       ],
-      "why_it_matters": "Strong relationships increase customer loyalty, repeat business, and market resilience."
+      "why_it_matters": "Strong relationships increase customer loyalty, repeat business, and market resilience.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.3",
@@ -3179,7 +3883,12 @@
         "Market Information Systems",
         "Extension Services"
       ],
-      "why_it_matters": "Market intelligence helps farmers make informed decisions and reduce business risk."
+      "why_it_matters": "Market intelligence helps farmers make informed decisions and reduce business risk.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.3",
@@ -3196,7 +3905,12 @@
         "Business Mentors",
         "Marketing Specialists"
       ],
-      "why_it_matters": "Understanding competitors helps improve market positioning and competitiveness."
+      "why_it_matters": "Understanding competitors helps improve market positioning and competitiveness.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.3",
@@ -3213,7 +3927,12 @@
         "Market Advisors",
         "Future Farms Institute"
       ],
-      "why_it_matters": "Market-led production reduces oversupply, increases profitability, and improves customer satisfaction."
+      "why_it_matters": "Market-led production reduces oversupply, increases profitability, and improves customer satisfaction.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.3",
@@ -3230,7 +3949,12 @@
         "Export Promotion Agencies",
         "Future Farms Network"
       ],
-      "why_it_matters": "Anticipating market trends allows farmers to adapt early and remain competitive."
+      "why_it_matters": "Anticipating market trends allows farmers to adapt early and remain competitive.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.3",
@@ -3247,7 +3971,12 @@
         "Marketing Consultants",
         "FAAB Programme"
       ],
-      "why_it_matters": "Businesses that respond to market intelligence remain competitive and grow sustainably."
+      "why_it_matters": "Businesses that respond to market intelligence remain competitive and grow sustainably.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.4",
@@ -3264,7 +3993,9 @@
         "Value Addition Specialists",
         "FAAB Programme"
       ],
-      "why_it_matters": "Value addition increases product appeal, market differentiation, and profitability."
+      "why_it_matters": "Value addition increases product appeal, market differentiation, and profitability.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P7.4",
@@ -3281,7 +4012,12 @@
         "Digital Marketplaces",
         "Trade Organisations"
       ],
-      "why_it_matters": "Multiple market channels improve resilience and create additional income opportunities."
+      "why_it_matters": "Multiple market channels improve resilience and create additional income opportunities.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.4",
@@ -3298,7 +4034,12 @@
         "Future Farms Institute",
         "Product Development Experts"
       ],
-      "why_it_matters": "Continuous product improvement strengthens competitiveness and customer satisfaction."
+      "why_it_matters": "Continuous product improvement strengthens competitiveness and customer satisfaction.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.4",
@@ -3315,7 +4056,12 @@
         "Future Farms Network",
         "Business Advisors"
       ],
-      "why_it_matters": "Effective marketing increases visibility, customer trust, and market opportunities."
+      "why_it_matters": "Effective marketing increases visibility, customer trust, and market opportunities.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.4",
@@ -3332,7 +4078,12 @@
         "Future Farms Advisory",
         "Development Partners"
       ],
-      "why_it_matters": "Innovation and diversification support long-term growth and reduce dependence on a single product or market."
+      "why_it_matters": "Innovation and diversification support long-term growth and reduce dependence on a single product or market.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.5",
@@ -3349,7 +4100,12 @@
         "Marketing Consultants",
         "Business Mentors"
       ],
-      "why_it_matters": "A strong value proposition helps attract customers, build loyalty, and compete effectively."
+      "why_it_matters": "A strong value proposition helps attract customers, build loyalty, and compete effectively.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.5",
@@ -3366,7 +4122,12 @@
         "Trade Associations",
         "Future Farms Network"
       ],
-      "why_it_matters": "Strategic partnerships create more secure markets, knowledge exchange, and growth opportunities."
+      "why_it_matters": "Strategic partnerships create more secure markets, knowledge exchange, and growth opportunities.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.5",
@@ -3382,7 +4143,12 @@
         "Quality Assurance Advisors",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Reputation is a valuable business asset that drives customer trust and repeat business."
+      "why_it_matters": "Reputation is a valuable business asset that drives customer trust and repeat business.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.5",
@@ -3399,7 +4165,12 @@
         "Future Farms Network",
         "Media Partners"
       ],
-      "why_it_matters": "Strong branding increases recognition, attracts customers, and strengthens market positioning."
+      "why_it_matters": "Strong branding increases recognition, attracts customers, and strengthens market positioning.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P7.5",
@@ -3416,7 +4187,12 @@
         "Business Coaches",
         "FAAB Programme"
       ],
-      "why_it_matters": "Strategic positioning enables long-term competitiveness, resilience, and sustainable business growth."
+      "why_it_matters": "Strategic positioning enables long-term competitiveness, resilience, and sustainable business growth.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.1",
@@ -3433,7 +4209,9 @@
         "Financial Institutions",
         "Enterprise Support Organisations"
       ],
-      "why_it_matters": "Knowing your financing options helps you choose the right source of capital for your business stage and growth goals."
+      "why_it_matters": "Knowing your financing options helps you choose the right source of capital for your business stage and growth goals.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P8.1",
@@ -3449,7 +4227,9 @@
         "Future Farms Institute (FFI)",
         "Business Development Service Providers"
       ],
-      "why_it_matters": "Understanding investor expectations helps farmers prepare before seeking external support."
+      "why_it_matters": "Understanding investor expectations helps farmers prepare before seeking external support.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P8.1",
@@ -3466,7 +4246,9 @@
         "Financial Advisors",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Investment should support clear business objectives rather than simply provide additional funds."
+      "why_it_matters": "Investment should support clear business objectives rather than simply provide additional funds.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P8.1",
@@ -3483,7 +4265,9 @@
         "Legal Advisors",
         "Development Partners"
       ],
-      "why_it_matters": "Responsible use of finance builds credibility and increases future funding opportunities."
+      "why_it_matters": "Responsible use of finance builds credibility and increases future funding opportunities.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P8.1",
@@ -3500,7 +4284,9 @@
         "FFI",
         "Enterprise Development Partners"
       ],
-      "why_it_matters": "Assessing readiness improves the likelihood of securing appropriate financing and building long-term investor confidence."
+      "why_it_matters": "Assessing readiness improves the likelihood of securing appropriate financing and building long-term investor confidence.",
+      "requiresVerification": false,
+      "allowedEvidenceTypes": []
     },
     {
       "capability_id": "P8.2",
@@ -3517,7 +4303,12 @@
         "Legal Advisors",
         "Business Development Providers"
       ],
-      "why_it_matters": "Legal registration enhances credibility, enables access to finance, and supports formal business growth."
+      "why_it_matters": "Legal registration enhances credibility, enables access to finance, and supports formal business growth.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.2",
@@ -3534,7 +4325,12 @@
         "Extension Services",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Regulatory compliance reduces legal risks and increases investor confidence."
+      "why_it_matters": "Regulatory compliance reduces legal risks and increases investor confidence.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.2",
@@ -3551,7 +4347,11 @@
         "Governance Advisors",
         "Future Farms Institute"
       ],
-      "why_it_matters": "Good governance improves transparency, accountability, and organisational resilience."
+      "why_it_matters": "Good governance improves transparency, accountability, and organisational resilience.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P8.2",
@@ -3568,7 +4368,11 @@
         "Human Resource Advisors",
         "Business Consultants"
       ],
-      "why_it_matters": "Policies improve consistency, reduce operational risk, and demonstrate business maturity."
+      "why_it_matters": "Policies improve consistency, reduce operational risk, and demonstrate business maturity.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P8.2",
@@ -3585,7 +4389,12 @@
         "Accountants",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Ongoing compliance protects the business, strengthens reputation, and improves investment readiness."
+      "why_it_matters": "Ongoing compliance protects the business, strengthens reputation, and improves investment readiness.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.3",
@@ -3602,7 +4411,12 @@
         "Future Farms Advisory",
         "Financial Literacy Programmes"
       ],
-      "why_it_matters": "Accurate financial records are essential for business management, financing, and investor confidence."
+      "why_it_matters": "Accurate financial records are essential for business management, financing, and investor confidence.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.3",
@@ -3619,7 +4433,11 @@
         "Business Development Advisors",
         "Future Farms Institute (FFI)"
       ],
-      "why_it_matters": "A business plan demonstrates direction, preparedness, and strategic thinking to investors and partners."
+      "why_it_matters": "A business plan demonstrates direction, preparedness, and strategic thinking to investors and partners.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P8.3",
@@ -3636,7 +4454,12 @@
         "Accountants",
         "Business Coaches"
       ],
-      "why_it_matters": "Budgeting improves financial discipline and demonstrates responsible business planning."
+      "why_it_matters": "Budgeting improves financial discipline and demonstrates responsible business planning.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.3",
@@ -3653,7 +4476,12 @@
         "Extension Services",
         "AgTech Providers"
       ],
-      "why_it_matters": "Investors and lenders rely on evidence of performance rather than assumptions."
+      "why_it_matters": "Investors and lenders rely on evidence of performance rather than assumptions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.3",
@@ -3670,7 +4498,11 @@
         "Investment Readiness Programmes",
         "Business Mentors"
       ],
-      "why_it_matters": "Well-prepared investment documents improve credibility and significantly increase funding success."
+      "why_it_matters": "Well-prepared investment documents improve credibility and significantly increase funding success.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "document"
+      ]
     },
     {
       "capability_id": "P8.4",
@@ -3687,7 +4519,12 @@
         "Development Partners",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Proactively seeking finance increases the likelihood of securing appropriate resources when opportunities arise."
+      "why_it_matters": "Proactively seeking finance increases the likelihood of securing appropriate resources when opportunities arise.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.4",
@@ -3705,7 +4542,12 @@
         "Universities",
         "NGOs"
       ],
-      "why_it_matters": "Strategic partnerships provide knowledge, credibility, market opportunities, and long-term growth."
+      "why_it_matters": "Strategic partnerships provide knowledge, credibility, market opportunities, and long-term growth.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.4",
@@ -3722,7 +4564,12 @@
         "Business Development Advisors",
         "Proposal Writing Support"
       ],
-      "why_it_matters": "Businesses that apply consistently create more opportunities for growth and investment."
+      "why_it_matters": "Businesses that apply consistently create more opportunities for growth and investment.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.4",
@@ -3739,7 +4586,12 @@
         "Investment Networks",
         "Enterprise Development Organisations"
       ],
-      "why_it_matters": "Trust and credibility are built through ongoing engagement rather than one-time funding requests."
+      "why_it_matters": "Trust and credibility are built through ongoing engagement rather than one-time funding requests.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.4",
@@ -3756,7 +4608,12 @@
         "Business Mentors",
         "Monitoring & Evaluation Specialists"
       ],
-      "why_it_matters": "Effective resource mobilisation is measured by business impact, not simply by funds received."
+      "why_it_matters": "Effective resource mobilisation is measured by business impact, not simply by funds received.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.5",
@@ -3773,7 +4630,12 @@
         "Business Advisors",
         "FAAB Programme"
       ],
-      "why_it_matters": "A defined strategy demonstrates vision, direction, and preparedness for sustainable growth."
+      "why_it_matters": "A defined strategy demonstrates vision, direction, and preparedness for sustainable growth.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.5",
@@ -3790,7 +4652,12 @@
         "Governance Experts",
         "Accountants"
       ],
-      "why_it_matters": "Investors seek businesses that can responsibly manage capital and deliver measurable results."
+      "why_it_matters": "Investors seek businesses that can responsibly manage capital and deliver measurable results.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.5",
@@ -3807,7 +4674,12 @@
         "Monitoring & Evaluation Specialists",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Performance monitoring supports accountability, learning, and informed investment decisions."
+      "why_it_matters": "Performance monitoring supports accountability, learning, and informed investment decisions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.5",
@@ -3824,7 +4696,12 @@
         "Pitch Coaching Programmes",
         "Investment Networks"
       ],
-      "why_it_matters": "Effective communication increases credibility and improves access to investment and strategic partnerships."
+      "why_it_matters": "Effective communication increases credibility and improves access to investment and strategic partnerships.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P8.5",
@@ -3841,7 +4718,12 @@
         "Future Farms Advisory",
         "Enterprise Development Partners"
       ],
-      "why_it_matters": "Investment readiness is an ongoing journey that requires continuous adaptation and improvement."
+      "why_it_matters": "Investment readiness is an ongoing journey that requires continuous adaptation and improvement.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     },
     {
       "capability_id": "P2.2",
@@ -3858,7 +4740,12 @@
         "Renewable Energy Providers",
         "Future Farms Advisory"
       ],
-      "why_it_matters": "Monitoring demonstrates the value of renewable energy and supports better investment decisions."
+      "why_it_matters": "Monitoring demonstrates the value of renewable energy and supports better investment decisions.",
+      "requiresVerification": true,
+      "allowedEvidenceTypes": [
+        "image",
+        "document"
+      ]
     }
   ]
 }

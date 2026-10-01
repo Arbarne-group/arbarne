@@ -4,167 +4,180 @@ import { useState } from "react";
 import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
 
+const SECTIONS: Array<{ title: string; href: string; body: string[] }> = [
+  {
+    title: "Business Profile (Overview)",
+    href: "/overview",
+    body: [
+      "Your farm's home page. It shows your profile summary, farm details and quick actions.",
+      "How to use it: review your details after signup, tap Edit Profile to update anything (size, enterprises, water, markets), and use the action cards to jump into your assessment or complete your Farm Business Profile.",
+    ],
+  },
+  {
+    title: "My Future Farm (Dashboard)",
+    href: "/dashboard",
+    body: [
+      "Your progress headquarters: maturity index, pillar radar chart and next steps.",
+      "How to use it: if your Farm Business Profile is incomplete, the dashboard blurs and asks you to finish it first — the numbers are computed from it. Once complete, track your maturity here after every assessment.",
+    ],
+  },
+  {
+    title: "FFMI/24 Assessment",
+    href: "/assessment",
+    body: [
+      "The 8-pillar farm maturity assessment — 25 questions per pillar. Answer YES or NO honestly for each question; the questionnaire autosaves as you go.",
+      "How to use it: work pillar by pillar from the assessment home. Submit a pillar to unlock its summary and report. Completed pillars lock for 90 days, then you may reassess to track improvement.",
+    ],
+  },
+  {
+    title: "FFV — Verify Your Progress",
+    href: "/ffv",
+    body: [
+      "Future Farms Verification. Every question you answered YES to appears here with guidance on what proves it.",
+      "How to use it: upload a photo, scan or PDF per question plus an optional note. Each item carries a badge — Not Submitted, Submitted, Verified or Needs Review. If an item comes back as Needs Review, read the reviewer's note and upload clearer evidence; it is a chance to improve, not a penalty. Finish all uploads to clear the attention mark in the sidebar.",
+    ],
+  },
+  {
+    title: "Digital Learning",
+    href: "/learning",
+    body: [
+      "Blogs, documents, videos and audio matched to your weakest capabilities.",
+      "How to use it: complete your assessment first — materials unlock from capabilities where you scored under 60% (less than 3 out of 5). Filter by type (blog, document, video, audio). General materials stay open to everyone.",
+    ],
+  },
+  {
+    title: "Opportunity Desk",
+    href: "/opportunities",
+    body: [
+      "Events, partner offers, programmes, markets and financing matched to your farm.",
+      "How to use it: items flagged “Matched to you” target capabilities you scored under 60% — including field days and cooperative offers. Filter by type. Anything without capability links is open to everyone.",
+    ],
+  },
+  {
+    title: "Solutions Hub",
+    href: "/service-desk",
+    body: [
+      "Everything Future Farms offers directly: farmer training, soil and water lab testing, irrigation design, cold-chain, market linkage and business setup.",
+      "How to use it: browse the full catalogue and open any card for details, pricing guidance and contact information.",
+    ],
+  },
+  {
+    title: "Support tickets",
+    href: "/support",
+    body: [
+      "Raise issues with the right team: Pillar Support, FFMI/24 Assessment, Learning, FFV, Opportunity Desk, Services Desk or a General Inquiry.",
+      "How to use it: open the New ticket tab, pick a department, describe the issue and submit. You receive an email with your ticket number and a tracking link. The My tickets tab lists everything with status filters (Open, In Progress, Resolved, Closed) — open any ticket to see its live status.",
+    ],
+  },
+  {
+    title: "Account basics",
+    href: "/login",
+    body: [
+      "Sign up with email and password or with Google. New Google accounts are verified instantly; password accounts confirm via email code.",
+      "Forgot your password? Use Forgot password on the login page. To change an existing password, use Settings. Keep your profile email current — tickets, verification and assessment reports all go there.",
+    ],
+  },
+];
+
 export default function HelpCenterPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const faqs = [
-    {
-      q: "How is the 8-Pillar Farm Maturity Index calculated?",
-      a: "The maturity index aggregates 40 sub-capabilities across Soil, Water, Technology, Business, Team, Climate Resilience, Market Access, and Post-Harvest. Your responses are weighted against regional benchmarks from thousands of commercial farming enterprises across East and Southern Africa to identify your tier (Emerging, Developing, Advancing, Leading).",
-    },
-    {
-      q: "Can I pay for the assessment via M-Pesa STK push?",
-      a: "Yes! During checkout, select the M-Pesa tab, verify your Kenyan phone number (+254), and tap 'Complete Payment'. A PIN prompt will appear instantly on your phone handset. Upon entering your Safaricom M-Pesa PIN, your assessment and dashboard will unlock automatically.",
-    },
-    {
-      q: "Is my farm financial and yield data kept confidential?",
-      a: "Absolutely. Future Farms adheres to strict data privacy standards. Your farm production numbers, revenues, and GPS coordinates are strictly anonymized and used only to benchmark your performance and suggest grant/market opportunities. We never sell or expose your operational data.",
-    },
-    {
-      q: "What happens after I complete the Full Assessment?",
-      a: "You immediately unlock the interactive 8-pillar Radar Chart, tailored action plans, high-priority intervention steps, and can export a formal PDF Transformation Plan to share with lenders, co-owners, or equity investors.",
-    },
-    {
-      q: "Can I update my questionnaire responses as my farm improves?",
-      a: "Yes. You can re-visit your onboarding steps or initiate a quarterly re-assessment from the Dashboard or Assessment Pricing page anytime to track your maturity index progress over the seasons.",
-    },
-    {
-      q: "How do I apply for the grants listed in the Opportunity Desk?",
-      a: "Each opportunity has clear eligibility requirements listed. Once your farm maturity matches the criteria (such as minimum acreage or verified cold storage needs), clicking 'Apply' automatically pre-fills your verified Future Farms audit score to accelerate sponsor review.",
-    },
-  ];
-
-  const filteredFaqs = faqs.filter(
-    (f) =>
-      f.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      f.a.toLowerCase().includes(searchQuery.toLowerCase())
+  const filtered = SECTIONS.filter(
+    (s) =>
+      s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.body.join(" ").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <AppShell>
       <div className="max-w-[1024px] mx-auto w-full px-4 md:px-10 py-8 space-y-8 pb-24">
-        {/* Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-xs font-bold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-            Knowledge Base &amp; Support
-          </span>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-on-surface">
-            How can we help your farm today?
-          </h1>
-          <p className="text-sm md:text-base text-on-surface-variant">
-            Explore guides, technical methodology, and payment troubleshooting.
-          </p>
-
-          <div className="relative max-w-lg mx-auto pt-2">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">
-              search
+        <div className="relative overflow-hidden rounded-3xl border border-outline-variant/30 bg-surface shadow-level-1">
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "linear-gradient(135deg, #045D6114 0%, transparent 60%)" }}
+          />
+          <div className="relative text-center max-w-2xl mx-auto space-y-4 p-6 md:p-8">
+            <div
+              className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center shadow-sm"
+              style={{ background: "linear-gradient(135deg, #045D6125 0%, #045D6145 100%)" }}
+            >
+              <span className="material-symbols-outlined text-[30px] drop-shadow-sm" style={{ color: "#045D61" }}>
+                help
+              </span>
+            </div>
+            <span className="inline-block text-xs font-bold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+              Help Center — System Navigation
             </span>
+            <h1 className="text-2xl md:text-3xl font-bold text-on-surface">
+              How to use Future Farms
+            </h1>
+            <p className="text-sm md:text-[15px] text-on-surface-variant">
+              What each page contains and how to navigate the system, section by
+              section. Search or open a guide below — every card links straight
+              to its page.
+            </p>
             <input
-              type="text"
-              placeholder="Search questions, billing, radar scores..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 rounded-2xl border border-outline-variant bg-surface-container-lowest text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 focus:ring-primary shadow-sm"
+              placeholder="Search the guide…"
+              className="w-full max-w-md mx-auto rounded-xl border border-outline-variant px-4 py-2.5 text-sm bg-surface-container-lowest outline-none focus:border-primary"
             />
           </div>
         </div>
 
-        {/* Quick Topic Categories */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-5 rounded-2xl bg-surface-container-lowest border border-surface-variant/40 shadow-sm text-center">
-            <div className="w-10 h-10 rounded-xl bg-primary-container/20 text-primary flex items-center justify-center mx-auto mb-3">
-              <span className="material-symbols-outlined">fact_check</span>
-            </div>
-            <h3 className="text-sm font-bold text-on-surface mb-1">
-              Assessment Scoring
-            </h3>
-            <p className="text-xs text-on-surface-variant">
-              Methodology, 8 pillars, and benchmark calculations.
+        <div className="space-y-3 max-w-3xl mx-auto">
+          {filtered.length === 0 && (
+            <p className="text-sm text-on-surface-variant text-center rounded-2xl border border-dashed border-outline-variant p-6">
+              Nothing matches “{searchQuery}”. Try “assessment”, “ticket” or “verification”.
             </p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-surface-container-lowest border border-surface-variant/40 shadow-sm text-center">
-            <div className="w-10 h-10 rounded-xl bg-secondary-container text-secondary flex items-center justify-center mx-auto mb-3">
-              <span className="material-symbols-outlined">payments</span>
-            </div>
-            <h3 className="text-sm font-bold text-on-surface mb-1">
-              M-Pesa &amp; Billing
-            </h3>
-            <p className="text-xs text-on-surface-variant">
-              STK push, receipts, and currency conversions.
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-surface-container-lowest border border-surface-variant/40 shadow-sm text-center">
-            <div className="w-10 h-10 rounded-xl bg-primary-container/20 text-primary flex items-center justify-center mx-auto mb-3">
-              <span className="material-symbols-outlined">security</span>
-            </div>
-            <h3 className="text-sm font-bold text-on-surface mb-1">
-              Data &amp; Privacy
-            </h3>
-            <p className="text-xs text-on-surface-variant">
-              Encrypted storage, confidentiality, and farmer rights.
-            </p>
-          </div>
-        </div>
-
-        {/* FAQs Accordion */}
-        <div className="bg-surface-container-lowest rounded-3xl p-6 md:p-8 border border-surface-variant/40 shadow-[0_4px_16px_rgba(0,0,0,0.03)] space-y-4">
-          <h2 className="text-lg font-bold text-on-surface mb-4">
-            Frequently Asked Questions
-          </h2>
-
-          <div className="divide-y divide-surface-variant/40">
-            {filteredFaqs.map((faq, idx) => {
-              const isOpen = openIndex === idx;
-              return (
-                <div key={idx} className="py-4">
-                  <button
-                    type="button"
-                    onClick={() => setOpenIndex(isOpen ? null : idx)}
-                    className="w-full flex items-center justify-between text-left gap-4 cursor-pointer group"
-                  >
-                    <span className="font-semibold text-sm text-on-surface group-hover:text-primary transition-colors">
-                      {faq.q}
-                    </span>
-                    <span
-                      className={`material-symbols-outlined text-on-surface-variant transition-transform duration-200 ${
-                        isOpen ? "rotate-180 text-primary" : ""
-                      }`}
+          )}
+          {filtered.map((s) => {
+            const idx = SECTIONS.indexOf(s);
+            const open = openIndex === idx;
+            return (
+              <div
+                key={s.title}
+                className="rounded-2xl border border-outline-variant/50 bg-surface shadow-level-1 hover:shadow-level-2 transition-all overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenIndex(open ? null : idx)}
+                  className="w-full flex items-center justify-between gap-3 px-5 py-4 text-left cursor-pointer"
+                >
+                  <span className="font-bold text-on-surface">{s.title}</span>
+                  <span className="material-symbols-outlined text-on-surface-variant shrink-0">
+                    {open ? "expand_less" : "expand_more"}
+                  </span>
+                </button>
+                {open && (
+                  <div className="px-5 pb-5 space-y-2.5">
+                    {s.body.map((p, i) => (
+                      <p key={i} className="text-sm text-on-surface-variant leading-relaxed">
+                        {p}
+                      </p>
+                    ))}
+                    <Link
+                      href={s.href}
+                      className="inline-flex items-center gap-1 text-sm font-bold text-primary"
                     >
-                      expand_more
-                    </span>
-                  </button>
-
-                  {isOpen && (
-                    <div className="mt-3 text-xs md:text-sm text-on-surface-variant leading-relaxed pl-1 pr-4 animate-fade-in">
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                      Open {s.title.split("(")[0].trim()}
+                      <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Support Callout */}
-        <div className="bg-primary/5 border border-primary/20 rounded-3xl p-6 md:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="text-base font-bold text-on-surface mb-1">
-              Still have questions or need custom assistance?
-            </h3>
-            <p className="text-xs text-on-surface-variant">
-              Our regional agricultural support team is available Monday through Saturday.
-            </p>
-          </div>
-          <Link
-            href="/contact"
-            className="px-6 py-2.5 rounded-xl bg-primary text-white text-xs font-bold btn-shadow hover:bg-primary/90 transition-all whitespace-nowrap"
-          >
-            Contact Our Support Desk
-          </Link>
-        </div>
+        <p className="text-center text-sm text-on-surface-variant">
+          Still stuck?{" "}
+          <Link href="/support" className="font-bold text-primary">
+            Open a support ticket
+          </Link>{" "}
+          and the team will help.
+        </p>
       </div>
     </AppShell>
   );

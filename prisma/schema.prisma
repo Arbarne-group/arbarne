@@ -50,6 +50,7 @@ model User {
   orders              Order[]
   subscriptions       Subscription[]
   business            Business?
+  supportTickets      SupportTicket[]
 }
 
 // ─── Farm business identity (own table, FK → User) ─────────────────
@@ -360,11 +361,26 @@ model FfvEvidence {
   notes        String?
   status       String     @default("submitted")
   createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @default(now()) @updatedAt
+  updatedAt    DateTime   @updatedAt
   assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  media        FfvMedia[]
 
   @@unique([assessmentId, questionId])
   @@index([assessmentId, pillarId])
+}
+
+// One verification question accepts up to 5 separate media files.
+model FfvMedia {
+  id         String      @id @default(cuid())
+  evidenceId String
+  evidence   FfvEvidence @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+  fileName   String
+  fileType   String?
+  fileSize   Int?
+  fileData   String
+  createdAt  DateTime    @default(now())
+
+  @@index([evidenceId])
 }
 
 // ─── Geographic hierarchy (composite primary keys) ───────────────
@@ -473,4 +489,86 @@ model AuditLog {
   @@index([model, recordId])
   @@index([actorId])
   @@index([at])
+}
+
+// ─── Support tickets ─────────────────────────────────────────────
+// Farmers raise tickets (pillar support, FFMI/24, Learning, FFV,
+// Opportunity Desk, Services Desk, General Inquiry). Clients track them
+// via the emailed slug link; staff resolve them in /a/* later.
+model SupportTicket {
+  id           String   @id @default(cuid())
+  ticketNumber String   @unique // human-readable, e.g. TKT-8F3K2A
+  slug         String   @unique // tracking link, e.g. tkt-a1b2c3d4e5
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     String
+  subject      String
+  message      String
+  status       String   @default("open") // open | in_progress | resolved | closed
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId, status])
+  @@index([status])
+}
+
+// ─── Opportunity Desk ────────────────────────────────────────────
+// Events, partner offers, programmes… linked to the capabilities they
+// strengthen. capabilityIds is a JSON array of "P1.1"-style ids; empty
+// means general (shown to everyone).
+model Opportunity {
+  id            String    @id @default(cuid())
+  key           String    @unique // stable seed key, e.g. "nakuru-dairy-field-day"
+  title         String
+  type          String    // event | offer | programme | market | finance
+  partner       String?
+  description   String
+  capabilityIds String    @default("[]")
+  location      String?
+  startsAt      DateTime?
+  endsAt        DateTime?
+  linkUrl       String?
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([active])
+}
+
+// ─── Digital Learning ────────────────────────────────────────────
+// Blogs, documents, videos… linked to capabilities. capabilityIds is a
+// JSON array of "P1.1"-style ids; empty means general.
+model LearningMaterial {
+  id            String   @id @default(cuid())
+  key           String   @unique
+  title         String
+  kind          String   // blog | document | video | audio
+  capabilityIds String   @default("[]")
+  summary       String?
+  url           String?
+  duration      String?
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([active])
+}
+
+// ─── Solutions Hub ───────────────────────────────────────────────
+// Everything Future Farms offers directly: training & extension,
+// soil/water lab testing, irrigation design, cold-chain, market linkage…
+model Solution {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  tagline     String?
+  description String
+  category    String?
+  contact     String?
+  linkUrl     String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active])
 }

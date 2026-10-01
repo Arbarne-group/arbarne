@@ -6,7 +6,6 @@ import { useAppUser as useUser } from "@/hooks/useAppUser";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import MobileNav from "./MobileNav";
-import ComingSoonModal from "./ComingSoonModal";
 import {
   OnboardingStage,
   clearLocalAppData,
@@ -51,6 +50,9 @@ export default function AppShell({
   const [userEmail, setUserEmail] = useState<string>("");
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
+  // FFV attention: number of verification items still needing the farmer
+  // (nothing uploaded, or sent back for review). Drives the sidebar badge.
+  const [ffvAttentionCount, setFfvAttentionCount] = useState<number>(0);
   // Staff bypass the farmer funnel: treat as fully complete for access.
   const [isStaffUser, setIsStaffUser] = useState(false);
   const STAFF_ROLES = ["FFDeveloper", "FFAdmin", "FFStaff"];
@@ -179,6 +181,16 @@ export default function AppShell({
       body: JSON.stringify({ email }),
     }).catch(() => {});
 
+    // FFV attention badge for the sidebar (quietly fails to "no badge").
+    fetch(`/api/ffv/summary?email=${encodeURIComponent(email)}`, { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data?.attentionCount === "number") {
+          setFfvAttentionCount(data.attentionCount);
+        }
+      })
+      .catch(() => {});
+
     // Refresh stage from API to keep in sync with database
     fetch(`/api/onboarding/step?email=${encodeURIComponent(email)}`)
       .then((res) => res.json())
@@ -306,6 +318,7 @@ export default function AppShell({
         onboardingStage={onboardingStage}
         completedPillarsCount={completedPillarsCount}
         hasAssessmentHistory={hasAssessmentHistory}
+        ffvBadge={ffvAttentionCount > 0 ? "Action needed" : null}
       />
 
       {/* Main Content Area - Transitions smoothly between ml-64 and ml-20 */}
@@ -341,11 +354,6 @@ export default function AppShell({
         )}
 
         {(() => {
-          const isComingSoonPage =
-            pathname === "/learning" ||
-            pathname === "/opportunities" ||
-            pathname === "/service-desk";
-
           const isSurveyStep =
             pathname.startsWith("/onboarding/") && pathname !== "/onboarding";
 
@@ -354,17 +362,10 @@ export default function AppShell({
               <main
                 className={`flex-1 overflow-y-auto bg-surface relative ${
                   isSurveyStep ? "pb-6 md:pb-8" : "pb-20 md:pb-8"
-                } transition-opacity ${
-                  isComingSoonPage ? "pointer-events-none select-none opacity-60" : ""
                 }`}
-                tabIndex={isComingSoonPage ? -1 : undefined}
-                aria-hidden={isComingSoonPage ? "true" : undefined}
               >
                 {children}
               </main>
-
-              {/* Blocking Coming Soon Pop Window for Digital Learning, Opportunity Desk, and Service Desk */}
-              {isComingSoonPage && <ComingSoonModal pathname={pathname} />}
 
               {/* Mobile Sticky Bottom Nav - Hidden on active survey steps so action buttons are unblocked */}
               {!isSurveyStep && (

@@ -48,6 +48,23 @@ export default function DashboardPage() {
 
   const [actions, setActions] = useState<ActionItem[]>([]);
   const [subscription, setSubscription] = useState<any>(null);
+  // FFV verification documents submitted by the farmer (bottom section).
+  interface VerificationDocument {
+    id: string;
+    questionId: string;
+    status?: string | null;
+    fileName?: string | null;
+    fileSize?: number | null;
+    createdAt?: string;
+    media?: Array<{
+      id: string;
+      fileName: string;
+      fileType?: string | null;
+      fileSize?: number | null;
+      createdAt?: string;
+    }>;
+  }
+  const [documents, setDocuments] = useState<VerificationDocument[]>([]);
   // Staff roam freely: farmer onboarding gates don't apply to them.
   const STAFF_ROLES = ["FFDeveloper", "FFAdmin", "FFStaff"];
 
@@ -96,6 +113,13 @@ export default function DashboardPage() {
         })
         .catch(console.error);
 
+      fetch(`/api/assessment/evidence?email=${encodeURIComponent(email)}`, { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data?.evidences)) setDocuments(data.evidences);
+        })
+        .catch(console.error);
+
       fetch(`/api/assessment/responses?email=${encodeURIComponent(email)}`)
         .then((res) => res.json())
         .then((data) => {
@@ -112,6 +136,11 @@ export default function DashboardPage() {
               }
             }
           } else {
+            // Server has no answers: still record its (empty) submission
+            // status, so the FFMI gate sees zero submissions instead of
+            // falling back to local drafts. Only a failed fetch (catch
+            // below) leaves the meta unknown.
+            if (data) setAssessmentMeta(data);
             // Fallback to local storage if available; otherwise stay and
             // render empty states below.
             if (localAnswers && Object.keys(localAnswers).length > 0) {
@@ -294,6 +323,29 @@ export default function DashboardPage() {
     ).length;
   }, [assessmentResult]);
 
+  // The FFMI is computed across ALL pillars — a pillar counts only once it
+  // is SUBMITTED (server-side isCompleted), never from drafts, autosaves or
+  // stale local answers. Until all 8 are submitted, the index, tier and
+  // radar stay hidden behind a completion prompt.
+  const assessedPillarsCount = useMemo(() => {
+    if (!assessmentResult) return 0;
+    return assessmentResult.pillarScores.filter((s) => s.answeredCount >= 25).length;
+  }, [assessmentResult]);
+  const pillarSubmitted = useMemo(() => {
+    const ps = assessmentMeta?.pillarStatus;
+    if (!ps) return null;
+    const m: Record<number, boolean> = {};
+    for (let pid = 1; pid <= 8; pid++) m[pid] = !!ps[pid]?.isCompleted;
+    return m;
+  }, [assessmentMeta]);
+  const submittedPillarsCount = pillarSubmitted
+    ? Object.values(pillarSubmitted).filter(Boolean).length
+    : null;
+  // Server submissions rule when known; client-side answered count is only
+  // the fallback when the status fetch itself failed.
+  const gatedPillarsCount = submittedPillarsCount ?? assessedPillarsCount;
+  const allPillarsAssessed = gatedPillarsCount >= 8;
+
   // Dynamic Strengths (capabilities scored >= 60%)
   const strengthsList = useMemo(() => {
     if (!assessmentResult || !hasAssessment) return [];
@@ -333,6 +385,62 @@ export default function DashboardPage() {
     });
     return list.sort((a, b) => a.score - b.score);
   }, [assessmentResult, hasAssessment]);
+
+  // Lookup for the Submitted Documents section: questionId → text/capability.
+  const questionInfo = useMemo(() => {
+    const map: Record<string, { text: string; capName: string; pillarId: number }> = {};
+    ALL_PILLARS.forEach((p) => {
+      p.capabilities.forEach((c) => {
+        c.questions.forEach((q: any) => {
+          map[q.id] = {
+            text: q.question || q.question_text || q.id,
+            capName: c.name,
+            pillarId: p.id,
+          };
+        });
+      });
+    });
+    return map;
+  }, []);
+
+  // Flatten verification evidence into one row per submitted document.
+  const documentRows = useMemo(() => {
+    const rows: Array<{
+      key: string;
+      fileName: string;
+      fileSize?: number | null;
+      createdAt?: string;
+      questionId: string;
+      status: string;
+    }> = [];
+    documents.forEach((ev) => {
+      const media = Array.isArray(ev?.media) ? ev.media : [];
+      if (media.length > 0) {
+        media.forEach((m) => {
+          rows.push({
+            key: m.id,
+            fileName: m.fileName,
+            fileSize: m.fileSize ?? null,
+            createdAt: m.createdAt,
+            questionId: ev.questionId,
+            status: String(ev.status || "submitted").toLowerCase(),
+          });
+        });
+      } else if (ev?.fileName) {
+        rows.push({
+          key: ev.id,
+          fileName: ev.fileName,
+          fileSize: ev.fileSize ?? null,
+          createdAt: ev.createdAt,
+          questionId: ev.questionId,
+          status: String(ev.status || "submitted").toLowerCase(),
+        });
+      }
+    });
+    return rows.sort(
+      (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+    );
+  }, [documents]);
 
   // Dynamic Development Plan (Top 3 Priority Improvements)
   const developmentPlanItems = useMemo(() => {
@@ -385,8 +493,11 @@ export default function DashboardPage() {
     ];
   }, [priorityGapsList]);
 
+  // Canonical farm ID lives on the Business table (FFF-KE-000-008 style);
+  // the User-row futureFarmId is only the legacy fallback.
   const farmIdentifier =
-    (user as any)?.futureFarmId ||
+    user?.business?.businessId ||
+    user?.futureFarmId ||
     (user?.id ? `FFF-KE-PROD-${user.id.slice(-4).toUpperCase()}` : "FFF-KE-PROD");
 
   // Farm Business Profile completeness: partial profiles get a prominent
@@ -525,13 +636,17 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Top Section: Bento Grid for Maturity Index & Radar */}
+          {/* Top Section: Bento Grid for Maturity Index & Radar.
+              The radar always shows; the FFMI numbers inside the left card
+              need all 8 submitted pillars (see below). */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
             {/* Left Col: Maturity Index */}
             <div className="col-span-1 lg:col-span-5 flex flex-col gap-gutter ">
               <div className="bg-surface rounded-2xl p-6 shadow-ambient h-full flex flex-col justify-between hover:shadow-hover transition-shadow relative overflow-hidden group border border-outline-variant/40">
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-primary-container opacity-10 rounded-full blur-2xl group-hover:bg-primary transition-colors duration-500 pointer-events-none" />
 
+                {allPillarsAssessed ? (
+                <>
                 <div>
                   <h3 className="font-title-md text-title-md text-on-surface-variant mb-1 font-semibold">
                     Future Farm Maturity Index
@@ -580,6 +695,74 @@ export default function DashboardPage() {
                   </span>
                   View Progress Over Time
                 </button>
+                </>
+                ) : (
+                <>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="material-symbols-outlined text-primary text-[22px]">lock</span>
+                    <p className="font-label-sm text-label-sm text-secondary font-bold tracking-wider uppercase">
+                      FFMI / 24
+                    </p>
+                  </div>
+                  <h3 className="font-title-md text-title-md text-on-surface font-bold">
+                    Complete all 8 pillars to unlock your index
+                  </h3>
+                  <p className="font-body-md text-body-md text-on-surface-variant mt-1 mb-4 leading-relaxed">
+                    The Future Farm Maturity Index is computed across all 8 submitted
+                    pillars, so drafts and partial answers can&rsquo;t produce it.
+                  </p>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex-1 h-2 rounded-full bg-surface-container-high overflow-hidden">
+                      <div
+                        className="h-full bg-primary rounded-full transition-all"
+                        style={{ width: `${(gatedPillarsCount / 8) * 100}%` }}
+                      />
+                    </div>
+                    <span className="text-sm font-bold text-on-surface whitespace-nowrap">
+                      {gatedPillarsCount}/8 submitted
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                    {ALL_PILLARS.map((p) => {
+                      const done = pillarSubmitted
+                        ? !!pillarSubmitted[p.id]
+                        : (assessmentResult?.pillarScores.find((s) => s.pillarId === p.id)?.answeredCount || 0) >= 25;
+                      return (
+                        <Link
+                          key={p.id}
+                          href={`/assessment/focus?pillar=${p.id}`}
+                          title={p.name}
+                          className={`flex items-center gap-2 rounded-xl border p-2.5 transition-colors ${
+                            done
+                              ? "bg-primary/10 text-primary border-primary/30"
+                              : "bg-surface-container-low text-on-surface-variant border-outline-variant/40 hover:border-primary/40"
+                          }`}
+                        >
+                          <span className="material-symbols-outlined text-[18px] shrink-0">
+                            {done ? "check_circle" : "circle"}
+                          </span>
+                          <span className="min-w-0">
+                            <span className="block text-xs font-bold">P{p.id}</span>
+                            <span className="block text-[11px] leading-tight opacity-80 truncate">
+                              {p.name}
+                            </span>
+                          </span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <Link
+                  href="/assessment"
+                  className="w-full py-3 px-4 bg-primary text-white font-label-sm text-label-sm hover:bg-primary/90 rounded-xl transition-colors flex justify-center items-center gap-2 cursor-pointer font-semibold"
+                >
+                  <span>Continue assessment</span>
+                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </Link>
+                </>
+                )}
               </div>
             </div>
 
@@ -1006,8 +1189,84 @@ export default function DashboardPage() {
           </div>
           </div>
 
-          
-          
+          {/* Submitted Documents — every verification file with its status */}
+          <div className="">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="material-symbols-outlined text-primary text-[22px]">folder_shared</span>
+                  <h3 className="font-title-md text-title-md text-on-surface font-bold">
+                    Submitted Documents
+                  </h3>
+                </div>
+                <p className="text-sm text-on-surface-variant max-w-xl">
+                  Every file uploaded for Future Farms Verification, with its current review status.
+                </p>
+              </div>
+              <Link
+                href="/ffv"
+                className="px-4 py-2 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors inline-flex items-center gap-1.5 shadow-xs shrink-0"
+              >
+                <span>Go to FFV</span>
+                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </Link>
+            </div>
+
+            <div className="pt-4">
+              {documentRows.length === 0 ? (
+                <div className="p-6 text-center text-sm text-on-surface-variant bg-surface-container-low rounded-2xl border border-outline-variant/30">
+                  <span className="material-symbols-outlined text-3xl text-primary mb-2">upload_file</span>
+                  <p className="font-semibold text-on-surface">No documents submitted yet</p>
+                  <p className="mt-1">Answer YES in your assessment, then upload proof on the FFV page.</p>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-0.5">
+                  {documentRows.map((doc) => {
+                    const info = questionInfo[doc.questionId];
+                    const pill =
+                      doc.status === "verified"
+                        ? "bg-primary/10 text-primary"
+                        : doc.status === "needs_review" || doc.status === "need_review"
+                          ? "bg-[#d97706]/10 text-[#d97706]"
+                          : "bg-blue-600/10 text-blue-700";
+                    const label =
+                      doc.status === "verified"
+                        ? "Verified"
+                        : doc.status === "needs_review" || doc.status === "need_review"
+                          ? "Needs Review"
+                          : "Submitted";
+                    return (
+                      <div
+                        key={doc.key}
+                        className="p-3 rounded-xl bg-surface border border-outline-variant/30 flex items-center justify-between gap-3"
+                      >
+                        <span className="flex items-center gap-2.5 min-w-0">
+                          <span className="material-symbols-outlined text-on-surface-variant text-[22px] shrink-0">
+                            {doc.fileName.toLowerCase().endsWith(".pdf") ? "picture_as_pdf" : "image"}
+                          </span>
+                          <span className="min-w-0">
+                            <span className="block font-bold text-sm text-on-surface truncate">
+                              {doc.fileName}
+                            </span>
+                            <span className="block text-[13px] text-on-surface-variant truncate">
+                              {info ? `${info.text} • ${info.capName}` : doc.questionId}
+                            </span>
+                            <span className="block text-xs text-on-surface-variant">
+                              {doc.createdAt ? new Date(doc.createdAt).toLocaleDateString() : ""}
+                              {doc.fileSize ? ` • ${(doc.fileSize / 1024).toFixed(0)} KB` : ""}
+                            </span>
+                          </span>
+                        </span>
+                        <span className={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide ${pill}`}>
+                          {label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Modal: View Progress Over Time */}

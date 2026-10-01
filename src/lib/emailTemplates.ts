@@ -185,3 +185,35 @@ export function inviteEmail(opts: {
     html,
   };
 }
+
+/* ---------------- Support ticket created ---------------- */
+
+export function supportTicketEmail(opts: {
+  name?: string;
+  ticketNumber: string;
+  category: string;
+  subject: string;
+  trackingLink: string;
+}): { subject: string; text: string; html: string } {
+  const greet = opts.name ? `Hi ${esc(opts.name)},` : "Hi,";
+  const { html } = shell({
+    preheader: `Your support ticket ${opts.ticketNumber} has been received`,
+    heading: "We've received your request",
+    intro: `${greet} your support ticket has been logged. Our team will review it and get back to you here by email.`,
+    bodyHtml:
+      `<p style="margin:0 0 6px 0;"><strong>Ticket:</strong> ${esc(opts.ticketNumber)}</p>` +
+      `<p style="margin:0 0 6px 0;"><strong>Department:</strong> ${esc(opts.category)}</p>` +
+      `<p style="margin:0;"><strong>Subject:</strong> ${esc(opts.subject)}</p>`,
+    cta: { label: "Track your ticket", href: opts.trackingLink },
+    footnote:
+      "Keep this email — the button above opens your ticket's live status. " +
+      "If you were not expecting this, you can safely ignore it.",
+  });
+  return {
+    subject: `Support ticket ${opts.ticketNumber} received`,
+    text:
+      `${greet}\n\nYour support ticket ${opts.ticketNumber} (${opts.category}) has been received: "${opts.subject}".\n\n` +
+      `Track its status here:\n${opts.trackingLink}`,
+    html,
+  };
+}
