@@ -185,6 +185,18 @@ export default function Home() {
           <p>&copy; {new Date().getFullYear()} Future Farms. Cultivating the Future of African Agriculture.</p>
           <div className="flex items-center gap-6 font-medium">
             <a
+              href="/privacy"
+              className="hover:text-primary transition-colors"
+            >
+              Privacy Policy
+            </a>
+            <a
+              href="/terms"
+              className="hover:text-primary transition-colors"
+            >
+              Terms of Service
+            </a>
+            <a
               href="https://www.futurefarms.africa/"
               target="_blank"
               rel="noopener noreferrer"

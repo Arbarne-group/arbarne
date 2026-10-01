@@ -13,6 +13,8 @@ const PUBLIC_RX = [
   /^\/reset-password(\/|$)/,
   /^\/invite(\/|$)/,
   /^\/pricing(\/|$)/,
+  /^\/privacy(\/|$)/,
+  /^\/terms(\/|$)/,
   /^\/help(\/|$)/,
   /^\/contact(\/|$)/,
   /^\/verify(\/|$)/,
