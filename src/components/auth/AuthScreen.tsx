@@ -475,6 +475,7 @@ function LoginPane({
           </button>
         </p>
 
+        {/* Google sign-in temporarily disabled
         <OrDivider />
 
         <div className="pt-3">
@@ -485,6 +486,7 @@ function LoginPane({
             callbackUrl={callbackUrl}
           />
         </div>
+        */}
       </div>
     </div>
   );
@@ -706,6 +708,7 @@ function SignupPane({
           </button>
         </p>
 
+        {/* Google sign-up temporarily disabled
         <OrDivider />
 
         <div className="pt-3">
@@ -716,6 +719,7 @@ function SignupPane({
             callbackUrl="/complete-profile"
           />
         </div>
+        */}
       </div>
     </div>
   );
@@ -1009,6 +1013,17 @@ export default function AuthScreen({
                   </div>
                 </div>
               </div>
+              <p className="mt-6 text-center text-xs text-gray-400 max-w-md">
+                By continuing you agree to our{" "}
+                <a href="/terms" className="font-semibold text-secondary hover:underline">
+                  Terms of Service
+                </a>{" "}
+                and acknowledge the{" "}
+                <a href="/privacy" className="font-semibold text-secondary hover:underline">
+                  Privacy Policy
+                </a>
+                .
+              </p>
             </div>
           </div>
         </section>
