@@ -12,6 +12,10 @@ export interface AssessmentQuestion {
   quick_win?: string;
   why_it_matters?: string;
   support_available?: string[];
+  /** False for awareness-type questions verified by interview — no upload. */
+  requiresVerification?: boolean;
+  /** Upload kinds accepted on the FFV page: "image" and/or "document". */
+  allowedEvidenceTypes?: string[];
 }
 
 export interface AssessmentCapability {

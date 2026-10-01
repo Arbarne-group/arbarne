@@ -16,6 +16,8 @@ interface SidebarProps {
   onboardingStage?: OnboardingStage;
   completedPillarsCount?: number;
   hasAssessmentHistory?: boolean;
+  /** Dynamic FFV badge, e.g. "3 pending" — null when nothing needs attention. */
+  ffvBadge?: string | null;
 }
 
 export default function Sidebar({
@@ -25,6 +27,7 @@ export default function Sidebar({
   onboardingStage = "INITIAL_IN_PROGRESS",
   completedPillarsCount = 0,
   hasAssessmentHistory = false,
+  ffvBadge = null,
 }: SidebarProps) {
   const pathname = usePathname();
 
@@ -62,37 +65,40 @@ export default function Sidebar({
 
   const navItems = [
     {
-      label: "Overview",
+      label: "Business Profile",
       href: "/overview",
       icon: "dashboard",
     },
     {
-      label: "My Business",
+      label: "My Future Farm",
       href: "/dashboard",
       icon: "agriculture",
     },
     {
-      label: "Assessment",
+      label: "FFMI / 24",
       href: "/assessment",
       icon: "fact_check",
+    },
+    {
+      label: "FFV",
+      href: "/ffv",
+      icon: "verified",
+      badge: ffvBadge,
     },
     {
       label: "Digital Learning",
       href: "/learning",
       icon: "school",
-      badge: "Soon",
     },
     {
       label: "Opportunity Desk",
       href: "/opportunities",
       icon: "lightbulb",
-      badge: "Soon",
     },
     {
-      label: "Service Desk",
+      label: "Solutions Hub",
       href: "/service-desk",
-      icon: "support_agent",
-      badge: "Soon",
+      icon: "handyman",
     },
   ];
   // FIX (Bug 1): previously this list was .filter()'d to remove
@@ -105,15 +111,20 @@ export default function Sidebar({
 
   const bottomItems = [
     {
-      label: "Help Center",
-      href: "#",
-      icon: "help",
+      label: "Support",
+      href: "/support",
+      icon: "support_agent",
     },
     {
-      label: "Contact Us",
-      href: "#",
-      icon: "mail",
+      label: "System Navigation",
+      href: "/help",
+      icon: "help",
     },
+    // {
+    //   label: "Contact Us",
+    //   href: "#",
+    //   icon: "mail",
+    // },
   ];
 
   /* ============================================================

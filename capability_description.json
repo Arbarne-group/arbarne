@@ -1,0 +1,254 @@
+{
+  "reference_type": "farming_capability_reference",
+  "version": "1.0",
+  "pillars": [
+    {
+      "id": 1,
+      "name": "Smart Farming & Digital Transformation",
+      "capabilities": [
+        {
+          "id": "1.1",
+          "name": "Technology Readiness",
+          "focus": "Does the farm understand its operational needs and have the basic infrastructure, resources, willingness and capacity required to identify and adopt appropriate technologies?"
+        },
+        {
+          "id": "1.2",
+          "name": "Digital Capability",
+          "focus": "Does the farmer have access to and the practical skills required to confidently use digital technologies in everyday farm and business activities?"
+        },
+        {
+          "id": "1.3",
+          "name": "Farm Information & Data Management",
+          "focus": "Does the farm systematically collect, organise, store and maintain reliable information about its production, finances, resources and operations?"
+        },
+        {
+          "id": "1.4",
+          "name": "Data-Driven Decision Making",
+          "focus": "Does the farmer actually use farm records, data, digital information and analysis to make better operational, production and business decisions?"
+        },
+        {
+          "id": "1.5",
+          "name": "Continuous Improvement & Innovation",
+          "focus": "Does the farm continuously evaluate its performance, experiment with better approaches, adopt appropriate innovations and improve how technology and information are used over time?"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Productive Use of Renewable Energy",
+      "capabilities": [
+        {
+          "id": "2.1",
+          "name": "Energy Awarenes & Readiness",
+          "focus": "Does the farm understand its energy situation, needs, challenges and opportunities well enough to make informed energy decisions?"
+        },
+        {
+          "id": "2.2",
+          "name": "Renewable Energy & Adoption",
+          "focus": "Has the farm adopted appropriate renewable-energy technologies and integrated them effectively into farm operations?"
+        },
+        {
+          "id": "2.3",
+          "name": "Energy Efficiency & Management",
+          "focus": "What energy do I use, where do I use it, what does it cost me, what problems does it create, and where are my biggest opportunities?"
+        },
+        {
+          "id": "2.4",
+          "name": "Productive Energy Use & Adoption",
+          "focus": "Is energy being deliberately used to increase productivity, reduce labour, improve quality, reduce losses and create economic value?"
+        },
+        {
+          "id": "2.5",
+          "name": "Energy Resilience, Innovation & Continous Growth",
+          "focus": "Can the farm maintain reliable energy access, manage disruptions, adapt to changing needs and continuously improve its energy systems?"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Food Safety, Quality & Compliance",
+      "capabilities": [
+        {
+          "id": "3.1",
+          "name": "Food Safety Awareness",
+          "focus": "Does the farmer understand food-safety risks, responsibilities and the basic principles required to produce food that is safe for consumers?"
+        },
+        {
+          "id": "3.2",
+          "name": "Safe Production Practices",
+          "focus": "Does the farm consistently apply appropriate practices that prevent contamination and protect food safety throughout production, harvesting, handling and storage?"
+        },
+        {
+          "id": "3.3",
+          "name": "Product Quality Management",
+          "focus": "Does the farm define, monitor and consistently deliver the product-quality characteristics required by its customers and target markets?"
+        },
+        {
+          "id": "3.4",
+          "name": "Compliance, Traceability & Documentation",
+          "focus": "Can the farm demonstrate what was produced, how it was produced, which inputs were used, where the product came from and whether relevant requirements were followed?"
+        },
+        {
+          "id": "3.5",
+          "name": "Continuous Improvement & Certification Readiness",
+          "focus": "Does the farm systematically review food-safety, quality and compliance performance, correct weaknesses and progressively prepare to meet recognised standards or certification requirements where commercially relevant?"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Indigenous Knowledge & Climate Resilience",
+      "capabilities": [
+        {
+          "id": "4.1",
+          "name": "Indigenous & Local Knowledge Awareness",
+          "focus": "Does the farmer recognise, understand and value indigenous and locally developed knowledge and its potential contribution to productive, sustainable and climate-resilient farming?"
+        },
+        {
+          "id": "4.2",
+          "name": "Climate Risk Awareness & Assessment",
+          "focus": "Does the farmer understand the climate and environmental risks affecting the farm and systematically assess their potential impact on production, resources, infrastructure and the farm business?"
+        },
+        {
+          "id": "4.3",
+          "name": "Climate-Smart Farm Practices",
+          "focus": "Does the farm apply appropriate practices that improve its ability to manage climate risks while supporting productivity, sustainability and long-term farm performance?"
+        },
+        {
+          "id": "4.4",
+          "name": "Resource Conservation & Ecosystem Resilience",
+          "focus": "Does the farm actively protect and restore the soil, water, biodiversity and ecosystems on which its long-term productivity and resilience depend?"
+        },
+        {
+          "id": "4.5",
+          "name": "Adaptation, Innovation & Continuous Improvement",
+          "focus": "Does the farmer continuously learn from changing conditions, test new approaches, combine different knowledge systems and adapt the farm to strengthen long-term climate resilience?"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Farm Business Performance & Growth",
+      "capabilities": [
+        {
+          "id": "5.1",
+          "name": "Financial Literacy & Farm Record Managem",
+          "focus": "Does the farmer understand the basic financial position of the farm and maintain accurate, organised and reliable records that support effective business management?"
+        },
+        {
+          "id": "5.2",
+          "name": "Cost, Revenue & Profitability Management",
+          "focus": "Does the farmer understand and actively manage the costs, revenues, margins and profitability of individual farm enterprises and the overall farm business?"
+        },
+        {
+          "id": "5.3",
+          "name": "Productivity & Performance Management",
+          "focus": "Does the farm systematically measure how effectively its land, labour, inputs, capital and other resources are being converted into productive and financial results?"
+        },
+        {
+          "id": "5.4",
+          "name": "Cash Flow, Planning & Risk Management",
+          "focus": "Can the farm plan its financial needs, maintain sufficient liquidity to operate, anticipate future requirements and prepare for events that could disrupt the business?"
+        },
+        {
+          "id": "5.5",
+          "name": "Growth Strategy, Scalability & Continuous Improvement",
+          "focus": "Does the farm have a deliberate strategy, systems and capacity to improve and grow while maintaining or strengthening profitability, efficiency, quality, resilience and sustainability?"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Human Capital, Leadership & Farm Operations",
+      "capabilities": [
+        {
+          "id": "6.1",
+          "name": "Human Capital Awareness",
+          "focus": "Does the farmer understand that people, skills, knowledge and leadership are critical farm resources and recognise the human-capital requirements of the farm?"
+        },
+        {
+          "id": "6.2",
+          "name": "Workforce Planning & Recruitment",
+          "focus": "Does the farm systematically determine its workforce requirements and recruit appropriate people with the skills and capacity needed to perform farm activities effectively?"
+        },
+        {
+          "id": "6.3",
+          "name": "Skills Development & Capacity Building",
+          "focus": "Does the farm continuously develop the knowledge, technical skills, management capability and adaptability of the people responsible for farm operations?"
+        },
+        {
+          "id": "6.4",
+          "name": "Farm Operations & Workforce Management",
+          "focus": "Does the farm organise, coordinate, supervise and measure people and daily operations so that work is completed safely, efficiently, consistently and on time?"
+        },
+        {
+          "id": "6.5",
+          "name": "Leadership, Culture & Workforce Wellbeing",
+          "focus": "Does the farm provide effective leadership and create a safe, respectful, accountable and motivating work environment that enables people to perform, develop and remain productive over time?"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Market Access, Customer Value & Competitiveness",
+      "capabilities": [
+        {
+          "id": "7.1",
+          "name": "Market Awareness",
+          "focus": "Does the farmer understand the markets available for their products, who their customers are, what those customers require, and the factors that influence demand, prices and market opportunities?"
+        },
+        {
+          "id": "7.2",
+          "name": "Market Access & Customer Relationships",
+          "focus": "Can the farm consistently reach appropriate markets, establish reliable sales channels and build relationships that attract, serve and retain customers?"
+        },
+        {
+          "id": "7.3",
+          "name": "Market Intelligence & Competitiveness",
+          "focus": "Does the farm systematically collect, analyse and use market information to understand customers, competitors, prices and trends and make better commercial decisions?"
+        },
+        {
+          "id": "7.4",
+          "name": "Value Addition & Market Diversification",
+          "focus": "Does the farm deliberately increase the value of its products and diversify products, customers, channels or markets to improve margins, create new opportunities and reduce market dependence?"
+        },
+        {
+          "id": "7.5",
+          "name": "Market Leadership & Strategic Positioning",
+          "focus": "Does the farm have a clear and differentiated market position, strong customer value proposition and long-term strategy for strengthening its competitiveness and market presence?"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Investment Readiness & Enterprise Development",
+      "capabilities": [
+        {
+          "id": "8.1",
+          "name": "Investment Awareness",
+          "focus": "Does the farmer understand why and when a farm business may require capital, the different financing options available, their costs and obligations, and how to make appropriate investment decisions?"
+        },
+        {
+          "id": "8.2",
+          "name": "Business Governance & Legal Readiness",
+          "focus": "Is the farm enterprise appropriately structured, governed and legally organised so that ownership, responsibilities, decision-making and accountability are clear?"
+        },
+        {
+          "id": "8.3",
+          "name": "Financial & Investment Documentation",
+          "focus": "Can the farm produce reliable financial, operational and business documentation that demonstrates its performance, credibility, capital requirements and ability to responsibly manage external resources?"
+        },
+        {
+          "id": "8.4",
+          "name": "Resource Mobilisation & Strategic Partnerships",
+          "focus": "Can the farm identify its financial and non-financial resource gaps, develop compelling propositions and build relationships that help mobilise the resources required to achieve its objectives?"
+        },
+        {
+          "id": "8.5",
+          "name": "Enterprise Growth & Investment Readiness",
+          "focus": "Has the farm brought together its business model, governance, financial performance, market opportunity, management capacity and growth strategy into a credible enterprise capable of responsibly absorbing capital and scaling?"
+        }
+      ]
+    }
+  ]
+}
