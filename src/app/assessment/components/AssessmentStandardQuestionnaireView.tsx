@@ -5,6 +5,7 @@ import { useAppUser as useUser } from "@/hooks/useAppUser";
 import {
   getPillarById,
 } from "@/data/assessmentData";
+import { legibleOn } from "./AssessmentOverviewView";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
 import PageLoader from "@/components/PageLoader";
 
@@ -273,20 +274,17 @@ export default function AssessmentStandardQuestionnaireView({
         <div className="px-4 sm:px-6 md:px-12 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 max-w-5xl mx-auto w-full">
           <div className="flex items-center gap-3">
             <div
-              className={`w-10 h-10 rounded-full ${pillar.iconBg} flex items-center justify-center shrink-0`}
+              className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm"
               style={{
-                backgroundColor: `${pillar.accentColor}1A`,
-                color: pillar.accentColor,
+                backgroundColor: pillar.accentColor,
+                color: legibleOn(pillar.accentColor),
               }}
             >
-              <span
-                className={`material-symbols-outlined ${pillar.iconColor} text-[24px]`}
-                style={{ color: pillar.accentColor }}
-              >
-                {pillar.icon}
+              <span className="text-lg font-black">
+                {pillar.id}
               </span>
             </div>
-            <h1 className="font-title-md text-lg md:text-headline-lg text-on-surface font-semibold">
+            <h1 className="font-title-md text-lg md:text-headline-lg font-semibold" style={{ color: pillar.accentColor }}>
               Pillar {pillar.id}: {pillar.name}
             </h1>
           </div>
@@ -363,7 +361,7 @@ export default function AssessmentStandardQuestionnaireView({
               return (
                 <section key={cap.id} aria-label={cap.name}>
                   <div className="mb-5">
-                    <p className="font-medium text-md md:text-md text-primary  mb-1.5 uppercase tracking-widest">
+                    <p className="font-semibold text-lg md:text-xl text-primary mb-1.5 uppercase tracking-widest">
                       Capability {cap.id.replace("P", "")} • {cap.name}
                     </p>
                     {cap.description && (

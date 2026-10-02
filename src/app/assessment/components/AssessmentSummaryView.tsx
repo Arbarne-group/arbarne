@@ -79,6 +79,10 @@ export default function AssessmentSummaryView({
     maturityLevel: string;
     capabilityScores: any;
     totalQuestions?: number;
+    completedAt?: string | null;
+    canReassess?: boolean;
+    nextEligibleDate?: string | null;
+    daysRemaining?: number;
   } | null>(null);
   const [dbResponses, setDbResponses] = useState<any[]>([]);
   const [loadingDb, setLoadingDb] = useState(true);
@@ -782,28 +786,40 @@ export default function AssessmentSummaryView({
       <div className="max-w-full mx-auto w-full flex flex-col items-center">
         {/* Top Actions: Reassessment Cycle Banner & Download Action */}
         <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6  md:mb-8 lg:mb-10 p-4">
-          {/* 90-Day Reassessment Cycle Notice */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-high/80 border border-outline-variant/60 text-sm font-medium text-on-surface-variant">
-            <span className="material-symbols-outlined text-[16px] text-amber-600">
-              event_repeat
-            </span>
-            <span>
-              Pillar reassessment can only be repeated after{" "}
-              <strong>90 days (3 months)</strong>
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 self-center sm:self-auto">
-            <Link
-              href={`/assessment/report?pillar=${pillar.id}`}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-surface-container-high bg-surface text-on-surface-variant shadow-xs hover:bg-surface-variant hover:border-outline-variant transition-all text-xs font-semibold cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[16px] text-emerald-700">
-                description
-              </span>
-              Transformation Report (PDF)
-            </Link>
-          </div>
+          {/* Reassessment status — computed from the submission date, never hardcoded */}
+          {(() => {
+            if (!dbPillarStatus?.isCompleted) return null;
+            const canReassess = dbPillarStatus.canReassess ?? true;
+            const days = Math.max(0, dbPillarStatus.daysRemaining ?? 0);
+            const eligible = dbPillarStatus.nextEligibleDate
+              ? new Date(dbPillarStatus.nextEligibleDate).toLocaleDateString()
+              : null;
+            if (!canReassess && days > 0) {
+              return (
+                <div className="w-full flex items-center gap-3 px-5 py-4 rounded-2xl bg-amber-500 border-2 border-amber-600 text-white shadow-level-1">
+                  <span className="material-symbols-outlined text-[30px] md:text-[34px] shrink-0">
+                    event_repeat
+                  </span>
+                  <span className="text-lg md:text-xl font-bold leading-snug">
+                    Pillar reassessment in{" "}
+                    <strong className="whitespace-nowrap">
+                      {days} day{days === 1 ? "" : "s"}
+                    </strong>
+                  </span>
+                </div>
+              );
+            }
+            return (
+              <div className="w-full flex items-center gap-3 px-5 py-4 rounded-2xl bg-primary border-2 border-primary text-white shadow-level-1">
+                <span className="material-symbols-outlined text-[30px] md:text-[34px] shrink-0">
+                  restart_alt
+                </span>
+                <span className="text-lg md:text-xl font-bold leading-snug">
+                  Reassessment window open — retake this pillar to refresh your score
+                </span>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Heading */}
@@ -811,7 +827,7 @@ export default function AssessmentSummaryView({
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2">
             Pillar Assessment Complete
           </div>
-          <h1 className="font-headline-lg text-2xl sm:text-3xl font-bold text-secondary m-0">
+          <h1 className="font-headline-lg text-2xl sm:text-3xl font-bold m-0" style={{ color: pillar.accentColor }}>
             Pillar {pillar.id}: {pillar.name}
           </h1>
           <p className="text-md  lg:text-lg max-w-3xl text-on-surface-variant mt-1">
@@ -878,8 +894,8 @@ export default function AssessmentSummaryView({
         </div>
 
         {/* Automatic Pillar Feedback Card */}
-        <div className="w-full md:max-w-4xl mt-8 bg-surface border border-surface-container-high rounded-2xl p-5 sm:p-6 shadow-sm mb-6 md:mb-8 lg:mb-16 text-center">
-          <p className="font-body-md text-md lg:text-lg text-on-surface-variant leading-relaxed max-w-2xl mx-auto m-0">
+        <div className="w-full md:max-w-4xl mt-8 bg-primary border border-white/10 rounded-2xl p-5 sm:p-6 shadow-level-1 mb-6 md:mb-8 lg:mb-16 text-center">
+          <p className="font-body-md text-md lg:text-lg text-white leading-relaxed max-w-2xl mx-auto m-0">
             {pillarFeedback.feedback}
           </p>
         </div>

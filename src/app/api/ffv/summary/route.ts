@@ -37,6 +37,7 @@ export async function GET(request: Request) {
         requiredTotal: 0,
         byStatus: {},
         attentionCount: 0,
+        pillars: [],
       });
     }
     const [responses, evidences] = await Promise.all([
@@ -60,6 +61,10 @@ export async function GET(request: Request) {
         );
         return q && q.requiresVerification !== false;
       });
+    const pillarOf = (qid: string): number => {
+      const m = String(qid).match(/^P([1-8])\./i);
+      return m ? Number(m[1]) : 0;
+    };
     const statusByQuestion: Record<string, string> = {};
     for (const e of evidences) statusByQuestion[e.questionId] = e.status;
     const byStatus: Record<string, number> = {
@@ -87,6 +92,26 @@ export async function GET(request: Request) {
       byStatus,
       attentionCount:
         byStatus[FFV_STATUS.NOT_SUBMITTED] + byStatus[FFV_STATUS.NEEDS_REVIEW],
+      pillars: [1, 2, 3, 4, 5, 6, 7, 8].map((pillarId) => {
+        const ids = yesIds.filter((qid) => pillarOf(qid) === pillarId);
+        if (ids.length === 0) return { pillarId, status: "none", required: 0 };
+        const states = ids.map((qid) => {
+          const st = (statusByQuestion[qid] || FFV_STATUS.NOT_SUBMITTED).toLowerCase();
+          if (st === "verified") return FFV_STATUS.VERIFIED;
+          if (st === "needs_review" || st === "need_review" || st === "needs review")
+            return FFV_STATUS.NEEDS_REVIEW;
+          if (st === "submitted") return FFV_STATUS.SUBMITTED;
+          return FFV_STATUS.NOT_SUBMITTED;
+        });
+        const status = states.includes(FFV_STATUS.NEEDS_REVIEW)
+          ? FFV_STATUS.NEEDS_REVIEW
+          : states.every((s) => s === FFV_STATUS.VERIFIED)
+            ? FFV_STATUS.VERIFIED
+            : states.some((s) => s !== FFV_STATUS.NOT_SUBMITTED)
+              ? FFV_STATUS.SUBMITTED
+              : FFV_STATUS.NOT_SUBMITTED;
+        return { pillarId, status, required: ids.length };
+      }),
     });
   } catch (error: any) {
     console.error("Error building FFV summary:", error);

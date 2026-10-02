@@ -63,7 +63,7 @@ const PILLAR_METADATA: Record<
     icon: "memory",
     iconBg: "bg-[#1E88E5]/15",
     iconColor: "text-[#1E88E5]",
-    accentColor: "#1E88E5",
+    accentColor: "#1e88e5",
     badgeBg: "bg-surface-variant",
     feedback: {
       progressing:
@@ -78,7 +78,7 @@ const PILLAR_METADATA: Record<
     icon: "solar_power",
     iconBg: "bg-[#FDD835]/20",
     iconColor: "text-[#FDD835]",
-    accentColor: "#FDD835",
+    accentColor: "#fdd835",
     badgeBg: "bg-surface-variant",
     feedback: {
       progressing:
@@ -93,7 +93,7 @@ const PILLAR_METADATA: Record<
     icon: "verified",
     iconBg: "bg-[#43A047]/15",
     iconColor: "text-[#43A047]",
-    accentColor: "#43A047",
+    accentColor: "#43a047",
     badgeBg: "bg-surface-variant",
     feedback: {
       progressing:
@@ -108,7 +108,7 @@ const PILLAR_METADATA: Record<
     icon: "psychology",
     iconBg: "bg-[#2E7D32]/15",
     iconColor: "text-[#2E7D32]",
-    accentColor: "#2E7D32",
+    accentColor: "#2e7d32",
     badgeBg: "bg-surface-variant",
     feedback: {
       progressing:
@@ -123,7 +123,7 @@ const PILLAR_METADATA: Record<
     icon: "trending_up",
     iconBg: "bg-[#8E24AA]/15",
     iconColor: "text-[#8E24AA]",
-    accentColor: "#8E24AA",
+    accentColor: "#9b4faf",
     badgeBg: "bg-surface-variant",
     feedback: {
       progressing:
@@ -138,7 +138,7 @@ const PILLAR_METADATA: Record<
     icon: "groups",
     iconBg: "bg-[#3949AB]/15",
     iconColor: "text-[#3949AB]",
-    accentColor: "#3949AB",
+    accentColor: "#4d59a2",
     badgeBg: "bg-surface-variant",
     feedback: {
       progressing:
@@ -153,7 +153,7 @@ const PILLAR_METADATA: Record<
     icon: "storefront",
     iconBg: "bg-[#FB8C00]/15",
     iconColor: "text-[#FB8C00]",
-    accentColor: "#FB8C00",
+    accentColor: "#f19c30",
     badgeBg: "bg-surface-variant",
     feedback: {
       progressing:
@@ -168,7 +168,7 @@ const PILLAR_METADATA: Record<
     icon: "account_balance",
     iconBg: "bg-[#683C21]/15",
     iconColor: "text-[#683C21]",
-    accentColor: "#683C21",
+    accentColor: "#bf7e55",
     badgeBg: "bg-surface-variant",
     feedback: {
       progressing:
