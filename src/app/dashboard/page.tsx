@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppUser as useUser } from "@/hooks/useAppUser";
 import AppShell from "@/components/layout/AppShell";
-import RadarChart from "@/components/dashboard/RadarChart";
+import FfmiGauge from "@/components/dashboard/FfmiGauge";
 import PageLoader from "@/components/PageLoader";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import {
@@ -48,23 +48,13 @@ export default function DashboardPage() {
 
   const [actions, setActions] = useState<ActionItem[]>([]);
   const [subscription, setSubscription] = useState<any>(null);
-  // FFV verification documents submitted by the farmer (bottom section).
-  interface VerificationDocument {
-    id: string;
-    questionId: string;
-    status?: string | null;
-    fileName?: string | null;
-    fileSize?: number | null;
-    createdAt?: string;
-    media?: Array<{
-      id: string;
-      fileName: string;
-      fileType?: string | null;
-      fileSize?: number | null;
-      createdAt?: string;
-    }>;
+  // FFV verification status per pillar (bottom section).
+  interface FfvPillarStatus {
+    pillarId: number;
+    status: string;
+    required: number;
   }
-  const [documents, setDocuments] = useState<VerificationDocument[]>([]);
+  const [ffvPillars, setFfvPillars] = useState<FfvPillarStatus[]>([]);
   // Staff roam freely: farmer onboarding gates don't apply to them.
   const STAFF_ROLES = ["FFDeveloper", "FFAdmin", "FFStaff"];
 
@@ -113,10 +103,10 @@ export default function DashboardPage() {
         })
         .catch(console.error);
 
-      fetch(`/api/assessment/evidence?email=${encodeURIComponent(email)}`, { cache: "no-store" })
+      fetch(`/api/ffv/summary?email=${encodeURIComponent(email)}`, { cache: "no-store" })
         .then((res) => res.json())
         .then((data) => {
-          if (Array.isArray(data?.evidences)) setDocuments(data.evidences);
+          if (Array.isArray(data?.pillars)) setFfvPillars(data.pillars);
         })
         .catch(console.error);
 
@@ -258,30 +248,9 @@ export default function DashboardPage() {
     } catch (e) {}
   };
 
-  // Compute canonical radar labels & scores
-  const radarLabels = [
-    ["P1 Smart Farming", "& Digital"],
-    "P2 Renewable Energy",
-    ["P3 Food Safety,", "Quality & Compl."],
-    ["P4 Indigenous", "Knowledge & Climate"],
-    ["P5 Business", "Performance"],
-    ["P6 Human Capital,", "Leadership"],
-    ["P7 Market Access,", "Customer Value"],
-    ["P8 Investment", "Readiness"],
-  ];
-
   const hasAssessment = useMemo(() => {
     return (assessmentResult?.totalAnswered ?? 0) > 0;
   }, [assessmentResult]);
-
-  const radarScores = useMemo(() => {
-    return ALL_PILLARS.map((p) => {
-      const pResult = assessmentResult?.pillarScores.find((r) => r.pillarId === p.id);
-      return pResult && pResult.answeredCount > 0 ? pResult.score : 0;
-    });
-  }, [assessmentResult]);
-
-  const benchmarkScores = [60, 50, 60, 55, 55, 50, 65, 50];
 
   // FFMI out of 24 points (8 pillars * 3 max capability points or normalized score)
   const overallPercentage = useMemo(() => {
@@ -386,61 +355,31 @@ export default function DashboardPage() {
     return list.sort((a, b) => a.score - b.score);
   }, [assessmentResult, hasAssessment]);
 
-  // Lookup for the Submitted Documents section: questionId → text/capability.
-  const questionInfo = useMemo(() => {
-    const map: Record<string, { text: string; capName: string; pillarId: number }> = {};
-    ALL_PILLARS.forEach((p) => {
-      p.capabilities.forEach((c) => {
-        c.questions.forEach((q: any) => {
-          map[q.id] = {
-            text: q.question || q.question_text || q.id,
-            capName: c.name,
-            pillarId: p.id,
-          };
-        });
-      });
-    });
-    return map;
-  }, []);
-
-  // Flatten verification evidence into one row per submitted document.
-  const documentRows = useMemo(() => {
-    const rows: Array<{
-      key: string;
-      fileName: string;
-      fileSize?: number | null;
-      createdAt?: string;
-      questionId: string;
-      status: string;
-    }> = [];
-    documents.forEach((ev) => {
-      const media = Array.isArray(ev?.media) ? ev.media : [];
-      if (media.length > 0) {
-        media.forEach((m) => {
-          rows.push({
-            key: m.id,
-            fileName: m.fileName,
-            fileSize: m.fileSize ?? null,
-            createdAt: m.createdAt,
-            questionId: ev.questionId,
-            status: String(ev.status || "submitted").toLowerCase(),
-          });
-        });
-      } else if (ev?.fileName) {
-        rows.push({
-          key: ev.id,
-          fileName: ev.fileName,
-          fileSize: ev.fileSize ?? null,
-          createdAt: ev.createdAt,
-          questionId: ev.questionId,
-          status: String(ev.status || "submitted").toLowerCase(),
+  // Priority pillars: answered pillars scoring under 15/25 yes answers.
+  const priorityPillarsList = useMemo(() => {
+    if (!assessmentResult || !hasAssessment) return [];
+    const list: { pillarId: number; pillarName: string; yesCount: number; score: number }[] = [];
+    assessmentResult.pillarScores.forEach((p) => {
+      if (p.answeredCount > 0 && p.yesCount < 15) {
+        list.push({
+          pillarId: p.pillarId,
+          pillarName: p.pillarName,
+          yesCount: p.yesCount,
+          score: p.score,
         });
       }
     });
-    return rows.sort(
-      (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
-    );
-  }, [documents]);
+    return list.sort((a, b) => a.score - b.score);
+  }, [assessmentResult, hasAssessment]);
+
+  // FFV status per pillar for the Verification Status grid.
+  const ffvStatusByPillar = useMemo(() => {
+    const map: Record<number, { status: string; required: number }> = {};
+    ffvPillars.forEach((p) => {
+      map[p.pillarId] = { status: p.status, required: p.required };
+    });
+    return map;
+  }, [ffvPillars]);
 
   // Dynamic Development Plan (Top 3 Priority Improvements)
   const developmentPlanItems = useMemo(() => {
@@ -616,9 +555,6 @@ export default function DashboardPage() {
                 {/* <span className="material-symbols-outlined text-primary text-[26px]">agriculture</span> */}
                 My Future Farm
               </h1>
-              <p className="text-sm md:text-sm text-on-surface-variant">
-                Farm progression across the 8 Pillars .
-              </p>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-sm font-mono font-bold">
@@ -645,8 +581,8 @@ export default function DashboardPage() {
               <div className="bg-surface rounded-2xl p-6 shadow-ambient h-full flex flex-col justify-between hover:shadow-hover transition-shadow relative overflow-hidden group border border-outline-variant/40">
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-primary-container opacity-10 rounded-full blur-2xl group-hover:bg-primary transition-colors duration-500 pointer-events-none" />
 
-                {allPillarsAssessed ? (
-                <>
+                {/* {allPillarsAssessed ? (
+                <> */}
                 <div>
                   <h3 className="font-title-md text-title-md text-on-surface-variant mb-1 font-semibold">
                     Future Farm Maturity Index
@@ -695,7 +631,7 @@ export default function DashboardPage() {
                   </span>
                   View Progress Over Time
                 </button>
-                </>
+                {/* </>
                 ) : (
                 <>
                 <div>
@@ -762,11 +698,11 @@ export default function DashboardPage() {
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </Link>
                 </>
-                )}
+                )} */}
               </div>
             </div>
 
-            {/* Right Col: Radar Chart (8 Pillar Summary) */}
+            {/* Right Col: Donut Chart (8 Pillar Summary) */}
             <div className="col-span-1 lg:col-span-7 bg-surface rounded-2xl p-4 sm:p-6 shadow-ambient min-h-80 sm:min-h-80 lg:h-auto flex flex-col relative overflow-hidden border border-outline-variant/40">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-title-md text-title-md text-on-surface font-bold">
@@ -774,39 +710,12 @@ export default function DashboardPage() {
                 </h3>
               </div>
 
-              <div className="flex-1 w-full h-full min-h-[250px] relative flex justify-center items-center">
-                <RadarChart
-                  labels={radarLabels}
-                  scores={radarScores}
-                  benchmarkScores={benchmarkScores}
-                />
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-2.5 sm:gap-6 mt-4 pt-4 border-t border-outline-variant">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-primary" />
-                  <span className="font-label-sm text-label-sm text-on-surface-variant font-medium">
-                    Your Score
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-[#d97706]" />
-                  <span className="font-label-sm text-label-sm text-on-surface-variant font-medium">
-                    Below benchmark
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-outline-variant" />
-                  <span className="font-label-sm text-label-sm text-on-surface-variant font-medium">
-                    Average Future Farm Benchmark
-                  </span>
-                </div>
-              </div>
+              <FfmiGauge score={hasAssessment ? ffmiScore24 : 0} active={hasAssessment} />
             </div>
           </div>
 
           {/* Middle Stats Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => setShowStrengthsModal(true)}
@@ -841,7 +750,7 @@ export default function DashboardPage() {
                   Priority Areas
                 </p>
                 <p className="font-title-md text-title-md text-on-surface mt-1">
-                  <span className="font-bold">{priorityGapsList.length}</span> Capabilities
+                  <span className="font-bold">{priorityPillarsList.length}</span> Pillar{priorityPillarsList.length === 1 ? "" : "s"}
                 </p>
               </div>
               <span className="material-symbols-outlined text-on-surface-variant text-sm">
@@ -849,7 +758,7 @@ export default function DashboardPage() {
               </span>
             </button>
 
-            <Link
+            {/* <Link
               href="/learning"
               className="bg-surface rounded-xl p-4 shadow-ambient border border-tertiary-fixed flex items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer"
             >
@@ -867,8 +776,10 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined text-on-surface-variant text-sm">
                 chevron_right
               </span>
-            </Link>
+            </Link> */}
 
+            {/* Opportunities card hidden for now — re-enable when the
+                Opportunity Desk catalogue is ready to surface here.
             <Link
               href="/opportunities"
               className="bg-surface rounded-xl p-4 shadow-ambient border border-secondary-fixed flex items-center justify-between hover:-translate-y-1 transition-transform cursor-pointer"
@@ -888,6 +799,7 @@ export default function DashboardPage() {
                 chevron_right
               </span>
             </Link>
+            */}
           </div>
 
           {/* Bottom Section: Lists */}
@@ -1189,18 +1101,18 @@ export default function DashboardPage() {
           </div>
           </div>
 
-          {/* Submitted Documents — every verification file with its status */}
+          {/* FFV - Verification Status: every pillar and its review state */}
           <div className="">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="material-symbols-outlined text-primary text-[22px]">folder_shared</span>
+                  <span className="material-symbols-outlined text-primary text-[22px]">verified</span>
                   <h3 className="font-title-md text-title-md text-on-surface font-bold">
-                    Submitted Documents
+                    FFV - Verification Status
                   </h3>
                 </div>
                 <p className="text-sm text-on-surface-variant max-w-xl">
-                  Every file uploaded for Future Farms Verification, with its current review status.
+                  Verification state of every pillar, from your uploaded evidence.
                 </p>
               </div>
               <Link
@@ -1213,58 +1125,48 @@ export default function DashboardPage() {
             </div>
 
             <div className="pt-4">
-              {documentRows.length === 0 ? (
-                <div className="p-6 text-center text-sm text-on-surface-variant bg-surface-container-low rounded-2xl border border-outline-variant/30">
-                  <span className="material-symbols-outlined text-3xl text-primary mb-2">upload_file</span>
-                  <p className="font-semibold text-on-surface">No documents submitted yet</p>
-                  <p className="mt-1">Answer YES in your assessment, then upload proof on the FFV page.</p>
-                </div>
-              ) : (
-                <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-0.5">
-                  {documentRows.map((doc) => {
-                    const info = questionInfo[doc.questionId];
-                    const pill =
-                      doc.status === "verified"
-                        ? "bg-primary/10 text-primary"
-                        : doc.status === "needs_review" || doc.status === "need_review"
-                          ? "bg-[#d97706]/10 text-[#d97706]"
-                          : "bg-blue-600/10 text-blue-700";
-                    const label =
-                      doc.status === "verified"
-                        ? "Verified"
-                        : doc.status === "needs_review" || doc.status === "need_review"
-                          ? "Needs Review"
-                          : "Submitted";
-                    return (
-                      <div
-                        key={doc.key}
-                        className="p-3 rounded-xl bg-surface border border-outline-variant/30 flex items-center justify-between gap-3"
-                      >
-                        <span className="flex items-center gap-2.5 min-w-0">
-                          <span className="material-symbols-outlined text-on-surface-variant text-[22px] shrink-0">
-                            {doc.fileName.toLowerCase().endsWith(".pdf") ? "picture_as_pdf" : "image"}
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block font-bold text-sm text-on-surface truncate">
-                              {doc.fileName}
-                            </span>
-                            <span className="block text-[13px] text-on-surface-variant truncate">
-                              {info ? `${info.text} • ${info.capName}` : doc.questionId}
-                            </span>
-                            <span className="block text-xs text-on-surface-variant">
-                              {doc.createdAt ? new Date(doc.createdAt).toLocaleDateString() : ""}
-                              {doc.fileSize ? ` • ${(doc.fileSize / 1024).toFixed(0)} KB` : ""}
-                            </span>
-                          </span>
-                        </span>
-                        <span className={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide ${pill}`}>
-                          {label}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {ALL_PILLARS.map((p) => {
+                  const entry = ffvStatusByPillar[p.id];
+                  const status = entry?.status || "none";
+                  const pill =
+                    status === "verified"
+                      ? "bg-primary/10 text-primary border-primary/25"
+                      : status === "needs_review"
+                        ? "bg-[#d97706]/10 text-[#d97706] border-[#d97706]/30"
+                        : status === "submitted"
+                          ? "bg-blue-600/10 text-blue-700 border-blue-600/25"
+                          : status === "none"
+                            ? "bg-surface-variant text-on-surface-variant border-outline-variant"
+                            : "bg-red-600/10 text-red-600 border-red-600/25";
+                  const label =
+                    status === "verified"
+                      ? "Verified"
+                      : status === "needs_review"
+                        ? "Needs Review"
+                        : status === "submitted"
+                          ? "Submitted"
+                          : status === "none"
+                            ? "No items"
+                            : "Not Submitted";
+                  return (
+                    <div
+                      key={p.id}
+                      className="p-4 rounded-2xl bg-surface border border-outline-variant/30 flex flex-col gap-2"
+                    >
+                      <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                        Pillar {p.id}
+                      </span>
+                      <span className="font-bold text-sm text-on-surface leading-snug line-clamp-2 min-h-10">
+                        {p.name}
+                      </span>
+                      <span className={`self-start text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full border ${pill}`}>
+                        {label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -1468,34 +1370,43 @@ export default function DashboardPage() {
               </div>
 
               <p className="text-sm text-on-surface-variant mb-4">
-                Capabilities identified with the greatest room for operational growth (Score &lt; 60%):
+                Pillars scoring under 15 out of 25 — your biggest improvement opportunities:
               </p>
 
               <div className="space-y-3 mb-6 max-h-[50vh] overflow-y-auto">
-                {priorityGapsList.length === 0 ? (
+                {priorityPillarsList.length === 0 ? (
                   <div className="p-6 text-center text-sm text-on-surface-variant bg-surface-container-low rounded-2xl">
                     <span className="material-symbols-outlined text-3xl text-primary mb-2">task_alt</span>
                     <p className="font-semibold text-on-surface">
-                      {hasAssessment ? "No major gaps identified" : "Complete assessment to uncover gaps"}
+                      {hasAssessment ? "No priority pillars" : "Complete assessment to uncover gaps"}
                     </p>
                     <p className="mt-1">
                       {hasAssessment
-                        ? "All assessed capabilities are currently meeting or exceeding standards."
+                        ? "Every assessed pillar is at or above 15 out of 25."
                         : "Take the 8-pillar diagnostic to identify high-ROI priority improvements."}
                     </p>
                   </div>
                 ) : (
-                  priorityGapsList.map((item, idx) => (
-                    <div key={idx} className="p-3 rounded-xl bg-rose-50 border border-rose-200">
+                  priorityPillarsList.map((item) => (
+                    <Link
+                      key={item.pillarId}
+                      href={`/assessment/focus?pillar=${item.pillarId}`}
+                      className="block p-3 rounded-xl bg-rose-50 border border-rose-200 hover:border-rose-300 transition-colors"
+                    >
                       <div className="flex items-center justify-between gap-2 font-bold text-sm text-rose-900 mb-1">
                         <span className="flex items-center gap-1.5">
                           <span className="material-symbols-outlined text-rose-700 text-sm fill">warning</span>
-                          <span>Capability {item.capId}: {item.capName}</span>
+                          <span>Pillar {item.pillarId}: {item.pillarName}</span>
                         </span>
-                        <span className="text-rose-700 font-extrabold">{item.score}%</span>
+                        <span className="text-rose-700 font-extrabold whitespace-nowrap">{item.yesCount}/25</span>
                       </div>
-                      <p className="text-[13px] text-rose-800">Pillar {item.pillarId} • {item.pillarName}</p>
-                    </div>
+                      <div className="h-1.5 rounded-full bg-rose-200/70 overflow-hidden">
+                        <div
+                          className="h-full bg-rose-500 rounded-full"
+                          style={{ width: `${Math.min(100, (item.yesCount / 25) * 100)}%` }}
+                        />
+                      </div>
+                    </Link>
                   ))
                 )}
               </div>

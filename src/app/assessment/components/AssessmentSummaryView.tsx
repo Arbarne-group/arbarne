@@ -79,6 +79,10 @@ export default function AssessmentSummaryView({
     maturityLevel: string;
     capabilityScores: any;
     totalQuestions?: number;
+    completedAt?: string | null;
+    canReassess?: boolean;
+    nextEligibleDate?: string | null;
+    daysRemaining?: number;
   } | null>(null);
   const [dbResponses, setDbResponses] = useState<any[]>([]);
   const [loadingDb, setLoadingDb] = useState(true);
@@ -149,8 +153,50 @@ export default function AssessmentSummaryView({
     "digital" | "demonstration" | "visit"
   >("digital");
   const [submissionNotes, setSubmissionNotes] = useState("");
-  const [showReportModal, setShowReportModal] = useState(false);
   const [showCertificateModal, setShowCertificateModal] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+
+  // Server-generated PDF download — no print dialog involved.
+  async function downloadPillarPdf() {
+    const email =
+      clerkUser?.primaryEmailAddress?.emailAddress || getActiveUserEmail();
+    if (!email) {
+      setPdfError("Sign in first to download your report.");
+      return;
+    }
+    setPdfError(null);
+    setDownloadingPdf(true);
+    try {
+      const res = await fetch(
+        `/api/assessment/report/${pillar.id}/pdf?email=${encodeURIComponent(email)}`
+      );
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Could not generate the PDF.");
+      }
+      const blob = await res.blob();
+      // Prefer the server's timestamped filename; fall back to a local one.
+      const disposition = res.headers.get("content-disposition") || "";
+      const serverName = disposition.match(/filename="([^"]+)"/)?.[1];
+      const stamp = new Date()
+        .toISOString()
+        .replace(/[-:T]/g, "")
+        .slice(0, 14);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = serverName || `Future-Farms-Pillar-${pillar.id}-Report-${stamp}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch (e: any) {
+      setPdfError(e?.message || "Could not generate the PDF.");
+    } finally {
+      setDownloadingPdf(false);
+    }
+  }
 
   // Print isolation: isolate certificate and hide all page background elements during print
   useEffect(() => {
@@ -782,28 +828,40 @@ export default function AssessmentSummaryView({
       <div className="max-w-full mx-auto w-full flex flex-col items-center">
         {/* Top Actions: Reassessment Cycle Banner & Download Action */}
         <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6  md:mb-8 lg:mb-10 p-4">
-          {/* 90-Day Reassessment Cycle Notice */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-high/80 border border-outline-variant/60 text-sm font-medium text-on-surface-variant">
-            <span className="material-symbols-outlined text-[16px] text-amber-600">
-              event_repeat
-            </span>
-            <span>
-              Pillar reassessment can only be repeated after{" "}
-              <strong>90 days (3 months)</strong>
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 self-center sm:self-auto">
-            <Link
-              href={`/assessment/report?pillar=${pillar.id}`}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-surface-container-high bg-surface text-on-surface-variant shadow-xs hover:bg-surface-variant hover:border-outline-variant transition-all text-xs font-semibold cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[16px] text-emerald-700">
-                description
-              </span>
-              Transformation Report (PDF)
-            </Link>
-          </div>
+          {/* Reassessment status — computed from the submission date, never hardcoded */}
+          {(() => {
+            if (!dbPillarStatus?.isCompleted) return null;
+            const canReassess = dbPillarStatus.canReassess ?? true;
+            const days = Math.max(0, dbPillarStatus.daysRemaining ?? 0);
+            const eligible = dbPillarStatus.nextEligibleDate
+              ? new Date(dbPillarStatus.nextEligibleDate).toLocaleDateString()
+              : null;
+            if (!canReassess && days > 0) {
+              return (
+                <div className="w-full flex items-center gap-3 px-5 py-4 rounded-2xl bg-amber-500 border-2 border-amber-600 text-white shadow-level-1">
+                  <span className="material-symbols-outlined text-[30px] md:text-[34px] shrink-0">
+                    event_repeat
+                  </span>
+                  <span className="text-lg md:text-xl font-bold leading-snug">
+                    Pillar reassessment in{" "}
+                    <strong className="whitespace-nowrap">
+                      {days} day{days === 1 ? "" : "s"}
+                    </strong>
+                  </span>
+                </div>
+              );
+            }
+            return (
+              <div className="w-full flex items-center gap-3 px-5 py-4 rounded-2xl bg-primary border-2 border-primary text-white shadow-level-1">
+                <span className="material-symbols-outlined text-[30px] md:text-[34px] shrink-0">
+                  restart_alt
+                </span>
+                <span className="text-lg md:text-xl font-bold leading-snug">
+                  Reassessment window open — retake this pillar to refresh your score
+                </span>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Heading */}
@@ -811,13 +869,31 @@ export default function AssessmentSummaryView({
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2">
             Pillar Assessment Complete
           </div>
-          <h1 className="font-headline-lg text-2xl sm:text-3xl font-bold text-secondary m-0">
+          <h1 className="font-headline-lg text-2xl sm:text-3xl font-bold m-0" style={{ color: pillar.accentColor }}>
             Pillar {pillar.id}: {pillar.name}
           </h1>
           <p className="text-md  lg:text-lg max-w-3xl text-on-surface-variant mt-1">
             Review your diagnostic score, capability recommendations, and start
             Future Farms Verification (FFV).
           </p>
+          <div className="mt-4 flex flex-col items-center gap-2">
+            <button
+              type="button"
+              onClick={downloadPillarPdf}
+              disabled={downloadingPdf}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-emerald-700 hover:bg-emerald-800 disabled:opacity-60 text-white text-sm font-bold transition cursor-pointer shadow-level-1"
+            >
+              <span className={`material-symbols-outlined text-[18px] ${downloadingPdf ? "animate-spin" : ""}`}>
+                {downloadingPdf ? "progress_activity" : "picture_as_pdf"}
+              </span>
+              {downloadingPdf ? "Generating PDF…" : "Download Pillar Report (PDF)"}
+            </button>
+            {pdfError && (
+              <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 max-w-md">
+                {pdfError}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Score Section */}
@@ -878,8 +954,8 @@ export default function AssessmentSummaryView({
         </div>
 
         {/* Automatic Pillar Feedback Card */}
-        <div className="w-full md:max-w-4xl mt-8 bg-surface border border-surface-container-high rounded-2xl p-5 sm:p-6 shadow-sm mb-6 md:mb-8 lg:mb-16 text-center">
-          <p className="font-body-md text-md lg:text-lg text-on-surface-variant leading-relaxed max-w-2xl mx-auto m-0">
+        <div className="w-full md:max-w-4xl mt-8 bg-primary border border-white/10 rounded-2xl p-5 sm:p-6 shadow-level-1 mb-6 md:mb-8 lg:mb-16 text-center">
+          <p className="font-body-md text-md lg:text-lg text-white leading-relaxed max-w-2xl mx-auto m-0">
             {pillarFeedback.feedback}
           </p>
         </div>
@@ -1908,198 +1984,6 @@ export default function AssessmentSummaryView({
                     <span>Submit Evidence</span>
                   </>
                 )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* MODAL 3: FUTURE FARMS TRANSFORMATION REPORT (ASSESSMENT-BASED)            */}
-      {/* ========================================================================= */}
-      {showReportModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
-          <div className="bg-surface rounded-3xl max-w-3xl w-full border border-surface-container-high shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
-            <div className="p-5 sm:p-6 border-b border-surface-container-high bg-surface-container-lowest flex items-center justify-between">
-              <div className="flex items-center gap-3.5">
-                <Image
-                  src="/logo.webp"
-                  alt="Future Farms"
-                  width={160}
-                  height={40}
-                  priority
-                  unoptimized
-                  className="h-8 w-auto object-contain shrink-0"
-                />
-                <div className="border-l border-surface-container-high pl-3">
-                  <span className="text-xs font-bold text-primary uppercase tracking-wider">
-                    Assessment-Based
-                  </span>
-                  <h2 className="text-lg sm:text-xl font-bold text-on-surface m-0">
-                    Future Farms Transformation Report
-                  </h2>
-                  <p className="text-xs text-on-surface-variant m-0 mt-0.5">
-                    Report ID: FFF-REP-2026-0881 • Farm ID: {dynamicFarmId}
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowReportModal(false)}
-                className="w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant flex items-center justify-center cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[20px]">
-                  close
-                </span>
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-5 text-xs text-on-surface">
-              {/* Farm Profile Summary */}
-              <div className="p-4 rounded-2xl bg-surface-container-lowest border border-surface-container-high grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-on-surface-variant block">
-                    Farm Name
-                  </span>
-                  <span className="font-bold text-on-surface truncate block">
-                    {dynamicFarmName}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-on-surface-variant block">
-                    Future Farm ID
-                  </span>
-                  <span className="font-bold text-primary">
-                    {dynamicFarmId}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-on-surface-variant block">
-                    Location
-                  </span>
-                  <span className="font-bold text-on-surface truncate block">
-                    {dynamicLocation}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase font-bold text-on-surface-variant block">
-                    Pillar Score
-                  </span>
-                  <span className="font-bold text-emerald-800">
-                    {pillarPercentage}% ({pillarFeedback.label})
-                  </span>
-                </div>
-              </div>
-
-              {/* Pillar Score Breakdown */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-on-surface-variant m-0">
-                  Full Pillar Assessment Results
-                </h4>
-                <div className="p-4 rounded-2xl bg-surface-container-lowest border border-surface-container-high space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold border-b border-surface-variant pb-2">
-                    <span>
-                      Pillar {pillar.id}: {pillar.name}
-                    </span>
-                    <span className="text-primary">
-                      {totalYes}/{totalQuestions} ({pillarFeedback.label})
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                    {capabilityScores.map((c) => (
-                      <div
-                        key={c.id}
-                        className="flex items-center justify-between p-2 rounded-lg bg-surface border border-outline-variant/40"
-                      >
-                        <span className="truncate pr-2">
-                          {c.code}: {c.name}
-                        </span>
-                        <span className="font-bold shrink-0">
-                          {c.yesCount}/{c.total}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Priority Development Areas */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-on-surface-variant m-0">
-                  Priority Development Areas (Lowest Capabilities)
-                </h4>
-                <div className="space-y-2">
-                  {capabilityScores
-                    .sort((a, b) => a.percent - b.percent)
-                    .slice(0, 3)
-                    .map((c, i) => (
-                      <div
-                        key={c.id}
-                        className="p-3 rounded-xl bg-amber-50/60 border border-amber-200 flex items-start gap-3"
-                      >
-                        <span className="w-5 h-5 rounded-full bg-amber-200 text-amber-900 font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5">
-                          {i + 1}
-                        </span>
-                        <div>
-                          <strong className="text-xs font-bold text-on-surface block">
-                            Capability {c.code}: {c.name} ({c.yesCount}/
-                            {c.total} - {c.tier.status})
-                          </strong>
-                          <p className="text-[11px] text-on-surface-variant m-0 mt-0.5 leading-relaxed">
-                            {c.statusFeedback}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-
-              {/* Report Notice */}
-              <div className="p-3.5 rounded-xl bg-surface-container-high text-[11px] text-on-surface-variant flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div className="space-y-1">
-                  <div>
-                    <strong>Progress Benchmark Notice:</strong> Reassessment
-                    eligible in 90 days. To convert this self-assessment report
-                    into an accredited{" "}
-                    <strong>Future Farms Verified Certification</strong>,
-                    complete the FFV verification protocol.
-                  </div>
-                  <div className="text-[10px] text-on-surface-variant">
-                    Official Advisory &amp; Verification Board:{" "}
-                    <a
-                      href="mailto:arbarnegroup@gmail.com"
-                      className="text-emerald-700 font-semibold hover:underline"
-                    >
-                      arbarnegroup@gmail.com
-                    </a>
-                  </div>
-                </div>
-                <div className="p-1 rounded-xl bg-white border border-outline-variant shrink-0 shadow-xs">
-                  <ScannableQrCode
-                    value={reportVerifyUrl}
-                    size={52}
-                    alt="Scan to verify report"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 border-t border-surface-container-high bg-surface-container-lowest flex items-center justify-between gap-3">
-              <Link
-                href={`/assessment/report?pillar=${pillar.id}`}
-                className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer shadow-xs"
-              >
-                <span className="material-symbols-outlined text-[16px]">
-                  picture_as_pdf
-                </span>
-                Open Full Printable A4 Report (PDF)
-              </Link>
-              <button
-                type="button"
-                onClick={() => setShowReportModal(false)}
-                className="px-5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-bold text-xs cursor-pointer"
-              >
-                Close
               </button>
             </div>
           </div>

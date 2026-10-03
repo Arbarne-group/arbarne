@@ -22,6 +22,17 @@ interface AssessmentOverviewViewProps {
   onSelectPillar: (pillarId: number, isLockedByCooldown?: boolean) => void;
 }
 
+// White number on dark accents, near-black on light ones (Pillar 2 yellow).
+export function legibleOn(hex: string): string {
+  const m = hex.replace("#", "");
+  if (m.length < 6) return "#fff";
+  const r = parseInt(m.slice(0, 2), 16) / 255;
+  const g = parseInt(m.slice(2, 4), 16) / 255;
+  const b = parseInt(m.slice(4, 6), 16) / 255;
+  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return lum > 0.6 ? "#1a1a1a" : "#fff";
+}
+
 export default function AssessmentOverviewView({
   onSelectPillar,
 }: AssessmentOverviewViewProps) {
@@ -157,10 +168,10 @@ export default function AssessmentOverviewView({
             <h1 className="font-display-lg text-headline-lg-mobile md:text-headline-lg font-bold text-on-surface mb-2">
               Assessment Overview
             </h1>
-            <p className="font-body-md text-body-md text-on-surface-variant max-w-md">
+            {/* <p className="font-body-md text-body-md text-on-surface-variant max-w-md">
               Complete the assessment to discover your farm&apos;s strengths and
               areas for improvement.
-            </p>
+            </p> */}
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">
             <button
@@ -181,7 +192,7 @@ export default function AssessmentOverviewView({
                 className="px-5 py-2 rounded-full bg-secondary hover:bg-secondary/50 text-white font-label-md text-sm font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-sm">picture_as_pdf</span>
-                Download 8-Pillar Report (PDF)
+                Download Farm Transformation Report (PDF)
               </Link>
             ) : (
               <Link
@@ -190,7 +201,7 @@ export default function AssessmentOverviewView({
                 className="px-5 py-2 rounded-full bg-secondary hover:bg-secondary/80 text-white font-label-md text-sm font-bold flex items-center gap-1.5 border border-outline-variant/40 transition-colors cursor-pointer"
               >
                 <span className="material-symbols-outlined text-sm text-white">lock</span>
-                <span>8-Pillar Report</span>
+                <span>Farm Transformation Report</span>
                 <span className="px-1.5 py-0.5 rounded-full bg-white text-secondary text-[10px] font-mono border border-secondary">
                   {completedPillarsCount}/8 Done
                 </span>
@@ -204,61 +215,55 @@ export default function AssessmentOverviewView({
         {/* Stats Overview Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {/* Stat Card 1 */}
-          <div className="bg-surface rounded-2xl p-6 shadow-level-1 flex flex-col items-center justify-center gap-2 border border-outline-variant/30 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-            <span className="material-symbols-outlined text-3xl text-primary mb-1">
+          <div className="bg-primary rounded-2xl p-6 shadow-level-1 flex flex-col items-center justify-center gap-2 border border-white/10 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+            <span className="material-symbols-outlined text-3xl text-white/90 mb-1">
               checklist
             </span>
-            <span className="font-display-lg text-display-lg font-bold text-on-surface">
+            <span className="font-display-lg text-display-lg font-bold text-white">
               40
             </span>
-            <span className="font-label-md text-label-md text-on-surface-variant text-center">
+            <span className="font-label-md text-label-md text-white/70 text-center">
               Capabilities
             </span>
           </div>
 
           {/* Stat Card 2 */}
-          <div className="bg-surface rounded-2xl p-6 shadow-level-1 flex flex-col items-center justify-center gap-2 border border-outline-variant/30 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-            <span className="material-symbols-outlined text-3xl text-secondary mb-1">
+          <div className="bg-primary rounded-2xl p-6 shadow-level-1 flex flex-col items-center justify-center gap-2 border border-white/10 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+            <span className="material-symbols-outlined text-3xl text-white/90 mb-1">
               view_module
             </span>
-            <span className="font-display-lg text-display-lg font-bold text-on-surface">
+            <span className="font-display-lg text-display-lg font-bold text-white">
               8
             </span>
-            <span className="font-label-md text-label-md text-on-surface-variant text-center">
+            <span className="font-label-md text-label-md text-white/70 text-center">
               Pillars
             </span>
           </div>
 
           {/* Stat Card 3 */}
-          <div className="bg-surface rounded-2xl p-6 shadow-level-1 flex flex-col items-center justify-center gap-2 border border-outline-variant/30 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-            <span className="material-symbols-outlined text-3xl text-tertiary mb-1">
+          <div className="bg-primary rounded-2xl p-6 shadow-level-1 flex flex-col items-center justify-center gap-2 border border-white/10 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+            <span className="material-symbols-outlined text-3xl text-white/90 mb-1">
               timer
             </span>
-            <span className="font-display-lg text-display-lg font-bold text-on-surface">
+            <span className="font-display-lg text-display-lg font-bold text-white">
               ~7{" "}
               <span className="text-title-md font-normal text-on-surface-variant">
                 min
               </span>
             </span>
-            <span className="font-label-md text-label-md text-on-surface-variant text-center">
+            <span className="font-label-md text-label-md text-white/70 text-center">
               Per Pillar (7m each)
             </span>
           </div>
 
           {/* Stat Card 4 */}
-          <div className="bg-surface rounded-2xl p-6 shadow-level-1 flex flex-col items-center justify-center gap-2 border border-outline-variant/30 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          <div className="bg-primary rounded-2xl p-6 shadow-level-1 flex flex-col items-center justify-center gap-2 border border-white/10 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
             <span
-              className={`material-symbols-outlined text-3xl mb-1 ${
-                assessmentStatus === "Completed"
-                  ? "text-primary"
-                  : assessmentStatus === "In Progress"
-                  ? "text-secondary"
-                  : "text-outline"
-              }`}
+              className="material-symbols-outlined text-3xl mb-1 text-white/90"
             >
               {assessmentStatus === "Completed"
                 ? "check_circle"
@@ -266,10 +271,10 @@ export default function AssessmentOverviewView({
                 ? "timelapse"
                 : "pending"}
             </span>
-            <span className="font-title-md text-title-md font-semibold text-on-surface mt-2 text-center">
+            <span className="font-title-md text-title-md font-semibold text-white mt-2 text-center">
               {assessmentStatus}
             </span>
-            <span className="font-label-md text-label-md text-on-surface-variant text-center">
+            <span className="font-label-md text-label-md text-white/70 text-center">
               Status
             </span>
           </div>
@@ -278,16 +283,13 @@ export default function AssessmentOverviewView({
        
         {/* The 8 Pillars Section */}
         <div className="mt-2">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="font-title-md text-headline-lg-mobile font-semibold text-on-surface">
                 The 8 Pillars
               </h2>
-              <p className="text-sm md:text-md lg:text-md text-on-surface-variant">
-                Progression across 8 pillars (P1–P8) and 40 capabilities (1.1–8.5).
-              </p>
             </div>
-            <button
+            {/* <button
               type="button"
               onClick={() => onSelectPillar(1)}
               className="text-secondary font-label-md text-label-md hover:underline flex items-center gap-1 cursor-pointer"
@@ -296,7 +298,20 @@ export default function AssessmentOverviewView({
               <span >
                 <ChevronRight className="w-4 h-4"/>
               </span>
-            </button>
+            </button> */}
+          </div>
+
+          {/* Full-width submission progress */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex-1 h-2.5 rounded-full bg-surface-container-high overflow-hidden">
+              <div
+                className="h-full bg-primary rounded-full transition-all"
+                style={{ width: `${(completedPillarsCount / 8) * 100}%` }}
+              />
+            </div>
+            <span className="text-sm font-bold text-on-surface whitespace-nowrap">
+              {completedPillarsCount}/8 submitted
+            </span>
           </div>
 
           {/* Bento Grid for Pillars */}
@@ -321,38 +336,35 @@ export default function AssessmentOverviewView({
                   className="bg-surface rounded-2xl p-5 shadow-level-1 border border-outline-variant/50 hover:shadow-level-2 transition-all flex flex-col justify-between hover:-translate-y-1 cursor-pointer group h-full relative overflow-hidden"
                 >
                   <div className="flex justify-between items-start mb-3">
-                    {/* Enhanced Interesting Pillar Icon */}
+                    {/* Pillar number in its accent color */}
                     <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-transform group-hover:scale-105"
+                      className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 shadow-sm transition-transform group-hover:scale-105"
                       style={{
-                        background: `linear-gradient(135deg, ${pillar.accentColor}25 0%, ${pillar.accentColor}45 100%)`,
-                        border: `1.5px solid ${pillar.accentColor}66`,
+                        backgroundColor: pillar.accentColor,
+                        color: legibleOn(pillar.accentColor),
                       }}
                     >
-                      <span
-                        className="material-symbols-outlined text-[28px] drop-shadow-sm"
-                        style={{ color: pillar.accentColor }}
-                      >
-                        {pillar.icon}
+                      <span className="text-xl font-black drop-shadow-sm">
+                        {pillar.id}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                      <span className="font-label-md text-sm font-bold text-on-surface-variant bg-surface-variant px-2 py-0.5 rounded-full">
-                        P{pillar.id}
-                      </span>
                       {isLockedCooldown && status?.completed ? (
                         <span className="material-symbols-outlined text-secondary text-[18px]">
                           check_circle
                         </span>
                       ) : null}
-                      
+
                     </div>
                   </div>
 
                   <div className="flex flex-col justify-between flex-1">
                     <div>
-                      <h3 className="text-md md:text-lg font-medium text-on-surface leading-snug mt-2 mb-1 group-hover:text-primary transition-colors">
+                      <h3
+                        className="text-md md:text-lg font-semibold leading-snug mt-2 mb-1"
+                        style={{ color: pillar.accentColor }}
+                      >
                         {pillar.name}
                       </h3>
                       <p className="text-[15px] text-gray-600 line-clamp-2 mb-3">
@@ -363,7 +375,7 @@ export default function AssessmentOverviewView({
                     </div>
 
                     <div className="flex items-center justify-between text-sm text-on-surface-variant pt-2.5 border-t border-outline-variant/20 mt-auto">
-                      <span className=" text-[13px]">Cap. {pillar.id}.1–{pillar.id}.5</span>
+                      <span />
                       {status?.completed ? (
                         <div className="flex items-center gap-2">
 
@@ -394,7 +406,7 @@ export default function AssessmentOverviewView({
                           In Progress • {status?.answeredCount}/25
                         </span>
                       ) : (
-                        <span className="text-primary font-semibold text-[12px] group-hover:underline">Start Pillar </span>
+                        <span className="text-primary font-semibold text-[12px] group-hover:underline">Start Assessment </span>
                       )}
                     </div>
                   </div>

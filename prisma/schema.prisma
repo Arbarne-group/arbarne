@@ -51,6 +51,7 @@ model User {
   subscriptions       Subscription[]
   business            Business?
   supportTickets      SupportTicket[]
+  reportDownloads     ReportDownload[]
 }
 
 // ─── Farm business identity (own table, FK → User) ─────────────────
@@ -471,6 +472,25 @@ model Invite {
   createdAt      DateTime  @default(now())
 
   @@index([invitedById])
+}
+
+// ─── Generated report download ledger ────────────────────────────
+// Every PDF download mints a fresh unique reference code and stores the
+// exact snapshot it was rendered from, so staff can reprint the identical
+// document later via /api/admin/reports/reprint/[referenceCode].
+model ReportDownload {
+  id            String   @id @default(cuid())
+  referenceCode String   @unique // e.g. FFR-20261003-8F3K2A, unique per download
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pillarId      Int? // null for full transformation reports
+  reportType    String   @default("PILLAR_DIAGNOSTIC")
+  fileName      String
+  snapshot      String // JSON of the exact PillarReportData rendered (no logo bytes)
+  createdAt     DateTime @default(now())
+
+  @@index([userId, pillarId])
+  @@index([createdAt])
 }
 
 // ─── Audit trail (every create/update/delete) ────────────────────
