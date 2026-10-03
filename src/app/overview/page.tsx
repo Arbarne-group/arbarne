@@ -128,9 +128,10 @@ export default function OverviewPage() {
         </div>
       </div>
 
-      {statusLoaded && !assessmentComplete && (
+      {/* {statusLoaded && !assessmentComplete && (
         <PromoCarousel cards={PROMO_CARDS}  />
-      )}
+      )} */}
+      <PromoCarousel cards={PROMO_CARDS}  />
       <FarmProfileMetadata />
     </AppShell>
   );
