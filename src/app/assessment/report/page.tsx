@@ -35,6 +35,46 @@ function AssessmentReportContent() {
   const [loading, setLoading] = useState(true);
   const [reportData, setReportData] = useState<any>(null);
   const [activeEmail, setActiveEmail] = useState<string>("");
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+
+  // Server-generated PDF download — no print dialog involved.
+  async function downloadGeneratedPdf() {
+    const email = activeEmail;
+    if (!email) {
+      setPdfError("Sign in first to download your report.");
+      return;
+    }
+    const endpoint = isAllPillars
+      ? `/api/assessment/report/full/pdf?email=${encodeURIComponent(email)}`
+      : `/api/assessment/report/${pillarId}/pdf?email=${encodeURIComponent(email)}`;
+    setPdfError(null);
+    setDownloadingPdf(true);
+    try {
+      const res = await fetch(endpoint);
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || "Could not generate the PDF.");
+      }
+      const blob = await res.blob();
+      const disposition = res.headers.get("content-disposition") || "";
+      const serverName = disposition.match(/filename="([^"]+)"/)?.[1];
+      const stamp = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download =
+        serverName || `Future-Farms-Report-${stamp}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch (e: any) {
+      setPdfError(e?.message || "Could not generate the PDF.");
+    } finally {
+      setDownloadingPdf(false);
+    }
+  }
   const [userProfile, setUserProfile] = useState<any>(null);
   const [completedPillars, setCompletedPillars] = useState<number[]>([]);
   const [completedPillarsInfo, setCompletedPillarsInfo] = useState<any[]>([]);
@@ -551,8 +591,14 @@ function AssessmentReportContent() {
 
             <button
               type="button"
-              onClick={handlePrint}
-              className="inline-flex items-center px-4 py-1.5 text-xs font-semibold rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs transition cursor-pointer"
+              onClick={downloadGeneratedPdf}
+              disabled={downloadingPdf || (isAllPillars && completedPillars.length < 8)}
+              title={
+                isAllPillars && completedPillars.length < 8
+                  ? `All 8 pillars required (${completedPillars.length}/8 completed)`
+                  : "Download generated PDF"
+              }
+              className="inline-flex items-center px-4 py-1.5 text-xs font-semibold rounded-lg bg-emerald-700 hover:bg-emerald-800 disabled:opacity-60 text-white shadow-xs transition cursor-pointer"
             >
               <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -566,6 +612,13 @@ function AssessmentReportContent() {
             </button>
           </div>
         </div>
+        {pdfError && (
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-3">
+            <p className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              {pdfError}
+            </p>
+          </div>
+        )}
       </header>
 
       {/* ─────────────────────────────────────────────────────────────

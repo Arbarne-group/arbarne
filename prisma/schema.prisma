@@ -483,7 +483,7 @@ model ReportDownload {
   referenceCode String   @unique // e.g. FFR-20261003-8F3K2A, unique per download
   userId        String
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  pillarId      Int
+  pillarId      Int? // null for full transformation reports
   reportType    String   @default("PILLAR_DIAGNOSTIC")
   fileName      String
   snapshot      String // JSON of the exact PillarReportData rendered (no logo bytes)

@@ -6,6 +6,7 @@ import path from "path";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/access";
 import PillarReportPdf from "@/lib/pillarReportPdf";
+import TransformationReportPdf from "@/lib/transformationReportPdf";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -45,9 +46,13 @@ export async function GET(
       logoDataUrl = null;
     }
     const buffer = await renderToBuffer(
-      React.createElement(PillarReportPdf, {
-        data: { ...snapshot, logoDataUrl },
-      })
+      snapshot?.kind === "full"
+        ? React.createElement(TransformationReportPdf, {
+            data: { ...snapshot, logoDataUrl },
+          })
+        : React.createElement(PillarReportPdf, {
+            data: { ...snapshot, logoDataUrl },
+          })
     );
     const bytes = new Uint8Array(buffer);
     return new Response(bytes, {
