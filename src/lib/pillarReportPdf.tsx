@@ -185,10 +185,10 @@ function Header({ data }: { data: PillarReportData }) {
       </View>
       <View style={styles.goldRule} />
       <Text style={styles.reportTitle}>
-        Pillar {data.pillar.id} Diagnostic &amp; Action Report
+        Pillar Diagnostic &amp; Action Report
       </Text>
       <Text style={styles.reportSub}>
-        {data.pillar.name} • Generated {data.generatedAt} • Report {data.reportId}
+        <Text style={{ fontWeight: "bold" }}>Generated:</Text> {data.generatedAt} • <Text style={{ fontWeight: "bold" }}>Report REF:</Text> {data.reportId}
       </Text>
       <View style={styles.metaGrid}>
         {[
