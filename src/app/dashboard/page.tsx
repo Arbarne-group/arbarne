@@ -384,7 +384,7 @@ export default function DashboardPage() {
   // Dynamic Development Plan (Top 3 Priority Improvements)
   const developmentPlanItems = useMemo(() => {
     if (priorityGapsList.length > 0) {
-      return priorityGapsList.slice(0, 3).map((item, idx) => ({
+      return priorityGapsList.slice(0, 5).map((item, idx) => ({
         id: idx + 1,
         num: idx + 1,
         numColor: item.score <= 30 ? "text-error" : "text-[#d97706]",
@@ -809,11 +809,8 @@ export default function DashboardPage() {
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h3 className="font-title-md text-title-md text-on-surface font-bold">
-                    My Development Plan
+                    My Development Priorities
                   </h3>
-                  <p className="text-[13px] text-on-surface-variant">
-                    {priorityGapsList.length > 0 ? "Highest-impact areas based on your assessment gaps" : "Core transformation areas"}
-                  </p>
                 </div>
                 <button
                   type="button"
@@ -866,13 +863,6 @@ export default function DashboardPage() {
                         {item.transition}
                       </span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => router.push(`/assessment`)}
-                      className="ml-auto px-4 py-1.5 border border-secondary text-secondary rounded-full font-label-sm text-label-sm hover:bg-primary-container hover:text-on-primary-container transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer font-semibold"
-                    >
-                      Audit
-                    </button>
                   </div>
                   ))
                 )}
