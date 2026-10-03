@@ -10,14 +10,18 @@ import PageLoader from "@/components/PageLoader";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import {
   computeAssessmentResults,
-  getMaturityTier,
   OverallAssessmentResult,
 } from "@/lib/assessmentScoring";
 import {
   countCompletedPillarsFromAnswers,
   getActiveUserEmail,
 } from "@/lib/onboardingGuard";
+import {
+  getCapabilityTier,
+  getCapabilityFeedbackText,
+} from "@/data/capabilityFeedback";
 import { getBusinessProfileStatus } from "@/lib/businessProfile";
+import { classifyFfmiBand } from "@/lib/ffmiBands";
 
 interface ActionItem {
   id: string;
@@ -41,6 +45,14 @@ export default function DashboardPage() {
   // Modals & Interactive States
   const [showProgressModal, setShowProgressModal] = useState(false);
   const [showAllPlanModal, setShowAllPlanModal] = useState(false);
+  const [showCapabilityModal, setShowCapabilityModal] = useState<{
+    capId: string;
+    capName: string;
+    pillarId: number;
+    pillarName: string;
+    yes: number;
+    total: number;
+  } | null>(null);
   const [showStrengthsModal, setShowStrengthsModal] = useState(false);
   const [showPriorityModal, setShowPriorityModal] = useState(false);
   const [newActionText, setNewActionText] = useState("");
@@ -263,26 +275,11 @@ export default function DashboardPage() {
     return Number(((overallPercentage / 100) * 24).toFixed(2));
   }, [hasAssessment, overallPercentage]);
 
-  const maturityTier = useMemo(() => {
-    if (!hasAssessment) {
-      return {
-        label: "Assessment Pending",
-        description: "Take the 8-Pillar Assessment to calculate your farm's verified FFMI score and maturity stage.",
-        badgeColor: "bg-surface-variant text-on-surface-variant",
-        textColor: "text-on-surface-variant",
-        color: "border-outline-variant bg-surface-container-low",
-      };
-    }
-    return getMaturityTier(overallPercentage);
-  }, [hasAssessment, overallPercentage]);
-
-  const farmClassification = useMemo(() => {
-    if (!hasAssessment) return "Pending Assessment";
-    if (overallPercentage >= 80) return "Future-Ready Farm";
-    if (overallPercentage >= 60) return "Structured Commercial Farm";
-    if (overallPercentage >= 40) return "Developing Farm";
-    return "Emerging Farm";
-  }, [hasAssessment, overallPercentage]);
+  // FFMI band classification (0–24 scale) for the index card.
+  const ffmiBand = useMemo(
+    () => classifyFfmiBand(ffmiScore24),
+    [ffmiScore24]
+  );
 
   // Verified & completed pillars
   const verifiedPillarsCount = useMemo(() => {
@@ -338,7 +335,7 @@ export default function DashboardPage() {
   // Dynamic Priority Gap Areas (capabilities scored < 60% with answered questions)
   const priorityGapsList = useMemo(() => {
     if (!assessmentResult || !hasAssessment) return [];
-    const list: { pillarId: number; pillarName: string; capId: string; capName: string; score: number }[] = [];
+    const list: { pillarId: number; pillarName: string; capId: string; capName: string; score: number; yes: number; total: number }[] = [];
     assessmentResult.pillarScores.forEach((p) => {
       Object.entries(p.capabilityScores || {}).forEach(([capId, cap]: [string, any]) => {
         if (p.answeredCount > 0 && cap.score < 60) {
@@ -348,6 +345,8 @@ export default function DashboardPage() {
             capId,
             capName: cap.name,
             score: cap.score,
+            yes: cap.yes ?? 0,
+            total: cap.total || 5,
           });
         }
       });
@@ -397,6 +396,9 @@ export default function DashboardPage() {
             ? "Basic → Developing"
             : "Developing → Established",
         pillarId: item.pillarId,
+        capId: item.capId,
+        yes: item.yes,
+        total: item.total,
       }));
     }
 
@@ -610,13 +612,16 @@ export default function DashboardPage() {
                       <span className="material-symbols-outlined text-[18px] mr-1 fill">
                         {hasAssessment ? "verified" : "hourglass_empty"}
                       </span>
-                      {farmClassification}
+                      {ffmiBand.name}
                     </span>
+                    <p className="mt-2 text-sm font-bold text-on-surface">
+                      {ffmiBand.tagline}
+                    </p>
                   </div>
 
                   <p className="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
                     {hasAssessment
-                      ? maturityTier.description
+                      ? ffmiBand.body
                       : "Take the 8-Pillar Assessment to establish your farm's verified capability benchmark and unlock access to commercial opportunities."}
                   </p>
                 </div>
@@ -804,7 +809,7 @@ export default function DashboardPage() {
 
           {/* Bottom Section: Lists */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
-            {/* My Development Plan */}
+            {/* My Development Priorities */}
             <div className="bg-surface rounded-2xl p-6 shadow-ambient flex flex-col border border-outline-variant/40">
               <div className="flex justify-between items-center mb-6">
                 <div>
@@ -842,11 +847,52 @@ export default function DashboardPage() {
                     </button>
                   </div>
                 ) : (
-                  developmentPlanItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center p-3 rounded-xl hover:bg-surface-container-low transition-colors border border-transparent hover:border-outline-variant group"
-                  >
+                  developmentPlanItems.map((item: any) => {
+                    const hasDetail = Boolean(item.capId);
+                    const level = hasDetail
+                      ? getCapabilityTier(item.yes ?? 0, item.total || 5).status
+                      : null;
+                    return (
+                    <div
+                      key={item.id}
+                      role={hasDetail ? "button" : undefined}
+                      tabIndex={hasDetail ? 0 : undefined}
+                      onClick={
+                        hasDetail
+                          ? () =>
+                              setShowCapabilityModal({
+                                capId: item.capId,
+                                capName: item.title,
+                                pillarId: item.pillarId,
+                                pillarName: "",
+                                yes: item.yes ?? 0,
+                                total: item.total || 5,
+                              })
+                          : undefined
+                      }
+                      onKeyDown={
+                        hasDetail
+                          ? (e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                setShowCapabilityModal({
+                                  capId: item.capId,
+                                  capName: item.title,
+                                  pillarId: item.pillarId,
+                                  pillarName: "",
+                                  yes: item.yes ?? 0,
+                                  total: item.total || 5,
+                                });
+                              }
+                            }
+                          : undefined
+                      }
+                      className={`flex items-center p-3 rounded-xl border border-transparent group ${
+                        hasDetail
+                          ? "hover:bg-surface-container-low hover:border-outline-variant cursor-pointer"
+                          : ""
+                      } transition-colors`}
+                    >
                     <span className={`font-title-md text-title-md ${item.numColor} w-8 text-center font-bold`}>
                       {item.num}
                     </span>
@@ -858,13 +904,24 @@ export default function DashboardPage() {
                         {item.subtitle}
                       </p>
                     </div>
-                    <div className="hidden sm:block px-3">
+                    {level && (
+                      <span className="shrink-0 text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 border border-amber-500/30">
+                        {level}
+                      </span>
+                    )}
+                    {/* <div className="hidden sm:block px-3">
                       <span className="text-sm px-2 py-1 bg-surface-variant text-on-surface-variant rounded-md font-medium">
                         {item.transition}
                       </span>
-                    </div>
+                    </div> */}
+                    {hasDetail && (
+                      <span className="material-symbols-outlined text-on-surface-variant text-sm group-hover:text-primary group-hover:translate-x-0.5 transition-all">
+                        chevron_right
+                      </span>
+                    )}
                   </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </div>
@@ -1161,6 +1218,59 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Modal: Capability feedback from the recommendation library */}
+        {showCapabilityModal && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-surface rounded-3xl p-5 sm:p-6 md:p-8 max-w-lg w-full max-h-[90dvh] overflow-y-auto shadow-2xl border border-outline-variant animate-fade-in-up flex flex-col">
+              <div className="flex justify-between items-center mb-4 border-b border-surface-variant pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-2xl">psychiatry</span>
+                  <h3 className="text-lg font-bold text-on-surface">{showCapabilityModal.capName}</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowCapabilityModal(null)}
+                  className="p-1 text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-variant transition-colors cursor-pointer"
+                >
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 border border-amber-500/30">
+                  {getCapabilityTier(showCapabilityModal.yes, showCapabilityModal.total).status}
+                </span>
+                <span className="text-xs font-semibold text-on-surface-variant">
+                  Pillar {showCapabilityModal.pillarId}
+                   {/* • {showCapabilityModal.yes} of{" "}
+                  {showCapabilityModal.total} yes */}
+                </span>
+              </div>
+              <p className="text-sm text-on-surface leading-relaxed">
+                {getCapabilityFeedbackText(
+                  showCapabilityModal.capId,
+                  showCapabilityModal.yes,
+                  showCapabilityModal.capName
+                )}
+              </p>
+              <div className="flex justify-between items-center pt-4 mt-4 border-t border-surface-variant">
+                <Link
+                  href={`/assessment/focus?pillar=${showCapabilityModal.pillarId}`}
+                  className="text-sm font-bold text-primary hover:underline"
+                >
+                  Review pillar &rarr;
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowCapabilityModal(null)}
+                  className="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Modal: View Progress Over Time */}
         {showProgressModal && (
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -1187,7 +1297,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between p-3 rounded-xl bg-primary/10 border border-primary/30">
                   <div>
                     <span className="text-sm font-bold text-primary block">Current Verified Benchmark</span>
-                    <span className="text-[13px] text-primary/80">Stage: {farmClassification}</span>
+                    <span className="text-[13px] text-primary/80">Stage: {ffmiBand.name}</span>
                   </div>
                   <span className="text-base font-black text-primary">{ffmiScore24} / 24</span>
                 </div>

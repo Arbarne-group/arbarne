@@ -6,6 +6,7 @@ import path from "path";
 import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
+import { appBaseUrl } from "@/lib/mailer";
 import { ALL_PILLARS } from "@/data/allPillarsData";
 import { getPillarById } from "@/data/assessmentData";
 import { getMaturityTier } from "@/lib/assessmentScoring";
@@ -134,6 +135,29 @@ export async function GET(
     }
 
     const fileName = `Future-Farms-Pillar-${pId}-Report-${fileStamp}.pdf`;
+    const loc: any = (user as any).farmLocation || {};
+    const ch: any = (user as any).farmCharacteristics || {};
+    const biz: any = (user as any).business || {};
+    const fp: any = (user as any).farmerProfile || {};
+    const farmId = biz.businessId || user.futureFarmId || "FFF-KE-PROD";
+    const verifyUrl = `${appBaseUrl()}/verify?type=report&reportId=${encodeURIComponent(referenceCode)}&pillar=${pId}&farmId=${encodeURIComponent(farmId)}`;
+
+    let qrDataUrl: string | null = null;
+    try {
+      const QRCode = (await import("qrcode")).default;
+      qrDataUrl = await QRCode.toDataURL(verifyUrl, { width: 240, margin: 1 });
+    } catch (e) {
+      console.warn("[Pillar PDF] QR generation failed:", (e as any)?.message || e);
+    }
+    const doneAt = pillarRecord?.completedAt
+      ? new Date(pillarRecord.completedAt)
+      : new Date(assessment.updatedAt);
+    const nextDue = new Date(doneAt.getTime() + 90 * 24 * 60 * 60 * 1000);
+    const fmtDay = (d: Date) =>
+      d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    const place = loc.ward || loc.subcounty || loc.county || "";
+    const ftype = String((user as any).farmingType || "").toLowerCase();
+
     const reportData = {
       generatedAt: now.toLocaleDateString("en-GB", {
         day: "numeric",
@@ -141,13 +165,28 @@ export async function GET(
         year: "numeric",
       }),
       reportId: referenceCode,
+      verifyUrl,
+      qrDataUrl,
       farm: {
-        farmName: user.farmName || (user.name ? `${user.name}'s Farm` : "Farm Name Not Specified"),
-        ownerName: user.name || "Farmer",
-        email: user.email,
-        phone: user.phone || "",
-        valueChain: (user as any).farmerProfile?.valueChain || "Not specified",
-        experienceYears: (user as any).farmerProfile?.experienceYears || "Not specified",
+        farmName:
+          (user as any).farmName ||
+          user.businessName ||
+          (user.name ? `${user.name}'s Farm` : "Farm Name Not Specified"),
+        farmId,
+        ownerManager: `${user.name || "Farmer"}${fp.jobTitle ? ` (${fp.jobTitle})` : ""}`,
+        location: place ? `${place} | ${loc.country || "Kenya"}` : "Kenya",
+        farmType:
+          ftype === "crop"
+            ? "Crop"
+            : ftype === "livestock"
+              ? "Livestock"
+              : ftype === "mixed"
+                ? "Mixed"
+                : "Not specified",
+        farmSize:
+          ch.farmSize != null ? `${ch.farmSize} ${ch.farmUnit || "Acres"}` : "Not specified",
+        assessmentDate: fmtDay(doneAt),
+        nextAssessmentDate: fmtDay(nextDue),
       },
       pillar: {
         id: pId,

@@ -91,11 +91,12 @@ export default function FfmiGauge({ score, active = true }: FfmiGaugeProps) {
           );
         })}
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-        <span className="text-4xl font-black text-on-surface">
-          {active ? clamped.toFixed(clamped % 1 === 0 ? 0 : 1) : "–"}
-          <span className="text-xl font-bold text-on-surface-variant">/24</span>
-        </span>
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+          <span className="text-4xl font-black text-on-surface">
+            {/* Same value + formatting as the FFMI card beside the chart. */}
+            {active ? parseFloat(clamped.toFixed(2)) : "–"}
+            <span className="text-xl font-bold text-on-surface-variant">/24</span>
+          </span>
         <span
           className="text-xs font-bold uppercase tracking-widest mt-1 px-3 py-1 rounded-full text-white"
           style={{ backgroundColor: active ? band.color : "#9ca3af" }}

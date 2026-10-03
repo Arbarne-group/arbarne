@@ -156,6 +156,7 @@ export default function AssessmentSummaryView({
   const [showCertificateModal, setShowCertificateModal] = useState(false);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const [pdfDone, setPdfDone] = useState(false);
 
   // Server-generated PDF download — no print dialog involved.
   async function downloadPillarPdf() {
@@ -166,6 +167,7 @@ export default function AssessmentSummaryView({
       return;
     }
     setPdfError(null);
+    setPdfDone(false);
     setDownloadingPdf(true);
     try {
       const res = await fetch(
@@ -191,6 +193,8 @@ export default function AssessmentSummaryView({
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 5000);
+      setPdfDone(true);
+      setTimeout(() => setPdfDone(false), 8000);
     } catch (e: any) {
       setPdfError(e?.message || "Could not generate the PDF.");
     } finally {
@@ -891,6 +895,12 @@ export default function AssessmentSummaryView({
             {pdfError && (
               <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 max-w-md">
                 {pdfError}
+              </p>
+            )}
+            {pdfDone && (
+              <p className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 max-w-md flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                Report downloaded - check your Downloads folder.
               </p>
             )}
           </div>

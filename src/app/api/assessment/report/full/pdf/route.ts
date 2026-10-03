@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { appBaseUrl } from "@/lib/mailer";
 import { ALL_PILLARS } from "@/data/allPillarsData";
+import { FFMI_BANDS } from "@/lib/ffmiBands";
 import { getPillarScoringTier } from "@/data/pillarScoringTiers";
 import { getCapabilityFeedbackText, getCapabilityTier } from "@/data/capabilityFeedback";
 import TransformationReportPdf from "@/lib/transformationReportPdf";
@@ -17,49 +18,6 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const REF_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-const BANDS = [
-  {
-    range: "0–4",
-    name: "Informal - Farm Business",
-    tagline: "Building the Foundation",
-    body: "Formal business systems, records, planning, and management practices are still limited. The priority is to establish the basic foundations of a farm business.",
-    min: 0,
-    max: 4,
-  },
-  {
-    range: "5–9",
-    name: "Emerging - Farm business",
-    tagline: "Building the Business",
-    body: "The farm is beginning to operate as a business, with some systems and commercial practices in place. The next step is to strengthen consistency, financial management, productivity, and market orientation.",
-    min: 5,
-    max: 9,
-  },
-  {
-    range: "10–15",
-    name: "Structured - Farm Business",
-    tagline: "Strengthening for Growth",
-    body: "The farm has established business and operational systems and demonstrates a more consistent approach to managing production and performance. The focus is now on closing capability gaps and preparing for sustainable growth and investment.",
-    min: 10,
-    max: 15,
-  },
-  {
-    range: "16–20",
-    name: "Investment-Ready - Farm Business",
-    tagline: "Prepared for Investment",
-    body: "The farm demonstrates the business, financial, governance, operational, and market capabilities needed to prepare for external investment or strategic partnerships. The focus is on evidence, scalability, risk management, and effective capital deployment.",
-    min: 16,
-    max: 20,
-  },
-  {
-    range: "21–24",
-    name: "Future-Ready Farm Business",
-    tagline: "Leading for the Future",
-    body: "The farm demonstrates advanced and integrated capabilities across its farm system, with strong foundations for resilience, innovation, competitiveness, sustainable growth, and continued improvement.",
-    min: 21,
-    max: 24,
-  },
-];
 
 function randomRefSegment(length = 6): string {
   const bytes = crypto.randomBytes(length);
@@ -130,7 +88,7 @@ export async function GET(request: Request) {
     const total = assessment.assessmentResponses.length || 200;
     const overallPercent = Math.round((totalYes / total) * 100);
     const score24 = Math.round((totalYes / total) * 24);
-    const bands = BANDS.map((b) => ({
+    const bands = FFMI_BANDS.map((b) => ({
       ...b,
       current: score24 >= b.min && score24 <= b.max,
     }));
