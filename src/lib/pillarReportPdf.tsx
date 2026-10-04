@@ -239,13 +239,13 @@ export default function PillarReportPdf({ data }: { data: PillarReportData } & D
           <Text style={styles.heroGuide}>{data.pillar.guidingQuestion}</Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Pillar recommendation</Text>
+        <Text style={styles.sectionTitle}>PILLAR RECOMMENDATION</Text>
         <View style={styles.recoBox}>
           <Text style={styles.recoText}>{data.pillar.recommendation}</Text>
           <Text style={[styles.recoText, { marginTop: 6 }]}>{data.pillar.maturityDescription}</Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Capability breakdown</Text>
+        <Text style={styles.sectionTitle}>Capability Development</Text>
         {data.capabilities.map((c) => (
           <View key={c.id} style={styles.capBox} wrap={false}>
             <View style={styles.capHeadRow}>
@@ -262,7 +262,7 @@ export default function PillarReportPdf({ data }: { data: PillarReportData } & D
         {data.gaps.length > 0 && (
           <>
             <Text style={styles.sectionTitle}>
-              Priority gaps &amp; recommendations ({data.gaps.length})
+              Critical Gaps &amp; Recommendations ({data.gaps.length})
             </Text>
             {data.gaps.map((g) => (
               <View key={g.questionId} style={styles.gapBox}>
@@ -310,7 +310,7 @@ export default function PillarReportPdf({ data }: { data: PillarReportData } & D
         </View>
         */}
 
-        <Text style={styles.sectionTitle}>Verified report</Text>
+        <Text style={styles.sectionTitle}>Verify Report</Text>
         <View style={styles.verifyBox} wrap={false}>
           {data.qrDataUrl ? <Image src={data.qrDataUrl} style={styles.qr} /> : null}
           <View style={styles.verifyBody}>
