@@ -210,8 +210,28 @@ export default function TransformationReportPdf({
           <View style={styles.goldRule} />
           <Text style={styles.reportTitle}>Future Farms Transformation Report</Text>
           <Text style={styles.reportSub}>
-            Full 8-pillar assessment • Generated {data.generatedAt} • Report {data.reportId}
+            <Text style={{ fontWeight: 'bold' }}>Generated:</Text> {data.generatedAt} •{' '}
+            <Text style={{ fontWeight: 'bold' }}>Report REF:</Text> {data.reportId}
           </Text>
+        </View>
+
+        <Text style={styles.sectionTitle}>Basic Farm ID</Text>
+        <View style={styles.idGrid}>
+          {[
+            ["Farm / Business Name", data.farm.farmName],
+            ["Farm ID", data.farm.farmId],
+            ["Owner / Manager", data.farm.ownerManager],
+            ["Location", data.farm.location],
+            ["Farm Type", data.farm.farmType],
+            ["Farm Size", data.farm.farmSize],
+            ["Assessment Date", data.farm.assessmentDate],
+            ["Next Assessment Date", data.farm.nextAssessmentDate],
+          ].map(([label, value]) => (
+            <View key={label} style={styles.idCell}>
+              <Text style={styles.idLabel}>{label}</Text>
+              <Text style={styles.idValue}>{value}</Text>
+            </View>
+          ))}
         </View>
 
         <Text style={styles.sectionTitle}>Farm classification &amp; FFMI Index</Text>
@@ -244,25 +264,6 @@ export default function TransformationReportPdf({
             </View>
           ))}
 
-        <Text style={styles.sectionTitle}>Basic Farm ID</Text>
-        <View style={styles.idGrid}>
-          {[
-            ["Farm / Business Name", data.farm.farmName],
-            ["Farm ID", data.farm.farmId],
-            ["Owner / Manager", data.farm.ownerManager],
-            ["Location", data.farm.location],
-            ["Farm Type", data.farm.farmType],
-            ["Farm Size", data.farm.farmSize],
-            ["Assessment Date", data.farm.assessmentDate],
-            ["Next Assessment Date", data.farm.nextAssessmentDate],
-          ].map(([label, value]) => (
-            <View key={label} style={styles.idCell}>
-              <Text style={styles.idLabel}>{label}</Text>
-              <Text style={styles.idValue}>{value}</Text>
-            </View>
-          ))}
-        </View>
-
         <Text style={styles.sectionTitle}>Pillar Status — all 8 pillars</Text>
         {data.pillars.map((p) => (
           <View key={p.id} style={styles.pillarRow} wrap={false}>
@@ -280,7 +281,7 @@ export default function TransformationReportPdf({
           Development Priorities as of {data.farm.assessmentDate}
         </Text>
         <Text style={[styles.pillarBrief, { marginBottom: 6 }]}>
-          Capabilities scoring 3 or less out of 5, in pillar order — start here.
+          Address these capabilities first to improve your overall maturity and FFMI Index score.
         </Text>
         {data.priorities.length === 0 ? (
           <Text style={styles.pillarBrief}>

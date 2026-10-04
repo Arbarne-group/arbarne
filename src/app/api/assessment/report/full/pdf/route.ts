@@ -129,6 +129,7 @@ export async function GET(request: Request) {
       id: string;
       name: string;
       yes: number;
+      score: number;
       feedback: string;
     }> = [];
     for (const p of ALL_PILLARS) {
@@ -140,23 +141,30 @@ export async function GET(request: Request) {
         parsed = {};
       }
       const pres = assessment.assessmentResponses.filter((r) => r.pillarId === p.id);
+      if (pres.length === 0) continue;
       for (const c of p.capabilities) {
         const yes =
           parsed[c.id]?.yes ??
           pres.filter((r) => r.capabilityId === c.id && r.answer === "yes").length;
-        if (yes <= 3) {
-          priorities.push({
-            pillarId: p.id,
-            pillarName: p.name,
-            id: c.id,
-            name: c.name,
-            yes,
-            feedback: getCapabilityFeedbackText(c.id, yes, c.name),
-          });
-        }
+        const total = parsed[c.id]?.total || 5;
+        const score =
+          parsed[c.id]?.score ?? Math.round((yes / Math.max(total, 1)) * 100);
+        // Same top-5 below-60% selection as the dashboard's Development
+        // Priorities list.
+        if (score >= 60) continue;
+        priorities.push({
+          pillarId: p.id,
+          pillarName: p.name,
+          id: c.id,
+          name: c.name,
+          yes,
+          score,
+          feedback: getCapabilityFeedbackText(c.id, yes, c.name),
+        });
       }
     }
-    priorities.sort((a, b) => a.pillarId - b.pillarId || a.id.localeCompare(b.id));
+    priorities.sort((a, b) => a.score - b.score);
+    const topPriorities = priorities.slice(0, 5);
 
     const now = new Date();
     const { date: datePart, fileStamp } = stamp(now);
@@ -222,7 +230,7 @@ export async function GET(request: Request) {
       ffmi: { score24, overallPercent },
       bands,
       pillars,
-      priorities,
+      priorities: topPriorities,
     };
 
     const buffer = await renderToBuffer(
