@@ -137,9 +137,6 @@ const styles = StyleSheet.create({
   verifyTitle: { fontSize: 11, fontWeight: "bold", color: TEAL },
   verifyText: { fontSize: 8.5, color: INK, marginTop: 3, lineHeight: 1.5 },
   verifyRef: { fontSize: 9, fontWeight: "bold", color: INK, marginTop: 5 },
-  signoff: { marginTop: 18, alignItems: "center" },
-  signoffMain: { fontSize: 11, fontWeight: "bold", color: TEAL, letterSpacing: 0.5 },
-  signoffSub: { fontSize: 8.5, color: MUTED, marginTop: 3 },
   footer: {
     position: "absolute",
     bottom: 22,
@@ -150,6 +147,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     fontSize: 7.5,
     color: MUTED,
+    opacity: 0.62,
   },
   footerCenter: { flex: 1, alignItems: "center" },
   footerPage: { fontSize: 7, color: MUTED, marginTop: 3 },
@@ -326,13 +324,6 @@ export default function PillarReportPdf({ data }: { data: PillarReportData } & D
             </Text>
             <Text style={styles.verifyRef}>Reference: {data.reportId}</Text>
           </View>
-        </View>
-
-        <View style={styles.signoff}>
-          <Text style={styles.signoffMain}>OurFarms.OurFuture</Text>
-          <Text style={styles.signoffSub}>
-            Future Farms Initiative | An initiative of Arbarne Agriculture Group
-          </Text>
         </View>
 
         <View style={styles.footer} fixed>
