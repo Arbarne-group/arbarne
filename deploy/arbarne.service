@@ -1,0 +1,30 @@
+# /etc/systemd/system/arbarne.service
+# Install: cp deploy/arbarne.service /etc/systemd/system/ && systemctl daemon-reload
+# Verify node path first: `which node` (default below is /usr/bin/node).
+
+[Unit]
+Description=Arbarne Future Farms (Next.js production, port 3050)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/arbarne
+Environment=NODE_ENV=production
+Environment=PORT=3050
+Environment=HOSTNAME=0.0.0.0
+# Production secrets live here (NOT in git). Required at minimum:
+#   DATABASE_URL, AUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
+#   AUTH_URL=https://dev.futurefarms.africa,
+#   NEXT_PUBLIC_APP_URL=https://dev.futurefarms.africa
+EnvironmentFile=-/var/www/arbarne/.env.production
+ExecStart=/usr/bin/node /var/www/arbarne/node_modules/next/dist/bin/next start -p 3050 -H 0.0.0.0
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=arbarne
+
+[Install]
+WantedBy=multi-user.target
