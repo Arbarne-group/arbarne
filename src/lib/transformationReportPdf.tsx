@@ -129,7 +129,8 @@ const styles = StyleSheet.create({
   idCell: { width: "50%", paddingVertical: 3, paddingRight: 8 },
   idLabel: { fontSize: 7.5, color: MUTED, textTransform: "uppercase", letterSpacing: 0.5 },
   idValue: { fontSize: 9.5, fontWeight: "bold", color: INK, marginTop: 1 },
-  pillarRow: { flexDirection: "row", alignItems: "center", paddingVertical: 6, borderBottomWidth: 0.5, borderBottomColor: LINE },
+  pillarRow: { paddingVertical: 7, borderBottomWidth: 0.5, borderBottomColor: LINE },
+  pillarTopRow: { flexDirection: "row", alignItems: "center" },
   pillarNum: {
     width: 24,
     height: 24,
@@ -141,9 +142,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingTop: 5,
   },
-  pillarBody: { flex: 1, paddingLeft: 9, paddingRight: 8 },
-  pillarName: { fontSize: 9.5, fontWeight: "bold", color: INK },
-  pillarBrief: { fontSize: 8.5, color: MUTED, marginTop: 1, lineHeight: 1.45 },
+  pillarName: { flex: 1, fontSize: 9.5, fontWeight: "bold", color: INK, paddingLeft: 9, paddingRight: 8 },
+  pillarBadge: { fontSize: 8, fontWeight: "bold", color: TEAL, backgroundColor: "#e6f2f2", borderRadius: 8, paddingVertical: 2, paddingHorizontal: 7 },
+  pillarBrief: { fontSize: 8.5, color: MUTED, marginTop: 3, lineHeight: 1.45 },
   pillarScore: { fontSize: 12, fontWeight: "bold", color: TEAL, width: 52, textAlign: "right" },
   prioBox: { borderWidth: 1, borderColor: LINE, borderRadius: 8, padding: 9, marginBottom: 7 },
   prioHead: { fontSize: 9.5, fontWeight: "bold", color: INK, marginBottom: 2 },
@@ -267,13 +268,12 @@ export default function TransformationReportPdf({
         <Text style={styles.sectionTitle}>Pillar Status — all 8 pillars</Text>
         {data.pillars.map((p) => (
           <View key={p.id} style={styles.pillarRow} wrap={false}>
-            <Text style={styles.pillarNum}>{p.id}</Text>
-            <View style={styles.pillarBody}>
+            <View style={styles.pillarTopRow}>
+              <Text style={styles.pillarNum}>{p.id}</Text>
               <Text style={styles.pillarName}>{p.name}</Text>
-              <Text style={styles.pillarBrief}>
-                {p.maturityStage}: {p.brief}
-              </Text>
+              <Text style={styles.pillarBadge}>{p.maturityStage}</Text>
             </View>
+            <Text style={styles.pillarBrief}>{p.brief}</Text>
           </View>
         ))}
 
