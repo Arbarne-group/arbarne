@@ -38,13 +38,17 @@ export interface PillarReportData {
   logoDataUrl?: string | null;
   generatedAt: string;
   reportId: string;
+  verifyUrl: string;
+  qrDataUrl?: string | null;
   farm: {
     farmName: string;
-    ownerName: string;
-    email: string;
-    phone: string;
-    valueChain: string;
-    experienceYears: string;
+    farmId: string;
+    ownerManager: string;
+    location: string;
+    farmType: string;
+    farmSize: string;
+    assessmentDate: string;
+    nextAssessmentDate: string;
   };
   pillar: {
     id: number;
@@ -88,6 +92,7 @@ const styles = StyleSheet.create({
   heroScore: { fontSize: 38, fontWeight: "bold", color: "#ffffff" },
   heroScoreSuffix: { fontSize: 15, color: "#ffffff", opacity: 0.85 },
   heroMeta: { marginLeft: 14, flex: 1 },
+  heroTitle: { fontSize: 20, fontWeight: "bold", color: "#ffffff", marginTop: 8 },
   heroTier: { fontSize: 13, fontWeight: "bold", color: "#ffffff" },
   heroGuide: { fontSize: 9, color: "#ffffff", opacity: 0.92, marginTop: 6, lineHeight: 1.5 },
   sectionTitle: {
@@ -126,6 +131,12 @@ const styles = StyleSheet.create({
   signCell: { flex: 1, marginRight: 12 },
   signLine: { borderBottomWidth: 1, borderBottomColor: MUTED, height: 18 },
   signLabel: { fontSize: 7.5, color: MUTED, marginTop: 3 },
+  verifyBox: { flexDirection: "row", borderWidth: 1, borderColor: LINE, borderRadius: 10, padding: 12, marginTop: 8, alignItems: "center" },
+  qr: { width: 110, height: 110 },
+  verifyBody: { flex: 1, paddingLeft: 12 },
+  verifyTitle: { fontSize: 11, fontWeight: "bold", color: TEAL },
+  verifyText: { fontSize: 8.5, color: INK, marginTop: 3, lineHeight: 1.5 },
+  verifyRef: { fontSize: 9, fontWeight: "bold", color: INK, marginTop: 5 },
   footer: {
     position: "absolute",
     bottom: 22,
@@ -133,10 +144,37 @@ const styles = StyleSheet.create({
     right: 40,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "flex-end",
     fontSize: 7.5,
     color: MUTED,
+    opacity: 0.62,
   },
+  footerCenter: { flex: 1, alignItems: "center" },
+  footerPage: { fontSize: 7, color: MUTED, marginTop: 3 },
+  footerName: { fontSize: 8.5, fontWeight: "bold", color: TEAL },
+  footerOrg: { fontSize: 7, color: MUTED, marginTop: 2 },
 });
+
+function Watermark({ logo }: { logo?: string | null }) {
+  if (!logo) return null;
+  return (
+    <View
+      fixed
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: 0.055,
+      }}
+    >
+      <Image src={logo} style={{ width: 340, height: 340, objectFit: "contain" }} />
+    </View>
+  );
+}
 
 function Header({ data }: { data: PillarReportData }) {
   return (
@@ -150,19 +188,21 @@ function Header({ data }: { data: PillarReportData }) {
       </View>
       <View style={styles.goldRule} />
       <Text style={styles.reportTitle}>
-        Pillar {data.pillar.id} Diagnostic &amp; Action Report
+        Pillar Diagnostic &amp; Action Report
       </Text>
       <Text style={styles.reportSub}>
-        {data.pillar.name} • Generated {data.generatedAt} • Report {data.reportId}
+        <Text style={{ fontWeight: "bold" }}>Generated:</Text> {data.generatedAt} • <Text style={{ fontWeight: "bold" }}>Report REF:</Text> {data.reportId}
       </Text>
       <View style={styles.metaGrid}>
         {[
-          ["Farmer", data.farm.ownerName],
-          ["Farm", data.farm.farmName],
-          ["Email", data.farm.email],
-          ["Phone", data.farm.phone || "—"],
-          ["Value chain", data.farm.valueChain],
-          ["Experience", data.farm.experienceYears],
+          ["Farm / Business Name", data.farm.farmName],
+          ["Farm ID", data.farm.farmId],
+          ["Owner / Manager", data.farm.ownerManager],
+          ["Location", data.farm.location],
+          ["Farm Type", data.farm.farmType],
+          ["Farm Size", data.farm.farmSize],
+          ["Assessment Date", data.farm.assessmentDate],
+          ["Next Assessment Date", data.farm.nextAssessmentDate],
         ].map(([label, value]) => (
           <View key={label} style={styles.metaCell}>
             <Text style={styles.metaLabel}>{label}</Text>
@@ -183,6 +223,7 @@ export default function PillarReportPdf({ data }: { data: PillarReportData } & D
       subject={`FFMI/24 Pillar ${data.pillar.id} diagnostic report`}
     >
       <Page size="A4" style={styles.page}>
+        <Watermark logo={data.logoDataUrl} />
         <Header data={data} />
 
         <View style={[styles.heroBox, { backgroundColor: accent }]}>
@@ -195,16 +236,19 @@ export default function PillarReportPdf({ data }: { data: PillarReportData } & D
               <Text style={styles.heroTier}>{data.pillar.maturityStage}</Text>
             </View>
           </View>
+          <Text style={styles.heroTitle}>
+            {data.pillar.name}
+          </Text>
           <Text style={styles.heroGuide}>{data.pillar.guidingQuestion}</Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Pillar recommendation</Text>
+        <Text style={styles.sectionTitle}>PILLAR RECOMMENDATION</Text>
         <View style={styles.recoBox}>
           <Text style={styles.recoText}>{data.pillar.recommendation}</Text>
           <Text style={[styles.recoText, { marginTop: 6 }]}>{data.pillar.maturityDescription}</Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Capability breakdown</Text>
+        <Text style={styles.sectionTitle}>Capability Development</Text>
         {data.capabilities.map((c) => (
           <View key={c.id} style={styles.capBox} wrap={false}>
             <View style={styles.capHeadRow}>
@@ -221,7 +265,7 @@ export default function PillarReportPdf({ data }: { data: PillarReportData } & D
         {data.gaps.length > 0 && (
           <>
             <Text style={styles.sectionTitle}>
-              Priority gaps &amp; recommendations ({data.gaps.length})
+              Critical Gaps &amp; Recommendations ({data.gaps.length})
             </Text>
             {data.gaps.map((g) => (
               <View key={g.questionId} style={styles.gapBox}>
@@ -269,11 +313,30 @@ export default function PillarReportPdf({ data }: { data: PillarReportData } & D
         </View>
         */}
 
+        <Text style={styles.sectionTitle}>Verify Report</Text>
+        <View style={styles.verifyBox} wrap={false}>
+          {data.qrDataUrl ? <Image src={data.qrDataUrl} style={styles.qr} /> : null}
+          <View style={styles.verifyBody}>
+            <Text style={styles.verifyTitle}>Scan to verify this report</Text>
+            <Text style={styles.verifyText}>
+              This document is a verified Future Farms pillar report. Scanning the
+              code opens its live verification record.
+            </Text>
+            <Text style={styles.verifyRef}>Reference: {data.reportId}</Text>
+          </View>
+        </View>
+
         <View style={styles.footer} fixed>
-          <Text>Generated by Future Farms • futurefarms.africa</Text>
-          <Text
-            render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
-          />
+          <View style={styles.footerCenter}>
+            <Text style={styles.footerName}>Our Farms.Our Future</Text>
+            <Text style={styles.footerOrg}>
+              Future Farms Initiative | An initiative of Arbarne Agriculture Group
+            </Text>
+            <Text
+              style={styles.footerPage}
+              render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
+            />
+          </View>
         </View>
       </Page>
     </Document>

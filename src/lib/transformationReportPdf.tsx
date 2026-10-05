@@ -129,7 +129,8 @@ const styles = StyleSheet.create({
   idCell: { width: "50%", paddingVertical: 3, paddingRight: 8 },
   idLabel: { fontSize: 7.5, color: MUTED, textTransform: "uppercase", letterSpacing: 0.5 },
   idValue: { fontSize: 9.5, fontWeight: "bold", color: INK, marginTop: 1 },
-  pillarRow: { flexDirection: "row", alignItems: "center", paddingVertical: 6, borderBottomWidth: 0.5, borderBottomColor: LINE },
+  pillarRow: { paddingVertical: 7, borderBottomWidth: 0.5, borderBottomColor: LINE },
+  pillarTopRow: { flexDirection: "row", alignItems: "center" },
   pillarNum: {
     width: 24,
     height: 24,
@@ -141,9 +142,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingTop: 5,
   },
-  pillarBody: { flex: 1, paddingLeft: 9, paddingRight: 8 },
-  pillarName: { fontSize: 9.5, fontWeight: "bold", color: INK },
-  pillarBrief: { fontSize: 8.5, color: MUTED, marginTop: 1, lineHeight: 1.45 },
+  pillarName: { flex: 1, fontSize: 9.5, fontWeight: "bold", color: INK, paddingLeft: 9, paddingRight: 8 },
+  pillarBadge: { fontSize: 8, fontWeight: "bold", color: TEAL, backgroundColor: "#e6f2f2", borderRadius: 8, paddingVertical: 2, paddingHorizontal: 7 },
+  pillarBrief: { fontSize: 8.5, color: MUTED, marginTop: 3, lineHeight: 1.45 },
   pillarScore: { fontSize: 12, fontWeight: "bold", color: TEAL, width: 52, textAlign: "right" },
   prioBox: { borderWidth: 1, borderColor: LINE, borderRadius: 8, padding: 9, marginBottom: 7 },
   prioHead: { fontSize: 9.5, fontWeight: "bold", color: INK, marginBottom: 2 },
@@ -155,9 +156,6 @@ const styles = StyleSheet.create({
   verifyTitle: { fontSize: 11, fontWeight: "bold", color: TEAL },
   verifyText: { fontSize: 8.5, color: INK, marginTop: 3, lineHeight: 1.5 },
   verifyRef: { fontSize: 9, fontWeight: "bold", color: INK, marginTop: 5 },
-  signoff: { marginTop: 18, alignItems: "center" },
-  signoffMain: { fontSize: 11, fontWeight: "bold", color: TEAL, letterSpacing: 0.5 },
-  signoffSub: { fontSize: 8.5, color: MUTED, marginTop: 3 },
   footer: {
     position: "absolute",
     bottom: 22,
@@ -165,9 +163,15 @@ const styles = StyleSheet.create({
     right: 40,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "flex-end",
     fontSize: 7.5,
     color: MUTED,
+    opacity: 0.62,
   },
+  footerCenter: { flex: 1, alignItems: "center" },
+  footerPage: { fontSize: 7, color: MUTED, marginTop: 3 },
+  footerName: { fontSize: 8.5, fontWeight: "bold", color: TEAL },
+  footerOrg: { fontSize: 7, color: MUTED, marginTop: 2 },
 });
 
 function shortBandName(name: string): string {
@@ -207,8 +211,28 @@ export default function TransformationReportPdf({
           <View style={styles.goldRule} />
           <Text style={styles.reportTitle}>Future Farms Transformation Report</Text>
           <Text style={styles.reportSub}>
-            Full 8-pillar assessment • Generated {data.generatedAt} • Report {data.reportId}
+            <Text style={{ fontWeight: 'bold' }}>Generated:</Text> {data.generatedAt} •{' '}
+            <Text style={{ fontWeight: 'bold' }}>Report REF:</Text> {data.reportId}
           </Text>
+        </View>
+
+        <Text style={styles.sectionTitle}>Basic Farm ID</Text>
+        <View style={styles.idGrid}>
+          {[
+            ["Farm / Business Name", data.farm.farmName],
+            ["Farm ID", data.farm.farmId],
+            ["Owner / Manager", data.farm.ownerManager],
+            ["Location", data.farm.location],
+            ["Farm Type", data.farm.farmType],
+            ["Farm Size", data.farm.farmSize],
+            ["Assessment Date", data.farm.assessmentDate],
+            ["Next Assessment Date", data.farm.nextAssessmentDate],
+          ].map(([label, value]) => (
+            <View key={label} style={styles.idCell}>
+              <Text style={styles.idLabel}>{label}</Text>
+              <Text style={styles.idValue}>{value}</Text>
+            </View>
+          ))}
         </View>
 
         <Text style={styles.sectionTitle}>Farm classification &amp; FFMI Index</Text>
@@ -241,35 +265,15 @@ export default function TransformationReportPdf({
             </View>
           ))}
 
-        <Text style={styles.sectionTitle}>Basic Farm ID</Text>
-        <View style={styles.idGrid}>
-          {[
-            ["Farm / Business Name", data.farm.farmName],
-            ["Farm ID", data.farm.farmId],
-            ["Owner / Manager", data.farm.ownerManager],
-            ["Location", data.farm.location],
-            ["Farm Type", data.farm.farmType],
-            ["Farm Size", data.farm.farmSize],
-            ["Assessment Date", data.farm.assessmentDate],
-            ["Next Assessment Date", data.farm.nextAssessmentDate],
-          ].map(([label, value]) => (
-            <View key={label} style={styles.idCell}>
-              <Text style={styles.idLabel}>{label}</Text>
-              <Text style={styles.idValue}>{value}</Text>
-            </View>
-          ))}
-        </View>
-
         <Text style={styles.sectionTitle}>Pillar Status — all 8 pillars</Text>
         {data.pillars.map((p) => (
           <View key={p.id} style={styles.pillarRow} wrap={false}>
-            <Text style={styles.pillarNum}>{p.id}</Text>
-            <View style={styles.pillarBody}>
+            <View style={styles.pillarTopRow}>
+              <Text style={styles.pillarNum}>{p.id}</Text>
               <Text style={styles.pillarName}>{p.name}</Text>
-              <Text style={styles.pillarBrief}>
-                {p.maturityStage}: {p.brief}
-              </Text>
+              <Text style={styles.pillarBadge}>{p.maturityStage}</Text>
             </View>
+            <Text style={styles.pillarBrief}>{p.brief}</Text>
           </View>
         ))}
 
@@ -277,7 +281,7 @@ export default function TransformationReportPdf({
           Development Priorities as of {data.farm.assessmentDate}
         </Text>
         <Text style={[styles.pillarBrief, { marginBottom: 6 }]}>
-          Capabilities scoring 3 or less out of 5, in pillar order — start here.
+          Address these capabilities first to improve your overall maturity and FFMI Index score.
         </Text>
         {data.priorities.length === 0 ? (
           <Text style={styles.pillarBrief}>
@@ -310,18 +314,17 @@ export default function TransformationReportPdf({
           </View>
         </View>
 
-        <View style={styles.signoff}>
-          <Text style={styles.signoffMain}>OurFarms.OurFuture</Text>
-          <Text style={styles.signoffSub}>
-            Future Farms Initiative | An initiative of Arbarne Agriculture Group
-          </Text>
-        </View>
-
         <View style={styles.footer} fixed>
-          <Text>Generated by Future Farms • futurefarms.africa</Text>
-          <Text
-            render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
-          />
+          <View style={styles.footerCenter}>
+            <Text style={styles.footerName}>Our Farms.Our Future</Text>
+            <Text style={styles.footerOrg}>
+              Future Farms Initiative | An initiative of Arbarne Agriculture Group
+            </Text>
+            <Text
+              style={styles.footerPage}
+              render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
+            />
+          </View>
         </View>
       </Page>
     </Document>

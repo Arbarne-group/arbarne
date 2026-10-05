@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { getOrCreateCurrentUser } from "@/lib/auth";
 import { appBaseUrl } from "@/lib/mailer";
 import { ALL_PILLARS } from "@/data/allPillarsData";
+import { FFMI_BANDS } from "@/lib/ffmiBands";
 import { getPillarScoringTier } from "@/data/pillarScoringTiers";
 import { getCapabilityFeedbackText, getCapabilityTier } from "@/data/capabilityFeedback";
 import TransformationReportPdf from "@/lib/transformationReportPdf";
@@ -17,49 +18,6 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const REF_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-const BANDS = [
-  {
-    range: "0–4",
-    name: "Informal - Farm Business",
-    tagline: "Building the Foundation",
-    body: "Formal business systems, records, planning, and management practices are still limited. The priority is to establish the basic foundations of a farm business.",
-    min: 0,
-    max: 4,
-  },
-  {
-    range: "5–9",
-    name: "Emerging - Farm business",
-    tagline: "Building the Business",
-    body: "The farm is beginning to operate as a business, with some systems and commercial practices in place. The next step is to strengthen consistency, financial management, productivity, and market orientation.",
-    min: 5,
-    max: 9,
-  },
-  {
-    range: "10–15",
-    name: "Structured - Farm Business",
-    tagline: "Strengthening for Growth",
-    body: "The farm has established business and operational systems and demonstrates a more consistent approach to managing production and performance. The focus is now on closing capability gaps and preparing for sustainable growth and investment.",
-    min: 10,
-    max: 15,
-  },
-  {
-    range: "16–20",
-    name: "Investment-Ready - Farm Business",
-    tagline: "Prepared for Investment",
-    body: "The farm demonstrates the business, financial, governance, operational, and market capabilities needed to prepare for external investment or strategic partnerships. The focus is on evidence, scalability, risk management, and effective capital deployment.",
-    min: 16,
-    max: 20,
-  },
-  {
-    range: "21–24",
-    name: "Future-Ready Farm Business",
-    tagline: "Leading for the Future",
-    body: "The farm demonstrates advanced and integrated capabilities across its farm system, with strong foundations for resilience, innovation, competitiveness, sustainable growth, and continued improvement.",
-    min: 21,
-    max: 24,
-  },
-];
 
 function randomRefSegment(length = 6): string {
   const bytes = crypto.randomBytes(length);
@@ -130,7 +88,7 @@ export async function GET(request: Request) {
     const total = assessment.assessmentResponses.length || 200;
     const overallPercent = Math.round((totalYes / total) * 100);
     const score24 = Math.round((totalYes / total) * 24);
-    const bands = BANDS.map((b) => ({
+    const bands = FFMI_BANDS.map((b) => ({
       ...b,
       current: score24 >= b.min && score24 <= b.max,
     }));
@@ -171,6 +129,7 @@ export async function GET(request: Request) {
       id: string;
       name: string;
       yes: number;
+      score: number;
       feedback: string;
     }> = [];
     for (const p of ALL_PILLARS) {
@@ -182,23 +141,30 @@ export async function GET(request: Request) {
         parsed = {};
       }
       const pres = assessment.assessmentResponses.filter((r) => r.pillarId === p.id);
+      if (pres.length === 0) continue;
       for (const c of p.capabilities) {
         const yes =
           parsed[c.id]?.yes ??
           pres.filter((r) => r.capabilityId === c.id && r.answer === "yes").length;
-        if (yes <= 3) {
-          priorities.push({
-            pillarId: p.id,
-            pillarName: p.name,
-            id: c.id,
-            name: c.name,
-            yes,
-            feedback: getCapabilityFeedbackText(c.id, yes, c.name),
-          });
-        }
+        const total = parsed[c.id]?.total || 5;
+        const score =
+          parsed[c.id]?.score ?? Math.round((yes / Math.max(total, 1)) * 100);
+        // Same top-5 below-60% selection as the dashboard's Development
+        // Priorities list.
+        if (score >= 60) continue;
+        priorities.push({
+          pillarId: p.id,
+          pillarName: p.name,
+          id: c.id,
+          name: c.name,
+          yes,
+          score,
+          feedback: getCapabilityFeedbackText(c.id, yes, c.name),
+        });
       }
     }
-    priorities.sort((a, b) => a.pillarId - b.pillarId || a.id.localeCompare(b.id));
+    priorities.sort((a, b) => a.score - b.score);
+    const topPriorities = priorities.slice(0, 5);
 
     const now = new Date();
     const { date: datePart, fileStamp } = stamp(now);
@@ -264,7 +230,7 @@ export async function GET(request: Request) {
       ffmi: { score24, overallPercent },
       bands,
       pillars,
-      priorities,
+      priorities: topPriorities,
     };
 
     const buffer = await renderToBuffer(
