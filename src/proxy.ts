@@ -41,7 +41,26 @@ const AUTHD_ONLY_RX = [
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  const cookieNames = req.cookies.getAll().map((c) => c.name);
+  let token: { email?: string | null; [key: string]: unknown } | null = null;
+  let tokenError: string | null = null;
+  try {
+    token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  } catch (e) {
+    tokenError = String((e as Error)?.message || e).slice(0, 200);
+  }
+  console.log(
+    "[auth-debug] proxy",
+    JSON.stringify({
+      path: pathname,
+      host: req.nextUrl.host,
+      forwardedProto: req.headers.get("x-forwarded-proto"),
+      cookies: cookieNames,
+      authSecretSet: Boolean(process.env.AUTH_SECRET),
+      tokenEmail: token?.email || null,
+      tokenError,
+    })
+  );
 
   // Staff (FFDeveloper / FFAdmin / FFStaff) live exclusively under /a/*.
   // Any other page is a 404 for them; APIs keep working for the admin UI.
@@ -89,6 +108,10 @@ export default async function proxy(req: NextRequest) {
   }
 
   if (!token?.email) {
+    console.log(
+      "[auth-debug] proxy BOUNCE",
+      JSON.stringify({ path: pathname, cookies: cookieNames })
+    );
     const url = new URL("/login", req.url);
     url.searchParams.set("callbackUrl", pathname + req.nextUrl.search);
     return NextResponse.redirect(url);
