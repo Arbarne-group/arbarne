@@ -93,15 +93,46 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .toLowerCase()
           .trim();
         const password = String(credentials?.password || "");
-        if (!email || !password) return null;
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || user.accountStatus !== "VERIFIED") return null;
-        const ok = await bcrypt.compare(password, user.passwordHash);
-        if (!ok) return null;
-        await prisma.user
-          .update({ where: { id: user.id }, data: { lastSeenAt: new Date() } })
-          .catch(() => {});
-        return { id: user.id, email: user.email, name: user.name };
+        if (!email || !password) {
+          console.log(
+            "[auth-debug] authorize",
+            JSON.stringify({ email: email || "(empty)", result: "missing-fields" })
+          );
+          return null;
+        }
+        try {
+          const user = await prisma.user.findUnique({ where: { email } });
+          if (!user) {
+            console.log(
+              "[auth-debug] authorize",
+              JSON.stringify({ email, result: "no-user" })
+            );
+            return null;
+          }
+          if (user.accountStatus !== "VERIFIED") {
+            console.log(
+              "[auth-debug] authorize",
+              JSON.stringify({ email, result: "unverified" })
+            );
+            return null;
+          }
+          const ok = await bcrypt.compare(password, user.passwordHash);
+          console.log(
+            "[auth-debug] authorize",
+            JSON.stringify({ email, result: ok ? "ok" : "bad-password" })
+          );
+          if (!ok) return null;
+          await prisma.user
+            .update({ where: { id: user.id }, data: { lastSeenAt: new Date() } })
+            .catch(() => {});
+          return { id: user.id, email: user.email, name: user.name };
+        } catch (error) {
+          console.error(
+            "[auth-debug] authorize threw:",
+            error instanceof Error ? error.message : String(error)
+          );
+          return null;
+        }
       },
     }),
   ],
@@ -117,6 +148,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             console.error("[Google Auth] ensureGoogleUser failed:", error);
             return null;
         });
+        console.log(
+          "[auth-debug] signIn google",
+          JSON.stringify({
+            email: (profile as any)?.email || null,
+            result: ensured ? "ok" : "denied",
+          })
+        );
         if (!ensured) return false;
       }
       return true;
@@ -127,20 +165,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         .toLowerCase()
         .trim();
       if (email) {
-        const db = await prisma.user
-          .findUnique({
+        try {
+          const db = await prisma.user.findUnique({
             where: { email },
             select: { id: true, role: true, name: true, email: true },
-          })
-          .catch((error) => {
-            console.error("[JWT Callback] prisma.user.findUnique failed:", error);
-            return null;
           });
-        if (db) {
-          (token as any).userId = db.id;
-          (token as any).role = db.role;
-          token.name = db.name;
-          token.email = db.email;
+          console.log(
+            "[auth-debug] jwt",
+            JSON.stringify({ email, dbResolved: Boolean(db) })
+          );
+          if (db) {
+            (token as any).userId = db.id;
+            (token as any).role = db.role;
+            token.name = db.name;
+            token.email = db.email;
+          }
+        } catch (error) {
+          console.error(
+            "[auth-debug] jwt prisma.user.findUnique failed:",
+            error instanceof Error ? error.message : String(error)
+          );
         }
       }
       return token;

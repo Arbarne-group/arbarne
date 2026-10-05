@@ -36,6 +36,10 @@ export async function POST(request: Request) {
     });
 
     if (!user) {
+      console.log(
+        "[auth-debug] /api/auth/login",
+        JSON.stringify({ email: email.toLowerCase().trim(), result: "no-user" })
+      );
       return NextResponse.json(
         { error: "Invalid email or password." },
         { status: 401 }
@@ -44,6 +48,10 @@ export async function POST(request: Request) {
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
+      console.log(
+        "[auth-debug] /api/auth/login",
+        JSON.stringify({ email: user.email, result: "bad-password" })
+      );
       return NextResponse.json(
         { error: "Invalid email or password." },
         { status: 401 }
@@ -51,6 +59,10 @@ export async function POST(request: Request) {
     }
 
     if (user.accountStatus !== "VERIFIED") {
+      console.log(
+        "[auth-debug] /api/auth/login",
+        JSON.stringify({ email: user.email, result: "unverified" })
+      );
       return NextResponse.json(
         { error: "Please verify your email address first.", code: "UNVERIFIED" },
         { status: 403 }
@@ -99,6 +111,17 @@ export async function POST(request: Request) {
       });
     });
     const token = await signSession({ userId: user.id, email: user.email });
+    console.log(
+      "[auth-debug] /api/auth/login",
+      JSON.stringify({
+        email: user.email,
+        result: "ok",
+        cookieIssued: "ff_session",
+        secureFlag: process.env.NODE_ENV === "production",
+        forwardedProto: request.headers.get("x-forwarded-proto"),
+        host: request.headers.get("host"),
+      })
+    );
     res.headers.append("Set-Cookie", sessionCookieHeader(token));
     return res;
   } catch (error: any) {
