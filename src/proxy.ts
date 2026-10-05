@@ -42,10 +42,23 @@ const AUTHD_ONLY_RX = [
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const cookieNames = req.cookies.getAll().map((c) => c.name);
+  // Auth.js names the session cookie by scheme: "__Secure-"-prefixed on
+  // HTTPS, plain on http. getToken() does NOT auto-detect — called bare it
+  // always looks for the plain name, which is why HTTPS logins bounced
+  // while localhost worked. Production is always served over HTTPS.
+  const isProduction = process.env.NODE_ENV === "production";
+  const sessionCookieName = isProduction
+    ? "__Secure-authjs.session-token"
+    : "authjs.session-token";
   let token: { email?: string | null; [key: string]: unknown } | null = null;
   let tokenError: string | null = null;
   try {
-    token = await getToken({ req, secret: process.env.AUTH_SECRET });
+    token = await getToken({
+      req,
+      secret: process.env.AUTH_SECRET,
+      secureCookie: isProduction,
+      cookieName: sessionCookieName,
+    });
   } catch (e) {
     tokenError = String((e as Error)?.message || e).slice(0, 200);
   }
@@ -56,6 +69,8 @@ export default async function proxy(req: NextRequest) {
       host: req.nextUrl.host,
       forwardedProto: req.headers.get("x-forwarded-proto"),
       cookies: cookieNames,
+      wantedCookie: sessionCookieName,
+      wantedCookiePresent: cookieNames.includes(sessionCookieName),
       authSecretSet: Boolean(process.env.AUTH_SECRET),
       tokenEmail: token?.email || null,
       tokenError,
