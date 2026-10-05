@@ -1,0 +1,30 @@
+# /etc/nginx/sites-available/dev.futurefarms.africa
+# Enable: ln -s /etc/nginx/sites-available/dev.futurefarms.africa /etc/nginx/sites-enabled/
+# Then: nginx -t && systemctl reload nginx
+# TLS:  certbot --nginx -d dev.futurefarms.africa  (after DNS points here)
+
+upstream arbarne_app {
+  server 127.0.0.1:3050;
+  keepalive 64;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name dev.futurefarms.africa;
+
+  # Evidence uploads allow 10MB files; give headroom.
+  client_max_body_size 20m;
+
+  location / {
+    proxy_pass http://arbarne_app;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_read_timeout 60s;
+  }
+}
