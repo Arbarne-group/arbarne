@@ -475,7 +475,6 @@ function LoginPane({
           </button>
         </p>
 
-        {/* Google sign-in temporarily disabled
         <OrDivider />
 
         <div className="pt-3">
@@ -486,7 +485,6 @@ function LoginPane({
             callbackUrl={callbackUrl}
           />
         </div>
-        */}
       </div>
     </div>
   );
@@ -708,7 +706,6 @@ function SignupPane({
           </button>
         </p>
 
-        {/* Google sign-up temporarily disabled
         <OrDivider />
 
         <div className="pt-3">
@@ -719,7 +716,6 @@ function SignupPane({
             callbackUrl="/complete-profile"
           />
         </div>
-        */}
       </div>
     </div>
   );
