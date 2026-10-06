@@ -216,7 +216,7 @@ export default function TransformationReportPdf({
           </Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Basic Farm ID</Text>
+        <Text style={styles.sectionTitle}>Farm ID</Text>
         <View style={styles.idGrid}>
           {[
             ["Farm / Business Name", data.farm.farmName],
