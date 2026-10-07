@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAppUser as useUser } from "@/hooks/useAppUser";
 import { ALL_PILLARS, AssessmentPillar } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { readMergedCache } from "@/lib/assessmentCache";
 import PageLoader from "@/components/PageLoader";
 import { ArrowRight, ChevronRight } from "lucide-react";
 
@@ -94,11 +95,10 @@ export default function AssessmentOverviewView({
       }
 
       try {
-        const savedAll = localStorage.getItem("future_farms_all_answers");
-        const savedAnswers = localStorage.getItem("future_farms_assessment_answers");
-        const parsedAll = savedAll ? JSON.parse(savedAll) : {};
-        const parsedPillar = savedAnswers ? JSON.parse(savedAnswers) : {};
-        answers = { ...parsedAll, ...parsedPillar, ...answers };
+        // Owner-scoped: foreign caches read as empty, so a new farmer on
+        // this browser never inherits another account's draft answers.
+        const merged = readMergedCache(email);
+        answers = { ...merged, ...answers };
       } catch (e) {
         console.error(e);
       }

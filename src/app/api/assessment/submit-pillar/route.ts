@@ -79,7 +79,10 @@ export async function POST(request: Request) {
       });
     }
 
-    // 2.5 Enforce 90-Day (3-Month) Reassessment Rule
+    // 2.5 Enforce 90-day rule + paid fast-track reassessment.
+    // First submission: always free. Out-of-cooldown resubmission: free
+    // (mandatory 90-day cycle). In-cooldown resubmission: needs an unused
+    // PILLAR_REASSESS grant (or active annual pass) which is consumed below.
     const COOLDOWN_DAYS = 90;
     const existingPillar = await prisma.pillarAssessment.findUnique({
       where: {
@@ -90,25 +93,41 @@ export async function POST(request: Request) {
       },
     });
 
-    if (existingPillar && existingPillar.isCompleted && existingPillar.completedAt) {
-      const completedTime = new Date(existingPillar.completedAt).getTime();
-      const nextEligibleTime = completedTime + COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
-      const now = Date.now();
-
-      if (now < nextEligibleTime && !body.forceReassess) {
-        const daysRemaining = Math.ceil((nextEligibleTime - now) / (24 * 60 * 60 * 1000));
-        const nextEligibleDate = new Date(nextEligibleTime);
+    let submitGrantId: string | null = null;
+    if (existingPillar && existingPillar.isCompleted) {
+      const { checkSubmitEntitlement } = await import("@/lib/entitlements");
+      const ent = await checkSubmitEntitlement(user.id, numPillarId);
+      if (!ent.allowed) {
+        const daysRemaining =
+          existingPillar.completedAt != null
+            ? Math.ceil(
+                (new Date(existingPillar.completedAt).getTime() +
+                  COOLDOWN_DAYS * 24 * 60 * 60 * 1000 -
+                  Date.now()) /
+                  (24 * 60 * 60 * 1000)
+              )
+            : COOLDOWN_DAYS;
         return NextResponse.json(
           {
             error: "REASSESSMENT_LOCKED",
-            message: `Pillar ${numPillarId} assessment was already completed on ${new Date(existingPillar.completedAt).toLocaleDateString("en-GB")}. Reassessment is only permitted once every 90 days (3 months). Next reassessment eligible in ${daysRemaining} days (on ${nextEligibleDate.toLocaleDateString("en-GB")}).`,
+            code: "PAYMENT_REQUIRED",
+            message:
+              ent.reason ||
+              `Pillar ${numPillarId} was already completed. Reassessment is only permitted once every 90 days.`,
             completedAt: existingPillar.completedAt,
-            nextEligibleDate: nextEligibleDate.toISOString(),
-            daysRemaining,
+            nextEligibleDate: new Date(
+              new Date(existingPillar.completedAt || Date.now()).getTime() +
+                COOLDOWN_DAYS * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            daysRemaining: Math.max(daysRemaining, 0),
             cooldownDays: COOLDOWN_DAYS,
+            upgradeUrl: ent.upgradeUrl || `/checkout?product=PILLAR_REASSESS&pillar=${numPillarId}`,
           },
-          { status: 403 }
+          { status: 402 }
         );
+      }
+      if (ent.mode === "grant" && (ent as any).grantId) {
+        submitGrantId = (ent as any).grantId;
       }
     }
 
@@ -232,6 +251,18 @@ export async function POST(request: Request) {
         console.error("[SubmitPillar] Sheet sync error:", syncErr.message);
       }
     });
+
+    // Consume a paid reassessment grant if one unlocked this submit, then
+    // check whether this completion qualifies a pending referral.
+    try {
+      const { consumeGrantById, qualifyReferralFor } = await import(
+        "@/lib/entitlements"
+      );
+      await consumeGrantById(submitGrantId);
+      await qualifyReferralFor(user.id);
+    } catch (e) {
+      console.error("[SubmitPillar] grant/referral notice:", (e as any)?.message || e);
+    }
 
     return NextResponse.json({
       success: true,

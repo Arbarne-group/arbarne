@@ -100,6 +100,11 @@ export default function Sidebar({
       href: "/service-desk",
       icon: "handyman",
     },
+    {
+      label: "Referrals",
+      href: "/referrals",
+      icon: "group_add",
+    },
   ];
   // FIX (Bug 1): previously this list was .filter()'d to remove
   // "Overview" once My Farm unlocked. Overview should stay visible

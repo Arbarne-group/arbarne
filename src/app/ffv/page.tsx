@@ -61,6 +61,7 @@ export default function FfvPage() {
   const [loading, setLoading] = useState(true);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadUpgradeUrl, setUploadUpgradeUrl] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
   // Staged files per question, keyed by stable row id so removing a row
   // never misaligns the remaining file inputs. + appends rows up to the
@@ -231,6 +232,7 @@ export default function FfvPage() {
     const files = ids.map((id) => rec[id]).filter((f): f is File => Boolean(f));
     const em = email || getActiveUserEmail();
     setUploadError(null);
+    setUploadUpgradeUrl(null);
     if (files.length === 0) {
       setUploadError("Choose at least one file first. Tap + to add more (up to 5).");
       return;
@@ -265,7 +267,12 @@ export default function FfvPage() {
         }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.error || "Upload failed.");
+      if (!res.ok) {
+        if (res.status === 402 && data?.upgradeUrl) {
+          setUploadUpgradeUrl(data.upgradeUrl);
+        }
+        throw new Error(data?.error || "Upload failed.");
+      }
       const media: EvidenceMedia[] = (data?.evidence?.media || []).map((m: any) => ({
         id: m.id,
         fileName: m.fileName,
@@ -402,8 +409,17 @@ export default function FfvPage() {
             </div>
 
             {uploadError && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
-                {uploadError}
+              <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 space-y-2">
+                <p>{uploadError}</p>
+                {uploadUpgradeUrl && (
+                  <a
+                    href={uploadUpgradeUrl}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold"
+                  >
+                    Pay now to unlock
+                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  </a>
+                )}
               </div>
             )}
 

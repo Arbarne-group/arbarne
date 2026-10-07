@@ -32,6 +32,7 @@ export async function POST(request: Request) {
       .trim();
     const password = String(body.password || "");
     const confirmPassword = String(body.confirmPassword || "");
+    const referralCode = String(body.referralCode || "").toUpperCase().trim() || null;
 
     if (!firstName || !lastName) {
       return NextResponse.json(
@@ -67,6 +68,14 @@ export async function POST(request: Request) {
     const passwordHash = await bcrypt.hash(password, 10);
     const displayName = [firstName, middleName, lastName].filter(Boolean).join(" ");
 
+    const { newReferralCode } = await import("@/lib/referralCode");
+    let ownCode = newReferralCode();
+    for (let i = 0; i < 5; i++) {
+      const clash = await prisma.user.findUnique({ where: { referralCode: ownCode } });
+      if (!clash) break;
+      ownCode = newReferralCode();
+    }
+
     const user = await runWithAuditContext({ actorId: existing?.id }, async () => {
       if (existing) {
         // Retry path: refresh a still-pending account with the new details.
@@ -79,6 +88,7 @@ export async function POST(request: Request) {
             name: displayName,
             passwordHash,
             authProvider: "password",
+            ...(existing.referralCode ? {} : { referralCode: ownCode }),
           },
         });
       }
@@ -93,9 +103,25 @@ export async function POST(request: Request) {
           authProvider: "password",
           accountStatus: "PENDING_VERIFICATION",
           role: "FFFarmer",
+          referralCode: ownCode,
         },
       });
     });
+
+    if (referralCode) {
+      try {
+        const inviter = await prisma.user.findUnique({ where: { referralCode } });
+        if (inviter && inviter.id !== user.id) {
+          await prisma.referral.upsert({
+            where: { referredId: user.id },
+            update: {},
+            create: { referrerId: inviter.id, referredId: user.id },
+          });
+        }
+      } catch (e) {
+        console.warn("Referral attribution failed:", e);
+      }
+    }
 
     const { publicId, retryAfter, mailSent } = await requestVerificationCode(email);
     if (retryAfter) {

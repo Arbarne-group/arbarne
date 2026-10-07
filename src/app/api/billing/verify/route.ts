@@ -88,6 +88,15 @@ export async function POST(request: Request) {
       },
     });
 
+    // Record coupon redemption once the order completes (idempotent).
+    try {
+      const { recordCouponRedemption, finalizeReferralDiscount } = await import("@/lib/pricing");
+      await recordCouponRedemption(userId, updatedOrder.couponCode, updatedOrder.id);
+      await finalizeReferralDiscount(updatedOrder.id);
+    } catch (e) {
+      console.error("[Billing Verify] coupon redemption notice:", (e as any)?.message || e);
+    }
+
     if (phoneFromMeta) {
       try {
         await prisma.user.update({

@@ -46,6 +46,13 @@ async function ensureGoogleUser(profile: {
   const { first, last } = splitName(
     profile.name || `${profile.given_name || ""} ${profile.family_name || ""}`
   );
+  const { newReferralCode } = await import("@/lib/referralCode");
+  let referralCode = newReferralCode();
+  for (let i = 0; i < 5; i++) {
+    const clash = await prisma.user.findUnique({ where: { referralCode } });
+    if (!clash) break;
+    referralCode = newReferralCode();
+  }
   return prisma.user.create({
     data: {
       email,
@@ -56,6 +63,7 @@ async function ensureGoogleUser(profile: {
       firstName: profile.given_name || first || null,
       lastName: profile.family_name || last || null,
       futureFarmId: await generateUniqueFutureFarmId(),
+      referralCode,
       passwordHash: "SOCIAL_AUTHENTICATED",
       authProvider: "google",
       accountStatus: "VERIFIED",
@@ -156,6 +164,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           })
         );
         if (!ensured) return false;
+        // Attribute an invite code carried through OAuth (?ref= → cookie).
+        try {
+          const { cookies } = await import("next/headers");
+          const store = await cookies();
+          const raw = store.get("ff_invite_ref")?.value || "";
+          const code = decodeURIComponent(raw).toUpperCase().trim();
+          if (code) {
+            const inviter = await prisma.user.findUnique({
+              where: { referralCode: code },
+              select: { id: true },
+            });
+            const me = await prisma.user.findUnique({
+              where: { email: String((profile as any)?.email || "").toLowerCase().trim() },
+              select: { id: true },
+            });
+            if (inviter && me && inviter.id !== me.id) {
+              await prisma.referral.upsert({
+                where: { referredId: me.id },
+                update: {},
+                create: { referrerId: inviter.id, referredId: me.id },
+              });
+            }
+          }
+          store.delete("ff_invite_ref");
+        } catch (e) {
+          console.warn("[Google Auth] invite attribution notice:", e);
+        }
       }
       return true;
     },

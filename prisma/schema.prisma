@@ -26,6 +26,7 @@ model User {
   country             Country?             @relation(fields: [countryCode], references: [initials])
   role                String               @default("FFFarmer")
   otherRoleLabel      String?
+  referralCode        String?              @unique // shareable code, e.g. FF-8F3K2A
   accountStatus       String               @default("VERIFIED")
   authProvider        String               @default("password")
   farmingType         String?
@@ -51,6 +52,8 @@ model User {
   subscriptions       Subscription[]
   business            Business?
   supportTickets      SupportTicket[]
+  referralsMade       Referral[]           @relation("Referrer")
+  referralsReceived   Referral[]           @relation("Referred")
   reportDownloads     ReportDownload[]
 }
 
@@ -58,14 +61,14 @@ model User {
 // The business lives here — never mixed into the User identity row.
 // (User.businessName / User.businessId are legacy fallbacks only.)
 model Business {
-  id         String   @id @default(cuid())
-  userId     String   @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  businessId String?  @unique // generated, e.g. FFF-KE-000-001
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessId   String?  @unique // generated, e.g. FFF-KE-000-001
   businessName String?
-  farmName   String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  farmName     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model FarmerProfile {
@@ -173,24 +176,24 @@ model FarmCharacteristics {
 }
 
 model FarmingSystem {
-  id                 String   @id @default(cuid())
-  userId             String   @unique
-  enterprises        String?
-  enterpriseCore     String?
-  enterpriseStrategic String?
+  id                       String   @id @default(cuid())
+  userId                   String   @unique
+  enterprises              String?
+  enterpriseCore           String?
+  enterpriseStrategic      String?
   enterpriseStrategicOther String?
-  enterpriseCashFlow String?
-  enterpriseCashFlowOther String?
-  cultivationMethod  String?
-  mechanizationSetup String?
-  energySource       String?
-  irrigationMethod   String?
-  irrigationOther    String?
-  storageFacilities  String?
-  processingFacilities String?
-  processingOther    String?
-  updatedAt          DateTime @updatedAt
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enterpriseCashFlow       String?
+  enterpriseCashFlowOther  String?
+  cultivationMethod        String?
+  mechanizationSetup       String?
+  energySource             String?
+  irrigationMethod         String?
+  irrigationOther          String?
+  storageFacilities        String?
+  processingFacilities     String?
+  processingOther          String?
+  updatedAt                DateTime @updatedAt
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model BusinessExperience {
@@ -254,6 +257,10 @@ model Order {
   paystackTransactionId String?
   planCode              String?
   subscriptionId        String?
+  pillarId              Int? // per-pillar products (reassess, report, FFV)
+  couponCode            String?
+  referralDiscount      Int       @default(0) // KES of referral credit consumed by this order
+  consumedAt            DateTime? // one-time grants are consumed on use
   createdAt             DateTime      @default(now())
   updatedAt             DateTime?     @updatedAt
   subscription          Subscription? @relation(fields: [subscriptionId], references: [id])
@@ -401,8 +408,8 @@ model CountyOrProvince {
   code        String // county/province code, unique per country
   name        String
 
-  country Country @relation(fields: [countryCode], references: [initials], onDelete: Cascade)
-  towns      Town[]
+  country     Country     @relation(fields: [countryCode], references: [initials], onDelete: Cascade)
+  towns       Town[]
   subCounties SubCounty[]
 
   @@id([countryCode, code])
@@ -493,18 +500,76 @@ model ReportDownload {
   @@index([createdAt])
 }
 
+// ─── Referrals ─────────────────────────────────────────────────────
+// A referral qualifies once the invited farmer completes their first
+// pillar assessment. Two qualified referrals unlock reward pricing.
+model Referral {
+  id          String    @id @default(cuid())
+  referrerId  String
+  referrer    User      @relation("Referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referredId  String    @unique
+  referred    User      @relation("Referred", fields: [referredId], references: [id], onDelete: Cascade)
+  status      String    @default("pending") // pending | qualified
+  qualifiedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([referrerId, status])
+}
+
+// A visit to a referral share link (/r/CODE), counted even when the
+// visitor never signs up. Distinct from Referral rows, which only exist
+// after a successful signup with the code.
+model ReferralClick {
+  id         String   @id @default(cuid())
+  referrerId String
+  createdAt  DateTime @default(now())
+
+  @@index([referrerId, createdAt])
+}
+
+// ─── Coupons ───────────────────────────────────────────────────────
+// type: PERCENT (0-100) | FIXED (KES off) | FREE (100% off)
+model Coupon {
+  id          String             @id @default(cuid())
+  code        String             @unique
+  type        String
+  value       Float              @default(0)
+  maxUses     Int?
+  usedCount   Int                @default(0)
+  active      Boolean            @default(true)
+  validFrom   DateTime?
+  validUntil  DateTime?
+  scope       String             @default("ALL") // "ALL" or JSON array of product ids
+  createdAt   DateTime           @default(now())
+  redemptions CouponRedemption[]
+
+  @@index([active, code])
+}
+
+model CouponRedemption {
+  id        String   @id @default(cuid())
+  couponId  String
+  coupon    Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  userId    String
+  orderId   String?
+  createdAt DateTime @default(now())
+
+  @@unique([couponId, userId])
+  @@index([userId])
+}
+
 // ─── Audit trail (every create/update/delete) ────────────────────
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  at        DateTime @default(now())
-  actorId   String?
-  action    String // CREATE | UPDATE | DELETE
-  model     String
-  recordId  String
-  before    String?
-  after     String?
-  ip        String?
+  id       String   @id @default(cuid())
+  at       DateTime @default(now())
+  actorId  String?
+  action   String // CREATE | UPDATE | DELETE
+  model    String
+  recordId String
+  before   String?
+  after    String?
+  ip       String?
 
   @@index([model, recordId])
   @@index([actorId])
@@ -540,7 +605,7 @@ model Opportunity {
   id            String    @id @default(cuid())
   key           String    @unique // stable seed key, e.g. "nakuru-dairy-field-day"
   title         String
-  type          String    // event | offer | programme | market | finance
+  type          String // event | offer | programme | market | finance
   partner       String?
   description   String
   capabilityIds String    @default("[]")
@@ -562,7 +627,7 @@ model LearningMaterial {
   id            String   @id @default(cuid())
   key           String   @unique
   title         String
-  kind          String   // blog | document | video | audio
+  kind          String // blog | document | video | audio
   capabilityIds String   @default("[]")
   summary       String?
   url           String?

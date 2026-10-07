@@ -7,6 +7,7 @@ import {
 } from "@/data/assessmentData";
 import { legibleOn } from "./AssessmentOverviewView";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { readPillarCache, writeAnswerCache } from "@/lib/assessmentCache";
 import PageLoader from "@/components/PageLoader";
 
 interface AssessmentStandardQuestionnaireViewProps {
@@ -23,17 +24,8 @@ export default function AssessmentStandardQuestionnaireView({
   const { user, isLoaded } = useUser();
   const pillar = getPillarById(pillarId);
   const [answers, setAnswers] = useState<Record<string, "yes" | "no">>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("future_farms_assessment_answers");
-        if (saved) {
-          return JSON.parse(saved);
-        }
-      } catch {
-        // ignore
-      }
-    }
-    return {};
+    // Owner-scoped: a different account on this browser starts clean.
+    return readPillarCache();
   });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [cooldownStatus, setCooldownStatus] = useState<{
@@ -145,12 +137,7 @@ export default function AssessmentStandardQuestionnaireView({
               combined = { ...data.answers, ...prev };
             }
             try {
-              localStorage.setItem(
-                "future_farms_assessment_answers",
-                JSON.stringify(combined)
-              );
-              const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
-              localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...combined }));
+              writeAnswerCache(combined);
             } catch (err) {
               console.error(err);
             }
@@ -188,12 +175,7 @@ export default function AssessmentStandardQuestionnaireView({
       }
     }
     try {
-      localStorage.setItem(
-        "future_farms_assessment_answers",
-        JSON.stringify(updated)
-      );
-      const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
-      localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...updated }));
+      writeAnswerCache(updated);
     } catch (e) {
       console.error(e);
     }
@@ -230,12 +212,7 @@ export default function AssessmentStandardQuestionnaireView({
     }
     setIsSubmitting(true);
     try {
-      localStorage.setItem(
-        "future_farms_assessment_answers",
-        JSON.stringify(answers)
-      );
-      const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
-      localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
+      writeAnswerCache(answers);
       const email = activeEmail;
       const res = await fetch("/api/assessment/submit-pillar", {
         method: "POST",
@@ -245,6 +222,15 @@ export default function AssessmentStandardQuestionnaireView({
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         console.warn("[Questionnaire] Database submission notice:", errData);
+        if (res.status === 402 && errData?.upgradeUrl) {
+          setToastMessage(
+            errData?.message || "Payment is required to reassess this pillar."
+          );
+          setTimeout(() => {
+            window.location.href = errData.upgradeUrl;
+          }, 1600);
+          return;
+        }
       }
     } catch (e) {
       console.error("Error submitting pillar to database API:", e);

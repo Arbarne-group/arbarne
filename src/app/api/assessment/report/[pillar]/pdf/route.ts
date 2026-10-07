@@ -95,6 +95,23 @@ export async function GET(
       );
     }
 
+    // One PILLAR_REPORT grant per download (annual pass covers it too).
+    const { checkReportEntitlement } = await import("@/lib/entitlements");
+    const reportEnt = await checkReportEntitlement(user.id, pId);
+    if (!reportEnt.allowed) {
+      return NextResponse.json(
+        {
+          error: reportEnt.reason || "A report credit is required.",
+          code: "PAYMENT_REQUIRED",
+          upgradeUrl:
+            reportEnt.upgradeUrl || `/checkout?product=PILLAR_REPORT&pillar=${pId}`,
+        },
+        { status: 402 }
+      );
+    }
+    const reportGrantId =
+      reportEnt.mode === "grant" ? (reportEnt as any).grantId || null : null;
+
     let parsedCapScores: Record<string, any> = {};
     try {
       parsedCapScores = JSON.parse(pillarRecord?.capabilityScores || "{}");
@@ -242,6 +259,15 @@ export async function GET(
         snapshot: JSON.stringify(reportData),
       },
     });
+
+    if (reportGrantId) {
+      try {
+        const { consumeGrantById } = await import("@/lib/entitlements");
+        await consumeGrantById(reportGrantId);
+      } catch (e) {
+        console.error("[Pillar PDF] grant consume notice:", (e as any)?.message || e);
+      }
+    }
 
     const bytes = new Uint8Array(buffer);
     return new Response(bytes, {

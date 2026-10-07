@@ -16,6 +16,7 @@ import {
   countCompletedPillarsFromAnswers,
   getActiveUserEmail,
 } from "@/lib/onboardingGuard";
+import { readMergedCache } from "@/lib/assessmentCache";
 import {
   getCapabilityTier,
   getCapabilityFeedbackText,
@@ -75,13 +76,13 @@ export default function DashboardPage() {
 
     // (No onboarding stage gate — farmers roam freely.)
 
+    // Owner-scoped: a different account on this browser contributes no
+    // draft answers, so gating never inherits another farmer's progress.
     let localAnswers: Record<string, "yes" | "no"> | null = null;
     try {
-      const saved =
-        localStorage.getItem("future_farms_assessment_answers") ||
-        localStorage.getItem("future_farms_all_answers");
-      if (saved) {
-        localAnswers = JSON.parse(saved);
+      const merged = readMergedCache(email);
+      if (Object.keys(merged).length > 0) {
+        localAnswers = merged;
       }
     } catch (e) {}
 

@@ -4,6 +4,7 @@ import React, { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import AssessmentNavShell from "../components/AssessmentNavShell";
 import AssessmentStandardQuestionnaireView from "../components/AssessmentStandardQuestionnaireView";
+import { writeAnswerCache } from "@/lib/assessmentCache";
 import { getPillarById } from "@/data/assessmentData";
 
 function FocusPageContent() {
@@ -19,13 +20,7 @@ function FocusPageContent() {
 
   const handleComplete = (completedPillarId: number, answers?: Record<string, "yes" | "no">) => {
     if (answers && typeof window !== "undefined") {
-      try {
-        localStorage.setItem("future_farms_assessment_answers", JSON.stringify(answers));
-        const prevAll = JSON.parse(localStorage.getItem("future_farms_all_answers") || "{}");
-        localStorage.setItem("future_farms_all_answers", JSON.stringify({ ...prevAll, ...answers }));
-      } catch (e) {
-        console.error(e);
-      }
+      writeAnswerCache(answers);
     }
     router.push(`/assessment/summary?pillar=${completedPillarId}`);
   };
