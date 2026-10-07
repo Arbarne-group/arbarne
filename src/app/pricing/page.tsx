@@ -25,7 +25,7 @@ const TIERS = [
     tag: "Choose: reassess your pillar or generate your existing pillar report",
     desc: "During the valid assessment period, choose what you need: reassess the pillar if you have made progress and want to update your results, or get the pillar report as it currently stands. Either option costs KES 1,500 per pillar.",
     features: [
-      "Reassess — bypasses the 90-day cooldown",
+      "Reassess: bypasses the 90-day cooldown",
       "Or generate the referenced PDF report",
       "Referral credit: each onboarded farmer → KES 500 off",
     ],
@@ -105,7 +105,7 @@ export default function PricingPage() {
               </h1>
               <p className="text-sm md:text-[15px] text-on-surface-variant leading-relaxed max-w-2xl">
                 Your first full assessment is free. Afterwards, pay per pillar
-                action — and refer fellow farmers to earn assessment credit.
+                action and refer fellow farmers to earn assessment credit.
                 Have a coupon? Apply it at checkout.
               </p>
             </div>
@@ -127,7 +127,7 @@ export default function PricingPage() {
             </p>
             <p className="text-xs md:text-sm text-on-surface-variant mt-0.5">
               Each referred farmer who completes an assessment earns you KES 500
-              credit — up to KES 1,000 applies to every pillar assessment or
+              credit, up to KES 1,000 applies to every pillar assessment or
               report (never below KES 500 per pillar).
             </p>
           </div>

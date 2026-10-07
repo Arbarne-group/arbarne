@@ -17,6 +17,7 @@ interface HeaderProps {
   onboardingStage?: OnboardingStage;
   hasAssessmentHistory?: boolean;
   completedPillarsCount?: number;
+  onMenuClick?: () => void;
 }
 
 export default function Header({
@@ -28,6 +29,7 @@ export default function Header({
   hasAssessmentHistory = false, 
   onboardingStage = "FULLY_COMPLETED",
   completedPillarsCount = 0,
+  onMenuClick,
 }: HeaderProps) {
   const router = useRouter();
   const { user } = useUser();
@@ -93,7 +95,18 @@ export default function Header({
     <>
       {/* Mobile Top App Bar - Exact h-16 */}
       <header className="sticky top-0 z-50 flex justify-between items-center w-full px-3.5 sm:px-4 h-16 bg-surface border-b border-surface-variant md:hidden">
-        <Link href={logoHref} className="flex items-center shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
+          {onMenuClick && (
+            <button
+              type="button"
+              onClick={onMenuClick}
+              aria-label="Open menu"
+              className="p-2 -ml-2 rounded-xl text-on-surface hover:bg-surface-container-high active:scale-95 transition cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[24px]">menu</span>
+            </button>
+          )}
+          <Link href={logoHref} className="flex items-center shrink-0">
           <Image
             src="/logo.webp"
             alt="Future Farms"
@@ -102,7 +115,8 @@ export default function Header({
             className="h-8 sm:h-10 w-auto max-w-[140px] sm:max-w-[180px] object-contain"
             priority
           />
-        </Link>
+          </Link>
+        </div>
         <div className="flex items-center gap-1.5 sm:gap-2 text-on-surface-variant relative" ref={menuRef}>
           <button
             onClick={() => setNotifOpen(!notifOpen)}

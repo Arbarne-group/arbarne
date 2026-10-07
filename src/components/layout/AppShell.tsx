@@ -6,6 +6,7 @@ import { useAppUser as useUser } from "@/hooks/useAppUser";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import MobileNav from "./MobileNav";
+import MobileDrawer from "./MobileDrawer";
 import {
   OnboardingStage,
   clearLocalAppData,
@@ -46,6 +47,7 @@ export default function AppShell({
     isFarmUnlockedCached()
   );
   const [userEmail, setUserEmail] = useState<string>("");
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
   // FFV attention: number of verification items still needing the farmer
@@ -327,6 +329,16 @@ export default function AppShell({
           onboardingStage={onboardingStage}
           completedPillarsCount={completedPillarsCount}
           hasAssessmentHistory={hasAssessmentHistory}
+          onMenuClick={() => setDrawerOpen(true)}
+        />
+
+        {/* Mobile navigation drawer — full section list on small screens */}
+        <MobileDrawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          userName={effectiveUserName}
+          userEmail={userEmail}
+          ffvBadge={ffvAttentionCount > 0 ? "Action needed" : null}
         />
 
         {/* Floating Redirect Alert Banner */}
