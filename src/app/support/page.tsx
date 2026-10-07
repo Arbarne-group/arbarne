@@ -181,7 +181,7 @@ function SupportPageContent() {
               </h1>
               <p className="text-sm md:text-[15px] text-on-surface-variant leading-relaxed max-w-2xl">
                 Open a ticket and our team will respond by email. Track every
-                ticket and its status here — each one carries a tracking link you
+                ticket and its status here. Each one carries a tracking link you
                 can bookmark or share.
               </p>
             </div>
@@ -342,7 +342,7 @@ function SupportPageContent() {
                         <textarea
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
-                          placeholder="What were you doing when it happened? What did you expect? Include dates, pillar or capability names — detail gets you unstuck faster."
+                          placeholder="What were you doing when it happened? What did you expect? Include dates, pillar or capability names, detail gets you unstuck faster."
                           rows={6}
                           maxLength={5000}
                           className={`${input} resize-y leading-relaxed`}
