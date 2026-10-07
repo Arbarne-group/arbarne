@@ -184,7 +184,7 @@ export default function PricingPage() {
 
         <p className="text-center text-xs text-on-surface-variant">
           Payments via M-Pesa and card through Paystack. Questions?{" "}
-          <Link href="/support" className="font-bold text-primary">
+          <Link href="/support?department=Pricing+%26+Payments" className="font-bold text-primary">
             Open a support ticket
           </Link>
           .

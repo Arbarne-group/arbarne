@@ -7,6 +7,7 @@ export const TICKET_CATEGORIES = [
   "FFV",
   "Opportunity Desk",
   "Services Desk",
+  "Pricing & Payments",
   "General Inquiry",
 ] as const;
 
@@ -51,6 +52,7 @@ export const DEPARTMENT_ICONS: Record<string, string> = {
   FFV: "verified",
   "Opportunity Desk": "lightbulb",
   "Services Desk": "handyman",
+  "Pricing & Payments": "payments",
   "General Inquiry": "forum",
 };
 
@@ -66,6 +68,7 @@ export const DEPARTMENT_BLURBS: Record<string, string> = {
   FFV: "Evidence uploads, reviews and badges",
   "Opportunity Desk": "Events, offers and eligibility",
   "Services Desk": "Booked services and providers",
+  "Pricing & Payments": "Charges, M-Pesa, coupons and referrals",
   "General Inquiry": "Anything else — we'll route it",
 };
 
