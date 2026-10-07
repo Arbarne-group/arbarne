@@ -83,7 +83,7 @@ export const HELP_ARTICLES: HelpArticle[] = [
     title: "Referrals",
     href: "/referrals",
     body: [
-      "Invite fellow farmers with your personal link. Each invited farmer who completes an assessment earns you KES 500 credit — up to KES 1,000 applies to every pillar assessment or report.",
+      "Invite fellow farmers with your personal link. Each invited farmer who completes an assessment earns you KES 500 credit, up to KES 1,000 applies to every pillar assessment or report.",
       "How to use it: copy your link from the Referrals page and share it. Link visits, signups and qualified referrals are tracked there. Joined by word of mouth and got a code later? Enter it in the “Were you invited?” card to credit your inviter.",
     ],
   },

@@ -7,8 +7,8 @@ const TIERS = [
   {
     name: "First FFMI/24 Assessment",
     price: "FREE",
-    tag: "Start your farm transformation journey",
-    desc: "Complete your first FFMI/24 assessment for free and receive a free Farm Transformation Report showing your farm classification, capability strengths, development gaps and priority areas for improvement.",
+    tag: "Start here",
+    desc: "Your first full assessment plus the Farm Transformation Report for free.",
     features: [
       "All 8 pillars, 200 questions",
       "Farm classification + maturity stage",
@@ -22,12 +22,12 @@ const TIERS = [
     name: "Individual Pillar Assessment & Report",
     price: "KES 1,500",
     per: "per pillar",
-    tag: "Choose: reassess your pillar or generate your existing pillar report",
-    desc: "During the valid assessment period, choose what you need: reassess the pillar if you have made progress and want to update your results, or get the pillar report as it currently stands. Either option costs KES 1,500 per pillar.",
+    tag: "Reassess or report, per pillar",
+    desc: "Reassess a pillar to update results, or generate its PDF report. KES 1,500 each.",
     features: [
-      "Reassess: bypasses the 90-day cooldown",
-      "Or generate the referenced PDF report",
-      "Referral credit: each onboarded farmer → KES 500 off",
+      "Reassess skips the 90-day cooldown",
+      "Or download the pillar PDF report",
+      "Referral credit: KES 500 off per onboarded farmer",
     ],
     cta: "Choose a pillar",
     href: "/assessment",
@@ -37,12 +37,12 @@ const TIERS = [
     name: "Pillar Verification (FFV)",
     price: "KES 2,500",
     per: "per pillar",
-    tag: "Verify your farm's capabilities when you are ready",
-    desc: "Request Future Farm Verification (FFV) for any pillar at any time. Provide the required evidence and have your farm's capabilities reviewed and verified.",
+    tag: "Prove your progress",
+    desc: "Submit evidence per pillar and get it reviewed and verified.",
     features: [
-      "Evidence review by our team",
+      "Review by our team",
       "Verified / Needs Review outcomes",
-      "Stronger profile for lenders & partners",
+      "Stronger profile for lenders",
     ],
     cta: "Verify a pillar",
     href: "/ffv",
@@ -51,8 +51,8 @@ const TIERS = [
   {
     name: "90-Day FFMI/24 Reassessment",
     price: "Mandatory",
-    tag: "Measure the progress you have made",
-    desc: "Your initial FFMI/24 establishes your farm's baseline. You then have 90 days to work on your identified development priorities. At the end of the 90-day period, you are required to reassess your farm so that Future Farms can measure your progress, identify remaining gaps and establish your next development priorities.",
+    tag: "Track your improvement",
+    desc: "After 90 days working on priorities, reassess to measure progress for free.",
     features: [
       "Required every 90 days",
       "Free of charge",
@@ -66,8 +66,8 @@ const TIERS = [
     name: "Annual FFMI/24 Assessment",
     price: "KES 5,600",
     per: "per year",
-    tag: "Complete your annual farm maturity review",
-    desc: "Undertake a comprehensive annual FFMI/24 assessment to review your farm's capabilities, measure transformation over the year and establish your next stage of development.",
+    tag: "Full yearly review",
+    desc: "A full assessment plus year-on-year transformation tracking.",
     features: [
       "All 8 pillars reassessable for a full year",
       "Year-on-year transformation tracking",
@@ -123,12 +123,11 @@ export default function PricingPage() {
           </span>
           <div className="flex-1">
             <p className="font-bold text-on-surface text-sm md:text-base">
-              Referral credit: every onboarded farmer earns you KES 500 off
+              Referrals earn KES 500 off each
             </p>
             <p className="text-xs md:text-sm text-on-surface-variant mt-0.5">
-              Each referred farmer who completes an assessment earns you KES 500
-              credit, up to KES 1,000 applies to every pillar assessment or
-              report (never below KES 500 per pillar).
+              Each qualified referral is KES 500 credit — up to KES 1,000 off
+              every pillar assessment or report.
             </p>
           </div>
           <Link
