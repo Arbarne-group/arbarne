@@ -252,11 +252,13 @@ function GoogleButton({
   enabled,
   onError,
   callbackUrl,
+  inviteCode,
 }: {
   label: string;
   enabled: boolean;
   onError: (msg: string) => void;
   callbackUrl: string;
+  inviteCode?: string | null;
 }) {
   return (
     <button
@@ -269,6 +271,13 @@ function GoogleButton({
 
           return;
         }
+        // Carry an invite code through OAuth: the server consumes it after
+        // the Google account is created so link-signups get attributed.
+        try {
+          if (inviteCode) {
+            document.cookie = `ff_invite_ref=${encodeURIComponent(inviteCode)}; path=/; max-age=1800; SameSite=Lax`;
+          }
+        } catch {}
         signIn("google", { callbackUrl });
       }}
       className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-300 bg-white py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
@@ -498,6 +507,8 @@ function SignupPane({
   googleEnabled: boolean;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const referralCode = (searchParams.get("ref") || "").toUpperCase().trim() || null;
 
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
@@ -527,6 +538,7 @@ function SignupPane({
           email,
           password,
           confirmPassword,
+          referralCode,
         }),
       });
 
@@ -571,6 +583,13 @@ function SignupPane({
           {error && (
             <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
               {error}
+            </p>
+          )}
+
+          {referralCode && (
+            <p className="rounded-xl bg-[#009924]/10 border border-[#009924]/25 px-3 py-2 text-sm text-[#006b1a]">
+              You were invited with code <strong>{referralCode}</strong>. Your inviter
+              earns referral credit when you complete an assessment.
             </p>
           )}
 
@@ -714,6 +733,7 @@ function SignupPane({
             enabled={googleEnabled}
             onError={setError}
             callbackUrl="/complete-profile"
+            inviteCode={referralCode}
           />
         </div>
       </div>

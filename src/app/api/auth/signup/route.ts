@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password, phone, farmName } = await request.json();
+    const { name, email, password, phone, farmName, referralCode } = await request.json();
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -26,11 +26,20 @@ export async function POST(request: Request) {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    const { newReferralCode } = await import("@/lib/referralCode");
+    let ownCode = newReferralCode();
+    for (let i = 0; i < 5; i++) {
+      const clash = await prisma.user.findUnique({ where: { referralCode: ownCode } });
+      if (!clash) break;
+      ownCode = newReferralCode();
+    }
+
     const user = await prisma.user.create({
       data: {
         name,
         email: email.toLowerCase().trim(),
         passwordHash,
+        referralCode: ownCode,
         phone: phone ? `+254 ${phone.replace(/^\+?254\s*/, "")}` : null,
         farmName: farmName || null,
         farmerProfile: {
@@ -51,6 +60,8 @@ export async function POST(request: Request) {
       },
     });
 
+    await attributeReferral(user.id, referralCode);
+
     return NextResponse.json({
       success: true,
       user: {
@@ -66,5 +77,25 @@ export async function POST(request: Request) {
       { error: "Failed to create account. Please try again." },
       { status: 500 }
     );
+  }
+}
+
+async function attributeReferral(referredId: string, code: string) {
+  try {
+    const normalized = String(code || "").toUpperCase().trim();
+    if (!normalized) return;
+    const referrer = await prisma.user.findUnique({
+      where: { referralCode: normalized },
+      select: { id: true },
+    });
+    if (!referrer || referrer.id === referredId) return;
+    await prisma.referral.create({
+      data: { referrerId: referrer.id, referredId },
+    });
+  } catch (e: any) {
+    // P2002 = already attributed; anything else is non-fatal.
+    if (String(e?.code) !== "P2002") {
+      console.error("[Signup] referral attribution notice:", e?.message || e);
+    }
   }
 }

@@ -6,6 +6,7 @@ import { useAppUser as useUser } from "@/hooks/useAppUser";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import MobileNav from "./MobileNav";
+import MobileDrawer from "./MobileDrawer";
 import {
   OnboardingStage,
   clearLocalAppData,
@@ -15,6 +16,7 @@ import {
   isFarmUnlockedCached,
   setFarmUnlockedCached,
 } from "@/lib/onboardingGuard";
+import { readMergedCache } from "@/lib/assessmentCache";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -34,13 +36,10 @@ export default function AppShell({
   const [onboardingStage, setOnboardingStage] = useState<OnboardingStage>("FULLY_COMPLETED");
   const [completedPillarsCount, setCompletedPillarsCount] = useState<number>(() => {
     // First-paint values. Persisted unlock flag + local answers, so the
-    // sidebar never flashes
+    // sidebar never flashes. Owner-scoped: foreign caches read as empty.
     if (typeof window === "undefined") return 0;
     try {
-      const saved =
-        localStorage.getItem("future_farms_assessment_answers") ||
-        localStorage.getItem("future_farms_all_answers");
-      if (saved) return countCompletedPillarsFromAnswers(JSON.parse(saved));
+      return countCompletedPillarsFromAnswers(readMergedCache());
     } catch {}
     return 0;
   });
@@ -48,6 +47,7 @@ export default function AppShell({
     isFarmUnlockedCached()
   );
   const [userEmail, setUserEmail] = useState<string>("");
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [statusLoaded, setStatusLoaded] = useState(false);
   const [redirectNotice, setRedirectNotice] = useState<string | null>(null);
   // FFV attention: number of verification items still needing the farmer
@@ -105,14 +105,9 @@ export default function AppShell({
     }
 
     try {
-      const savedAnswers =
-        localStorage.getItem("future_farms_assessment_answers") ||
-        localStorage.getItem("future_farms_all_answers");
-      if (savedAnswers) {
-        const parsed = JSON.parse(savedAnswers);
-        const cnt = countCompletedPillarsFromAnswers(parsed);
-        setCompletedPillarsCount(cnt);
-      }
+      const merged = readMergedCache();
+      const cnt = countCompletedPillarsFromAnswers(merged);
+      setCompletedPillarsCount(cnt);
     } catch (e) {}
 
     // Determine user email from Clerk or cached session
@@ -334,6 +329,16 @@ export default function AppShell({
           onboardingStage={onboardingStage}
           completedPillarsCount={completedPillarsCount}
           hasAssessmentHistory={hasAssessmentHistory}
+          onMenuClick={() => setDrawerOpen(true)}
+        />
+
+        {/* Mobile navigation drawer — full section list on small screens */}
+        <MobileDrawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          userName={effectiveUserName}
+          userEmail={userEmail}
+          ffvBadge={ffvAttentionCount > 0 ? "Action needed" : null}
         />
 
         {/* Floating Redirect Alert Banner */}

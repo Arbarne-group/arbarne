@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -14,107 +13,104 @@ interface PromoCarouselProps {
   cards: PromoCard[];
 }
 
+/*
+ * Seamless infinite belt: the track holds two copies of the cards
+ * (1,2,3,1,2,3…) and always moves forward. Each card hugs its image's
+ * natural aspect at a fixed slim height, so as many images as fit are
+ * visible with no letterbox padding. When the second copy ends, the track
+ * snaps back to the start without animation — visually identical, so there
+ * is never a "scroll back" rewind.
+ */
 export default function PromoCarousel({ cards }: PromoCarouselProps) {
-  const [activeSlide, setActiveSlide] = useState(0);
+  const n = cards.length;
+  const loop = n > 1 ? [...cards, ...cards] : cards;
+
+  const [index, setIndex] = useState(0);
+  const [animate, setAnimate] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const [translateX, setTranslateX] = useState(0);
 
-  const viewportRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
-  const firstCardRef = useRef<HTMLAnchorElement>(null);
+  const slideRefs = useRef<Array<HTMLAnchorElement | null>>([]);
 
-  /*
-   * Calculate the exact amount the slider should move.
-   * This prevents the last slide from moving past the end
-   * and creating an empty white space.
-   */
   const updateSliderPosition = () => {
-    if (
-      !viewportRef.current ||
-      !sliderRef.current ||
-      !firstCardRef.current
-    ) {
-      return;
-    }
-
-    const viewportWidth = viewportRef.current.clientWidth;
-    const sliderWidth = sliderRef.current.scrollWidth;
-    const cardWidth = firstCardRef.current.offsetWidth;
-
-    // Tailwind gap-4 = 16px
-    const gap = 16;
-
-    const requestedPosition = activeSlide * (cardWidth + gap);
-
-    // Never allow the slider to move beyond its content
-    const maxTranslate = Math.max(0, sliderWidth - viewportWidth);
-
-    const finalPosition = Math.min(requestedPosition, maxTranslate);
-
-    setTranslateX(finalPosition);
+    const el = slideRefs.current[index];
+    if (!el) return;
+    setTranslateX(el.offsetLeft);
   };
 
-  /*
-   * Recalculate whenever the active slide changes
-   * or the browser/container is resized.
-   */
   useEffect(() => {
     updateSliderPosition();
-  }, [activeSlide, cards.length]);
+  }, [index, n]);
 
   useEffect(() => {
-    const handleResize = () => {
-      updateSliderPosition();
-    };
-
-    window.addEventListener("resize", handleResize);
-
+    window.addEventListener("resize", updateSliderPosition);
+    // Images settling can shift offsets; re-measure shortly after mount.
+    const t = setTimeout(updateSliderPosition, 500);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", updateSliderPosition);
+      clearTimeout(t);
     };
-  }, [activeSlide, cards.length]);
+  }, [index, n]);
 
-  /*
-   * Automatically move to the next banner every 5 seconds.
-   */
+  // Snap back to the start (no animation) once the duplicated copy ends.
   useEffect(() => {
-    if (cards.length <= 1 || isPaused) {
+    if (n > 1 && index >= loop.length) {
+      const t = setTimeout(() => {
+        setAnimate(false);
+        setIndex(0);
+      }, 720);
+      return () => clearTimeout(t);
+    }
+  }, [index, loop.length, n]);
+
+  // Automatically move to the next banner every 4 seconds.
+  useEffect(() => {
+    if (n <= 1 || isPaused) {
       return;
     }
-
     const timer = setInterval(() => {
-      setActiveSlide((current) =>
-        current === cards.length - 1 ? 0 : current + 1
-      );
+      setAnimate(true);
+      setIndex((current) => current + 1);
     }, 4000);
-
     return () => clearInterval(timer);
-  }, [cards.length, isPaused]);
+  }, [n, isPaused]);
 
-  /*
-   * Keep active slide valid if cards change dynamically.
-   */
-  useEffect(() => {
-    if (activeSlide >= cards.length) {
-      setActiveSlide(0);
-    }
-  }, [cards.length, activeSlide]);
-
-  if (!cards || cards.length === 0) {
+  if (!cards || n === 0) {
     return null;
   }
 
   const nextSlide = () => {
-    setActiveSlide((current) =>
-      current === cards.length - 1 ? 0 : current + 1
-    );
+    setAnimate(true);
+    setIndex((current) => (n > 1 ? current + 1 : 0));
   };
 
   const previousSlide = () => {
-    setActiveSlide((current) =>
-      current === 0 ? cards.length - 1 : current - 1
-    );
+    if (n <= 1) return;
+    if (index === 0) {
+      // Jump (no animation) to the copy, then step back seamlessly.
+      setAnimate(false);
+      setIndex(n);
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          setAnimate(true);
+          setIndex(n - 1);
+        })
+      );
+      return;
+    }
+    setAnimate(true);
+    setIndex((current) => current - 1);
   };
+
+  const goToDot = (i: number) => {
+    if (n <= 1) return;
+    const base = Math.floor(Math.min(index, loop.length - 1) / n) * n;
+    setAnimate(true);
+    setIndex(base + i);
+  };
+
+  const activeDot = n > 1 ? index % n : 0;
 
   return (
     <section className="w-full overflow-hidden px-4 pb-5 sm:px-6 lg:px-10 mb-6 md:mb-8 lg:mb-8">
@@ -125,61 +121,45 @@ export default function PromoCarousel({ cards }: PromoCarouselProps) {
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Slider viewport */}
-          <div
-            ref={viewportRef}
-            className="w-full overflow-hidden"
-          >
+          <div className="w-full overflow-hidden">
             {/* Slider track */}
             <div
               ref={sliderRef}
-              className="flex gap-4 transition-transform duration-700 ease-in-out"
+              className={`flex gap-4 ${
+                animate
+                  ? "transition-transform duration-700 ease-in-out"
+                  : "transition-none"
+              }`}
               style={{
                 transform: `translate3d(-${translateX}px, 0, 0)`,
               }}
             >
-              {cards.map((card, index) => (
+              {loop.map((card, position) => (
                 <Link
-                  key={card.image}
-                  ref={index === 0 ? firstCardRef : undefined}
+                  key={`${card.image}-${position}`}
+                  ref={(el) => {
+                    slideRefs.current[position] = el;
+                  }}
                   href="/assessment"
                   aria-label="Open assessment"
-                  className="
-                    relative
-                    block
-                    w-[80%]
-                    flex-shrink-0
-                    overflow-hidden
-                    rounded-2xl
-                    bg-gray-100
-                    shadow-sm
-                    sm:w-[70%]
-                    md:w-[65%]
-                    lg:w-[60%]
-                    xl:w-[58%]
-                  "
+                  aria-hidden={n > 1 && position >= n}
+                  tabIndex={n > 1 && position >= n ? -1 : undefined}
+                  className="relative block h-28 flex-shrink-0 overflow-hidden rounded-2xl bg-surface-container-low shadow-sm sm:h-36 lg:h-44"
                 >
-                  <div className="relative aspect-[12/7] w-full">
-                    <Image
-                      src={card.image}
-                      alt={card.alt || "Future Farms"}
-                      fill
-                      priority={index === 0}
-                      className="object-cover"
-                      sizes="
-                        (max-width: 640px) 80vw,
-                        (max-width: 768px) 70vw,
-                        (max-width: 1024px) 65vw,
-                        60vw
-                      "
-                    />
-                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={card.image}
+                    alt={card.alt || "Future Farms"}
+                    onLoad={updateSliderPosition}
+                    className="h-full w-auto object-contain opacity-90"
+                  />
                 </Link>
               ))}
             </div>
           </div>
 
           {/* Previous button */}
-          {cards.length > 1 && (
+          {n > 1 && (
             <button
               type="button"
               onClick={previousSlide}
@@ -206,7 +186,7 @@ export default function PromoCarousel({ cards }: PromoCarouselProps) {
           )}
 
           {/* Next button */}
-          {cards.length > 1 && (
+          {n > 1 && (
             <button
               type="button"
               onClick={nextSlide}
@@ -233,18 +213,18 @@ export default function PromoCarousel({ cards }: PromoCarouselProps) {
           )}
 
           {/* Indicators */}
-          {cards.length > 1 && (
+          {n > 1 && (
             <div className="mt-3 flex justify-center gap-1.5">
-              {cards.map((_, index) => (
+              {cards.map((_, i) => (
                 <button
-                  key={index}
+                  key={i}
                   type="button"
-                  aria-label={`Go to banner ${index + 1}`}
-                  onClick={() => setActiveSlide(index)}
+                  aria-label={`Go to banner ${i + 1}`}
+                  onClick={() => goToDot(i)}
                   className={`
                     h-1.5 rounded-full transition-all duration-300
                     ${
-                      activeSlide === index
+                      activeDot === i
                         ? "w-8 bg-primary"
                         : "w-1.5 bg-gray-300 hover:bg-gray-400"
                     }

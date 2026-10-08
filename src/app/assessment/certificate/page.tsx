@@ -8,6 +8,7 @@ import { useAppUser as useUser } from "@/hooks/useAppUser";
 import { ALL_PILLARS, PillarData } from "@/data/allPillarsData";
 import { getPillarById } from "@/data/assessmentData";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { readMergedCache } from "@/lib/assessmentCache";
 import { ScannableQrCode } from "@/components/ScannableQrCode";
 
 function CertificatePageContent() {
@@ -43,11 +44,7 @@ function CertificatePageContent() {
     // Load answers from localStorage
     let localAnswers: Record<string, "yes" | "no"> = {};
     try {
-      const savedAll = localStorage.getItem("future_farms_all_answers");
-      const savedPillar = localStorage.getItem("future_farms_assessment_answers");
-      const parsedAll = savedAll ? JSON.parse(savedAll) : {};
-      const parsedPillar = savedPillar ? JSON.parse(savedPillar) : {};
-      localAnswers = { ...parsedAll, ...parsedPillar };
+      localAnswers = readMergedCache(email);
       setPillarAnswers(localAnswers);
     } catch (e) {}
 

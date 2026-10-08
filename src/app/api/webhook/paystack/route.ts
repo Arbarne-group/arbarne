@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       case "charge.success": {
         const reference = data.reference;
         if (reference) {
-          await prisma.order.updateMany({
+          const flipped = await prisma.order.updateMany({
             where: { paystackReference: reference },
             data: {
               status: "COMPLETED",
@@ -36,6 +36,21 @@ export async function POST(request: Request) {
               updatedAt: new Date(),
             },
           });
+          if (flipped.count > 0) {
+            try {
+              const done = await prisma.order.findFirst({
+                where: { paystackReference: reference },
+                select: { id: true, userId: true, couponCode: true },
+              });
+              if (done) {
+                const { recordCouponRedemption, finalizeReferralDiscount } = await import("@/lib/pricing");
+                await recordCouponRedemption(done.userId, done.couponCode, done.id);
+                await finalizeReferralDiscount(done.id);
+              }
+            } catch (e: any) {
+              console.error("[Webhook] coupon redemption notice:", e?.message || e);
+            }
+          }
         }
         break;
       }

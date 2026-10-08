@@ -216,7 +216,7 @@ export default function TransformationReportPdf({
           </Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Basic Farm ID</Text>
+        <Text style={styles.sectionTitle}>Farm ID</Text>
         <View style={styles.idGrid}>
           {[
             ["Farm / Business Name", data.farm.farmName],
@@ -265,7 +265,7 @@ export default function TransformationReportPdf({
             </View>
           ))}
 
-        <Text style={styles.sectionTitle}>Pillar Status — all 8 pillars</Text>
+        <Text style={styles.sectionTitle}>8 Pillar Status</Text>
         {data.pillars.map((p) => (
           <View key={p.id} style={styles.pillarRow} wrap={false}>
             <View style={styles.pillarTopRow}>

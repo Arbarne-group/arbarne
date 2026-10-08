@@ -35,6 +35,42 @@ const PROMO_CARDS = [
     image: "/carousel5.png",
    
   },
+  {
+    image: "/carousel3.png",
+   
+  },
+  {
+    image: "/carousel4.png",
+   
+  },
+  {
+    image: "/carousel5.png",
+   
+  },
+  {
+    image: "/carousel3.png",
+   
+  },
+  {
+    image: "/carousel4.png",
+   
+  },
+  {
+    image: "/carousel5.png",
+   
+  },
+  {
+    image: "/carousel3.png",
+   
+  },
+  {
+    image: "/carousel4.png",
+   
+  },
+  {
+    image: "/carousel5.png",
+   
+  },
   // {
   //   image: "/carousel2.png",
    

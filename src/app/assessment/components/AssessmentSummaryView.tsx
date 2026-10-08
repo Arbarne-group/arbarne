@@ -12,6 +12,7 @@ import {
   getPillarAutomaticFeedback,
 } from "@/data/capabilityFeedback";
 import { getActiveUserEmail } from "@/lib/onboardingGuard";
+import { readMergedCache, writeAnswerCache } from "@/lib/assessmentCache";
 import ScannableQrCode from "@/components/ScannableQrCode";
 import PageLoader from "@/components/PageLoader";
 
@@ -57,13 +58,8 @@ export default function AssessmentSummaryView({
     }
     if (typeof window !== "undefined") {
       try {
-        const savedPillar = localStorage.getItem(
-          "future_farms_assessment_answers",
-        );
-        const savedAll = localStorage.getItem("future_farms_all_answers");
-        const parsedPillar = savedPillar ? JSON.parse(savedPillar) : {};
-        const parsedAll = savedAll ? JSON.parse(savedAll) : {};
-        const merged = { ...parsedAll, ...parsedPillar };
+        // Owner-scoped: foreign caches read as empty.
+        const merged = readMergedCache();
         if (Object.keys(merged).length > 0) return merged;
       } catch (e) {
         console.error("Failed to parse cached answers:", e);
@@ -175,6 +171,10 @@ export default function AssessmentSummaryView({
       );
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        if (res.status === 402 && data?.upgradeUrl) {
+          window.location.href = data.upgradeUrl;
+          return;
+        }
         throw new Error(data?.error || "Could not generate the PDF.");
       }
       const blob = await res.blob();
@@ -278,13 +278,8 @@ export default function AssessmentSummaryView({
       localCombined = { ...propAnswers };
     }
     try {
-      const savedPillar = localStorage.getItem(
-        "future_farms_assessment_answers",
-      );
-      const savedAll = localStorage.getItem("future_farms_all_answers");
-      const parsedPillar = savedPillar ? JSON.parse(savedPillar) : {};
-      const parsedAll = savedAll ? JSON.parse(savedAll) : {};
-      localCombined = { ...parsedAll, ...parsedPillar, ...localCombined };
+      const cached = readMergedCache();
+      localCombined = { ...cached, ...localCombined };
     } catch (e) {
       console.error("Error reading local answers:", e);
     }
@@ -333,17 +328,7 @@ export default function AssessmentSummaryView({
               // Database answers are the single source of truth
               const merged = { ...localCombined, ...prev, ...data.answers };
               try {
-                localStorage.setItem(
-                  "future_farms_assessment_answers",
-                  JSON.stringify(merged),
-                );
-                const prevAll = JSON.parse(
-                  localStorage.getItem("future_farms_all_answers") || "{}",
-                );
-                localStorage.setItem(
-                  "future_farms_all_answers",
-                  JSON.stringify({ ...prevAll, ...merged }),
-                );
+                writeAnswerCache(merged);
               } catch (err) {
                 console.error(err);
               }

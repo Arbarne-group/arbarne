@@ -16,6 +16,7 @@ import {
   countCompletedPillarsFromAnswers,
   getActiveUserEmail,
 } from "@/lib/onboardingGuard";
+import { readMergedCache } from "@/lib/assessmentCache";
 import {
   getCapabilityTier,
   getCapabilityFeedbackText,
@@ -75,13 +76,13 @@ export default function DashboardPage() {
 
     // (No onboarding stage gate — farmers roam freely.)
 
+    // Owner-scoped: a different account on this browser contributes no
+    // draft answers, so gating never inherits another farmer's progress.
     let localAnswers: Record<string, "yes" | "no"> | null = null;
     try {
-      const saved =
-        localStorage.getItem("future_farms_assessment_answers") ||
-        localStorage.getItem("future_farms_all_answers");
-      if (saved) {
-        localAnswers = JSON.parse(saved);
+      const merged = readMergedCache(email);
+      if (Object.keys(merged).length > 0) {
+        localAnswers = merged;
       }
     } catch (e) {}
 
@@ -551,7 +552,38 @@ export default function DashboardPage() {
             }
           >
           {/* My Future Farm Page Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-2 ">
+          {/* Mobile premium hero */}
+          <div className="md:hidden relative overflow-hidden rounded-3xl bg-primary p-5 shadow-lg mb-1">
+            <div className="absolute -right-12 -top-20 w-56 h-56 rounded-full bg-on-primary/10 pointer-events-none" />
+            <div className="absolute right-20 -bottom-20 w-40 h-40 rounded-full bg-on-primary/[0.07] pointer-events-none" />
+            <div className="relative">
+              <p className="text-on-primary/70 text-xs font-semibold uppercase tracking-widest">
+                {new Date().getHours() < 12
+                  ? "Good morning"
+                  : new Date().getHours() < 17
+                  ? "Good afternoon"
+                  : "Good evening"}
+              </p>
+              <h1 className="text-on-primary text-[22px] font-black tracking-tight truncate mt-0.5">
+                {user?.name || clerkUser?.fullName || "My Future Farm"}
+              </h1>
+              <div className="flex items-center gap-2 mt-3">
+                <span className="px-2.5 py-1 rounded-lg bg-on-primary/15 text-on-primary text-[11px] font-mono font-bold truncate max-w-[55%]">
+                  ID: {farmIdentifier}
+                </span>
+                <span className="px-2.5 py-1 rounded-lg bg-on-primary/15 text-on-primary text-[11px] font-bold whitespace-nowrap">
+                  {verifiedPillarsCount}/8 Pillars
+                </span>
+              </div>
+              <div className="mt-3 h-1.5 rounded-full bg-on-primary/20 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-on-primary transition-all"
+                  style={{ width: `${(verifiedPillarsCount / 8) * 100}%` }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="hidden md:flex md:flex-row md:items-center md:justify-between gap-3 pb-2 ">
             <div>
               <h1 className="text-xl md:text-2xl font-bold text-on-surface tracking-tight flex items-center gap-2">
                 {/* <span className="material-symbols-outlined text-primary text-[26px]">agriculture</span> */}
@@ -577,10 +609,10 @@ export default function DashboardPage() {
           {/* Top Section: Bento Grid for Maturity Index & Radar.
               The radar always shows; the FFMI numbers inside the left card
               need all 8 submitted pillars (see below). */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 ">
             {/* Left Col: Maturity Index */}
             <div className="col-span-1 lg:col-span-5 flex flex-col gap-gutter ">
-              <div className="bg-surface rounded-2xl p-6 shadow-ambient h-full flex flex-col justify-between hover:shadow-hover transition-shadow relative overflow-hidden group border border-outline-variant/40">
+              <div className="bg-surface rounded-2xl p-5 md:p-6 shadow-ambient h-full flex flex-col justify-between hover:shadow-hover transition-shadow relative overflow-hidden group border border-outline-variant/40">
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-primary-container opacity-10 rounded-full blur-2xl group-hover:bg-primary transition-colors duration-500 pointer-events-none" />
 
                 {/* {allPillarsAssessed ? (
@@ -808,9 +840,9 @@ export default function DashboardPage() {
           </div>
 
           {/* Bottom Section: Lists */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 ">
             {/* My Development Priorities */}
-            <div className="bg-surface rounded-2xl p-6 shadow-ambient flex flex-col border border-outline-variant/40">
+            <div className="bg-surface rounded-2xl p-5 md:p-6 shadow-ambient flex flex-col border border-outline-variant/40">
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h3 className="font-title-md text-title-md text-on-surface font-bold">
@@ -927,7 +959,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Recommended Next Actions */}
-            <div className="bg-surface rounded-2xl p-6 shadow-ambient flex flex-col relative overflow-hidden border border-outline-variant/40">
+            <div className="bg-surface rounded-2xl p-5 md:p-6 shadow-ambient flex flex-col relative overflow-hidden border border-outline-variant/40">
               <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary-fixed-dim opacity-10 rounded-tl-full pointer-events-none" />
 
               <div className="flex justify-between items-center mb-6 z-10">

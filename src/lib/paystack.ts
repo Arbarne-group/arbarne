@@ -18,73 +18,76 @@ export interface BillingPlan {
 }
 
 export const PAYSTACK_PLANS: Record<string, BillingPlan> = {
-  "1_PILLAR": {
-    id: "1_PILLAR",
-    name: "1 Pillar Assessment",
-    subheading: "Assess any single pillar",
-    amount: 100,
-    amountInSubunits: 10000,
+  "PILLAR_REASSESS": {
+    id: "PILLAR_REASSESS",
+    name: "Individual Pillar Assessment",
+    subheading: "Reassess one pillar",
+    amount: 1500,
+    amountInSubunits: 150000,
     currency: "KES",
     interval: "monthly",
     questionsCount: 25,
     pillarsCount: 1,
     features: [
-      "Any 1 pillar of your choice",
-      "25 questions (from 200+ Yes/No questions)",
-      "Instant recommendations for all gaps identified",
-      "Capability status feedback",
-      "Pillar score benchmark",
+      "Any 1 completed pillar of your choice",
+      "25 questions, updated score and maturity stage",
+      "Bypasses the 90-day cooldown",
     ],
-    bestFor: "Quick check of one priority pillar",
-    defaultPlanCode: process.env.PAYSTACK_PLAN_1_PILLAR || "PLN_uey8ewrvjdtfofv",
+    bestFor: "Updating results after making progress",
+    defaultPlanCode: process.env.PAYSTACK_PLAN_PILLAR_REASSESS || "",
   },
-  "4_PILLARS": {
-    id: "4_PILLARS",
-    name: "4 Pillars Assessment",
-    subheading: "Assess any 4 key pillars",
-    amount: 500,
-    amountInSubunits: 50000,
+  "PILLAR_REPORT": {
+    id: "PILLAR_REPORT",
+    name: "Individual Pillar Report",
+    subheading: "Generate one pillar report",
+    amount: 1500,
+    amountInSubunits: 150000,
     currency: "KES",
     interval: "monthly",
-    questionsCount: 100,
-    pillarsCount: 4,
+    questionsCount: 25,
+    pillarsCount: 1,
     features: [
-      "Any 4 key pillars of your choice",
-      "100 questions (from 200+ Yes/No questions)",
-      "Instant recommendations for all gaps identified",
-      "Capability status feedback",
-      "Pillar scores across all 4 chosen pillars",
-      "Farm Transformation Plan (PDF Summary)",
+      "Referenced PDF report with unique tracking code",
+      "Capability feedback and priority recommendations",
     ],
-    bestFor: "Focus on key areas & improve performance",
-    defaultPlanCode: process.env.PAYSTACK_PLAN_4_PILLARS || "PLN_1wwdo8pjjz3k10b",
+    bestFor: "Reviewing or sharing existing results",
+    defaultPlanCode: process.env.PAYSTACK_PLAN_PILLAR_REPORT || "",
   },
-  "FULL_ASSESSMENT": {
-    id: "FULL_ASSESSMENT",
-    name: "Full Assessment (8 Pillars Complete)",
-    subheading: "All 8 Pillars Complete",
-    badge: "BEST VALUE",
-    popular: true,
-    amount: 1000,
-    amountInSubunits: 100000,
+  "FFV_VERIFY": {
+    id: "FFV_VERIFY",
+    name: "Pillar Verification (FFV)",
+    subheading: "Verify one pillar",
+    amount: 2500,
+    amountInSubunits: 250000,
     currency: "KES",
     interval: "monthly",
+    questionsCount: 0,
+    pillarsCount: 1,
+    features: [
+      "Evidence review for one pillar",
+      "Verified / Needs Review outcomes",
+    ],
+    bestFor: "Proving capabilities to partners and lenders",
+    defaultPlanCode: process.env.PAYSTACK_PLAN_FFV_VERIFY || "",
+  },
+  "ANNUAL_ASSESSMENT": {
+    id: "ANNUAL_ASSESSMENT",
+    name: "Annual FFMI/24 Assessment",
+    subheading: "Full yearly review",
+    amount: 5600,
+    amountInSubunits: 560000,
+    currency: "KES",
+    interval: "annually",
     questionsCount: 200,
     pillarsCount: 8,
     features: [
-      "All 8 pillars covered",
-      "200 questions (Complete Yes/No diagnostic set)",
-      "Instant recommendations for all gaps identified",
-      "Capability status feedback across 40 capabilities",
-      "Pillar scores for all 8 pillars & radar diagnostic profile",
-      "Farm Transformation Action Plan (PDF Full Plan)",
-      "Commercial farm classification included",
+      "All 8 pillars, reassessable for a full year",
+      "Year-on-year transformation tracking",
     ],
-    bestFor: "Complete picture of your farm's commercial readiness",
-    defaultPlanCode: process.env.PAYSTACK_PLAN_FULL_ASSESSMENT || "PLN_n1osab6mrhurh4j",
+    bestFor: "The comprehensive annual maturity review",
+    defaultPlanCode: process.env.PAYSTACK_PLAN_ANNUAL_ASSESSMENT || "",
   },
 };
-
 export function getPaystackConfig() {
   const secretKey =
     process.env.PAYSTACK_SECRET_KEY ||
@@ -105,7 +108,7 @@ export function getPaystackConfig() {
 }
 
 export function getPlanById(planId: string): BillingPlan {
-  return PAYSTACK_PLANS[planId] || PAYSTACK_PLANS["FULL_ASSESSMENT"];
+  return PAYSTACK_PLANS[planId] || PAYSTACK_PLANS["PILLAR_REASSESS"];
 }
 
 /**

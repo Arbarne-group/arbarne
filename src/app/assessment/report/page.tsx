@@ -54,6 +54,10 @@ function AssessmentReportContent() {
       const res = await fetch(endpoint);
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        if (res.status === 402 && data?.upgradeUrl) {
+          window.location.href = data.upgradeUrl;
+          return;
+        }
         throw new Error(data?.error || "Could not generate the PDF.");
       }
       const blob = await res.blob();

@@ -186,6 +186,29 @@ export async function POST(request: Request) {
       );
     }
 
+    // FFV verification costs one credit per pillar: grandfathered while
+    // this pillar already has uploads, otherwise an unused FFV_VERIFY
+    // grant is required and consumed on this first upload.
+    let ffvGrantId: string | null = null;
+    {
+      const pillarMedia = await prisma.ffvMedia.count({
+        where: { evidence: { assessmentId: assessment.id, pillarId: Number(pillarId) } },
+      });
+      const { checkFfvEntitlement } = await import("@/lib/entitlements");
+      const ent = await checkFfvEntitlement(user.id, Number(pillarId), pillarMedia > 0);
+      if (!ent.allowed) {
+        return NextResponse.json(
+          {
+            error: ent.reason || "Verification credit required.",
+            code: "PAYMENT_REQUIRED",
+            upgradeUrl: ent.upgradeUrl || `/checkout?product=FFV_VERIFY&pillar=${pillarId}`,
+          },
+          { status: 402 }
+        );
+      }
+      if ((ent as any).grantId) ffvGrantId = (ent as any).grantId;
+    }
+
     // Upsert the evidence record in Neon database
     const evidence = await prisma.ffvEvidence.upsert({
       where: {
@@ -235,6 +258,15 @@ export async function POST(request: Request) {
       orderBy: { createdAt: "asc" },
       select: MEDIA_SELECT,
     });
+
+    if (ffvGrantId) {
+      try {
+        const { consumeGrantById } = await import("@/lib/entitlements");
+        await consumeGrantById(ffvGrantId);
+      } catch (e) {
+        console.error("[Evidence] grant consume notice:", (e as any)?.message || e);
+      }
+    }
 
     return NextResponse.json({
       success: true,

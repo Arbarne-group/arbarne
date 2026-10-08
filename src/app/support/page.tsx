@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import AppShell from "@/components/layout/AppShell";
 import PageLoader from "@/components/PageLoader";
@@ -57,12 +58,24 @@ const TABS = [
   { key: "mine", label: "My tickets", icon: "confirmation_number" },
 ] as const;
 
-export default function SupportPage() {
+function SupportPageContent() {
   const { user, isLoaded } = useAppUser();
+  const searchParams = useSearchParams();
   const email = user?.primaryEmailAddress?.emailAddress || user?.email || "";
   const [tab, setTab] = useState<"new" | "mine">("new");
 
   const [category, setCategory] = useState<string>("");
+  // Deep-link preselect, e.g. /support?department=Pricing+%26+Payments
+  useEffect(() => {
+    const dept = searchParams.get("department") || "";
+    if (
+      dept &&
+      (TICKET_CATEGORIES as readonly string[]).includes(dept)
+    ) {
+      setCategory(dept);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -168,7 +181,7 @@ export default function SupportPage() {
               </h1>
               <p className="text-sm md:text-[15px] text-on-surface-variant leading-relaxed max-w-2xl">
                 Open a ticket and our team will respond by email. Track every
-                ticket and its status here — each one carries a tracking link you
+                ticket and its status here. Each one carries a tracking link you
                 can bookmark or share.
               </p>
             </div>
@@ -329,7 +342,7 @@ export default function SupportPage() {
                         <textarea
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
-                          placeholder="What were you doing when it happened? What did you expect? Include dates, pillar or capability names — detail gets you unstuck faster."
+                          placeholder="What were you doing when it happened? What did you expect? Include dates, pillar or capability names, detail gets you unstuck faster."
                           rows={6}
                           maxLength={5000}
                           className={`${input} resize-y leading-relaxed`}
@@ -448,5 +461,13 @@ export default function SupportPage() {
         )}
       </div>
     </AppShell>
+  );
+}
+
+export default function SupportPage() {
+  return (
+    <Suspense fallback={<PageLoader message="Loading support…" />}>
+      <SupportPageContent />
+    </Suspense>
   );
 }

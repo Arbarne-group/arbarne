@@ -1256,14 +1256,16 @@ export default function FarmProfileMetadata() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={openEdit}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-on-primary text-primary hover:bg-on-primary/90 px-5 py-3 text-[14px] font-bold transition-all duration-150 shadow-md shrink-0 self-start md:self-auto active:scale-[0.98]"
-              >
-                <Icon name="edit" className="text-[18px]" />
-                Edit Profile
-              </button>
+              {!isEmpty && (
+                <button
+                  type="button"
+                  onClick={openEdit}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-on-primary text-primary hover:bg-on-primary/90 px-5 py-3 text-[14px] font-bold transition-all duration-150 shadow-md shrink-0 self-start md:self-auto active:scale-[0.98]"
+                >
+                  <Icon name="edit" className="text-[18px]" />
+                  Edit Profile
+                </button>
+              )}
             </div>
           </div>
 
@@ -1413,13 +1415,13 @@ export default function FarmProfileMetadata() {
                 Your farm profile metadata hasn't been configured yet. Populate
                 your details to start managing operations.
               </p>
-              <Link
+              {/* <Link
                 href="/farm-business"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary text-[14px] font-bold hover:opacity-90 transition shadow-sm"
               >
                 <Icon name="add" />
                 Fill Out Profile
-              </Link>
+              </Link> */}
             </div>
           )}
 
