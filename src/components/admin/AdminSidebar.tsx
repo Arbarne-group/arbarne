@@ -1,110 +1,142 @@
+
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { appSignOut } from "@/hooks/useAppUser";
 
 const LINKS = [
   { href: "/a/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/a/users", label: "Users & Invites", icon: "group" },
+  { href: "/a/users", label: "Farmers & Users", icon: "group" },
+  { href: "/a/assessments", label: "Assessments", icon: "assignment" },
+  { href: "/a/billing", label: "Billing & Payments", icon: "credit_card" },
+  { href: "/a/support", label: "Support Centre", icon: "support_agent" },
+  { href: "/a/analytics", label: "Reports & Analytics", icon: "insights" },
   { href: "/a/geography", label: "Geography", icon: "public" },
   { href: "/a/audit", label: "Audit Log", icon: "receipt_long" },
+  { href: "/a/settings", label: "Admin Settings", icon: "settings" },
 ];
+
+function isActivePath(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const linkCls = (active: boolean) =>
-    `flex items-center gap-3 rounded-xl transition-all duration-200 text-sm font-medium relative shrink-0 ${
-      active
-        ? "bg-secondary text-white font-semibold shadow-sm"
-        : "text-white/85 hover:bg-white/10 hover:text-white"
-    }`;
+  const navigationContent = (
+    <div className="flex min-h-full w-full flex-1 flex-col bg-[#045D61] text-white">
+      {/* Logo Header */}
+      <div className="flex h-20 shrink-0 items-center border-b border-white/10 px-5">
+        <Link
+          href="/a/dashboard"
+          onClick={() => setMobileOpen(false)}
+          className="flex items-center"
+        >
+          <Image
+            src="/ffi-white-horizontal.png"
+            alt="Future Farms Framework"
+            width={180}
+            height={44}
+            priority
+            className="h-auto w-[160px] object-contain"
+          />
+        </Link>
+      </div>
 
-  return (
-    <>
-      {/* Mobile top rail */}
-      <nav className="flex w-full items-center gap-1.5 overflow-x-auto bg-primary px-3 py-2.5 md:hidden shrink-0 no-print print:hidden">
-        <span className="mr-1 flex h-8 w-8 items-center justify-center rounded-lg bg-white/15 text-xs font-black text-white shrink-0">
-          FF
-        </span>
-        {LINKS.map((l) => {
-          const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
+      {/* Navigation Links */}
+      <nav
+        aria-label="Admin navigation"
+        className="flex-1 space-y-1 overflow-y-auto px-3 py-5"
+      >
+        {LINKS.map((link) => {
+          const active = isActivePath(pathname, link.href);
+
           return (
             <Link
-              key={l.href}
-              href={l.href}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors ${
-                active ? "bg-secondary text-white" : "text-white/75 hover:bg-white/10 hover:text-white"
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              aria-current={active ? "page" : undefined}
+              className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors ${
+                active
+                  ? "bg-secondary font-semibold text-white shadow-xs"
+                  : "text-white/75 hover:bg-white/10 hover:text-white"
               }`}
             >
-              <span className="material-symbols-outlined text-[18px]">{l.icon}</span>
-              {l.label}
+              <span className="material-symbols-outlined shrink-0 text-[21px]">
+                {link.icon}
+              </span>
+
+              <span className="truncate">{link.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      {/* Desktop rail (mirrors the main app sidebar) */}
-      <nav className="h-screen sticky top-0 hidden md:flex flex-col w-64 z-40 select-none bg-primary text-on-primary border-r border-white/10 transition-all shrink-0 no-print print:hidden">
-        <div className="h-20 min-h-20 flex items-center px-3.5 border-b border-white/10 shrink-0">
-          <Link
-            href="/a/dashboard"
-            className="flex items-center gap-2.5 pl-1 rounded-lg hover:bg-white/10 transition-colors"
-            title="Future Farms Admin"
-          >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-sm font-black text-white shrink-0">
-              FF
-            </span>
-            <span className="min-w-0">
-              <span className="block text-sm font-bold text-white leading-tight">FF ADMIN</span>
-              <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-white/40">
-                Control center
-              </span>
-            </span>
-          </Link>
-        </div>
+      {/* Sign Out Footer */}
+      <div className="shrink-0 border-t border-white/10 p-3">
+        <button
+          type="button"
+          onClick={() => appSignOut("/")}
+          className="flex w-full cursor-pointer bg-secondary items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-white transition-colors hover:bg-white/10 hover:text-white"
+        >
+          <span className="material-symbols-outlined text-[21px]">
+            logout
+          </span>
 
-        <div className="flex-1 min-h-0 overflow-y-auto py-5 px-3 flex flex-col gap-1.5 bg-primary">
-          {LINKS.map((l) => {
-            const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
-            return (
-              <Link key={l.href} href={l.href} className={`${linkCls(active)} px-3.5 py-3 gap-3`}>
-                <span
-                  className={`material-symbols-outlined shrink-0 text-[20px] transition-colors ${
-                    active ? "fill text-white" : "text-white/85"
-                  }`}
-                >
-                  {l.icon}
-                </span>
-                <span className="truncate whitespace-nowrap">{l.label}</span>
-              </Link>
-            );
-          })}
-        </div>
+          Sign Out
+        </button>
+      </div>
+    </div>
+  );
 
-        <div className="p-3 border-t border-white/10 mt-auto flex flex-col gap-1.5 shrink-0 bg-primary">
-          <Link
-            href="/overview"
-            className="rounded-xl flex items-center text-sm font-medium transition-all duration-200 text-white/85 hover:bg-white/10 hover:text-white px-3.5 py-2.5 gap-3"
-          >
-            <span className="material-symbols-outlined text-[20px] shrink-0 text-white/85">
-              storefront
-            </span>
-            <span className="truncate whitespace-nowrap">View site</span>
-          </Link>
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <div className="hidden h-full min-h-full w-full md:flex">
+        {navigationContent}
+      </div>
+
+      {/* Mobile Top Bar */}
+      <div className="sticky top-0 z-45 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 md:hidden">
+        <Link href="/a/dashboard" className="flex items-center gap-2">
+          <span className="font-bold text-[#045D61]">
+            Future Farms <span className="font-normal">Admin</span>
+          </span>
+        </Link>
+
+        <button
+          type="button"
+          aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((open) => !open)}
+          className="cursor-pointer rounded-lg p-2 text-gray-700 hover:bg-gray-100"
+        >
+          <span className="material-symbols-outlined">
+            {mobileOpen ? "close" : "menu"}
+          </span>
+        </button>
+      </div>
+
+      {/* Mobile Drawer Overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
           <button
             type="button"
-            onClick={() => appSignOut("/")}
-            className="rounded-xl bg-secondary hover:bg-secondary/50 hover:text-white transition-all duration-200 flex items-center text-sm text-white font-medium px-3.5 py-2.5 gap-3 mt-0.5 cursor-pointer text-left"
-          >
-            <span className="material-symbols-outlined text-[20px] text-white shrink-0">
-              logout
-            </span>
-            <span>Sign Out</span>
-          </button>
+            aria-label="Close navigation overlay"
+            onClick={() => setMobileOpen(false)}
+            className="absolute inset-0 bg-black/40 backdrop-blur-xs"
+          />
+
+          <div className="absolute inset-y-0 left-0 z-10 h-full w-72 max-w-[85vw] shadow-xl">
+            {navigationContent}
+          </div>
         </div>
-      </nav>
+      )}
     </>
   );
 }

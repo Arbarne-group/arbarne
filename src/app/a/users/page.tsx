@@ -1,17 +1,22 @@
 "use client";
 
-import { UsersTab } from "@/components/admin/AdminTabs";
+import { Users } from "@/components/admin/Users";
 
 export default function AdminUsersPage() {
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-xl font-bold text-on-surface md:text-2xl">Users & Invites</h1>
-        <p className="mt-1 text-sm text-on-surface-variant">
-          Presence, roles, and staff invitations.
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+      {/* Page Header */}
+      <div className="flex flex-col gap-1 border-b border-outline-variant/30 pb-5">
+        <h1 className="text-2xl font-semibold tracking-tight text-secondary md:text-3xl">
+          User Management
+        </h1>
+        <p className="text-md text-on-surface-variant">
+          Monitor registered accounts, business profiles, system access, and details.
         </p>
       </div>
-      <UsersTab />
+
+      {/* Main Users Component */}
+      <Users />
     </div>
   );
 }

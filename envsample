@@ -1,0 +1,18 @@
+# ─── App ──────────────────────────────────────────────────────────────
+APP_ENV=development
+APP_DEBUG=true
+APP_HOST=0.0.0.0
+APP_PORT=8000
+APP_LOG_LEVEL=INFO
+
+# ─── Database (Neon Postgres) ─────────────────────────────────────────
+DATABASE_URL="postgresql://root:toor@localhost:5432/future_farms?sslmode=disable"
+DIRECT_URL="postgresql://root:toor@localhost:5432/future_farms?sslmode=disable"
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=root
+POSTGRES_PASSWORD=toor
+POSTGRES_DB=future_farms
+
+
+
